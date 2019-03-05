@@ -1,0 +1,9 @@
+#+TITLE: Emacs configuration
+#+AUTHOR: Serghei Iakovlev
+
+* Personal Information
+
+#+begin_src emacs-lisp
+(setq user-full-name "Sergjei Iakovlev"
+      user-mail-address "sadhooklay@gmail.com")
+#+end_src
