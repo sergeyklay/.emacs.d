@@ -1,22 +1,36 @@
+;;; init.el -- Initialization file
+;; Serghei Iakovlev
+;; 4 March 2019
+
+;;; Commentary:
+;; This file is used to set up the packages sources and then call
+;; an org-babel tangle in order to load a literate configuration.
+
+;;; Code:
+
+(require 'server)
+(unless (server-running-p)
+       (server-start))
+
 (require 'package)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-archives
-   (quote
-    (("gnu" . "http://elpa.gnu.org/packages/")
-     ("melpa-stable" . "http://stable.melpa.org/packages/"))))
- '(package-selected-packages (quote (haskell-mode))))
+(setq package-archives '(("org" . "http://orgmode.org/elpa/")
+                         ("melpa" . "http://melpa.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")))
 
-; Activate all the packages (in particular autoloads)
+(setq package-enable-at-startup nil)
 (package-initialize)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(defconst user-init-dir
+  (cond ((boundp 'user-emacs-directory)
+         user-emacs-directory)
+        ((boundp 'user-init-directory)
+         user-init-directory)
+        (t "~/.emacs.d/")))
+
+; See: https://emacs.stackexchange.com/a/3147/16592
+(org-babel-load-file
+ (expand-file-name "settings.org" user-init-dir))
+
+;;; init.el ends here
