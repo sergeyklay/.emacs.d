@@ -1,0 +1,12 @@
+#+TITLE: My Emacs Configuration
+#+AUTHOR: Serghei Iakovlev
+#+EMAIL: sadhooklay@gmail.com
+
+This repository contains my personal Emacs’ configuration,
+notes and any other resources for the Emacs which I port around from system
+to system with me.
+
+** License
+This project is open source software licensed under the
+GNU General Public Licence version 3.
+
