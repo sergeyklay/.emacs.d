@@ -4,6 +4,153 @@
 #+EMAIL: sadhooklay@gmail.com
 #+OPTIONS: toc:2 num:nil
 
+* Sane defaults
+
+** Backup behaviour
+*** Delete excess backup versions silently
+#+BEGIN_SRC emacs-lisp
+(setq delete-old-versions t)
+#+END_SRC
+
+*** Use Version control
+#+BEGIN_SRC emacs-lisp
+(setq version-control t)
+#+END_SRC
+
+*** Make backup files even in version controlled directories
+#+BEGIN_SRC emacs-lisp
+(setq vc-make-backup-files t)
+#+END_SRC
+
+*** Backup directories
+#+BEGIN_SRC emacs-lisp
+(setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+#+END_SRC
+
+** Don't ask for confirmation when opening symlinks
+#+BEGIN_SRC emacs-lisp
+(setq vc-follow-symlinks t)
+#+END_SRC
+
+** Silent bell
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC
+
+** Use utf-8 by default
+#+BEGIN_SRC emacs-lisp
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8)
+(setq coding-system-for-read 'utf-8 )
+(setq coding-system-for-write 'utf-8 )
+#+END_SRC
+
+** Default text wrap at 80 cols
+#+BEGIN_SRC emacs-lisp
+(setq default-fill-column 80)
+#+END_SRC
+
+** Modeline tweaks
+Activate column and line number in the modeline, as well as time.
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t)
+(line-number-mode t)
+(display-time-mode t)
+#+END_SRC
+
+** Startup message customization
+#+BEGIN_SRC emacs-lisp
+(setq initial-scratch-message "")
+#+END_SRC
+
+** Remove the trailing whitespaces on save
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
+** Open URLs with =xdg-open=
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'browse-url-xdg-open)
+#+END_SRC
+
+** Save hist
+We set up a separate folder for the history, and also raise the history size.
+#+BEGIN_SRC emacs-lisp
+(savehist-mode 1)
+(setq savehist-file
+  (expand-file-name "var/history" user-emacs-directory) history-length 300)
+#+END_SRC
+
+** Recentf
+Save the list of recently accessed files.
+#+BEGIN_SRC emacs-lisp
+(setq recentf-save-file
+  (expand-file-name "var/recentf" user-emacs-directory)
+  recentf-max-saved-items 50)
+#+END_SRC
+
+** Bookmark
+#+BEGIN_SRC emacs-lisp
+(setq bookmark-default-file
+  (expand-file-name "var/recentf" user-emacs-directory))
+#+END_SRC
+
+** Eldoc
+Eldoc displays information about function signatures.
+Here we reduce the delay.
+
+#+BEGIN_SRC emacs-lisp
+(setq eldoc-idle-delay 0.3)
+#+END_SRC
+
+** Documentation for elisp
+#+BEGIN_SRC emacs-lisp
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+#+END_SRC
+
+** Utilities for =list-packages= menu
+We add functions to filter the list by status (s new), or filter to see only
+marked packages.
+
+#+BEGIN_SRC emacs-lisp
+(defun package-menu-find-marks ()
+  "Find packages marked for action in *Packages*."
+  (interactive)
+  (occur "^[A-Z"))
+
+(defun package-menu-filter-by-status (status)
+  "Filter the *Packages* buffer by status."
+  (interactive
+   (list (completing-read
+          "Status : " '("new" "installed" "dependency" "obsolete"))))
+  (package-menu-filter (concat "status:" status)))
+
+(define-key package-menu-mode-map "s" #'package-menu-filter-by-status)
+(define-key package-menu-mode-map "a" #'package-menu-find-marks)
+#+END_SRC
+
+** Inhibit startup screen
+#+BEGIN_SRC emacs-lisp
+; TODO
+; (setq inhibit-startup-screen t)
+#+END_SRC
+
+** Inhibit startup message
+#+BEGIN_SRC emacs-lisp
+; TODO
+; (setq inhibit-startup-message t)
+#+END_SRC
+
+* Customize settings
+
+Set up the customize file to its own separate file, instead of saving
+customize settings in [[file:init.el][init.el]].
+
+#+BEGIN_SRC emacs-lisp
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
+#+END_SRC
+
 * Personal Information
 
 #+begin_src emacs-lisp

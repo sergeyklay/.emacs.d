@@ -6,7 +6,10 @@ This repository contains my personal Emacs’ configuration,
 notes and any other resources for the Emacs which I port around from system
 to system with me.
 
+The configuration depends on Org mode.  [[file:init.el][init.el]] sets up a few initial GUI settings,
+bootstraps [[https://github.com/jwiegley/use-package][use-package]], and loads [[file:setting.org][setting.org]],
+which is where the majority of the configuration magic happens.
+
 ** License
 This project is open source software licensed under the
 GNU General Public Licence version 3.
-
