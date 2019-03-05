@@ -1,9 +1,12 @@
 #+TITLE: Emacs configuration
+#+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
+#+EMAIL: sadhooklay@gmail.com
+#+OPTIONS: toc:2 num:nil
 
 * Personal Information
 
 #+begin_src emacs-lisp
-(setq user-full-name "Sergjei Iakovlev"
+(setq user-full-name "Serghei Iakovlev"
       user-mail-address "sadhooklay@gmail.com")
 #+end_src

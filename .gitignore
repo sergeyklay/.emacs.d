@@ -1,2 +1,4 @@
-settings.el
-*.*~
+*
+!README.org
+!init.el
+!settings.org
