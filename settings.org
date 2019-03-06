@@ -1140,12 +1140,32 @@ Auto completion.
   (define-key company-active-map (kbd "C-p") #'company-select-previous))
 #+end_src
 
-** =php-mode=
+** PHP
+
+*** =php-mode=
 
 #+begin_src emacs-lisp
 (use-package php-mode
     :ensure t
-    :mode ("\\.php\\'" . php-mode))
+    :mode "\\.php[345t]?\\'"
+    :config
+    (define-key php-mode-map (kbd "C-c /") 'comment-or-uncomment-region))
+#+end_src
+
+*** =company-php=
+
+#+begin_src emacs-lisp
+(use-package company-php
+  :ensure t
+  :init
+    (add-hook 'php-mode-hook
+          '(lambda ()
+             (require 'company-php)
+             (company-mode t)
+             ;; Enable eldoc
+             (ac-php-core-eldoc-setup)
+             (make-local-variable 'company-backends)
+             (add-to-list 'company-backends 'company-ac-php-backend))))
 #+end_src
 
 * Computer-specific settings

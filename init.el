@@ -1,4 +1,4 @@
-;;; init.el -- Initialization file
+;;; init.el -- Initialization file. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
