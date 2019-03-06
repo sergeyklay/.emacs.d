@@ -632,20 +632,29 @@ A quick way to jump around text in buffers.
   :bind ("C-S-s" . ace-jump-mode))
 #+end_src
 
-** Ace Window
+** Winum
 
-[[https://github.com/abo-abo/ace-window][ace-window]] is a package that uses the same idea from ace-jump-mode for
-buffer navigation, but applies it to windows. The default keys are
-1-9, but it's faster to access the keys on the home row, so that's
-what I have them set to (with respect to Dvorak, of course).
+[[https://github.com/deb0ch/emacs-winum][Window numbers]] for Emacs: Navigate your windows and frames using numbers !
 
 #+begin_src emacs-lisp
-(use-package ace-window
+(use-package winum
   :ensure t
   :config
-  (setq aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s))
-  (ace-window-display-mode)
-  :bind ("s-o" . ace-window))
+  (progn
+    (setq winum-auto-assign-0-to-minibuffer nil
+          winum-auto-setup-mode-line nil
+          winum-ignored-buffers '(" *which-key*"))
+    (define-key winum-keymap (kbd "M-0") 'winum-select-window-0-or-10)
+    (define-key winum-keymap (kbd "M-1") 'winum-select-window-1)
+    (define-key winum-keymap (kbd "M-2") 'winum-select-window-2)
+    (define-key winum-keymap (kbd "M-3") 'winum-select-window-3)
+    (define-key winum-keymap (kbd "M-4") 'winum-select-window-4)
+    (define-key winum-keymap (kbd "M-5") 'winum-select-window-5)
+    (define-key winum-keymap (kbd "M-6") 'winum-select-window-6)
+    (define-key winum-keymap (kbd "M-7") 'winum-select-window-7)
+    (define-key winum-keymap (kbd "M-8") 'winum-select-window-8)
+    (define-key winum-keymap (kbd "M-9") 'winum-select-window-9)
+    (winum-mode)))
 #+end_src
 
 ** Eldoc/C-Eldoc
@@ -1084,6 +1093,7 @@ Note: You have to install =sbcl=.
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode t)
+
     (pcase (cons (not (null (executable-find "git")))
                  (not (null (executable-find "python3"))))
       (`(t . t)
@@ -1097,7 +1107,8 @@ Note: You have to install =sbcl=.
         ("C-x t t"   . treemacs)
         ("C-x t B"   . treemacs-bookmark)
         ("C-x t C-t" . treemacs-find-file)
-        ("C-x t M-t" . treemacs-find-tag)))
+        ("C-x t M-t" . treemacs-find-tag)
+        ("C-`"       . treemacs-switch-workspace)))
 
 (use-package treemacs-projectile
   :after treemacs projectile
