@@ -25,10 +25,6 @@
 (unless (server-running-p)
        (server-start))
 
-;; Startup screen
-(setq inhibit-startup-message t)
-(setq initial-scratch-message "")
-
 ;; Set up package
 (require 'package)
 (setq package-archives
@@ -37,11 +33,18 @@
         ("melpa-stable" . "http://stable.melpa.org/packages/")
         ("gnu" . "https://elpa.gnu.org/packages/")))
 
+; Apparently needed for the package auto-complete (why?)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
 	'((org-plus-contrib . "org"))))
 
 (package-initialize)
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
 ;; Bootstrap use-package
 ;; Install use-package if it's not already installed.
