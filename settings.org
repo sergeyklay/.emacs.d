@@ -10,6 +10,9 @@ the way I've become accustomed to many different tweaks for it.
 This configuration uses the [[https://github.com/jwiegley/use-package][use-package]] package from John Wiegley, which is
 a fantastic way to manage package configurations.
 
+For the basis of this configuration, I used
+[[Daniel's Mai Emacs Configuration][https://github.com/danielmai/.emacs.d]] project.
+
 * Personal information
 
 #+begin_src emacs lisp
@@ -205,61 +208,57 @@ Activate column and line number in the modeline, as well as time.
 #+end_src
 
 ** Don't ask for confirmation when opening symlinks
+
 #+begin_src emacs-lisp
 (setq vc-follow-symlinks t)
 #+end_src
 
-
 ** Default text wrap at 80 cols
+
 #+begin_src emacs-lisp
 (setq default-fill-column 80)
 #+end_src
 
 ** Startup message customization
+
 #+begin_src emacs-lisp
+(setq inhibit-startup-message t)
 (setq initial-scratch-message "")
+
+(setq initial-scratch-message
+      (concat
+       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
+       ";; To create a file, visit it with \\[find-file] and enter text in its buffer.\n"
+       ";; To evaluate an S-expr in this buffer, use \\[eval-print-last-sexp].\n"
+       ";;\n"
+       ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 #+end_src
 
 ** Remove the trailing whitespaces on save
+
 #+begin_src emacs-lisp
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
 ** Open URLs with =xdg-open=
+
 #+begin_src emacs-lisp
 (setq browse-url-browser-function 'browse-url-xdg-open)
 #+end_src
 
 ** Save hist
-We set up a separate folder for the history, and also raise the history size.
+
+Setting up a file for the history, and also raise the history size.
+
 #+begin_src emacs-lisp
 (savehist-mode 1)
 (setq savehist-file
-  (expand-file-name "var/history" user-emacs-directory) history-length 300)
-#+end_src
-
-
-** Bookmark
-#+begin_src emacs-lisp
-(setq bookmark-default-file
-  (expand-file-name "var/recentf" user-emacs-directory))
-#+end_src
-
-** Eldoc
-Eldoc displays information about function signatures.
-Here we reduce the delay.
-
-#+begin_src emacs-lisp
-(setq eldoc-idle-delay 0.3)
-#+end_src
-
-** Documentation for elisp
-#+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (expand-file-name "history" user-emacs-directory) history-length 300)
 #+end_src
 
 ** Utilities for =list-packages= menu
-We add functions to filter the list by status (s new), or filter to see only
+
+Add functions to filter the list by status (s new), or filter to see only
 marked packages.
 
 #+begin_src emacs-lisp
@@ -277,6 +276,21 @@ marked packages.
 
 (define-key package-menu-mode-map "s" #'package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'package-menu-find-marks)
+#+end_src
+
+** Eldoc
+
+Eldoc displays information about function signatures.
+Here we reduce the delay.
+
+#+begin_src emacs-lisp
+(setq eldoc-idle-delay 0.3)
+#+end_src
+
+** Documentation for elisp
+
+#+begin_src emacs-lisp
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 #+end_src
 
 * List buffers
@@ -508,6 +522,7 @@ do just that to reduce the repetition.
   (interactive)
   (split-window-vertically)
   (other-window 1 nil))
+
 (defun hsplit-other-window ()
   "Splits the window horizontally and switches to that window."
   (interactive)
@@ -612,8 +627,7 @@ what I have them set to (with respect to Dvorak, of course).
   :bind ("s-o" . ace-window))
 #+end_src
 
-** C-Eldoc
-   DEADLINE: <2019-03-06 Wed>
+** Eldoc/C-Eldoc
    :PROPERTIES:
    :GitHub:   https://github.com/mooz/c-eldoc
    :END:
@@ -626,3 +640,500 @@ This package displays function signatures in the mode line.
   :ensure t
   :init (add-hook 'c-mode-hook #'c-turn-on-eldoc-mode))
 #+end_src
+
+** Helm
+
+For more see: https://github.com/emacs-helm/helm/wiki/Locate
+
+#+begin_src emacs-lisp
+(use-package helm
+  :disabled t
+  :ensure t
+  :diminish helm-mode
+  :bind (("C-c h" . helm-command-prefix)
+         ("C-x b" . helm-mini)
+         ("C-`" . helm-resume)
+         ("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("C-x C-r" . helm-recentf))
+  :init
+  (require 'helm-config)
+  :config
+  (setq helm-locate-command "locate %s -e -A --regex %s"
+        helm-ff-newfile-prompt-p nil
+        helm-M-x-fuzzy-match t)
+  (helm-mode))
+
+(use-package helm-projectile
+  :ensure t
+  :after helm-mode
+  :commands helm-projectile
+  :bind ("C-c p h" . helm-projectile))
+
+(use-package helm-ag
+  :ensure t
+  :after helm-mode)
+
+(use-package helm-swoop
+  :ensure t
+  :after helm-mode
+  :bind ("H-w" . helm-swoop))
+#+end_src
+
+** Ivy
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :ensure t
+  :diminish (ivy-mode . "")
+  :bind
+  (:map ivy-mode-map
+   ("C-'" . ivy-avy))
+  :config
+  (ivy-mode 1)
+
+  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+  (setq ivy-use-virtual-buffers t)
+
+  ;; number of result lines to display
+  (setq ivy-height 10)
+
+  ;; Show candidate index and total count
+  (setq ivy-count-format "(%d/%d) ")
+
+  ;; no regexp by default
+  (setq ivy-initial-inputs-alist nil)
+
+  ;; configure regexp engine.
+  (setq ivy-re-builders-alist
+	;; allow input not in order
+        '((t   . ivy--regex-ignore-order))))
+
+(use-package counsel
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-r" . counsel-recentf)
+         ("C-c h i" . counsel-imenu)
+         ("C-h v" . counsel-describe-variable)
+         ("C-h f" . counsel-describe-function)))
+
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (counsel-projectile-mode)
+  (setq counsel-projectile-switch-project-action 'dired))
+
+(use-package swiper
+  :ensure t
+  :bind (("C-c s" . swiper)))
+#+end_src
+
+** Magit
+
+A great interface for git projects. It's much more pleasant to use
+than the git interface on the command line. Use an easy keybinding to
+access magit. For more see: https://magit.vc/
+
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure t
+  :defer t
+  :bind (("C-c g" . magit-status)
+         ("C-c m l" . magit-log-buffer-file)
+         ("C-c m b" . magit-blame))
+  :config
+  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session))
+#+end_src
+
+
+*** Fullscreen magit
+
+#+begin_quote
+The following code makes magit-status run alone in the frame, and then
+restores the old window configuration when you quit out of magit.
+
+No more juggling windows after commiting. It's magit bliss.
+#+end_quote
+
+#+begin_src emacs-lisp
+;; full screen magit-status
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+#+end_src
+
+** Edit With Emacs
+
+Editing input boxes from Chrome with Emacs. Pretty useful to keep all
+significant text-writing on the web within emacs. I typically use this
+with posts on Discourse, which has a post editor that overrides normal
+Emacs key bindings with other functions. As such, ~markdown-mode~ is
+used.
+
+#+begin_src emacs-lisp
+(use-package edit-server
+  :ensure t
+  :config
+  (edit-server-start)
+  (setq edit-server-default-major-mode 'markdown-mode)
+  (setq edit-server-new-frame nil))
+#+end_src
+
+** Elfeed
+
+#+begin_src emacs-lisp :tangle no
+(use-package elfeed
+  :ensure t
+  :defer t)
+#+end_src
+
+** Expand region
+
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :bind ("C-@" . er/expand-region))
+#+end_src
+
+** Flycheck
+
+Still need to set up hooks so that flycheck automatically runs in
+python mode, etc. js2-mode is already really good for the syntax
+checks, so I probably don't need the jshint checks with flycheck for
+it.
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :defer 10
+  :config (setq flycheck-html-tidy-executable "tidy5"))
+#+end_src
+
+** Git Link
+
+#+begin_src emacs-lisp
+(use-package git-link
+  :ensure t)
+#+end_src
+
+** Macrostep
+
+Macrostep allows you to see what Elisp macros expand to.
+For more see the [[https://www.youtube.com/watch?v%3D2TSKxxYEbII][package highlight talk for use-package]].
+
+#+begin_src emacs-lisp
+(use-package macrostep
+  :ensure t
+  :bind ("H-`" . macrostep-expand))
+#+end_src
+
+** Markdown mode
+
+Install [[https://github.com/commonmark/cmark][cmark]] or your Markdown processor of choice and set it as ~markdown-command~ before using the live previewer commands.
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode (("\\.markdown\\'" . markdown-mode)
+         ("\\.md\\'"       . markdown-mode))
+  :config
+  (setq markdown-command "cmark"))
+#+end_src
+
+** Multiple cursors
+
+We'll also need to ~(require 'multiple-cusors)~ because of [[https://github.com/magnars/multiple-cursors.el/issues/105][an autoload issue]].
+
+#+begin_src emacs-lisp
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-!"         . mc/mark-next-symbol-like-this)
+         ("C-c d"       . mc/mark-all-dwim)))
+#+end_src
+
+** Projectile
+
+Project navigation and management library for Emacs.
+For more see: http://batsov.com/projectile/
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :commands (projectile-mode projectile-switch-project)
+  :bind (("C-c p p" . projectile-switch-project)
+         ("C-c p s s" . projectile-ag))
+  :config
+  (setq projectile-keymap-prefix "p")
+  (projectile-global-mode t)
+  (setq projectile-enable-caching t)
+  (setq projectile-switch-project-action 'projectile-dired))
+#+end_src
+
+** Restclient
+
+See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how restclient can help out with
+testing APIs from within Emacs. The HTTP calls you make in the buffer
+aren't constrainted within Emacs; there's the
+=restclient-copy-curl-command= to get the equivalent =curl= call
+string to keep things portable.
+
+#+begin_src emacs-lisp
+(use-package restclient
+  :ensure t
+  :mode ("\\.restclient\\'" . restclient-mode))
+#+end_src
+
+** Smartscan
+
+Quickly jumps between other symbols found at point in Emacs.
+For more see: https://github.com/mickeynp/smart-scan
+
+#+begin_src emacs-lisp
+(use-package smartscan
+  :ensure t
+  :config (global-smartscan-mode 1))
+#+end_src
+
+** Smoothscrolling
+
+This makes it so ~C-n~-ing and ~C-p~-ing won't make the buffer jump
+around so much.
+
+#+begin_src emacs-lisp
+(use-package smooth-scrolling
+  :ensure t
+  :config
+  (smooth-scrolling-mode))
+#+end_src
+
+** Webmode
+
+#+begin_src emacs-lisp :tangle no
+(use-package web-mode
+  :ensure t)
+#+end_src
+
+** Yasnippet
+
+Yeah, snippets!
+For more see [[https://github.com/AndreaCrotti/yasnippet-snippets][Andrea Crotti's collection]] .
+
+It takes a few seconds to load and I don't need them immediately when
+Emacs starts up, so we can defer loading yasnippet until there's some
+idle time.
+
+Setting =yas-indent-line= to ='fixed= fixes Python indentation
+behavior when typing a templated snippet.
+
+#+begin_src emacs-lisp :tangle no
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+  (setq yas-snippet-dirs (concat user-emacs-directory "snippets"))
+  (setq yas-indent-line 'fixed)
+  (yas-global-mode))
+#+end_src
+
+** Emmet
+
+According to [[http://emmet.io/][their website]], "Emmet — the essential toolkit for web-developers."
+
+#+begin_src emacs-lisp
+(use-package emmet-mode
+  :ensure t
+  :commands emmet-mode
+  :config
+  (add-hook 'html-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook 'emmet-mode))
+#+end_src
+
+** Scratch
+
+Convenient package to create =*scratch*= buffers that are based on the
+current buffer's major mode.  This is more convienent than manually
+creating a buffer to do some scratch work or reusing the initial
+=*scratch*= buffer.
+
+#+begin_src emacs-lisp
+(use-package scratch
+  :ensure t
+  :commands scratch)
+#+end_src
+
+** Shell pop
+
+#+begin_src emacs-lisp
+(use-package shell-pop
+  :ensure t
+  :bind ("M-<f12>" . shell-pop))
+#+end_src
+
+** SLIME
+
+The Superior Lisp Interaction Mode for Emacs. First, Install SBCL with
+brew.
+
+Note: You have to install =sbcl=.
+
+#+begin_src emacs-lisp
+(use-package slime
+  :ensure t
+  :defer 10
+  :init
+  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (add-to-list 'slime-contribs 'slime-fancy))
+#+end_src
+
+** Quickrun
+
+#+begin_src emacs-lisp
+(use-package quickrun
+  :defer 10
+  :ensure t
+  :bind ("C-c r" . quickrun))
+#+end_src
+
+** Undo Tree
+
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure t)
+#+end_src
+
+** =crux=
+
+A Collection of Ridiculously Useful eXtensions for Emacs.
+[[https://github.com/bbatsov/crux][crux]] bundles a few useful interactive commands to enhance your overall Emacs experience.
+
+#+begin_src emacs-lisp
+(use-package crux
+  :ensure t
+  :bind (("C-c o o" . crux-open-with)
+         ("C-c o u" . crux-view-url)))
+#+end_src
+
+** =json=mode=
+
+#+begin_src emacs-lisp
+(use-package json-mode
+  :ensure t)
+#+end_src
+
+** =yaml-mode=
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure t)
+#+end_src
+
+** =company-mode=
+
+Auto completion.
+
+#+begin_src emacs-lisp
+(use-package company
+  :ensure t
+  :config
+  (setq company-tooltip-limit 20)
+  (setq company-idle-delay .15)
+  (setq company-echo-delay 0)
+  (setq company-begin-commands '(self-insert-command))
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))
+#+end_src
+* Computer-specific settings
+
+Load some computer-specific settings, such as the name and and email
+address. The way the settings are loaded is based off of [[https://github.com/magnars/.emacs.d][Magnar
+Sveen's]] config.
+
+In my case, the computers I use usually use the same username (my
+name, go figure), so instead of basing the specific settings from the
+username, I use the hostname. The shell command ~hostname -s~ gets the
+hostname for the computer without any "domain information," such as
+the ".local" suffix.
+
+#+begin_src emacs-lisp
+(require 'subr-x) ;; #'string-trim
+(defvar mai/user-settings-dir nil
+  "The directory with user-specific Emacs settings for this
+  user.")
+
+;; Settings for currently logged in user
+(setq mai/user-settings-dir
+      (concat user-emacs-directory
+              "users/"
+              (string-trim (shell-command-to-string "hostname -s"))))
+(add-to-list 'load-path mai/user-settings-dir)
+
+;; Load settings specific for the current user
+(when (file-exists-p mai/user-settings-dir)
+  (mapc 'load (directory-files mai/user-settings-dir nil "^[^#].*el$")))
+#+end_src
+
+* Languages
+
+** C/Java
+
+Change the default way that Emacs handles indentation. For instance,
+
+#+begin_src C
+int main(int argc, char *argv[])
+{
+  /* What's with the brace alignment? */
+  if (check)
+    {
+    }
+  return 0;
+}
+#+end_src
+
+and
+
+#+begin_src java
+switch (number)
+    {
+    case 1:
+        doStuff();
+        break;
+    case 2:
+        doStuff();
+        break;
+    default:
+        break;
+    }
+#+end_src
+
+
+Luckily, I can modify the way Emacs formats code with this configuration.
+
+#+begin_src emacs-lisp
+(defun my-c-mode-hook ()
+  (setq c-basic-offset 4)
+  (c-set-offset 'substatement-open 0)   ; Curly braces alignment
+  (c-set-offset 'case-label 4))         ; Switch case statements alignment
+
+(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'java-mode-hook 'my-c-mode-hook)
+#+end_src
+
+* Misc
+
+** Non-ELPA packages
+
+Some packages aren't in ELPA, so they're stored in the [[file:site-lisp][site-lisp]]
+directory and loaded here.
