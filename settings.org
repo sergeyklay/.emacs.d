@@ -990,8 +990,12 @@ According to [[http://emmet.io/][their website]], "Emmet — the essential toolk
   :ensure t
   :commands emmet-mode
   :config
+
   (add-hook 'html-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook 'emmet-mode))
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'web-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook 'emmet-mode)
+  (add-hook 'rjsx-mode-hook 'emmet-mode))
 #+end_src
 
 ** Scratch
@@ -1181,8 +1185,7 @@ Install =php-mode=, set coding style and add a hook to load =flymake=.
 (use-package php-mode
     :ensure t
     :mode (("\\.php[ts354]?\\'" . php-mode)
-           ("\\.inc\\'" . php-mode)
-           ("\\.phtml\\'" . php-mode))
+           ("\\.inc\\'" . php-mode))
     :config
     (progn
       (setq php-executable "/usr/bin/php")
@@ -1209,6 +1212,39 @@ Install =php-mode=, set coding style and add a hook to load =flymake=.
              (ac-php-core-eldoc-setup)
              (make-local-variable 'company-backends)
              (add-to-list 'company-backends 'company-ac-php-backend))))
+#+end_src
+
+** Web
+
+[[http://web-mode.org/][web-mode]] is an autonomous emacs major-mode for editing web templates.
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :ensure t
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.tpl\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.phtml\\'" . web-mode)
+         ("\\.volt\\'" . web-mode)
+         ("\\.twig\\'" . web-mode)
+         ("\\.[agj]sp\\'" . web-mode)
+         ("\\.as[cp]x\\'" . web-mode)
+         ("\\.erb\\'" . web-mode)
+         ("\\.mustache\\'" . web-mode)
+         ("\\.handlebars\\'" . web-mode)
+         ("\\.hbs\\'" . web-mode)
+         ("\\.djhtml\\'" . web-mode))
+  :init
+  ;; associate an engine
+  (setq web-mode-engines-alist
+        '(("php"    . "\\.phtml\\'")
+          ("blade" . "\\.blade\\.")))
+
+  ;; indentation
+  (setq-default indent-tabs-mode nil)
+  (setq web-mode-markup-indent-offset 4
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 4))
 #+end_src
 
 * Computer-specific settings
