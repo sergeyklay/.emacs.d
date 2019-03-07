@@ -20,10 +20,8 @@
   (scroll-bar-mode -1)
   (tooltip-mode -1))
 
-;; Startup server always
-(require 'server)
-(unless (server-running-p)
-       (server-start))
+;; I'll use this on post initialization
+(defconst emacs-start-time (current-time))
 
 ;; Set up package
 (require 'package)
