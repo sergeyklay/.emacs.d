@@ -120,7 +120,10 @@ Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
 
 #+begin_src emacs-lisp
 (use-package page-break-lines
-  :ensure t)
+  :diminish page-break-lines-mode
+  :ensure t
+  :config
+  (global-page-break-lines-mode))
 #+end_src
 
 ** Miscellaneous stuff
@@ -757,6 +760,8 @@ For more see: https://github.com/emacs-helm/helm/wiki/Locate
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (counsel-projectile-mode)
+  ;; See: https://github.com/bbatsov/projectile/issues/1302
+  (setq projectile-git-submodule-command nil)
   (setq counsel-projectile-switch-project-action 'dired))
 
 (use-package swiper
@@ -838,18 +843,38 @@ used.
   :bind ("C-@" . er/expand-region))
 #+end_src
 
-** Flycheck
+** Flycheckf
 
-Still need to set up hooks so that flycheck automatically runs in
-python mode, etc. js2-mode is already really good for the syntax
-checks, so I probably don't need the jshint checks with flycheck for
-it.
+=Flycheck= is a general syntax highlighting framework which
+other packages hook into.  It's an improvment on the built in =flymake=.
 
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure t
-  :defer 10
-  :config (setq flycheck-html-tidy-executable "tidy5"))
+  :config
+  (setq flycheck-indication-mode 'right-fringe
+        flycheck-standard-error-navigation nil
+        flycheck-display-errors-function
+        #'flycheck-display-error-messages-unless-error-list)
+
+  (add-hook 'after-init-hook 'global-flycheck-mode)
+  ;; Start it automatically for all modes except ELisp mode,
+  ;; where the linter is just designed to make you mad.
+  (add-hook 'find-file-hook
+            (lambda ()
+              (when (not (equal 'emacs-lisp-mode major-mode))
+                (flycheck-mode))))
+
+  :diminish flycheck-mode)
+#+end_src
+
+** Flyspell
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook #'flyspell-mode))
 #+end_src
 
 ** Git Link
