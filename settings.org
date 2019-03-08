@@ -153,9 +153,6 @@ Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
 ;; Automagic indent on newline
 (global-set-key "\C-m" 'newline-and-indent)
 
-;; Auto reread from disk when file changes
-(global-auto-revert-mode t)
-
 ;; Enable line highlight mode everywhere
 (global-hl-line-mode 1)
 
@@ -600,12 +597,6 @@ and allows you.
 #+end_src
 
 * Keybindings
-
-** Revert buffer
-
-#+begin_src emacs-lisp
-(bind-key "C-c u" #'revert-buffer)
-#+end_src
 
 ** =ibuffer=
 
