@@ -2,13 +2,14 @@
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
 #+EMAIL: sadhooklay@gmail.com
-#+OPTIONS: headlines 3
 
 Emacs has been my text editor of choice since probably about 2017 or so,
 and along the way I've become accustomed to many different tweaks for it.
 
 This configuration uses the [[https://github.com/jwiegley/use-package][use-package]] package from John Wiegley, which is
 a fantastic way to manage package configurations.
+
+#+TOC: headlines 4
 
 * Header
 
