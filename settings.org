@@ -9,8 +9,6 @@ and along the way I've become accustomed to many different tweaks for it.
 This configuration uses the [[https://github.com/jwiegley/use-package][use-package]] package from John Wiegley, which is
 a fantastic way to manage package configurations.
 
-#+TOC: headlines 4
-
 * Header
 
 This is to remind me in case I start editing [[file:settings.el][settings.el]] by mistake...
