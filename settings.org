@@ -347,11 +347,11 @@ Save the list of recently accessed files.
 
 * Org mode
 
-Truly the way to [[http://orgmode.org/][live life in plain text]]. I mainly use it to take
-notes and save executable source blocks. I'm also starting to make use
-of its agenda, timestamping, and capturing features. :sm
+Truly the way to [[http://orgmode.org/][live life in plain text]].  I mainly use it to take
+notes and save executable source blocks.  I'm also starting to make use
+of its agenda, timestamping, and capturing features.
 
-It goes without saying that I also use it to manage my Emacs config.
+It goes without saying that I also use it to manage my Emacs configuration.
 
 ** Installation
 
@@ -508,7 +508,9 @@ Pandoc converts between a huge number of different file formats.
 
 *** LaTeX exporting
 
-I've had issues with getting BiBTeX to work correctly with the LaTeX exporter for PDF exporting. By changing the command to `latexmk` references appear in the PDF output like they should. Source: http://tex.stackexchange.com/a/161619.
+I've had issues with getting BiBTeX to work correctly with the LaTeX exporter
+for PDF exporting.  By changing the command to ~latexmk~ references appear in
+the PDF output like they should.  Source: http://tex.stackexchange.com/a/161619 .
 
 #+begin_src emacs-lisp
 (setq org-latex-pdf-process (list "latexmk -pdf %f"))
@@ -773,7 +775,7 @@ For more see: https://github.com/emacs-helm/helm/wiki/Locate
 
 A great interface for git projects. It's much more pleasant to use
 than the git interface on the command line. Use an easy keybinding to
-access magit. For more see: https://magit.vc/
+access magit.  For more see: https://magit.vc/
 
 #+begin_src emacs-lisp
 (use-package magit
@@ -812,17 +814,33 @@ No more juggling windows after commiting. It's magit bliss.
 
 ** Edit With Emacs
 
-Editing input boxes from Chrome with Emacs. Pretty useful to keep all
-significant text-writing on the web within emacs. I typically use this
-with posts on Discourse, which has a post editor that overrides normal
-Emacs key bindings with other functions. As such, ~markdown-mode~ is
-used.
+Editing input boxes from Chrome/Firefox with Emacs. Pretty useful to keep all
+significant text-writing on the web within Emacs.  I typically use this
+with posts on GitHub, which has a post editor that overrides normal
+Emacs key bindings with other functions.  As such, ~markdown-mode~ is used.
+
+For more see:
+
+- [[https://addons.mozilla.org/en-US/firefox/addon/edit-with-emacs1][Edit with Emacs Firefox Add-on]]
+- [[https://chrome.google.com/webstore/detail/edit-with-emacs/ljobjlafonikaiipfkggjbhkghgicgoh][Edit with Emacs Google Chrome Extension]]
+
+When using firefox plugin itsalltext with Emacs, finish editing on Emacs with ~C-x #~
+http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html
 
 #+begin_src emacs-lisp
 (use-package edit-server
   :ensure t
+  :unless window-system
+  :init
+  (add-hook 'after-init-hook 'server-start t)
+  (add-hook 'after-init-hook 'edit-server-start t)
+
   :config
-  (edit-server-start)
+  (add-to-list 'edit-server-url-major-mode-alist '("^stackoverflow" . markdown-mode))
+  (add-to-list 'edit-server-url-major-mode-alist '("^github.com" . markdown-mode))
+  (add-to-list 'edit-server-url-major-mode-alist '("^emacs\\.stackexchange" . markdown-mode))
+  (add-to-list 'edit-server-url-major-mode-alist '("^unix\\.stackexchange" . markdown-mode))
+
   (setq edit-server-default-major-mode 'markdown-mode)
   (setq edit-server-new-frame nil))
 #+end_src
@@ -945,7 +963,7 @@ For more see: http://batsov.com/projectile/
 ** Restclient
 
 See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how restclient can help out with
-testing APIs from within Emacs. The HTTP calls you make in the buffer
+testing APIs from within Emacs.  The HTTP calls you make in the buffer
 aren't constrainted within Emacs; there's the
 =restclient-copy-curl-command= to get the equivalent =curl= call
 string to keep things portable.
@@ -969,8 +987,8 @@ For more see: https://github.com/mickeynp/smart-scan
 
 ** Smoothscrolling
 
-This makes it so ~C-n~-ing and ~C-p~-ing won't make the buffer jump
-around so much.
+This makes it so ~C-n~-ing and ~C-p~-ing won't make the buffer
+jump around so much.
 
 #+begin_src emacs-lisp
 (use-package smooth-scrolling
@@ -1423,31 +1441,6 @@ Luckily, I can modify the way Emacs formats code with this configuration.
 
 Some packages aren't in ELPA, so they're stored in the [[file:site-lisp][site-lisp]]
 directory and loaded here.
-
-** Edit with Emacs
-
-Edit content in web forms via "Edit with Emacs" Firefox/Chrome plugin
-For more see:
-
-- [[https://addons.mozilla.org/en-US/firefox/addon/edit-with-emacs1][Edit with Emacs Firefox Add-on]]
-- [[https://chrome.google.com/webstore/detail/edit-with-emacs/ljobjlafonikaiipfkggjbhkghgicgoh][Edit with Emacs Google Chrome Extension]]
-
-When using firefox plugin itsalltext with Emacs, finish editing on Emacs with ~C-x #~
-http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html
-
-#+begin_src emacs-lisp
-(use-package edit-server
-  :unless window-system
-  :init
-  (add-hook 'after-init-hook 'server-start t)
-  (add-hook 'after-init-hook 'edit-server-start t)
-
-  :config
-  (add-to-list 'edit-server-url-major-mode-alist '("^stackoverflow" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^github.com" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^emacs\\.stackexchange" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^unix\\.stackexchange" . markdown-mode)))
-#+end_src
 
 ** Post initialization
 
