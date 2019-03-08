@@ -2,7 +2,7 @@
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
 #+EMAIL: sadhooklay@gmail.com
-#+OPTIONS: toc:2 num:nil
+#+OPTIONS: headlines 3
 
 Emacs has been my text editor of choice since probably about 2017 or so,
 and along the way I've become accustomed to many different tweaks for it.
