@@ -1268,46 +1268,76 @@ Install =php-mode=, set coding style and add a hook to load =flymake=.
 #+end_src
 
 ** Haskell
--
+
+Haskell configuration for Emacs.
+
+*** Prerequisites
+:PROPERTIES:
+:CUSTOM_ID: haskell-prerequisites
+:END:
+
+| Name    | Archlinux | Gentoo                       | Ubuntu  | Optional |
+|---------+-----------+------------------------------+---------+----------|
+| [[https://github.com/DanielG/ghc-mod][ghc-mod]] | ghc-mod   | app-emacs/ghc-mod            | ghc-mod | No       |
+| [[https://github.com/ndmitchell/hlint][hlint]]   | hlint     | dev-haskell/hlint            | hlint   | No       |
+| [[https://github.com/ndmitchell/hoogle][hoogle]]  | hoogle    | dev-haskell/hoogle [haskell] | hoogle  | No       |
+
+*** Packages
+:PROPERTIES:
+:CUSTOM_ID: haskell-packages
+:END:
+
+| Package          | Description                                                        |
+|------------------+--------------------------------------------------------------------|
+| [[https://github.com/haskell/haskell-mode][haskell-mode]]     | Emacs mode for editing, debugging and developing Haskell programs. |
+| [[https://github.com/DanielG/ghc-mod][ghc-mod]]          | Haskell completion and keybindings.                                |
+| [[https://github.com/flycheck/flycheck-haskell][flycheck-haskell]] | Flycheck mode for Haskell.                                         |
+
+
 #+begin_src emacs-lisp
 (use-package haskell-mode
   :ensure t
-  :mode "\\.hs"
-  :config
-  (require 'haskell-interactive-mode)
-  (require 'haskell-process)
+  :mode "\\.l?hs\\'"
+  :init
+  (progn
+    (setq
+     haskell-interactive-popup-errors nil
+     haskell-process-log t
+     haskell-process-suggest-remove-import-lines t
+     haskell-process-auto-import-loaded-modules t
+     haskell-stylish-on-save t)
 
-  (custom-set-variables
-   '(haskell-process-suggest-remove-import-lines t)
-   '(haskell-process-auto-import-loaded-modules t)
-   '(haskell-process-log t))
+    (use-package company-ghci
+      :ensure t
+      :defer t)
 
-  :bind
-  (:map
-   haskell-mode-map
-   ("<backtab>" . haskell-indentation-indent-backwards)
-     ("TAB"     . haskell-indentation-indent-line)
+    (use-package flycheck-haskell
+      :ensure t
+      :after flycheck
+      :init (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
 
-     ("M-."     . haskell-mode-goto-loc)
-     ("C-c C-t" . haskell-mode-show-type-at)
+    (use-package intero
+      :defer t
+      :ensure t
+      :init
+      (progn
+        (setq intero-extra-ghci-options '("-fno-defer-type-errors"))))
 
-     ("M-P"     . flymake-goto-prev-error)
-     ("M-N"     . flymake-goto-next-error)
+    (use-package hindent
+      :ensure t
+      :commands (hindent-mode)
+      :bind (:map hindent-mode-map
+                  ("C-c R" . hindent-reformat-buffer)))
 
-     ("C-,"     . haskell-move-nested-left)
-     ("C-."     . haskell-move-nested-right)
+    (defun haskell-hook ()
+      (semantic-mode)
+      (flycheck-mode)
+      (intero-global-mode)
+      (hindent-mode)
+      (add-to-list (make-local-variable 'company-backends)
+                   '(company-intero company-ghci company-dabbrev-code company-yasnippet)))
 
-     ("C-`"     . haskell-interactive-bring)
-     ("C-c C-k" . haskell-interactive-mode-clear)
-
-     ("C-c C-c" . haskell-compile)
-     ("C-c C-d" . haskell-w3m-open-haddock)
-     ("C-c C-f" . haskell-cabal-visit-file)
-
-     ("C-c C-b" . haskell-process-cabal-build)
-     ("C-c C-l" . haskell-process-load-or-reload)
-     ("C-c C-i" . haskell-process-do-info)
-     ("C-c c"   . haskell-process-cabal)))
+    (add-hook 'haskell-mode-hook 'haskell-hook)))
 #+end_src
 * Computer-specific settings
 
