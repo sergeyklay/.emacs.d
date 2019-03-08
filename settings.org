@@ -830,7 +830,7 @@ http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html
 #+begin_src emacs-lisp
 (use-package edit-server
   :ensure t
-  :unless window-system
+  :if window-system
   :init
   (add-hook 'after-init-hook 'server-start t)
   (add-hook 'after-init-hook 'edit-server-start t)
@@ -954,7 +954,7 @@ For more see: http://batsov.com/projectile/
   :bind (("C-c p p" . projectile-switch-project)
          ("C-c p s s" . projectile-ag))
   :config
-  (setq projectile-keymap-prefix "p")
+  (setq projectile-keymap-prefix (kbd "C-c p"))
   (projectile-global-mode t)
   (setq projectile-enable-caching t)
   (setq projectile-switch-project-action 'projectile-dired))
