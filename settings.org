@@ -173,6 +173,25 @@ Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
+** Scrolling
+
+#+begin_src emacs-lisp
+;; nice scrolling
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
+#+end_src
+
+This makes it so ~C-n~-ing and ~C-p~-ing won't make the buffer
+jump around so much.
+
+#+begin_src emacs-lisp
+(use-package smooth-scrolling
+  :ensure t
+  :config
+  (smooth-scrolling-mode))
+#+end_src
+
 ** Modeline tweaks
 
 Activate column and line number in the modeline, as well as time.
@@ -181,6 +200,7 @@ Activate column and line number in the modeline, as well as time.
 (column-number-mode t)
 (line-number-mode t)
 (display-time-mode t)
+(size-indication-mode t)
 
 (global-visual-line-mode)
 (diminish 'visual-line-mode)
@@ -317,6 +337,22 @@ Here we reduce the delay.
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 #+end_src
 
+** Frame title
+
+More useful frame title, that show either a file or a
+buffer name (if the buffer isn't visiting a file).
+
+#+begin_src emacs-lisp
+(setq frame-title-format
+      '(""
+        invocation-name
+        " Emacs - "
+        (:eval
+         (if (buffer-file-name)
+             (abbreviate-file-name (buffer-file-name))
+           "%b")
+         )))
+#+end_src
 * List buffers
 
 =ibuffer= is the improved version of =list-buffers=.
@@ -981,18 +1017,6 @@ For more see: https://github.com/mickeynp/smart-scan
 (use-package smartscan
   :ensure t
   :config (global-smartscan-mode 1))
-#+end_src
-
-** Smoothscrolling
-
-This makes it so ~C-n~-ing and ~C-p~-ing won't make the buffer
-jump around so much.
-
-#+begin_src emacs-lisp
-(use-package smooth-scrolling
-  :ensure t
-  :config
-  (smooth-scrolling-mode))
 #+end_src
 
 ** Yasnippet
