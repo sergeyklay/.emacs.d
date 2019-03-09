@@ -147,8 +147,15 @@ Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
 
 (setq uniquify-buffer-name-style 'forward)
 
-;; -i gets alias definitions from .bash_profile
-(setq shell-command-switch "-ic")
+;; -i is for interactive, and -c tells bash to read whatever commands follow
+;;
+;; however, due to
+;; * https://github.com/bbatsov/projectile/issues/1097
+;; * https://emacs.stackexchange.com/q/3447/16592
+;;
+;; I use -l instead of -i
+;; -l means invoke login shells, so that .profile or .bash_profile is read
+(setq shell-command-switch "-lc")
 
 ;; Automagic indent on newline
 (global-set-key "\C-m" 'newline-and-indent)
