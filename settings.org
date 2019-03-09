@@ -605,7 +605,7 @@ and allows you.
 
 * Keybindings
 
-** =ibuffer=
+Opening ibuffer.
 
 #+begin_src emacs-lisp
 (bind-key (kbd "C-x C-b") 'ibuffer)
@@ -1378,4 +1378,15 @@ directory and loaded here.
                           ,load-file-name elapsed)))
             t))
 
+#+end_src
+** Custom function
+
+Revert buffer without confirmation.
+
+#+begin_src emacs-lisp
+;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
+(defun serg/revert-buffer-no-confirm ()
+    "Revert buffer without confirmation."
+    (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
 #+end_src
