@@ -1210,9 +1210,9 @@ and configure ac company.
 
     :bind
     (:map php-mode-map
-          ("<C-tab>" . counsel-company)
-          ("C-]"     . ac-php-find-symbol-at-point)
-          ("C-t"     . ac-php-location-stack-back)
+          ("<C-tab>" . #'counsel-company)
+          ("C-]"     . #'ac-php-find-symbol-at-point)
+          ("C-t"     . #'ac-php-location-stack-back)
           ("C-c /"   . #'comment-or-uncomment-region)
           ("C-c C--" . #'php-current-class)
           ("C-c C-=" . #'php-current-namespace)))
