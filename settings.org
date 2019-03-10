@@ -637,6 +637,9 @@ and allows you.
 
 * Ido
 
+~ido-mode~ enhanced Emacs switch buffer command and opening file command.
+For more see: http://ergoemacs.org/emacs/emacs_ido_mode.html
+
 #+begin_src emacs-lisp
 (use-package ido
   :disabled t
@@ -788,6 +791,10 @@ For more see: https://github.com/emacs-helm/helm/wiki/Locate
 #+end_src
 
 ** Ivy
+
+- *Ivy*, a generic completion mechanism for Emacs.
+- *Counsel*, a collection of Ivy-enhanced versions of common Emacs commands.
+- *Swiper*, an Ivy-enhanced alternative to ~isearch~.
 
 #+begin_src emacs-lisp
 (use-package ivy
