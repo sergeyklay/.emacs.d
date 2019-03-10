@@ -363,14 +363,10 @@ buffer name (if the buffer isn't visiting a file).
 
 #+begin_src emacs-lisp
 (setq frame-title-format
-      '(""
-        invocation-name
-        " Emacs - "
-        (:eval
-         (if (buffer-file-name)
-             (abbreviate-file-name (buffer-file-name))
-           "%b")
-         )))
+      '("" invocation-name " Emacs - "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 #+end_src
 * List buffers
 
