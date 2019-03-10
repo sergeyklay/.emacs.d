@@ -368,7 +368,7 @@ buffer name (if the buffer isn't visiting a file).
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
 #+end_src
-* List buffers
+* Buffer management
 
 =ibuffer= is the improved version of =list-buffers=.
 
@@ -659,12 +659,6 @@ and allows you.
 #+end_src
 
 * Keybindings
-
-Opening ibuffer.
-
-#+begin_src emacs-lisp
-(bind-key (kbd "C-x C-b") 'ibuffer)
-#+end_src
 
 Opening eshell.
 
@@ -1176,7 +1170,7 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
   :ensure t)
 #+end_src
 
-** =company-mode=
+** Company
 
 Auto completion.
 
