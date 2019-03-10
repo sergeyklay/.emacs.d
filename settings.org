@@ -647,6 +647,12 @@ Opening ibuffer.
 (bind-key (kbd "C-x C-b") 'ibuffer)
 #+end_src
 
+Opening eshell.
+
+#+begin_src emacs-lisp
+(bind-key (kbd "M-s e") 'eshell)
+#+end_src
+
 * ELPA packages
 
 These are the packages that are not built into Emacs.
@@ -1299,6 +1305,15 @@ Haskell configuration for Emacs.
 
     (add-hook 'haskell-mode-hook 'haskell-hook)))
 #+end_src
+** Windows scripts
+
+*** PowerShell
+
+#+begin_src emacs-lisp
+(use-package powershell
+  :ensure t)
+#+end_src
+
 * Computer-specific settings
 
 Load some computer-specific settings, such as the name and and email
