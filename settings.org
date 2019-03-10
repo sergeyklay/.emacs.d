@@ -1311,7 +1311,8 @@ Haskell configuration for Emacs.
 
 #+begin_src emacs-lisp
 (use-package powershell
-  :ensure t)
+  :ensure t
+  :mode "\\.ps[dm]?1\\'")
 #+end_src
 
 * Computer-specific settings
