@@ -228,10 +228,29 @@ Activate column and line number in the modeline, as well as time.
 
 *** Backup directories
 
+Keep all backup in one directory.
+
 #+begin_src emacs-lisp
-;; Keep all backup and auto-save files in one directory
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+(let ((my-backup-dir (locate-user-emacs-file "backups")))
+  (setq backup-directory-alist
+        `(("." . ,(file-name-as-directory my-backup-dir))))
+  (unless (file-exists-p my-backup-dir)
+    (make-directory my-backup-dir)))
+#+end_src
+
+Setting up Auto-Saving.
+For more see: https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dSaving.html
+
+#+begin_src emacs-lisp
+(let ((my-auto-save-dir (locate-user-emacs-file "auto-save-list")))
+  (setq auto-save-file-name-transforms
+        `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t)))
+  (unless (file-exists-p my-auto-save-dir)
+    (make-directory my-auto-save-dir)))
+
+(setq auto-save-default t
+      auto-save-timeout 10
+      auto-save-interval 200)
 #+end_src
 
 ** Use utf-8 by default
@@ -723,6 +742,20 @@ This package displays function signatures in the mode line.
   :commands c-turn-on-eldoc-mode
   :ensure t
   :init (add-hook 'c-mode-hook #'c-turn-on-eldoc-mode))
+#+end_src
+
+** Editorconfig
+
+[[https://editorconfig.org/][Editorconfig]] is a configuration format for controlling the
+text attributes for text files.  It is good to use with version
+control, especially when contributors develop on different platforms.
+
+#+begin_src emacs-lisp
+(use-package editorconfig
+  :ensure t
+  :diminish editorconfig-mode
+  :config
+  (editorconfig-mode 1))
 #+end_src
 
 ** Helm
