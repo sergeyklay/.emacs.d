@@ -1335,32 +1335,34 @@ Haskell configuration for Emacs.
 
 * Computer-specific settings
 
-Load some computer-specific settings, such as the name and and email
-address. The way the settings are loaded is based off of [[https://github.com/magnars/.emacs.d][Magnar
-Sveen's]] config.
+Load some computer-specific settings (office, home, etc), such as
+the name and email address. The way the settings are loaded is
+based off of [[https://github.com/magnars/.emacs.d][Magnar Sveen's]] configuration.
 
 In my case, the computers I use usually use the same username (my
 name, go figure), so instead of basing the specific settings from the
 username, I use the hostname. The shell command ~hostname -s~ gets the
 hostname for the computer without any "domain information," such as
-the ".local" suffix.
+the ~.local~ suffix.
 
 #+begin_src emacs-lisp
-(require 'subr-x) ;; #'string-trim
-(defvar mai/user-settings-dir nil
+(require 'subr-x)
+
+(defvar serg/user-settings-dir nil
   "The directory with user-specific Emacs settings for this
   user.")
 
 ;; Settings for currently logged in user
-(setq mai/user-settings-dir
+(setq serg/platform-settings-dir
       (concat user-emacs-directory
-              "users/"
+              "platform/"
               (string-trim (shell-command-to-string "hostname -s"))))
-(add-to-list 'load-path mai/user-settings-dir)
+
+(add-to-list 'load-path serg/platform-settings-dir)
 
 ;; Load settings specific for the current user
-(when (file-exists-p mai/user-settings-dir)
-  (mapc 'load (directory-files mai/user-settings-dir nil "^[^#].*el$")))
+(when (file-exists-p serg/platform-settings-dir)
+  (mapc 'load (directory-files serg/platform-settings-dir nil "^[^#].*el$")))
 #+end_src
 
 * Languages
