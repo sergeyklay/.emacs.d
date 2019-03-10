@@ -558,6 +558,10 @@ the PDF output like they should.  Source: http://tex.stackexchange.com/a/161619 
 
 * Tramp
 
+~tramp~ is a great extension for working with files on another machine.
+You can connect using several protocols, including SSH, and edit files
+as if they were on your local machine.
+
 #+begin_src emacs-lisp :trangle no
 (use-package tramp)
 #+end_src
@@ -1163,25 +1167,15 @@ Auto completion.
 
 ** PHP
 
-Install =php-mode=, set coding style and add a hook to load =flymake=.
+Install =php-mode=, set coding style, add a hook to load =flymake=
+and configure ac company.
 
-*** php-mode
+*** ac-php
 
 #+begin_src emacs-lisp
-(use-package php-mode
-    :ensure t
-    :mode (("\\.php[ts354]?\\'" . php-mode)
-           ("\\.inc\\'" . php-mode))
-    :config
-    (progn
-      (setq php-executable "/usr/bin/php")
-      (setq-default php-mode-coding-style 'psr2)
-
-      (add-hook 'php-mode-hook (lambda () (subword-mode 1)))
-
-      (define-key php-mode-map (kbd "C-c C--") 'php-current-class)
-      (define-key php-mode-map (kbd "C-c C-=") 'php-current-namespace)
-      (define-key php-mode-map (kbd "C-c /") 'comment-or-uncomment-region)))
+(use-package ac-php
+  :after company
+  :ensure t)
 #+end_src
 
 *** company-php
@@ -1189,15 +1183,39 @@ Install =php-mode=, set coding style and add a hook to load =flymake=.
 #+begin_src emacs-lisp
 (use-package company-php
   :ensure t
-  :init
-    (add-hook 'php-mode-hook
-          '(lambda ()
-             (require 'company-php)
-             (company-mode t)
-             ;; Enable eldoc
-             (ac-php-core-eldoc-setup)
-             (make-local-variable 'company-backends)
-             (add-to-list 'company-backends 'company-ac-php-backend))))
+  :after ac-php)
+#+end_src
+
+*** php-mode
+
+#+begin_src emacs-lisp
+(use-package php-mode
+    :ensure t
+    :after company-php
+    :mode (("\\.php[ts354]?\\'" . php-mode)
+           ("\\.inc\\'" . php-mode))
+    :requires (ac-php company-php)
+
+    :config
+    (add-hook 'php-mode-hook 'auto-complete-mode)
+    (add-hook 'php-mode-hook 'company-mode)
+    (add-hook 'php-mode-hook 'subword-mode)
+
+    (ac-php-core-eldoc-setup)
+    (make-local-variable 'company-backends)
+    (add-to-list 'company-backends 'company-ac-php-backend)
+
+    (setq php-executable "/usr/bin/php")
+    (setq-default php-mode-coding-style 'psr2)
+
+    :bind
+    (:map php-mode-map
+          ("<C-tab>" . counsel-company)
+          ("C-]"     . ac-php-find-symbol-at-point)
+          ("C-t"     . ac-php-location-stack-back)
+          ("C-c /"   . #'comment-or-uncomment-region)
+          ("C-c C--" . #'php-current-class)
+          ("C-c C-=" . #'php-current-namespace)))
 #+end_src
 
 ** Web mode
