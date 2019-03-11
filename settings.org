@@ -40,6 +40,32 @@ customize settings in [[file:init.el][init.el]].
 (load custom-file)
 #+end_src
 
+* Quelpa
+
+[[https://github.com/quelpa/quelpa][Qualpa]] is used to pull packages from different sources (mostly MELPA).
+
+#+begin_src emacs-lisp
+;; Enable Quelpa.
+(use-package quelpa
+  :init
+  (progn
+    (setq quelpa-update-melpa-p nil)
+    ;; Make Quelpa prefer MELPA-stable over melpa. This is optional but
+    ;; highly recommended.
+    ;;
+    ;; (setq quelpa-stable-p t)
+    ))
+
+;; Install quelpa-use-package, which will install use-package as well
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://framagit.org/steckerhalter/quelpa-use-package.git"
+   :stable nil))
+
+(require 'quelpa-use-package)
+#+end_src
+
 * Theme
 
 ** Doom theme
@@ -754,6 +780,7 @@ sudo apt install -y ack-grep curl
     :init (helm-fuzzier-mode))
 
   (use-package helm-mode-manager :ensure t)
+
   (use-package helm-org-rifle :ensure t)
 
   (use-package helm-projectile
@@ -770,19 +797,6 @@ sudo apt install -y ack-grep curl
   (use-package helm-ag
     :ensure t
     :after ag)
-
-  (use-package helm-words
-    :ensure t
-    :defer t
-
-    :config
-    (progn
-      (use-package dictionary
-        :ensure t))
-
-    :bind (("C-c d" . helm-words-at-point)
-           ("C-c D" . helm-words)))
-
 
   ;; Global Keybindings
   ;;
@@ -812,7 +826,7 @@ sudo apt install -y ack-grep curl
    helm-move-to-line-cycle-in-source     t
    ; scroll 8 lines other window using M-<next>/M-<prior>
    helm-scroll-amount                    8
-   helm-ff-file-name-history-use-recentf nil
+   helm-ff-file-name-history-use-recentf t
    helm-ff-skip-boring-files             t
    ; search for library in `require' and `declare-function' sexp.
    helm-ff-search-library-in-sexp        t
@@ -863,7 +877,8 @@ sudo apt install -y ack-grep curl
 
   (helm-adaptive-mode)
   (helm-mode)
-  (helm-recentf)
+  ;; I'll use dashboard instead of `helm-recentf'
+  ;; (helm-recentf)
   (ido-mode -1)
 
   :config
@@ -1316,8 +1331,8 @@ and configure ac company.
 
 #+begin_src emacs-lisp
 (use-package ac-php
-  :after company
-  :ensure t)
+  :ensure t
+  :after company)
 #+end_src
 
 *** company-php
