@@ -66,7 +66,7 @@ brew cask install font-fira-code
 
 To install it on Ubuntu, install the package ~fonts-firacode~.
 
-#+begin_src sh
+#+begin_src sh :tangle no
 sudo apt install fonts-firacode
 #+end_src
 
@@ -368,38 +368,6 @@ buffer name (if the buffer isn't visiting a file).
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
 #+end_src
-* Buffer management
-
-=ibuffer= is the improved version of =list-buffers=.
-
-#+begin_src emacs-lisp
-;; make ibuffer the default buffer lister.
-(defalias 'list-buffers 'ibuffer)
-#+end_src
-
-source: http://ergoemacs.org/emacs/emacs_buffer_management.html
-
-#+begin_src emacs-lisp
-(add-hook 'dired-mode-hook 'auto-revert-mode)
-
-;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
-#+end_src
-
-source: [[http://whattheemacsd.com/sane-defaults.el-01.html][Magnars Sveen]]
-
-* Recentf
-
-Save the list of recently accessed files.
-
-#+begin_src emacs-lisp
-(use-package recentf
-  :config
-  (recentf-mode t)
-  (setq recentf-max-saved-items 500))
-#+end_src
-
 * Org mode
 
 Truly the way to [[http://orgmode.org/][live life in plain text]].  I mainly use it to take
@@ -753,41 +721,180 @@ control, especially when contributors develop on different platforms.
 
 ** Helm
 
-For more see: https://github.com/emacs-helm/helm/wiki/Locate
+Helm Configuration.
+
+To install dependencies on Ubuntu, use command as follows.
+
+#+begin_src sh :tangle no
+sudo apt install -y ack-grep curl
+#+end_src
 
 #+begin_src emacs-lisp
 (use-package helm
-  :disabled t
   :ensure t
   :diminish helm-mode
-  :bind (("C-c h" . helm-command-prefix)
-         ("C-x b" . helm-mini)
-         ("C-`" . helm-resume)
-         ("M-x" . helm-M-x)
-         ("C-x C-f" . helm-find-files)
-         ("C-x C-r" . helm-recentf))
   :init
   (require 'helm-config)
+
+  (use-package helm-descbinds
+    :ensure t
+    :config (helm-descbinds-mode)
+    :bind (("C-h b" . helm-descbinds)))
+
+  (use-package helm-flx
+    :ensure t
+    :defer t
+    :init (setq helm-flx-for-helm-locate t)
+    :config (helm-flx-mode))
+
+  (use-package helm-flycheck :ensure t)
+
+  (use-package helm-fuzzier
+    :ensure t :disabled
+    :init (helm-fuzzier-mode))
+
+  (use-package helm-mode-manager :ensure t)
+  (use-package helm-org-rifle :ensure t)
+
+  (use-package helm-projectile
+    :ensure t
+    :after projectile
+    :commands helm-projectile
+    :bind ("C-c p h" . helm-projectile))
+
+  (use-package helm-swoop
+    :ensure t
+    :bind (("C-c h M-S" . helm-multi-swoop)
+           ("C-c h S"   . helm-multi-swoop-projectile)))
+
+  (use-package helm-ag
+    :ensure t
+    :after ag)
+
+  (use-package helm-words
+    :ensure t
+    :defer t
+
+    :config
+    (progn
+      (use-package dictionary
+        :ensure t))
+
+    :bind (("C-c d" . helm-words-at-point)
+           ("C-c D" . helm-words)))
+
+
+  ;; Global Keybindings
+  ;;
+  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  ;; Changed to "C-c h".
+  ;;
+  ;; Note: We must set "C-c h" globally, because we
+  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+  (global-set-key   (kbd "C-c h") 'helm-command-prefix)
+  (global-set-key   (kbd "C-x h") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+
+  ;; Helm Google Suggest Settings
+  ;; Make helm-google-suggest prefer using curl
+  (when (executable-find "curl")
+        (setq helm-google-suggest-use-curl-p t))
+
+  ;; Replace grep with ack-grep
+  (when (executable-find "ack-grep")
+    (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+          helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+
+  (setq
+   ; open helm buffer inside cur window, don't jump to whole other window
+   helm-split-window-in-side-p           t
+   ; move to beg/end of source when end/beg is reached
+   helm-move-to-line-cycle-in-source     t
+   ; scroll 8 lines other window using M-<next>/M-<prior>
+   helm-scroll-amount                    8
+   helm-ff-file-name-history-use-recentf nil
+   helm-ff-skip-boring-files             t
+   ; search for library in `require' and `declare-function' sexp.
+   helm-ff-search-library-in-sexp        t
+   helm-echo-input-in-header-line        t
+   helm-M-x-fuzzy-match                  t
+   helm-apropos-fuzzy-match              t
+   helm-buffers-fuzzy-matching           nil
+   helm-completion-in-region-fuzzy-match t
+   helm-etags-fuzzy-match                t
+   helm-ff-fuzzy-matching                t
+   helm-file-cache-fuzzy-match           t
+   helm-imenu-fuzzy-match                t
+   helm-lisp-fuzzy-completion            t
+   helm-locate-fuzzy-match               t
+   helm-locate-library-fuzzy-match       t
+   helm-mode-fuzzy-match                 t
+   helm-recentf-fuzzy-match              t
+   helm-semantic-fuzzy-match             t)
+
+  ;; C-c h i settings
+  (setq helm-semantic-fuzzy-match t
+        helm-imenu-fuzzy-match    t)
+
+  (defun spacemacs//helm-hide-minibuffer-maybe ()
+    "Hide minibuffer in Helm session if we use the header line as input field."
+    (when (with-helm-buffer helm-echo-input-in-header-line)
+      (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+        (overlay-put ov 'window (selected-window))
+        (overlay-put ov 'face
+                     (let ((bg-color (face-background 'default nil)))
+                       `(:background ,bg-color :foreground ,bg-color)))
+        (setq-local cursor-type nil))))
+
+  (add-hook 'helm-minibuffer-set-up-hook
+            'spacemacs//helm-hide-minibuffer-maybe)
+
+  (setq helm-locate-fuzzy-match t)
+  (setq helm-apropos-fuzzy-match t)
+  (setq helm-lisp-fuzzy-completion t)
+
+  (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+
+  ;; Lets see bookmarks in Helm Mini as well.
+  (setq helm-mini-default-sources '(helm-source-buffers-list
+                                    helm-source-recentf
+                                    helm-source-bookmarks
+                                    helm-source-buffer-not-found))
+
+  (helm-adaptive-mode)
+  (helm-mode)
+  (helm-recentf)
+  (ido-mode -1)
+
   :config
-  (setq helm-locate-command "locate %s -e -A --regex %s"
-        helm-ff-newfile-prompt-p nil
-        helm-M-x-fuzzy-match t)
-  (helm-mode))
+  ;; Write $<FOO>/ in helm-find-files to expand any of the following folder
+  ;; shortcuts (just like ~/)
+  (setenv "ED"   (expand-file-name user-emacs-directory))
+  (setenv "EL"   (expand-file-name (concat user-emacs-directory "site-lisp")))
+  (setenv "ORG"  (expand-file-name "~/Dropbox/Org"))
+  (setenv "N"    (expand-file-name "~/Dropbox/Notes"))
 
-(use-package helm-projectile
-  :ensure t
-  :after helm-mode
-  :commands helm-projectile
-  :bind ("C-c p h" . helm-projectile))
+  (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 
-(use-package helm-ag
-  :ensure t
-  :after helm-mode)
+  :bind (("C-c h"   . helm-command-prefix)
+         ("C-x b"   . helm-mini)
+         ("C-h a"   . helm-apropos)
+         ("C-`"     . helm-resume)
+         ("M-x"     . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("C-x r"   . helm-recentf)
+         ("C-x C-i" . helm-semantic-or-imenu)
 
-(use-package helm-swoop
-  :ensure t
-  :after helm-mode
-  :bind ("H-w" . helm-swoop))
+         :map helm-command-map
+         ("C-c h" . helm-execute-persistent-action)
+
+         :map helm-map
+         ;; Rebind tab to run persistent action
+         ("<tab>" . helm-execute-persistent-action)
+         ;; Also rebind <tab> in terminals (i.e., the cryptic "C-i") to do the same
+         ("C-i"   . helm-execute-persistent-action)
+         ;; List actions using C-z
+         ("C-z"   . helm-select-action)))
 #+end_src
 
 ** Ivy
@@ -964,9 +1071,14 @@ other packages hook into.  It's an improvment on the built in =flymake=.
 
 #+begin_src emacs-lisp
 (use-package flyspell
-  :ensure t
+  :defer t
+  :ensure helm-flyspell
+  :diminish flyspell-mode
   :config
-  (add-hook 'org-mode-hook #'flyspell-mode))
+  (add-hook 'org-mode-hook #'flyspell-mode)
+  :bind
+  (:map flyspell-mode-map
+        ("C-;" . #'helm-flyspell-correct)))
 #+end_src
 
 ** Git Link
