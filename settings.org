@@ -836,7 +836,7 @@ Helm Configuration.
 | Package           | Description                                                         |
 |-------------------+---------------------------------------------------------------------|
 | [[https://github.com/emacs-helm/helm][helm]]              | Emacs incremental completion and selection narrowing framework.     |
-| [[https://github.com/emacs-helm/helm-descbinds][helm-descbins]]     | A helm frontend for <kbd>M</kbd>-<kbd>x</kbd> ~describe-bindings~.  |
+| [[https://github.com/emacs-helm/helm-descbinds][helm-descbins]]     | A helm frontend for ~M-x~ ~describe-bindings~.                      |
 | [[https://github.com/PythonNut/helm-flx][helm-flx]]          | A [[https://github.com/lewang/flx][flx]]-based fuzzy sorting for helm.                                 |
 | [[https://github.com/yasuyk/helm-flycheck][helm-flycheck]]     | Show flycheck errors with helm.                                     |
 | [[https://github.com/EphramPerdition/helm-fuzzier][helm-fuzzier]]      | Better Fuzzy Matching for emacs Helm .                              |
