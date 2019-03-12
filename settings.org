@@ -710,9 +710,23 @@ For more see: http://ergoemacs.org/emacs/emacs_ido_mode.html
   :bind ("<f10>" . whitespace-mode))
 #+end_src
 
-* Keybindings
+* Eshell
 
-Opening eshell.
+Emacs shell interactive mode.
+
+Usefull links:
+- [[https://www.emacswiki.org/emacs/EshellPrompt][EshellPrompt]]
+- [[http://www.howardism.org/Technical/Emacs/eshell-fun.html][Eschewing Zshell for Emacs Shell]]
+
+#+begin_src emacs-lisp
+(use-package eshell
+  :defer t
+  :init
+  :config
+  (add-hook 'eshell-mode-hook
+            '(lambda ()
+               (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))
+#+end_src
 
 #+begin_src emacs-lisp
 (bind-key (kbd "M-s e") 'eshell)
