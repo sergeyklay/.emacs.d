@@ -13,15 +13,15 @@
 
 ;;; Code:
 
+;; I'll use this on post initialization
+(defconst emacs-start-time (current-time))
+
 ;; Turn off mouse interface early in startup to avoid momentary display
 (when window-system
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (tooltip-mode -1))
-
-;; I'll use this on post initialization
-(defconst emacs-start-time (current-time))
 
 ;; Set up package
 (require 'package)
