@@ -53,7 +53,7 @@ external dependencies or long-term shared data.")
   "Directory for volatile storage.
 Use this for files that change often, like cache files.")
 
-(defvar user-host-dir (concat user-etc-dir "host/" (system-name))
+(defvar user-host-dir (concat user-etc-dir "hosts/" (system-name))
   "The directory with user-specific Emacs settings for this
 user.  The `system-name' is a built-in function which returns
 the host name of the machine you are running on, as a string.")
@@ -818,11 +818,33 @@ control, especially when contributors develop on different platforms.
 
 Helm Configuration.
 
-To install dependencies on Ubuntu, use command as follows.
+*** Prerequisites
+:PROPERTIES:
+:CUSTOM_ID: helm-prerequisites
+:END:
 
-#+begin_src sh :tangle no
-sudo apt install -y ack-grep curl
-#+end_src
+| Name | ArchLinux | Gentoo        | Ubuntu   | Optional |
+|------+-----------+---------------+----------+----------|
+| [[https://beyondgrep.com][ack]]  | ack       | sys-apps/ack  | ack-grep | No       |
+| [[https://curl.haxx.se][cURL]] | curl      | net-misc/curl | curl     | No       |
+
+*** Packages
+:PROPERTIES:
+:CUSTOM_ID: helm-packages
+:END:
+
+| Package           | Description                                                         |
+|-------------------+---------------------------------------------------------------------|
+| [[https://github.com/emacs-helm/helm][helm]]              | Emacs incremental completion and selection narrowing framework.     |
+| [[https://github.com/emacs-helm/helm-descbinds][helm-descbins]]     | A helm frontend for <kbd>M</kbd>-<kbd>x</kbd> ~describe-bindings~.  |
+| [[https://github.com/PythonNut/helm-flx][helm-flx]]          | A [[https://github.com/lewang/flx][flx]]-based fuzzy sorting for helm.                                 |
+| [[https://github.com/yasuyk/helm-flycheck][helm-flycheck]]     | Show flycheck errors with helm.                                     |
+| [[https://github.com/EphramPerdition/helm-fuzzier][helm-fuzzier]]      | Better Fuzzy Matching for emacs Helm .                              |
+| [[https://github.com/istib/helm-mode-manager][helm-mode-manager]] | Switch and toggle emacs major and minor modes using Helm .          |
+| [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle]]    | Rifle through your Org buffers and acquire your target.             |
+| [[https://github.com/bbatsov/helm-projectile][helm-projectile]]   | Helm UI for Projectile.                                             |
+| [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]        | Efficiently hopping squeezed lines powered by Emacs helm interface. |
+| [[https://github.com/syohex/emacs-helm-ag][helm-ag]]           | The silver searcher with helm interface.                            |
 
 #+begin_src emacs-lisp
 (use-package helm
@@ -1038,18 +1060,21 @@ sudo apt install -y ack-grep curl
 
 ** Magit
 
-A great interface for git projects. It's much more pleasant to use
-than the git interface on the command line. Use an easy keybinding to
-access magit.  For more see: https://magit.vc/
+A great interface for git projects.  It's much more pleasant to use
+than the git interface on the command line.  Use an easy keybinding
+to access magit.  For more see: https://magit.vc/
 
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t
   :defer t
-  :bind (("C-c g" . magit-status)
+  :bind (("C-c g"   . magit-status)
          ("C-c m l" . magit-log-buffer-file)
          ("C-c m b" . magit-blame))
   :config
+  ;; DWIM prompting when creating new branches.
+  (setq magit-branch-read-upstream-first 'fallback)
+
   (define-key magit-status-mode-map (kbd "q") 'magit-quit-session))
 #+end_src
 
@@ -1495,7 +1520,7 @@ Haskell configuration for Emacs.
 :CUSTOM_ID: haskell-prerequisites
 :END:
 
-| Name    | Archlinux | Gentoo                       | Ubuntu  | Optional |
+| Name    | ArchLinux | Gentoo                       | Ubuntu  | Optional |
 |---------+-----------+------------------------------+---------+----------|
 | [[https://github.com/DanielG/ghc-mod][ghc-mod]] | ghc-mod   | app-emacs/ghc-mod            | ghc-mod | No       |
 | [[https://github.com/ndmitchell/hlint][hlint]]   | hlint     | dev-haskell/hlint            | hlint   | No       |
