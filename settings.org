@@ -1333,7 +1333,7 @@ Note: You have to install =sbcl=.
   :ensure t)
 #+end_src
 
-** =crux=
+** crux
 
 A Collection of Ridiculously Useful eXtensions for Emacs.
 [[https://github.com/bbatsov/crux][crux]] bundles a few useful interactive commands to enhance your overall Emacs experience.
@@ -1345,14 +1345,14 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
          ("C-c o u" . crux-view-url)))
 #+end_src
 
-** =json=mode=
+** JSON
 
 #+begin_src emacs-lisp
 (use-package json-mode
   :ensure t)
 #+end_src
 
-** =yaml-mode=
+** Yaml
 
 #+begin_src emacs-lisp
 (use-package yaml-mode
@@ -1446,23 +1446,23 @@ and configure ac company.
 #+begin_src emacs-lisp
 (use-package web-mode
   :ensure t
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.tpl\\'" . web-mode)
-         ("\\.tpl\\.php\\'" . web-mode)
-         ("\\.phtml\\'" . web-mode)
-         ("\\.volt\\'" . web-mode)
-         ("\\.twig\\'" . web-mode)
-         ("\\.[agj]sp\\'" . web-mode)
-         ("\\.as[cp]x\\'" . web-mode)
-         ("\\.erb\\'" . web-mode)
-         ("\\.mustache\\'" . web-mode)
+  :mode (("\\.html?\\'"      . web-mode)
+         ("\\.tpl\\'"        . web-mode)
+         ("\\.tpl\\.php\\'"  . web-mode)
+         ("\\.phtml\\'"      . web-mode)
+         ("\\.volt\\'"       . web-mode)
+         ("\\.twig\\'"       . web-mode)
+         ("\\.[agj]sp\\'"    . web-mode)
+         ("\\.as[cp]x\\'"    . web-mode)
+         ("\\.erb\\'"        . web-mode)
+         ("\\.mustache\\'"   . web-mode)
          ("\\.handlebars\\'" . web-mode)
-         ("\\.hbs\\'" . web-mode)
-         ("\\.djhtml\\'" . web-mode))
+         ("\\.hbs\\'"        . web-mode)
+         ("\\.djhtml\\'"     . web-mode))
   :init
   ;; associate an engine
   (setq web-mode-engines-alist
-        '(("php"    . "\\.phtml\\'")
+        '(("php"   . "\\.phtml\\'")
           ("blade" . "\\.blade\\.")))
 
   ;; indentation
