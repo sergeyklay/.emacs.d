@@ -1395,7 +1395,14 @@ and configure ac company.
 #+begin_src emacs-lisp
 (use-package company-php
   :ensure t
-  :after ac-php)
+  :after ac-php
+  :config
+  (unless (executable-find "phpctags")
+    (warn "company-php: phpctags isn't installed, auto-completion will be gimped"))
+  (let ((my-cache-dir (concat user-cache-dir "ac-php/")))
+    (setq ac-php-tags-path my-cache-dir)
+    (unless (file-exists-p my-cache-dir)
+      (make-directory my-cache-dir t))))
 #+end_src
 
 *** php-mode
@@ -1413,6 +1420,8 @@ and configure ac company.
     (add-hook 'php-mode-hook 'company-mode)
     (add-hook 'php-mode-hook 'subword-mode)
 
+    (ac-php-remake-tags)
+    (ac-php-remake-tags-all)
     (ac-php-core-eldoc-setup)
     (make-local-variable 'company-backends)
     (add-to-list 'company-backends 'company-ac-php-backend)
