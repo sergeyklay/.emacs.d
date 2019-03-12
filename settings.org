@@ -725,7 +725,7 @@ Usefull links:
   :config
   (add-hook 'eshell-mode-hook
             '(lambda ()
-               (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))
+               (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))))
 #+end_src
 
 #+begin_src emacs-lisp
