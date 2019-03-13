@@ -1,9 +1,6 @@
 \#*\#
 /.cache
 
-# My personal (and private) TODO list related to this project
-/LATER.org
-
 /private.el
 /settings.el
 
