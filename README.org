@@ -2,6 +2,9 @@
 #+AUTHOR: Serghei Iakovlev
 #+EMAIL: sadhooklay@gmail.com
 
+[[https://www.gnu.org/licenses/gpl-3.0.txt][https://img.shields.io/badge/license-GPL_3-green.svg]]
+[[https://travis-ci.org/sergeyklay/.emacs.d][https://travis-ci.com/sergeyklay/.emacs.d.svg]]
+
 This repository contains my personal Emacs’ configuration,
 notes and any other resources for the Emacs which I port around from system
 to system with me.
