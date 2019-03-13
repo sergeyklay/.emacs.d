@@ -1249,8 +1249,8 @@ For more see: http://batsov.com/projectile/
   :bind (("C-c p p" . projectile-switch-project)
          ("C-c p s s" . projectile-ag))
   :config
-  (setq projectile-keymap-prefix (kbd "C-c p"))
   (projectile-global-mode t)
+  (setq projectile-keymap-prefix (kbd "C-c p"))
   (setq projectile-enable-caching t)
   (setq projectile-switch-project-action 'projectile-dired))
 #+end_src
@@ -1455,17 +1455,30 @@ and configure ac company.
     :requires (ac-php company-php)
 
     :config
+    (defun serg/locate-php-executable ()
+      "Search for the PHP executable using ’phpenv’.
+
+This function will try to find the PHP executable by calling ’phpenv’.
+If it is not available, the function will utilize `executable-find'.
+The function will return the absolute file name if found or nil otherwise."
+      (let ((phpenv (executable-find "phpenv")))
+        (if phpenv
+            (setq php-executable
+                  (replace-regexp-in-string
+                   "\n\\'" ""
+                   (shell-command-to-string (concat phpenv " which php"))))
+          (setq php-executable (executable-find "php")))))
+
     (add-hook 'php-mode-hook 'auto-complete-mode)
     (add-hook 'php-mode-hook 'company-mode)
     (add-hook 'php-mode-hook 'subword-mode)
+    (add-hook 'php-mode-hook #'serg/locate-php-executable)
 
     (ac-php-remake-tags)
     (ac-php-remake-tags-all)
     (ac-php-core-eldoc-setup)
     (make-local-variable 'company-backends)
     (add-to-list 'company-backends 'company-ac-php-backend)
-
-    (setq php-executable "/usr/bin/php")
     (setq-default php-mode-coding-style 'psr2)
 
     :bind
