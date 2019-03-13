@@ -38,7 +38,7 @@ before_script:
   - EMACS_MAJOR_VERSION="$(echo $EMACS_VERSION | cut -d '.' -f 1)"
 
 script:
-  - lsb_release -a
+  - .ci/run-tests.sh
 
 notifications:
   email: false
