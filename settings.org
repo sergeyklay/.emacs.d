@@ -1661,7 +1661,8 @@ directory and loaded here.
                (let ((elapsed (float-time (time-subtract (current-time)
                                                          emacs-start-time))))
                  (message "Loading %s...done (%.3fs) [after-init]"
-                          ,load-file-name elapsed)))
+                          ,load-file-name elapsed)
+                 (message "Used features: %d" (length features))))
             t))
 
 #+end_src
