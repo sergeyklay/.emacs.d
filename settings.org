@@ -1460,7 +1460,8 @@ and configure ac company.
 
 This function will try to find the PHP executable by calling ’phpenv’.
 If it is not available, the function will utilize `executable-find'.
-The function will return the absolute file name if found or nil otherwise."
+The function will set `php-executable' to the current PHP if found
+or nil otherwise."
       (let ((phpenv (executable-find "phpenv")))
         (if phpenv
             (setq php-executable
