@@ -87,32 +87,6 @@ Change the storage location of recentf file.
 (setq recentf-save-file (concat user-cache-dir "recentf"))
 #+end_src
 
-* Quelpa
-
-[[https://github.com/quelpa/quelpa][Qualpa]] is used to pull packages from different sources (mostly MELPA).
-
-#+begin_src emacs-lisp
-;; Enable Quelpa.
-(use-package quelpa
-  :init
-  (progn
-    (setq quelpa-update-melpa-p nil)
-    ;; Make Quelpa prefer MELPA-stable over melpa. This is optional but
-    ;; highly recommended.
-    ;;
-    ;; (setq quelpa-stable-p t)
-    ))
-
-;; Install quelpa-use-package, which will install use-package as well
-(quelpa
- '(quelpa-use-package
-   :fetcher git
-   :url "https://framagit.org/steckerhalter/quelpa-use-package.git"
-   :stable nil))
-
-(require 'quelpa-use-package)
-#+end_src
-
 * Theme
 
 ** Doom theme

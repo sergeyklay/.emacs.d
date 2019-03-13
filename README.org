@@ -7,9 +7,9 @@ notes and any other resources for the Emacs which I port around from system
 to system with me.
 
 The configuration depends on Org mode and only supports Emacs >= 25.1.
+
 [[file:init.el][init.el]] sets up a few initial GUI settings, bootstraps [[https://github.com/jwiegley/use-package][use-package]],
-[[https://github.com/quelpa/quelpa-use-package][quelpa-use-package]] and loads [[file:settings.org][settings.org]],
-which is where the majority of the configuration magic happens.
+and loads [[file:settings.org][settings.org]], which is where the majority of the configuration magic happens.
 
 ** License
 This project is open source software licensed under the
