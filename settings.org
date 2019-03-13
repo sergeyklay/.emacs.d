@@ -1038,20 +1038,11 @@ Helm Configuration.
 
 (use-package counsel
   :ensure t
-  :bind (("M-x" . counsel-M-x)
+  :bind (("M-x"     . counsel-M-x)
          ("C-x C-r" . counsel-recentf)
          ("C-c h i" . counsel-imenu)
-         ("C-h v" . counsel-describe-variable)
-         ("C-h f" . counsel-describe-function)))
-
-(use-package counsel-projectile
-  :ensure t
-  :config
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (counsel-projectile-mode)
-  ;; See: https://github.com/bbatsov/projectile/issues/1302
-  (setq projectile-git-submodule-command nil)
-  (setq counsel-projectile-switch-project-action 'dired))
+         ("C-h v"   . counsel-describe-variable)
+         ("C-h f"   . counsel-describe-function)))
 
 (use-package swiper
   :ensure t
@@ -1241,18 +1232,38 @@ We'll also need to ~(require 'multiple-cusors)~ because of [[https://github.com/
 Project navigation and management library for Emacs.
 For more see: http://batsov.com/projectile/
 
+*** Prerequisites
+:PROPERTIES:
+:CUSTOM_ID: projectile-prerequisites
+:END:
+
+| Name | ArchLinux           | Gentoo              | Ubuntu            | Optional |
+|------+---------------------+---------------------+-------------------+----------|
+| [[https://geoff.greer.fm/ag/][ag]]   | the_silver_searcher | the_silver_searcher | silversearcher-ag | No       |
+
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
   :diminish projectile-mode
-  :commands (projectile-mode projectile-switch-project)
-  :bind (("C-c p p" . projectile-switch-project)
+  :init
+  (setq projectile-cache-file (concat user-cache-dir "projectile.cache")
+        projectile-known-projects-file (concat user-cache-dir "projectile-bookmarks.eld")
+        ;; The command-line option ‘-batch’ causes Emacs to run `noninteractively'.
+        projectile-enable-caching (not noninteractive)
+        ;; The alien indexing method optimizes to the limit the speed
+        ;; of the hybrid indexing method.
+        projectile-indexing-method 'alien
+        ;; Projectile will consider the current directory the project root.
+        rojectile-require-project-root nil
+        ;; Ignores
+        projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS")
+        projectile-globally-ignored-file-suffixes
+        '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock"))
+
+  :bind (("C-c p p"   . projectile-switch-project)
          ("C-c p s s" . projectile-ag))
   :config
-  (projectile-global-mode t)
-  (setq projectile-keymap-prefix (kbd "C-c p"))
-  (setq projectile-enable-caching t)
-  (setq projectile-switch-project-action 'projectile-dired))
+  (projectile-mode t))
 #+end_src
 
 ** Restclient
@@ -1462,13 +1473,12 @@ This function will try to find the PHP executable by calling ’phpenv’.
 If it is not available, the function will utilize `executable-find'.
 The function will set `php-executable' to the current PHP if found
 or nil otherwise."
-      (let ((phpenv (executable-find "phpenv")))
-        (if phpenv
-            (setq php-executable
-                  (replace-regexp-in-string
-                   "\n\\'" ""
-                   (shell-command-to-string (concat phpenv " which php"))))
-          (setq php-executable (executable-find "php")))))
+      (if-let ((phpenv (executable-find "phpenv")))
+          (setq php-executable
+                (replace-regexp-in-string
+                 "\n\\'" ""
+                 (shell-command-to-string (concat phpenv " which php"))))
+        (setq php-executable (executable-find "php"))))
 
     (add-hook 'php-mode-hook 'auto-complete-mode)
     (add-hook 'php-mode-hook 'company-mode)

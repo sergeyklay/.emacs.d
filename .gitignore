@@ -7,9 +7,6 @@
 /private.el
 /settings.el
 
-/projectile-bookmarks.eld
-/projectile.cache
-
 /helm-adaptive-history
 /ac-comphist.dat
 
