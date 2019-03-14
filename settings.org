@@ -923,10 +923,6 @@ Helm Configuration.
   (add-hook 'helm-minibuffer-set-up-hook
             'spacemacs//helm-hide-minibuffer-maybe)
 
-  (setq helm-locate-fuzzy-match t)
-  (setq helm-apropos-fuzzy-match t)
-  (setq helm-lisp-fuzzy-completion t)
-
   (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
 
   ;; Lets see bookmarks in Helm Mini as well.
@@ -936,9 +932,7 @@ Helm Configuration.
                                     helm-source-buffer-not-found))
 
   (helm-adaptive-mode)
-  (helm-mode)
-  ;; I'll use dashboard instead of `helm-recentf'
-  ;; (helm-recentf)
+  (helm-mode t)
   (ido-mode -1)
 
   :config
@@ -955,6 +949,7 @@ Helm Configuration.
          ("C-x b"   . helm-mini)
          ("C-h a"   . helm-apropos)
          ("C-`"     . helm-resume)
+         ("M-y"     . helm-show-kill-ring)
          ("M-x"     . helm-M-x)
          ("C-x C-f" . helm-find-files)
          ("C-x r"   . helm-recentf)
@@ -970,52 +965,6 @@ Helm Configuration.
          ("C-i"   . helm-execute-persistent-action)
          ;; List actions using C-z
          ("C-z"   . helm-select-action)))
-#+end_src
-
-** Ivy
-
-- *Ivy*, a generic completion mechanism for Emacs.
-- *Counsel*, a collection of Ivy-enhanced versions of common Emacs commands.
-- *Swiper*, an Ivy-enhanced alternative to ~isearch~.
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :ensure t
-  :diminish (ivy-mode . "")
-  :bind
-  (:map ivy-mode-map
-   ("C-'" . ivy-avy))
-  :config
-  (ivy-mode 1)
-
-  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
-  (setq ivy-use-virtual-buffers t)
-
-  ;; number of result lines to display
-  (setq ivy-height 10)
-
-  ;; Show candidate index and total count
-  (setq ivy-count-format "(%d/%d) ")
-
-  ;; no regexp by default
-  (setq ivy-initial-inputs-alist nil)
-
-  ;; configure regexp engine.
-  (setq ivy-re-builders-alist
-	;; allow input not in order
-        '((t   . ivy--regex-ignore-order))))
-
-(use-package counsel
-  :ensure t
-  :bind (("M-x"     . counsel-M-x)
-         ("C-x C-r" . counsel-recentf)
-         ("C-c h i" . counsel-imenu)
-         ("C-h v"   . counsel-describe-variable)
-         ("C-h f"   . counsel-describe-function)))
-
-(use-package swiper
-  :ensure t
-  :bind (("C-c s" . swiper)))
 #+end_src
 
 ** Magit
