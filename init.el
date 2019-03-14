@@ -35,6 +35,9 @@
   (setq package-pinned-packages
 	'((org-plus-contrib . "org"))))
 
+;; Load emacs packages and activate them
+;; This must come before configurations of installed packages.
+;; Don't delete this line.
 (package-initialize)
 
 (when (not package-archive-contents)
