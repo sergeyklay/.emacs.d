@@ -1,6 +1,5 @@
 #+TITLE: My Emacs Configuration
 #+AUTHOR: Serghei Iakovlev
-#+EMAIL: sadhooklay@gmail.com
 
 [[https://www.gnu.org/licenses/gpl-3.0.txt][https://img.shields.io/badge/license-GPL_3-green.svg]]
 [[https://travis-ci.org/sergeyklay/.emacs.d][https://travis-ci.com/sergeyklay/.emacs.d.svg]]

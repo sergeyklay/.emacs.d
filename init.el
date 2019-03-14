@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
-;; Author: Serghei Iakovlev <sadhooklay@gmail.com>
+;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
 ;; Version: 0.1.0
 ;; URL: https://github.com/sergeyklay/emacs.d
 
@@ -26,14 +26,10 @@
 ;; Set up package
 (require 'package)
 (setq package-archives
-      '(("org" . "http://orgmode.org/elpa/")
-        ("melpa" . "http://melpa.org/packages/")
+      '(("org"          . "http://orgmode.org/elpa/")
+        ("melpa"        . "http://melpa.org/packages/")
         ("melpa-stable" . "http://stable.melpa.org/packages/")
-        ("gnu" . "https://elpa.gnu.org/packages/")))
-
-; Apparently needed for the package auto-complete (why?)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+        ("gnu"          . "https://elpa.gnu.org/packages/")))
 
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages

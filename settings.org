@@ -1,7 +1,6 @@
 #+TITLE: Emacs configuration
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
-#+EMAIL: sadhooklay@gmail.com
 
 Emacs has been my text editor of choice since probably about 2017 or so,
 and along the way I've become accustomed to many different tweaks for it.
@@ -27,7 +26,7 @@ This is to remind me in case I start editing [[file:settings.el][settings.el]] b
 
 #+begin_src emacs lisp
 (setq user-full-name "Serghei Iakovlev"
-      user-mail-address "sadhooklay@gmail.com")
+      user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
 #+end_src
 
 * Setting up global directories
@@ -141,8 +140,8 @@ Sources for this section include [[https://github.com/magnars/.emacs.d/blob/mast
 ** Setting up occur
 
 The following function for ~occur-dwim~ is taken from [[https://github.com/abo-abo][Oleh Krehel]] from
-[[http://oremacs.com/2015/01/26/occur-dwim/][his blog post at (or emacs]]. It takes the current region or the symbol
-at point as the default value for occur.
+[[http://oremacs.com/2015/01/26/occur-dwim/][his blog post at "(or emacs irrelevant)"]].  It takes the current region
+or the symbol at point as the default value for occur.
 
 #+begin_src emacs-lisp
 (defun occur-dwim ()
