@@ -816,7 +816,6 @@ Helm Configuration.
 | [[https://github.com/EphramPerdition/helm-fuzzier][helm-fuzzier]]      | Better Fuzzy Matching for emacs Helm .                              |
 | [[https://github.com/istib/helm-mode-manager][helm-mode-manager]] | Switch and toggle emacs major and minor modes using Helm .          |
 | [[https://github.com/alphapapa/helm-org-rifle][helm-org-rifle]]    | Rifle through your Org buffers and acquire your target.             |
-| [[https://github.com/bbatsov/helm-projectile][helm-projectile]]   | Helm UI for Projectile.                                             |
 | [[https://github.com/ShingoFukuyama/helm-swoop][helm-swoop]]        | Efficiently hopping squeezed lines powered by Emacs helm interface. |
 | [[https://github.com/syohex/emacs-helm-ag][helm-ag]]           | The silver searcher with helm interface.                            |
 
@@ -847,12 +846,6 @@ Helm Configuration.
   (use-package helm-mode-manager :ensure t)
 
   (use-package helm-org-rifle :ensure t)
-
-  (use-package helm-projectile
-    :ensure t
-    :after projectile
-    :commands helm-projectile
-    :bind ("C-c p h" . helm-projectile))
 
   (use-package helm-swoop
     :ensure t
@@ -1215,6 +1208,16 @@ For more see: http://batsov.com/projectile/
 |------+---------------------+---------------------+-------------------+----------|
 | [[https://geoff.greer.fm/ag/][ag]]   | the_silver_searcher | the_silver_searcher | silversearcher-ag | No       |
 
+*** Packages
+:PROPERTIES:
+:CUSTOM_ID: projectile-packages
+:END:
+
+| Package         | Description                           |
+|-----------------+---------------------------------------|
+| [[https://github.com/bbatsov/helm-projectile][helm-projectile]] | Helm UI for Projectile.               |
+| [[https://github.com/bbatsov/projectile][projectile]]      | Project Interaction Library for Emacs |
+
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
@@ -1238,6 +1241,24 @@ For more see: http://batsov.com/projectile/
          ("C-c p s s" . projectile-ag))
   :config
   (projectile-mode t))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package helm-projectile
+    :ensure t
+    :after helm
+    :commands (helm-projectile helm-projectile-switch-project)
+    :init
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on)
+    (setq projectile-switch-project-action 'helm-projectile)
+
+    (defvar helm-source-file-not-found
+      (helm-build-dummy-source
+          "Create file"
+        :action 'find-file))
+
+    (add-to-list 'helm-projectile-sources-list helm-source-file-not-found t))
 #+end_src
 
 ** Restclient
