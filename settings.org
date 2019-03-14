@@ -433,14 +433,17 @@ It goes without saying that I also use it to manage my Emacs configuration.
 
 ** Installation
 
-Although Org mode ships with Emacs, the latest version can be installed externally. The configuration here follows the [[http://orgmode.org/elpa.html][Org mode ELPA installation instructions]].
+Although Org mode ships with Emacs, the latest version can be installed externally.
+The configuration here follows the [[http://orgmode.org/elpa.html][Org mode ELPA installation instructions]].
 
 #+begin_src emacs-lisp
 (use-package org
   :ensure org-plus-contrib)
 #+end_src
 
-On Org mode version 9 I wasn't able to execute source blocks out of the box. [[https://emacs.stackexchange.com/a/28604][Others have ran into the same issue too]]. The solution is to remove the =*.elc= files from the package directory:
+On Org mode version 9 I wasn't able to execute source blocks out of the box.
+[[https://emacs.stackexchange.com/a/28604][Others have ran into the same issue too]].  The solution is to remove the =*.elc=
+files from the package directory:
 
 #+begin_src sh :var ORG_DIR=(let* ((org-v (cadr (split-string (org-version nil t) "@"))) (len (length org-v))) (substring org-v 1 (- len 2)))
 rm ${ORG_DIR}/*.elc
