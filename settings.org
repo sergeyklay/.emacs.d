@@ -466,13 +466,14 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
 (setq org-agenda-files
       (delq nil
             (mapcar (lambda (x) (and (file-exists-p x) x))
-                    '("~/Dropbox/Agenda"))))
+                    '("~/Dropbox/Agenda.org"))))
 #+end_src
 
 *** Org capture
 
 #+begin_src emacs-lisp
 (bind-key "C-c c" 'org-capture)
+
 (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 (setq org-capture-bookmark nil)
 #+end_src
@@ -1087,13 +1088,78 @@ other packages hook into.  It's an improvment on the built in =flymake=.
 
 ** Flyspell
 
+*** Prerequisites
+:PROPERTIES:
+:CUSTOM_ID: flyspell-prerequisites
+:END:
+
+| Name      | ArchLinux | Gentoo             | Ubuntu    | Optional |
+|-----------+-----------+--------------------+-----------+----------|
+| [[http://aspell.net/][aspell]]    | aspell    | textproc/aspell    | aspell    | No       |
+| aspell-ru | aspell-ru | textproc/aspell-ru | aspell-ru | No       |
+| aspell-en | aspell-en | textproc/aspell-en | aspell-en | No       |
+
+*** Packages
+:PROPERTIES:
+:CUSTOM_ID: flyspell-packages
+:END:
+
+| Package       | Description                                        |
+|---------------+----------------------------------------------------|
+| [[http://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell.html][flyspell]]      | Eenables on-the-fly spell checking in Emacs.       |
+| [[https://github.com/pronobis/helm-flyspell][helm-flyspell]] | Helm extension for correcting words with Flyspell. |
+
+
 #+begin_src emacs-lisp
 (use-package flyspell
   :defer t
   :ensure helm-flyspell
-  :diminish flyspell-mode
+  :diminish flyspell-mode " Ⓢ"
+
+  :init
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+  (dolist (hook '(text-mode-hook org-mode-hook))
+    (add-hook hook (lambda () (flyspell-mode 1))))
+
+  (dolist (hook '(org-agenda-mode-hook))
+    (add-hook hook (lambda () (flyspell-mode -1))))
+
   :config
-  (add-hook 'org-mode-hook #'flyspell-mode)
+  (setq ispell-program-name "aspell"
+        ;; my dictionary-alist, using for redefinition russian dictionary
+        ispell-dictionary-alist
+        '(("english"   ;; English
+           "[a-zA-Z]"  ;; casecshars
+           "[^a-zA-Z]" ;; not-casechars
+           "['-’]"     ;; other-chars
+           nil
+           ("-d" "en" "--lang" "en_GB" "--encoding=en_GB.utf8" "--size=90")
+           nil
+           utf-8
+           ;;iso-8859-1
+           )
+          ("russian" ;; Russian
+           "[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
+           "[^АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
+           "[`'-]"
+           nil
+           ("-C" "-d" "ru")
+           nil
+           utf-8))
+        ispell-aspell-dictionary-alist ispell-dictionary-alist
+
+        ispell-russian-dictionary "russian"
+        ispell-english-dictionary "english"
+
+        flyspell-default-dictionary ispell-russian-dictionary
+
+        ispell-dictionary ispell-english-dictionary
+        ispell-extra-args '("--sug-mode=normal")
+        ispell-list-command "--list")
+
+  ; (add-hook 'org-mode-hook #'flyspell-mode)
+
   :bind
   (:map flyspell-mode-map
         ("C-;" . #'helm-flyspell-correct)))
