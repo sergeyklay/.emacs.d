@@ -567,11 +567,14 @@ Source block templates.
 #+end_src
 
 #+begin_src emacs-lisp
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("py" . "src python"))
-(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
-(add-to-list 'org-structure-template-alist '("md" . "src markdown"))
+(add-to-list 'org-structure-template-alist '("el"  . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("py"  . "src python"))
+(add-to-list 'org-structure-template-alist '("sh"  . "src sh"))
+(add-to-list 'org-structure-template-alist '("md"  . "src markdown"))
 (add-to-list 'org-structure-template-alist '("php" . "src php"))
+(add-to-list 'org-structure-template-alist '("bnf" . "src bnf"))
+(add-to-list 'org-structure-template-alist '("hs"  . "src haskell"))
+(add-to-list 'org-structure-template-alist '("zep" . "src zephir"))
 #+end_src
 
 ** Org exporting
@@ -1117,8 +1120,6 @@ other packages hook into.  It's an improvment on the built in =flymake=.
   :diminish flyspell-mode " Ⓢ"
 
   :init
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
   (dolist (hook '(text-mode-hook org-mode-hook))
     (add-hook hook (lambda () (flyspell-mode 1))))
 

@@ -1,5 +1,4 @@
 \#*\#
-/.cache
 
 /private.el
 /settings.el
@@ -13,3 +12,4 @@
 /transient/
 /semanticdb/
 /.local/cache/
+/.cask/
