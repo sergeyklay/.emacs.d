@@ -1419,7 +1419,8 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
 
 #+begin_src emacs-lisp
 (use-package yaml-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.ya?ml\\'")
 #+end_src
 
 ** Company
