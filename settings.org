@@ -1512,11 +1512,6 @@ Luckily, I can modify the way Emacs formats code with this configuration.
 
 * Misc
 
-** Non-ELPA packages
-
-Some packages aren't in ELPA, so they're stored in the [[file:site-lisp][site-lisp]]
-directory and loaded here.
-
 ** Post initialization
 
 *** Measure time to init

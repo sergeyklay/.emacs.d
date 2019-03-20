@@ -13,6 +13,10 @@ The configuration depends on Org mode and only supports Emacs >= 25.1.
 [[file:init.el][init.el]] sets up a few initial GUI settings, bootstraps [[https://github.com/jwiegley/use-package][use-package]],
 and loads [[file:settings.org][settings.org]], which is where the majority of the configuration magic happens.
 
+** Prerequisite software are
+
+- ~gnutls-cli~
+
 ** License
 This project is open source software licensed under the
 GNU General Public Licence version 3.
