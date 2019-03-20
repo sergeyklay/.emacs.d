@@ -15,12 +15,6 @@ a fantastic way to manage package configurations.
       user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
 #+end_src
 
-* Customize settings
-
-#+begin_src emacs-lisp
-(setq recentf-save-file (concat user-cache-dir "recentf"))
-#+end_src
-
 * Theme
 
 ** Doom theme
@@ -187,59 +181,6 @@ Activate column and line number in the modeline, as well as time.
 (diminish 'visual-line-mode)
 #+end_src
 
-** Backup behaviour
-
-*** Delete excess backup versions silently
-
-#+begin_src emacs-lisp
-(setq delete-old-versions t)
-#+end_src
-
-*** Use Version control
-
-#+begin_src emacs-lisp
-(setq version-control t)
-#+end_src
-
-*** Make backup files even in version controlled directories
-
-#+begin_src emacs-lisp
-(setq vc-make-backup-files t)
-#+end_src
-
-*** Backup directories
-
-Keep all backup in one directory.
-
-#+begin_src emacs-lisp
-(let ((my-backup-dir (concat user-cache-dir "backup/")))
-  (setq backup-directory-alist
-        `(("." . ,(file-name-as-directory my-backup-dir))))
-  (unless (file-exists-p my-backup-dir)
-    (make-directory my-backup-dir t)))
-#+end_src
-
-Setting up Auto-Saving.
-For more see: https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dSaving.html
-
-#+begin_src emacs-lisp
-(let ((my-auto-save-dir (concat user-cache-dir "autosave/")))
-  (setq
-   auto-save-file-name-transforms
-   `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t))
-
-   auto-save-list-file-name
-   (concat my-auto-save-dir
-            (format ".saves-%d-%s~" (emacs-pid) (system-name))))
-
-  (unless (file-exists-p my-auto-save-dir)
-    (make-directory my-auto-save-dir t)))
-
-(setq auto-save-default t
-      auto-save-timeout 10
-      auto-save-interval 200)
-#+end_src
-
 ** Configuring bell
 
 #+begin_src emacs-lisp
@@ -271,18 +212,6 @@ For more see: https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002
 
 #+begin_src emacs-lisp
 (setq browse-url-browser-function 'browse-url-xdg-open)
-#+end_src
-
-** History settings
-
-Setting up a file for the history, and also raise the history size.
-
-#+begin_src emacs-lisp
-(setq history-length 500)
-(setq savehist-file (concat user-cache-dir "minibuffer-history.el"))
-(setq history-delete-duplicates t)
-
-(savehist-mode 1)
 #+end_src
 
 ** Utilities for =list-packages= menu
@@ -510,16 +439,6 @@ the PDF output like they should.  Source: http://tex.stackexchange.com/a/161619 
 
 #+begin_src emacs-lisp
 (setq org-latex-pdf-process (list "latexmk -pdf %f"))
-#+end_src
-
-* Tramp
-
-~tramp~ is a great extension for working with files on another machine.
-You can connect using several protocols, including SSH, and edit files
-as if they were on your local machine.
-
-#+begin_src emacs-lisp :trangle no
-(use-package tramp)
 #+end_src
 
 * Window

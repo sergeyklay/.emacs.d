@@ -11,6 +11,7 @@
 
 ;;; Code:
 
+
 ;;; Setting up global variables and directories
 
 (defconst emacs-start-time (current-time)
@@ -45,6 +46,7 @@ Use this for files that change often, like cache files.")
 Function `system-name' returns the host name of the machine you
 are running on, as a string.")
 
+
 ;;; Encoding
 
 (when (fboundp 'set-charset-priority)
@@ -59,13 +61,61 @@ are running on, as a string.")
 (setq locale-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 
+
+;;; Backup behaviour
+
+;; Delete excess backup versions silently
+(setq delete-old-versions t)
+
+;; Make numeric backup versions unconditionally.
+(setq version-control t)
+
+;; Make backup files even in version controlled directories
+(setq vc-make-backup-files t)
+
+;; Keep all backup in one directory.
+(let ((my-backup-dir (concat user-cache-dir "backup/")))
+  (setq backup-directory-alist
+        `(("." . ,(file-name-as-directory my-backup-dir))))
+  (unless (file-exists-p my-backup-dir)
+    (make-directory my-backup-dir t)))
+
+;; Setting up Auto-Saving.
+;; For more see URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dSaving.html'
+(let ((my-auto-save-dir (concat user-cache-dir "autosave/")))
+  (setq
+   auto-save-file-name-transforms
+   `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t))
+
+   auto-save-list-file-name
+   (concat my-auto-save-dir
+            (format ".saves-%d-%s~" (emacs-pid) (system-name))))
+
+  (unless (file-exists-p my-auto-save-dir)
+    (make-directory my-auto-save-dir t)))
+
+(setq auto-save-default t
+      auto-save-timeout 10
+      auto-save-interval 200)
+
+
 ;;; Sane defaults
 
 (setq-default
  debug-on-error (and (not noninteractive) emacs-debug-mode)
+ history-length 500
+ history-delete-duplicates t
  ;; Files
- mc/list-file (concat user-etc-dir "mc-lists.el"))
+ recentf-save-file            (concat user-cache-dir "recentf")
+ savehist-file                (concat user-cache-dir "minibuffer-history.el")
+ mc/list-file                 (concat user-etc-dir "mc-lists.el")
+ tramp-auto-save-directory    (concat user-cache-dir "autosave/tramp/")
+ tramp-backup-directory-alist backup-directory-alist
+ tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el"))
 
+(savehist-mode 1)
+
+
 ;;; Customize settings
 
 (setq custom-file (concat user-etc-dir "custom.el"))
@@ -76,6 +126,7 @@ are running on, as a string.")
 (when (file-exists-p user-host-dir)
   (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
 
+
 ;;; Startup message customization
 
 (setq inhibit-startup-message t)
