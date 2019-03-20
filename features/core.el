@@ -62,7 +62,30 @@ are running on, as a string.")
 ;;; Sane defaults
 
 (setq-default
- debug-on-error (and (not noninteractive) emacs-debug-mode))
+ debug-on-error (and (not noninteractive) emacs-debug-mode)
+ ;; Files
+ mc/list-file (concat user-etc-dir "mc-lists.el"))
+
+;;; Customize settings
+
+(setq custom-file (concat user-etc-dir "custom.el"))
+(load custom-file t)
+
+(add-to-list 'load-path user-host-dir)
+
+(when (file-exists-p user-host-dir)
+  (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
+
+;;; Startup message customization
+
+(setq inhibit-startup-message t)
+(setq initial-scratch-message
+      (concat
+       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
+       ";; To create a file, visit it with \\[find-file] and enter text in its buffer.\n"
+       ";; To evaluate an S-expr in this buffer, use \\[eval-print-last-sexp].\n"
+       ";;\n"
+       ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
 (provide 'core)
 ;;; core.el ends here

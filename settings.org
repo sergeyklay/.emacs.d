@@ -17,28 +17,6 @@ a fantastic way to manage package configurations.
 
 * Customize settings
 
-Set up the customize file to its own separate file, instead of saving
-customize settings in [[file:init.el][init.el]].
-
-#+begin_src emacs-lisp
-(setq custom-file (concat user-etc-dir "custom.el"))
-(load custom-file t)
-#+end_src
-
-Load some computer-specific settings (office, home, etc), such as
-the name and email address.  The way the settings are loaded is
-based off of [[https://github.com/magnars/.emacs.d][Magnar Sveen's]] configuration.
-
-#+begin_src emacs-lisp
-(add-to-list 'load-path user-host-dir)
-
-;; Load settings specific for the current user
-(when (file-exists-p user-host-dir)
-  (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
-#+end_src
-
-Change the storage location of recentf file.
-
 #+begin_src emacs-lisp
 (setq recentf-save-file (concat user-cache-dir "recentf"))
 #+end_src
@@ -281,19 +259,6 @@ For more see: https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002
 
 #+begin_src emacs-lisp
 (setq default-fill-column 80)
-#+end_src
-
-** Startup message customization
-
-#+begin_src emacs-lisp
-(setq inhibit-startup-message t)
-(setq initial-scratch-message
-      (concat
-       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
-       ";; To create a file, visit it with \\[find-file] and enter text in its buffer.\n"
-       ";; To evaluate an S-expr in this buffer, use \\[eval-print-last-sexp].\n"
-       ";;\n"
-       ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 #+end_src
 
 ** Remove the trailing whitespaces on save
