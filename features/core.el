@@ -21,6 +21,9 @@
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
+(defconst session-macos-p (equal system-type 'darwin)
+  "This constant indicate whether the current session used on macOS.")
+
 (defvar user-emacs-dir (file-truename user-emacs-directory)
   "The path to this emacs.d directory.
 The real path of this directory is found by chasing symbolic links
@@ -40,6 +43,12 @@ external dependencies or long-term shared data.")
 (defvar user-cache-dir (concat user-local-dir "cache/")
   "Directory for volatile storage.
 Use this for files that change often, like cache files.")
+
+(defvar user-packages-dir (concat user-local-dir "packages/")
+  "Where package.el and quelpa plugins (and their caches) are stored.")
+
+(defvar user-features-dir (concat user-emacs-dir "features/")
+  "All the features should located here.")
 
 (defvar user-host-dir (concat user-etc-dir "hosts/" (system-name))
   "The directory with user-specific Emacs settings.
@@ -115,28 +124,22 @@ are running on, as a string.")
 
 (savehist-mode 1)
 
+;; Startup message customization
+(setq inhibit-startup-message t)
+
 
-;;; Customize settings
+;;; Setting up the dependencies, features and packages
+
+(add-to-list 'load-path user-packages-dir)
+(add-to-list 'load-path user-features-dir)
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+;; Set up appearance early
+(require 'appearance)
+
 (add-to-list 'load-path user-host-dir)
-
-(when (file-exists-p user-host-dir)
-  (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
-
-
-;;; Startup message customization
-
-(setq inhibit-startup-message t)
-(setq initial-scratch-message
-      (concat
-       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
-       ";; To create a file, visit it with \\[find-file] and enter text in its buffer.\n"
-       ";; To evaluate an S-expr in this buffer, use \\[eval-print-last-sexp].\n"
-       ";;\n"
-       ";; Happy hacking, " user-login-name " - Emacs ♥ you!\n\n"))
 
 (provide 'core)
 ;;; core.el ends here
