@@ -17,7 +17,9 @@ Known to work with GNU Emacs 25.1 and later.
 Prerequisite packages are
 -------------------------
 
+- `ag`
 - `gnutls-cli`
+- `exuberant-ctags`
 - Fira Code Font
 
 License

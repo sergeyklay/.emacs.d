@@ -954,10 +954,6 @@ For more see: http://batsov.com/projectile/
 :CUSTOM_ID: projectile-prerequisites
 :END:
 
-| Name | ArchLinux           | Gentoo              | Ubuntu            | Optional |
-|------+---------------------+---------------------+-------------------+----------|
-| [[https://geoff.greer.fm/ag/][ag]]   | the_silver_searcher | the_silver_searcher | silversearcher-ag | No       |
-
 *** Packages
 :PROPERTIES:
 :CUSTOM_ID: projectile-packages
