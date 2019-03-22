@@ -18,6 +18,7 @@ Prerequisite packages are
 -------------------------
 
 - `gnutls-cli`
+- Fira Code Font
 
 License
 -------

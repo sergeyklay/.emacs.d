@@ -15,51 +15,6 @@ a fantastic way to manage package configurations.
       user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
 #+end_src
 
-* Theme
-
-** Doom theme
-
-#+begin_src emacs-lisp
-(use-package doom-themes
-  :ensure t
-  :config
-  (load-theme 'doom-one t))
-#+end_src
-
-* Font
-
-[[https://github.com/tonsky/FiraCode][Fira Code]] is a nice monospaced font.
-
-#+begin_src sh :tangle no
-# You may need to run these two lines if you haven't set up Homebrew
-# Cask and its fonts formula.
-brew install caskroom/cask/brew-cask
-brew tap caskroom/fonts
-
-brew cask install font-fira-code
-#+end_src
-
-To install it on Ubuntu, install the package ~fonts-firacode~.
-
-#+begin_src sh :tangle no
-sudo apt install fonts-firacode
-#+end_src
-
-And here's how we tell Emacs to use the font we want to use.
-
-#+begin_src emacs-lisp
-(add-to-list 'default-frame-alist
-             (cond
-              ((string-equal system-type "darwin")    '(font . "Fira Code-14"))
-              ((string-equal system-type "gnu/linux") '(font . "Fira Code-12"))))
-#+end_src
-
-Note: To view all fonts that are available to use, run the following:
-
-#+begin_src emacs-lisp :tangle no
-(font-family-list)
-#+end_src
-
 * Sane defaults
 
 Let's start with some sane defaults, shall we?
@@ -228,18 +183,6 @@ Here we reduce the delay.
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 #+end_src
 
-** Frame title
-
-More useful frame title, that show either a file or a
-buffer name (if the buffer isn't visiting a file).
-
-#+begin_src emacs-lisp
-(setq frame-title-format
-      '("" invocation-name " Emacs - "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
-#+end_src
 * Org mode
 
 Truly the way to [[http://orgmode.org/][live life in plain text]].  I mainly use it to take

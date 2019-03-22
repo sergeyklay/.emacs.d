@@ -21,9 +21,6 @@
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
-(defconst session-macos-p (equal system-type 'darwin)
-  "This constant indicate whether the current session used on macOS.")
-
 (defvar user-emacs-dir (file-truename user-emacs-directory)
   "The path to this emacs.d directory.
 The real path of this directory is found by chasing symbolic links

@@ -38,5 +38,26 @@
 ;; Highlight current line
 (global-hl-line-mode 1)
 
+;; More useful frame title, that show either a file or a
+;; buffer name (if the buffer isn't visiting a file).
+(setq frame-title-format
+      '("" invocation-name " Emacs - "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
+
+
+;;; Theme & font
+
+(add-to-list 'default-frame-alist
+             (cond
+              ((string-equal system-type "darwin")    '(font . "Fira Code-14"))
+              ((string-equal system-type "gnu/linux") '(font . "Fira Code-12"))))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t))
+
 (provide 'appearance)
 ;;; appearance.el ends here
