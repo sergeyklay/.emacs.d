@@ -701,6 +701,27 @@ to access magit.  For more see: https://magit.vc/
   (define-key magit-status-mode-map (kbd "q") 'magit-quit-session))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package git-link
+  :ensure t)
+
+(use-package gitconfig-mode
+  :ensure t
+  :mode (("\\.gitconfig\\'" . gitconfig-mode)
+	 ("\\.git/config\\'" . gitconfig-mode)
+	 ("\\.gitmodules\\'" . gitconfig-mode)))
+
+(use-package gitignore-mode
+  :ensure t
+  :mode (("\\.gitignore\\'" . gitignore-mode)
+         ("\\.dockerignore\\'" . gitignore-mode)))
+
+(use-package gitattributes-mode
+  :ensure t
+  :mode (("\\.gitattributes\\'" . gitattributes-mode)
+         ("\\.git/info/attributes\\'" . gitattributes-mode)))
+#+end_src
+
 
 *** Fullscreen magit
 
@@ -874,13 +895,6 @@ other packages hook into.  It's an improvment on the built in =flymake=.
   :bind
   (:map flyspell-mode-map
         ("C-;" . #'helm-flyspell-correct)))
-#+end_src
-
-** Git Link
-
-#+begin_src emacs-lisp
-(use-package git-link
-  :ensure t)
 #+end_src
 
 ** Macrostep
