@@ -11,7 +11,6 @@
 
 ;;; Code:
 
-
 ;;; Setting up global variables and directories
 
 (defconst emacs-start-time (current-time)
@@ -49,7 +48,6 @@ Use this for files that change often, like cache files.")
 Function `system-name' returns the host name of the machine you
 are running on, as a string.")
 
-
 ;;; Encoding
 
 (when (fboundp 'set-charset-priority)
@@ -64,7 +62,6 @@ are running on, as a string.")
 (setq locale-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 
-
 ;;; Backup behaviour
 
 ;; Delete excess backup versions silently
@@ -101,9 +98,7 @@ are running on, as a string.")
       auto-save-timeout 10
       auto-save-interval 200)
 
-
-;;; Sane defaults
-
+;; Sane defaults
 (setq-default
  debug-on-error (and (not noninteractive) emacs-debug-mode)
  history-length 500
@@ -128,53 +123,9 @@ are running on, as a string.")
   (scroll-bar-mode -1)
   (tooltip-mode -1))
 
-
-;;; Bootstrap packaging system
-
-;; Set up package
-(require 'package)
-(setq package-archives
-      '(("org"          . "http://orgmode.org/elpa/")
-        ("melpa"        . "http://melpa.org/packages/")
-        ("melpa-stable" . "http://stable.melpa.org/packages/")
-        ("gnu"          . "https://elpa.gnu.org/packages/")))
-
-(setq
- package--init-file-ensured t
- package-user-dir (concat user-local-dir "packages/" emacs-version "/elpa"))
-
-(package-initialize)
-
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-;; Install use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile (require 'use-package))
-
-;; Install diminish
-(unless (package-installed-p 'diminish)
-  (package-refresh-contents)
-  (package-install 'diminish))
-
-(require 'diminish)
-(require 'bind-key)
-
-
-;;; Setting up the dependencies, features and packages
-
+;; Setting up the dependencies, features and packages
 (add-to-list 'load-path user-features-dir)
-
-(setq custom-file (concat user-etc-dir "custom.el"))
-(load custom-file t)
-
 (add-to-list 'load-path user-host-dir)
-
-
-;;; Misc
 
 ;; Enable disabled by default commands permanently
 (put 'downcase-region 'disabled nil)

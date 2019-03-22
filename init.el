@@ -14,10 +14,12 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
-(setq user-full-name "Serghei Iakovlev"
-      user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
-
 (require 'appearance)
+(require 'p14n)
+(require 'packaging)
+
+(setq custom-file (concat user-etc-dir "custom.el"))
+(load custom-file t)
 
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages

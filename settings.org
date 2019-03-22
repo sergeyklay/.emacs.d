@@ -76,28 +76,6 @@ or the symbol at point as the default value for occur.
 (setq browse-url-browser-function 'browse-url-xdg-open)
 #+end_src
 
-** Utilities for =list-packages= menu
-
-Add functions to filter the list by status (s new), or filter to see only
-marked packages.
-
-#+begin_src emacs-lisp
-(defun package-menu-find-marks ()
-  "Find packages marked for action in *Packages*."
-  (interactive)
-  (occur "^[A-Z]"))
-
-(defun package-menu-filter-by-status (status)
-  "Filter the *Packages* buffer by status."
-  (interactive
-   (list (completing-read
-          "Status : " '("new" "installed" "dependency" "obsolete"))))
-  (package-menu-filter (concat "status:" status)))
-
-(define-key package-menu-mode-map "s" #'package-menu-filter-by-status)
-(define-key package-menu-mode-map "a" #'package-menu-find-marks)
-#+end_src
-
 * Org mode
 
 Truly the way to [[http://orgmode.org/][live life in plain text]].  I mainly use it to take
