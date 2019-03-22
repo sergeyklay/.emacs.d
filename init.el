@@ -14,9 +14,9 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
+(require 'packaging)
 (require 'appearance)
 (require 'p14n)
-(require 'packaging)
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
