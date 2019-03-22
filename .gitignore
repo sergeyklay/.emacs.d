@@ -5,10 +5,9 @@
 /helm-adaptive-history
 /ac-comphist.dat
 
-/elpa/
 /eshell/
-/site-lisp/
 /transient/
 /semanticdb/
 /.local/cache/
+/.local/packages/
 /.cask/

@@ -135,7 +135,10 @@ are running on, as a string.")
         ("melpa-stable" . "http://stable.melpa.org/packages/")
         ("gnu"          . "https://elpa.gnu.org/packages/")))
 
-(setq package--init-file-ensured t)
+(setq
+ package--init-file-ensured t
+ package-user-dir (concat user-local-dir "packages/" emacs-version "/elpa"))
+
 (package-initialize)
 
 (when (not package-archive-contents)
@@ -147,26 +150,6 @@ are running on, as a string.")
   (package-install 'use-package))
 
 (eval-when-compile (require 'use-package))
-
-;; Install quelpa
-(unless (package-installed-p 'quelpa)
-  (package-refresh-contents)
-  (package-install 'quelpa))
-
-(require 'quelpa)
-(setq quelpa-update-melpa-p nil)
-
-;; Install quelpa-use-package
-(quelpa
- '(quelpa-use-package
-   :fetcher github
-   :repo "quelpa/quelpa-use-package"))
-
-(require 'quelpa-use-package)
-(setq use-package-ensure-function 'quelpa)
-
-;; Always automatically install missing packages
-(setq use-package-always-ensure t)
 
 ;; Install diminish
 (unless (package-installed-p 'diminish)
