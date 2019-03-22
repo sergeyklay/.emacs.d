@@ -49,10 +49,17 @@
 
 ;;; Theme & font
 
-(add-to-list 'default-frame-alist
-             (cond
-              ((string-equal system-type "darwin")    '(font . "Fira Code-14"))
-              ((string-equal system-type "gnu/linux") '(font . "Fira Code-12"))))
+;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
+
+(cond
+ ((string-equal system-type "gnu/linux")
+  (when (member "Fira Code" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "Fira Code-12"))
+    (add-to-list 'default-frame-alist '(font . "Fira Code-12"))))
+ ((string-equal system-type "darwin")
+    (when (member "Fira Code" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "Fira Code-14"))
+    (add-to-list 'default-frame-alist '(font . "Fira Code-14")))))
 
 (use-package doom-themes
   :ensure t
