@@ -173,5 +173,14 @@ are running on, as a string.")
 
 (add-to-list 'load-path user-host-dir)
 
+
+;;; Misc
+
+;; Enable disabled by default commands permanently
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+
 (provide 'core)
 ;;; core.el ends here

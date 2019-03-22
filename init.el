@@ -14,6 +14,9 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
+(setq user-full-name "Serghei Iakovlev"
+      user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
+
 (require 'appearance)
 
 (when (boundp 'package-pinned-packages)

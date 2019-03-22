@@ -8,13 +8,6 @@ and along the way I've become accustomed to many different tweaks for it.
 This configuration uses the [[https://github.com/jwiegley/use-package][use-package]] package from John Wiegley, which is
 a fantastic way to manage package configurations.
 
-* Personal information
-
-#+begin_src emacs lisp
-(setq user-full-name "Serghei Iakovlev"
-      user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
-#+end_src
-
 * Sane defaults
 
 Let's start with some sane defaults, shall we?
@@ -42,38 +35,10 @@ or the symbol at point as the default value for occur.
 (bind-key "M-s o" 'occur-dwim)
 #+end_src
 
-** Pretify page breaks
-
-Here we make page-break characters look pretty, instead of appearing
-as =^L= in Emacs. [[http://ericjmritz.name/2015/08/29/using-page-breaks-in-gnu-emacs/][Here's an informative article called "Using
-Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
-
-#+begin_src emacs-lisp
-(use-package page-break-lines
-  :diminish page-break-lines-mode
-  :ensure t
-  :config
-  (global-page-break-lines-mode))
-#+end_src
-
 ** Miscellaneous stuff
 
 #+begin_src emacs-lisp
-;; These functions are useful. Activate them.
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
-
-;; Turn off the blinking cursor
-(blink-cursor-mode -1)
-
 (setq-default indent-tabs-mode nil)
-
-;; delete the region when typing, just like as we expect nowadays.
-(delete-selection-mode t)
-
-(show-paren-mode t)
 
 (setq uniquify-buffer-name-style 'forward)
 
@@ -87,39 +52,8 @@ Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
 ;; -l means invoke login shells, so that .profile or .bash_profile is read
 (setq shell-command-switch "-lc")
 
-;; Automagic indent on newline
-(global-set-key "\C-m" 'newline-and-indent)
-
-;; Enable line highlight mode everywhere
-(global-hl-line-mode 1)
-
-;; Make sure that there is one newline at the end of the file while saving,
-;; also removes all spaces at the end of lines.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-(setq-default indicate-empty-lines t)
-
 ;; Change all yes-or-no-p to y-or-n-p
 (defalias 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-** Scrolling
-
-#+begin_src emacs-lisp
-;; nice scrolling
-(setq scroll-margin 0
-      scroll-conservatively 100000
-      scroll-preserve-screen-position 1)
-#+end_src
-
-This makes it so ~C-n~-ing and ~C-p~-ing won't make the buffer
-jump around so much.
-
-#+begin_src emacs-lisp
-(use-package smooth-scrolling
-  :ensure t
-  :config
-  (smooth-scrolling-mode))
 #+end_src
 
 ** Don't ask for confirmation when opening symlinks
@@ -128,15 +62,11 @@ jump around so much.
 (setq vc-follow-symlinks t)
 #+end_src
 
-** Default text wrap at 80 cols
-
-#+begin_src emacs-lisp
-(setq default-fill-column 80)
-#+end_src
-
 ** Remove the trailing whitespaces on save
 
 #+begin_src emacs-lisp
+;; Make sure that there is one newline at the end of the file while saving,
+;; also removes all spaces at the end of lines.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
@@ -166,21 +96,6 @@ marked packages.
 
 (define-key package-menu-mode-map "s" #'package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'package-menu-find-marks)
-#+end_src
-
-** Eldoc
-
-Eldoc displays information about function signatures.
-Here we reduce the delay.
-
-#+begin_src emacs-lisp
-(setq eldoc-idle-delay 0.3)
-#+end_src
-
-** Documentation for elisp
-
-#+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 #+end_src
 
 * Org mode
@@ -521,6 +436,19 @@ A quick way to jump around text in buffers.
    :PROPERTIES:
    :GitHub:   https://github.com/mooz/c-eldoc
    :END:
+
+Documentation for elisp
+
+#+begin_src emacs-lisp
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+#+end_src
+
+Eldoc displays information about function signatures.
+Here we reduce the delay.
+
+#+begin_src emacs-lisp
+(setq eldoc-idle-delay 0.3)
+#+end_src
 
 This package displays function signatures in the mode line.
 
