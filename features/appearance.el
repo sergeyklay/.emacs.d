@@ -11,6 +11,7 @@
 
 ;;; Code:
 
+
 ;;; Bell configuration
 
 ;; Don't beep at me
@@ -22,6 +23,7 @@
         (invert-face 'mode-line)
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
+
 ;;; Modeline tweaks
 
 ;; Activate column and line number in the modeline
@@ -30,6 +32,7 @@
 
 (global-visual-line-mode)
 
+
 ;;; Misc
 
 ;; Highlight current line

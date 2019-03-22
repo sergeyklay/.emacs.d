@@ -125,15 +125,64 @@ are running on, as a string.")
 (setq inhibit-startup-message t)
 
 
+;;; Bootstrap packaging system
+
+;; Set up package
+(require 'package)
+(setq package-archives
+      '(("org"          . "http://orgmode.org/elpa/")
+        ("melpa"        . "http://melpa.org/packages/")
+        ("melpa-stable" . "http://stable.melpa.org/packages/")
+        ("gnu"          . "https://elpa.gnu.org/packages/")))
+
+(setq package--init-file-ensured t)
+(package-initialize)
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+;; Install use-package
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile (require 'use-package))
+
+;; Install quelpa
+(unless (package-installed-p 'quelpa)
+  (package-refresh-contents)
+  (package-install 'quelpa))
+
+(require 'quelpa)
+(setq quelpa-update-melpa-p nil)
+
+;; Install quelpa-use-package
+(quelpa
+ '(quelpa-use-package
+   :fetcher github
+   :repo "quelpa/quelpa-use-package"))
+
+(require 'quelpa-use-package)
+(setq use-package-ensure-function 'quelpa)
+
+;; Always automatically install missing packages
+(setq use-package-always-ensure t)
+
+;; Install diminish
+(unless (package-installed-p 'diminish)
+  (package-refresh-contents)
+  (package-install 'diminish))
+
+(require 'diminish)
+(require 'bind-key)
+
+
 ;;; Setting up the dependencies, features and packages
 
 (add-to-list 'load-path user-features-dir)
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
-
-;; Set up appearance early
-(require 'appearance)
 
 (add-to-list 'load-path user-host-dir)
 
