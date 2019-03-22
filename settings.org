@@ -167,29 +167,6 @@ jump around so much.
   (smooth-scrolling-mode))
 #+end_src
 
-** Modeline tweaks
-
-Activate column and line number in the modeline, as well as time.
-
-#+begin_src emacs-lisp
-(column-number-mode t)
-(line-number-mode t)
-(display-time-mode t)
-(size-indication-mode t)
-
-(global-visual-line-mode)
-(diminish 'visual-line-mode)
-#+end_src
-
-** Configuring bell
-
-#+begin_src emacs-lisp
-(setq ring-bell-function 'ignore)
-
-;; Don't beep at me
-(setq visible-bell t)
-#+end_src
-
 ** Don't ask for confirmation when opening symlinks
 
 #+begin_src emacs-lisp
@@ -625,6 +602,59 @@ control, especially when contributors develop on different platforms.
   (editorconfig-mode 1))
 #+end_src
 
+** Password store
+
+#+begin_src emacs-lisp
+(use-package password-store
+  :ensure t)
+#+end_src
+** ERC
+
+#+begin_src emacs-lisp
+(use-package erc-hl-nicks
+  :ensure t
+  :after erc)
+
+(use-package erc-image
+  :ensure t
+  :after erc)
+
+;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use/
+(use-package erc
+  :after password-store
+  :defer t
+  :custom
+  (erc-autojoin-channels-alist
+   '(("freenode.net"
+      "#emacs" "#i3" "#latex" "#org-mode"
+      "#phalcon" "#zephir")))
+
+  (erc-autojoin-timing 'ident)
+  (erc-fill-function 'erc-fill-static)
+  (erc-fill-static-center 22)
+  (erc-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-threshold-time 43200)
+  (erc-prompt-for-nickserv-password nil)
+  (erc-server-reconnect-attempts 5)
+  (erc-server-reconnect-timeout 3)
+  (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                             "324" "329" "332" "333" "353" "477"))
+
+  :config
+  (add-to-list 'erc-modules 'notifications)
+  (add-to-list 'erc-modules 'spelling)
+  (erc-services-mode 1)
+  (erc-update-modules))
+
+(defun my/erc-start-or-switch ()
+  "Connects to ERC, or switch to last active buffer."
+  (interactive)
+  (if (get-buffer "irc.freenode.net:6667")
+      (erc-track-switch-buffer 1)
+    (when (y-or-n-p "Start ERC? ")
+      (erc :server "irc.freenode.net" :port 6667 :nick "klay"))))
+#+end_src
 ** Helm
 
 Helm Configuration.

@@ -44,9 +44,6 @@ external dependencies or long-term shared data.")
   "Directory for volatile storage.
 Use this for files that change often, like cache files.")
 
-(defvar user-packages-dir (concat user-local-dir "packages/")
-  "Where package.el and quelpa plugins (and their caches) are stored.")
-
 (defvar user-features-dir (concat user-emacs-dir "features/")
   "All the features should located here.")
 
@@ -130,7 +127,6 @@ are running on, as a string.")
 
 ;;; Setting up the dependencies, features and packages
 
-(add-to-list 'load-path user-packages-dir)
 (add-to-list 'load-path user-features-dir)
 
 (setq custom-file (concat user-etc-dir "custom.el"))
