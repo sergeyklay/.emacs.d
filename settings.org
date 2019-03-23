@@ -372,7 +372,9 @@ Helm Configuration.
    helm-locate-library-fuzzy-match       t
    helm-mode-fuzzy-match                 t
    helm-recentf-fuzzy-match              t
-   helm-semantic-fuzzy-match             t)
+   helm-semantic-fuzzy-match             t
+   helm-adaptive-history-file
+   (concat user-cache-dir "helm-adaptive-history.el"))
 
   ;; C-c h i settings
   (setq helm-semantic-fuzzy-match t
