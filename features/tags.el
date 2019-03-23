@@ -1,13 +1,17 @@
-;;; tags.el --- Initialise all things tags related. -*- lexical-binding: t; -*-
+;;; tags.el --- Emacs configuration for tags. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
 ;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
 ;; URL: https://github.com/sergeyklay/.emacs.d
+;;
+;; This file is not part of GNU Emacs.
+;;
+;; License: GPLv3
 
 ;;; Commentary:
 
-;; Setting up tags realated features
+;; Tags realated features GNU Emacs.
 
 ;;; Code:
 
@@ -32,6 +36,7 @@
     (progn
       (dolist (hook '(sh-mode-hook
                       c-mode-hook
+                      c++-mode-hook
                       makefile-mode-hook))
         (add-hook hook #'ggtags-mode)))))
 

@@ -1,9 +1,13 @@
-;;; init.el -- Initialization file. -*- lexical-binding: t; -*-
+;;; init.el --- Initialization file. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
 ;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
 ;; URL: https://github.com/sergeyklay/.emacs.d
+;;
+;; This file is not part of GNU Emacs.
+;;
+;; License: GPLv3
 
 ;;; Commentary:
 
@@ -24,6 +28,7 @@
 (require 'intellisense)
 (require 'tags)
 (require 'vcs)
+(require 'orgs)
 
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages

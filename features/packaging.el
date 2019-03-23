@@ -1,13 +1,17 @@
-;;; packaging.el -- All packaging related features. -*- lexical-binding: t; -*-
+;;; packaging.el --- All packaging related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
 ;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
 ;; URL: https://github.com/sergeyklay/.emacs.d
+;;
+;; This file is not part of GNU Emacs.
+;;
+;; License: GPLv3
 
 ;;; Commentary:
 
-;; Packaging related features
+;; Packaging related features for GNU Emacs.
 
 ;;; Code:
 
