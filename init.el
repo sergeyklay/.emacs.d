@@ -21,6 +21,9 @@
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+(require 'intellisense)
+(require 'tags)
+
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
 	'((org-plus-contrib . "org"))))

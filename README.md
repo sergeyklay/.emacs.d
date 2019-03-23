@@ -17,9 +17,10 @@ Known to work with GNU Emacs 25.1 and later.
 Prerequisite packages are
 -------------------------
 
-- `ag`
-- `gnutls-cli`
-- `exuberant-ctags`
+- The Silver Searcher (`ag`)
+- GnuTLS client (`gnutls-cli`)
+- Exuberant Ctags (`exuberant-ctags`)
+- GNU Global (`global`)
 - Fira Code Font
 
 License

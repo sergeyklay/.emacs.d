@@ -51,9 +51,6 @@ or the symbol at point as the default value for occur.
 ;; I use -l instead of -i
 ;; -l means invoke login shells, so that .profile or .bash_profile is read
 (setq shell-command-switch "-lc")
-
-;; Change all yes-or-no-p to y-or-n-p
-(defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
 ** Don't ask for confirmation when opening symlinks
@@ -691,9 +688,14 @@ to access magit.  For more see: https://magit.vc/
 (use-package magit
   :ensure t
   :defer t
-  :bind (("C-c g"   . magit-status)
-         ("C-c m l" . magit-log-buffer-file)
-         ("C-c m b" . magit-blame))
+  :bind (
+         ("C-x g s" . magit-status)
+         ("C-x g x" . magit-checkout)
+         ("C-x g c" . magit-commit)
+         ("C-x g p" . magit-push)
+         ("C-x g u" . magit-pull)
+         ("C-x g e" . magit-ediff-resolve)
+         ("C-x g r" . magit-rebase-interactive))
   :config
   ;; DWIM prompting when creating new branches.
   (setq magit-branch-read-upstream-first 'fallback)
@@ -1143,24 +1145,6 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
   :mode "\\.ya?ml\\'")
 #+end_src
 
-** Company
-
-Auto completion.
-
-#+begin_src emacs-lisp
-(use-package company
-  :ensure t
-  :config
-
-  (setq company-tooltip-limit 20)
-  (setq company-idle-delay .15)
-  (setq company-echo-delay 0)
-  (setq company-begin-commands '(self-insert-command))
-
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous))
-#+end_src
-
 ** PHP
 
 Install =php-mode=, set coding style, add a hook to load =flymake=
@@ -1355,6 +1339,14 @@ Haskell configuration for Emacs.
 
 ** C/Java
 
+#+begin_src emacs-lisp
+(use-package cc-mode
+  :after company
+  :init
+  (define-key c-mode-map  [(tab)] 'company-complete)
+  (define-key c++-mode-map [(tab)] 'company-complete))
+#+end_src
+
 Change the default way that Emacs handles indentation. For instance,
 
 #+begin_src C
@@ -1387,7 +1379,7 @@ switch (number)
 Luckily, I can modify the way Emacs formats code with this configuration.
 
 #+begin_src emacs-lisp
-(defun my-c-mode-hook ()
+(defun my/c-mode-hook ()
   (setq tab-width 4)
   (setq c-basic-offset 4)
   (setq indent-tabs-mode t)
@@ -1395,8 +1387,8 @@ Luckily, I can modify the way Emacs formats code with this configuration.
   (c-set-offset 'substatement-open 0)   ; Curly braces alignment
   (c-set-offset 'case-label 4))         ; Switch case statements alignment
 
-(add-hook 'c-mode-hook 'my-c-mode-hook)
-(add-hook 'java-mode-hook 'my-c-mode-hook)
+(add-hook 'c-mode-hook 'my/c-mode-hook)
+(add-hook 'java-mode-hook 'my/c-mode-hook)
 #+end_src
 
 * Misc
