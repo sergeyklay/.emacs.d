@@ -1026,14 +1026,6 @@ Haskell configuration for Emacs.
 
 ** C/Java
 
-#+begin_src emacs-lisp
-(use-package cc-mode
-  :after company
-  :init
-  (define-key c-mode-map  [(tab)] 'company-complete)
-  (define-key c++-mode-map [(tab)] 'company-complete))
-#+end_src
-
 Change the default way that Emacs handles indentation. For instance,
 
 #+begin_src C

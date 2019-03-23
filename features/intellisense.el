@@ -38,7 +38,10 @@
 ;; Company-Statistics: Suggest most used completions first
 (use-package company-statistics
   :ensure t
-  :hook (company-mode . company-statistics-mode))
+  :hook (company-mode . company-statistics-mode)
+  :config
+  (setq company-statistics-file
+        (concat user-cache-dir "company-statistics-cache.el")))
 
 ;; Company-Quickhelp: Add information about completions
 (use-package company-quickhelp
