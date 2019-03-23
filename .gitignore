@@ -1,11 +1,5 @@
 \#*\#
 
 /settings.el
-
-/helm-adaptive-history
-/ac-comphist.dat
-
 /eshell/
-/transient/
-/semanticdb/
 /.cask/
