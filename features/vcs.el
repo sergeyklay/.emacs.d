@@ -22,7 +22,6 @@
 ;; to access magit.  For more see URL `https://magit.vc'
 
 (use-package magit
-  :ensure t
   :bind (("C-x g s" . magit-status)
          ("C-x g x" . magit-checkout)
          ("C-x g c" . magit-commit)
@@ -39,22 +38,18 @@
 
 ;;; Git
 
-(use-package git-link
-  :ensure t)
+(use-package git-link)
 
 (use-package gitconfig-mode
-  :ensure t
   :mode (("\\.gitconfig\\'" . gitconfig-mode)
 	 ("\\.git/config\\'" . gitconfig-mode)
 	 ("\\.gitmodules\\'" . gitconfig-mode)))
 
 (use-package gitignore-mode
-  :ensure t
   :mode (("\\.gitignore\\'" . gitignore-mode)
          ("\\.dockerignore\\'" . gitignore-mode)))
 
 (use-package gitattributes-mode
-  :ensure t
   :mode (("\\.gitattributes\\'" . gitattributes-mode)
          ("\\.git/info/attributes\\'" . gitattributes-mode)))
 

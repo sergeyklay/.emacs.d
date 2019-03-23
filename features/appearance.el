@@ -59,7 +59,6 @@
 ;; Pretify page breaks
 (use-package page-break-lines
   :diminish page-break-lines-mode
-  :ensure t
   :config
   (global-page-break-lines-mode))
 
@@ -84,7 +83,6 @@
     (add-to-list 'default-frame-alist '(font . "Fira Code-14")))))
 
 (use-package doom-themes
-  :ensure t
   :config
   (load-theme 'doom-one t))
 
@@ -99,7 +97,6 @@
 ;; jump around so much.
 
 (use-package smooth-scrolling
-  :ensure t
   :config
   (smooth-scrolling-mode))
 

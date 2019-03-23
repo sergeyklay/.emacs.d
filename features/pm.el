@@ -16,7 +16,6 @@
 ;;; Code:
 
 (use-package projectile
-  :ensure t
   :diminish projectile-mode
   :init
   (setq projectile-cache-file (concat user-cache-dir "projectile.cache")

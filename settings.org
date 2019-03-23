@@ -62,25 +62,6 @@ and allows you.
   :bind ("C-c t" . transpose-frame))
 #+end_src
 
-* Ido
-
-~ido-mode~ enhanced Emacs switch buffer command and opening file command.
-For more see: http://ergoemacs.org/emacs/emacs_ido_mode.html
-
-#+begin_src emacs-lisp
-(use-package ido
-  :disabled t
-  :init
-  (setq ido-enable-flex-matching t)
-  (setq ido-everywhere t)
-  (ido-mode t)
-  (use-package ido-vertical-mode
-    :ensure t
-    :defer t
-    :init (ido-vertical-mode 1)
-    (setq ido-vertical-define-keys 'C-n-and-C-p-only)))
-#+end_src
-
 * Whitespace mode
 
 #+begin_src emacs-lisp

@@ -19,7 +19,6 @@
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (when (executable-find "global")
   (use-package ggtags
-    :ensure t
     :bind
     (:map ggtags-mode-map
           ("C-c g s" . 'ggtags-find-other-symbol)
@@ -51,7 +50,6 @@
 
 (when (executable-find "ctags")
   (use-package ctags-update
-    :ensure t
     :diminish (ctags-auto-update-mode . " τ")
     :hook
     ((c-mode-common . turn-on-ctags-auto-update-mode))))

@@ -17,7 +17,6 @@
 
 ;; For more see URL `http://company-mode.github.io'
 (use-package company
-  :ensure t
   :init
   (global-company-mode)
   :config
@@ -31,13 +30,11 @@
 
 ;; For more see URL `https://github.com/randomphrase/company-c-headers'
 (use-package company-c-headers
-  :ensure t
   :init
   (add-to-list 'company-backends 'company-c-headers))
 
 ;; Company-Statistics: Suggest most used completions first
 (use-package company-statistics
-  :ensure t
   :hook (company-mode . company-statistics-mode)
   :config
   (setq company-statistics-file
@@ -45,7 +42,6 @@
 
 ;; Company-Quickhelp: Add information about completions
 (use-package company-quickhelp
-  :ensure t
   :hook (company-mode . company-quickhelp-mode)
   :config
   (setq company-quickhelp-delay 0)
