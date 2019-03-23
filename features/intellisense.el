@@ -42,10 +42,16 @@
 
 ;; Company-Quickhelp: Add information about completions
 (use-package company-quickhelp
+  :if window-system
   :hook (company-mode . company-quickhelp-mode)
   :config
-  (setq company-quickhelp-delay 0)
-  (setq company-quickhelp-use-propertized-text t))
+  (setq
+   company-quickhelp-delay 0
+   company-quickhelp-use-propertized-text t
+   ;; from doom-one-theme.el
+   pos-tip-background-color "#23272e"
+   pos-tip-foreground-color "#bbc2cf"))
+
 
 (provide 'intellisense)
 ;;; intellisense.el ends here
