@@ -26,7 +26,7 @@
 (load custom-file t)
 
 (require 'pm)
-(require 'intellisense)
+(require 'fcompany)
 (require 'tags)
 (require 'vcs)
 (require 'orgs)

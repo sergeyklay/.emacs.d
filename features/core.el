@@ -135,6 +135,11 @@ are running on, as a string.")
 (add-to-list 'load-path user-features-dir)
 (add-to-list 'load-path user-host-dir)
 
+;; Add feature groups to the load path
+(dolist (feature-group (directory-files user-features-dir t "\\w+"))
+  (when (file-directory-p feature-group)
+    (add-to-list 'load-path feature-group)))
+
 ;; Enable disabled by default commands permanently
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)

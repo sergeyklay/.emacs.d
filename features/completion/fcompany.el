@@ -1,4 +1,4 @@
-;;; intellisense.el --- Initialise company. -*- lexical-binding: t; -*-
+;;; fcompany.el --- Initialise company. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -52,11 +52,5 @@
    pos-tip-background-color "#23272e"
    pos-tip-foreground-color "#bbc2cf"))
 
-;; TODO: Probable I'll remove this in the future
-;; currently needed only for PHP
-(use-package auto-complete
-  :config
-  (setq ac-comphist-file (concat user-cache-dir "ac-comphist.dat")))
-
-(provide 'intellisense)
-;;; intellisense.el ends here
+(provide 'fcompany)
+;;; fcompany.el ends here
