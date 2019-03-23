@@ -5,7 +5,7 @@
     <a href="https://www.gnu.org/licenses/gpl-3.0.txt">
         <img src="https://img.shields.io/badge/license-GPL_3-green.svg" alt="GPL 3">
     </a>
-    <a href="https://travis-ci.org/sergeyklay/.emacs.d">
+    <a href="https://travis-ci.com/sergeyklay/.emacs.d">
         <img src="https://travis-ci.com/sergeyklay/.emacs.d.svg" alt="Build Status">
     </a>
 </p>
