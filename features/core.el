@@ -115,7 +115,7 @@ are running on, as a string.")
  recentf-save-file            (concat user-cache-dir "recentf")
  savehist-file                (concat user-cache-dir "minibuffer-history.el")
  mc/list-file                 (concat user-etc-dir "mc-lists.el")
- tramp-auto-save-directory    (concat user-cache-dir "autosave/tramp/")
+ tramp-auto-save-directory    (concat user-cache-dir "tramp/")
  tramp-backup-directory-alist backup-directory-alist
  tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el"))
 

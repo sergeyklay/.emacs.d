@@ -1,4 +1,3 @@
 *
-!/etc
-!/cache
+!/hosts
 !.gitignore
