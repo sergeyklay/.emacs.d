@@ -25,6 +25,7 @@
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+(require 'pm)
 (require 'intellisense)
 (require 'tags)
 (require 'vcs)
