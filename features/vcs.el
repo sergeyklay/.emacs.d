@@ -23,14 +23,13 @@
 
 (use-package magit
   :ensure t
-  :bind
-  ("C-x g s" . magit-status)
-  ("C-x g x" . magit-checkout)
-  ("C-x g c" . magit-commit)
-  ("C-x g p" . magit-push)
-  ("C-x g u" . magit-pull)
-  ("C-x g e" . magit-ediff-resolve)
-  ("C-x g r" . magit-rebase-interactive)
+  :bind (("C-x g s" . magit-status)
+         ("C-x g x" . magit-checkout)
+         ("C-x g c" . magit-commit)
+         ("C-x g p" . magit-push)
+         ("C-x g u" . magit-pull)
+         ("C-x g e" . magit-ediff-resolve)
+         ("C-x g r" . magit-rebase-interactive))
   :config
   ;; DWIM prompting when creating new branches.
   (setq magit-branch-read-upstream-first 'fallback))
