@@ -86,9 +86,6 @@
 
 ;;; Org babel languages
 
-(use-package ob-restclient
-  :ensure t)
-
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)
