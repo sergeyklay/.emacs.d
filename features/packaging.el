@@ -19,31 +19,41 @@
 
 (require 'package)
 
-(setq package-archives
-      '(("org"          . "http://orgmode.org/elpa/")
-        ("melpa"        . "http://melpa.org/packages/")
-        ("melpa-stable" . "http://stable.melpa.org/packages/")
-        ("gnu"          . "https://elpa.gnu.org/packages/")))
-
 (setq
  package--init-file-ensured t
  package-user-dir (concat user-local-dir "packages/" emacs-version "/elpa"))
 
-(package-initialize)
+;; Emacs >= 26.1
+(when (boundp 'package-gnupghome-dir)
+  (setq package-gnupghome-dir
+        (expand-file-name "gnupg" user-local-dir)))
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
+(setq package-archives
+      '(("org"      . "http://orgmode.org/elpa/")
+        ("melpa"    . "http://melpa.org/packages/")
+        ("m-stable" . "http://stable.melpa.org/packages/")
+        ("gnu"      . "https://elpa.gnu.org/packages/")))
+
+;; Priorities. Default priority is 0.
+(setq package-archive-priorities
+      '(("m-stable" . 20)
+        ("melpa" . 10)))
+
+;; Initialize package manager.
+(package-initialize)
+(unless package-archive-contents (package-refresh-contents))
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
 
 (eval-when-compile (require 'use-package))
 
+;; All packages should be installed.
+(setq use-package-always-ensure t)
+
 ;; Install diminish
 (unless (package-installed-p 'diminish)
-  (package-refresh-contents)
   (package-install 'diminish))
 
 (require 'diminish)

@@ -587,17 +587,6 @@ other packages hook into.  It's an improvment on the built in =flymake=.
         ("C-;" . #'helm-flyspell-correct)))
 #+end_src
 
-** Macrostep
-
-Macrostep allows you to see what Elisp macros expand to.
-For more see the [[https://www.youtube.com/watch?v%3D2TSKxxYEbII][package highlight talk for use-package]].
-
-#+begin_src emacs-lisp
-(use-package macrostep
-  :ensure t
-  :bind ("H-`" . macrostep-expand))
-#+end_src
-
 ** Markdown mode
 
 Install [[https://github.com/commonmark/cmark][cmark]] or your Markdown processor of choice and set it as ~markdown-command~ before using the live previewer commands.
