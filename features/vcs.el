@@ -31,8 +31,11 @@
          ("C-x g e" . magit-ediff-resolve)
          ("C-x g r" . magit-rebase-interactive))
   :config
-  ;; DWIM prompting when creating new branches.
-  (setq magit-branch-read-upstream-first 'fallback))
+  (setq transient-history-file (concat user-cache-dir "transient/history.el")
+        transient-values-file (concat user-cache-dir "transient/values.el")
+        transient-levels-file (concat user-cache-dir "transient/levels.el")
+        ;; DWIM prompting when creating new branches.
+        magit-branch-read-upstream-first 'fallback))
 
 ;;; Git
 
