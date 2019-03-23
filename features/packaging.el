@@ -11,7 +11,6 @@
 
 ;;; Code:
 
-
 ;;; Bootstrap packaging system
 
 (require 'package)

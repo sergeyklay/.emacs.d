@@ -1,4 +1,4 @@
-;;; intellisense.el --- Initialise company
+;;; intellisense.el --- Initialise company. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 

@@ -11,7 +11,6 @@
 
 ;;; Code:
 
-
 ;;; Bell configuration
 
 ;; Don't beep at me
@@ -23,7 +22,6 @@
         (invert-face 'mode-line)
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
-
 ;;; Modeline tweaks
 
 ;; Activate column and line number in the modeline
@@ -32,7 +30,6 @@
 
 (global-visual-line-mode)
 
-
 ;;; Misc
 
 ;; Enable line highlight mode everywhere
@@ -68,7 +65,6 @@
 ;; delete the region when typing, just like as we expect nowadays.
 (delete-selection-mode t)
 
-
 ;;; Theme & font
 
 ;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
@@ -88,7 +84,6 @@
   :config
   (load-theme 'doom-one t))
 
-
 ;;; Scrolling
 
 ;; nice scrolling
