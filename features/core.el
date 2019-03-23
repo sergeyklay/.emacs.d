@@ -98,11 +98,15 @@ are running on, as a string.")
       auto-save-timeout 10
       auto-save-interval 200)
 
-;; Sane defaults
+;;; Sane defaults
+
+(setq indent-tabs-mode nil)
+
 (setq-default
  debug-on-error (and (not noninteractive) emacs-debug-mode)
  history-length 500
  history-delete-duplicates t
+ vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
  ;; Files
  recentf-save-file            (concat user-cache-dir "recentf")
  savehist-file                (concat user-cache-dir "minibuffer-history.el")
@@ -132,6 +136,24 @@ are running on, as a string.")
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
+;; -i is for interactive, and -c tells bash to read whatever commands follow
+;;
+;; however, due to
+;; * https://github.com/bbatsov/projectile/issues/1097
+;; * https://emacs.stackexchange.com/q/3447/16592
+;;
+;; I use -l instead of -i
+;; -l means invoke login shells, so that .profile or .bash_profile is read
+(setq shell-command-switch "-lc")
+
+;; Make sure that there is one newline at the end of the file while saving,
+;; also removes all spaces at the end of lines.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Open URLs with =xdg-open=
+
+(setq browse-url-browser-function 'browse-url-xdg-open)
 
 (provide 'core)
 ;;; core.el ends here
