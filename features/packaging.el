@@ -59,7 +59,22 @@
 (require 'diminish)
 (require 'bind-key)
 
-;;; Utilities for =list-packages= menu
+;;; Install quelpa
+(defvar quelpa-dir)
+
+(use-package quelpa
+  :init
+  (setq quelpa-dir (concat user-local-dir "packages/" emacs-version "/quelpa")
+        quelpa-checkout-melpa-p nil
+        quelpa-update-melpa-p nil))
+
+(use-package quelpa-use-package
+  :config
+  (quelpa-use-package-activate-advice))
+
+(require 'quelpa-use-package)
+
+;;; Utilities for `list-packages' menu
 
 ;; Add functions to filter the list by status (s new), or filter to see only
 ;; marked packages.
