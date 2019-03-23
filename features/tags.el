@@ -35,15 +35,21 @@
                       makefile-mode-hook))
         (add-hook hook #'ggtags-mode)))))
 
-(use-package ctags-update
-  :ensure t
-  :if (executable-find "ctags-exuberant")
-  :diminish (ctags-auto-update-mode . " τ")
-  :hook
-  ((c-mode-common . turn-on-ctags-auto-update-mode)))
-
 ;; Make Emacs reload the TAGS file automatically
 (setq tags-revert-without-query 1)
+
+;; t=case-insensitive, nil=case-sensitive
+(setq tags-case-fold-search nil)
+
+;; Increase the warning threshold to be more than normal TAGS file sizes
+(setq large-file-warning-threshold (* 50 1024 1024))
+
+(when (executable-find "ctags")
+  (use-package ctags-update
+    :ensure t
+    :diminish (ctags-auto-update-mode . " τ")
+    :hook
+    ((c-mode-common . turn-on-ctags-auto-update-mode))))
 
 (provide 'tags)
 ;;; tags.el ends here
