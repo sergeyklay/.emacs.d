@@ -32,13 +32,18 @@
         projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS")
         projectile-globally-ignored-file-suffixes
         '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock"))
-
   :bind (("C-c p p"   . projectile-switch-project)
          ("C-c p s s" . projectile-ag))
   :config
   (projectile-mode t)
   (setq projectile-completion-system 'ivy)
   (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook))
+
+(use-package counsel-projectile
+  :after (ivy counsel projectile)
+  :config
+  (counsel-projectile-mode 1)
+  (ivy-set-display-transformer #'counsel-projectile-find-file nil))
 
 (provide 'pm)
 ;;; pm.el ends here
