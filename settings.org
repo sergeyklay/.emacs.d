@@ -95,14 +95,6 @@ Usefull links:
 
 These are the packages that are not built into Emacs.
 
-** Ag
-
-#+begin_src emacs-lisp
-(use-package ag
-  :commands ag
-  :ensure t)
-#+end_src
-
 ** Ace Jump Mode
 
 A quick way to jump around text in buffers.

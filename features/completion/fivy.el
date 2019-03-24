@@ -19,6 +19,15 @@
 
 (use-package ivy
   :diminish (ivy-mode . "")
+  :defer 0.1
+  :bind (("C-x b"   . ivy-switch-buffer)
+         ("C-x B"   . ivy-switch-buffer-other-window)
+         ("C-c C-r" . ivy-resume)
+         :map ivy-minibuffer-map
+         ("<tab>"   . ivy-alt-done)
+         ("C-i"     . ivy-partial-or-done)
+         :map ivy-switch-buffer-map
+         ("C-k"     . ivy-switch-buffer-kill))
   :config
   (ivy-mode 1)
   (setq
@@ -43,9 +52,8 @@
    ;; Disable magic slash on non-match
    ivy-magic-slash-non-match-action nil))
 
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
+;;; Counsel
 
-;; Counsel
 (use-package counsel
   :requires ivy
   :config
@@ -63,6 +71,15 @@
 (global-set-key (kbd "C-h b")   #'counsel-descbinds)
 
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+
+;;; Swiper
+
+(use-package swiper
+  :after ivy
+  :commands (swiper swiper-all)
+  :bind(("C-s" . swiper)
+        :map swiper-map
+        ("M-%" . swiper-query-replace)))
 
 (provide 'fivy)
 ;;; fivy.el ends here
