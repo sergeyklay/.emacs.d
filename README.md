@@ -17,6 +17,7 @@ Known to work with GNU Emacs 25.1 and later.
 Prerequisite packages are
 -------------------------
 
+- Aspell
 - Exuberant Ctags (`exuberant-ctags`)
 - Fira Code Font
 - GNU Global (`global`)

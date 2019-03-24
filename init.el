@@ -30,6 +30,7 @@
 (require 'fivy)
 (require 'tags)
 (require 'vcs)
+(require 'spellcheck)
 (require 'forg)
 
 (when (boundp 'package-pinned-packages)

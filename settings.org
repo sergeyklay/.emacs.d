@@ -95,20 +95,6 @@ Usefull links:
 
 These are the packages that are not built into Emacs.
 
-** Ace Jump Mode
-
-A quick way to jump around text in buffers.
-
-[[http://emacsrocks.com/e10.html][See Emacs Rocks Episode 10 for a screencast.]]
-
-#+begin_src emacs-lisp
-(use-package ace-jump-mode
-  :ensure t
-  :diminish ace-jump-mode
-  :commands ace-jump-mode
-  :bind ("C-S-s" . ace-jump-mode))
-#+end_src
-
 ** Winum
 
 [[https://github.com/deb0ch/emacs-winum][Window numbers]] for Emacs: Navigate your windows and frames using numbers !
@@ -303,79 +289,6 @@ other packages hook into.  It's an improvment on the built in =flymake=.
                 (flycheck-mode))))
 
   :diminish flycheck-mode)
-#+end_src
-
-** Flyspell
-
-*** Prerequisites
-:PROPERTIES:
-:CUSTOM_ID: flyspell-prerequisites
-:END:
-
-| Name      | ArchLinux | Gentoo             | Ubuntu    | Optional |
-|-----------+-----------+--------------------+-----------+----------|
-| [[http://aspell.net/][aspell]]    | aspell    | textproc/aspell    | aspell    | No       |
-| aspell-ru | aspell-ru | textproc/aspell-ru | aspell-ru | No       |
-| aspell-en | aspell-en | textproc/aspell-en | aspell-en | No       |
-
-*** Packages
-:PROPERTIES:
-:CUSTOM_ID: flyspell-packages
-:END:
-
-| Package       | Description                                        |
-|---------------+----------------------------------------------------|
-| [[http://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell.html][flyspell]]      | Eenables on-the-fly spell checking in Emacs.       |
-
-
-#+begin_src emacs-lisp
-(use-package flyspell
-  :defer t
-  :diminish flyspell-mode " Ⓢ"
-
-  :init
-  (dolist (hook '(text-mode-hook org-mode-hook))
-    (add-hook hook (lambda () (flyspell-mode 1))))
-
-  (dolist (hook '(org-agenda-mode-hook))
-    (add-hook hook (lambda () (flyspell-mode -1))))
-
-  :config
-  (setq ispell-program-name "aspell"
-        ;; my dictionary-alist, using for redefinition russian dictionary
-        ispell-dictionary-alist
-        '(("english"   ;; English
-           "[a-zA-Z]"  ;; casecshars
-           "[^a-zA-Z]" ;; not-casechars
-           "['-’]"     ;; other-chars
-           nil
-           ("-d" "en" "--lang" "en_GB" "--encoding=en_GB.utf8" "--size=90")
-           nil
-           utf-8
-           ;;iso-8859-1
-           )
-          ("russian" ;; Russian
-           "[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
-           "[^АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
-           "[`'-]"
-           nil
-           ("-C" "-d" "ru")
-           nil
-           utf-8))
-        ispell-aspell-dictionary-alist ispell-dictionary-alist
-
-        ispell-russian-dictionary "russian"
-        ispell-english-dictionary "english"
-
-        flyspell-default-dictionary ispell-russian-dictionary
-
-        ispell-dictionary ispell-english-dictionary
-        ispell-extra-args '("--sug-mode=normal")
-        ispell-list-command "--list")
-  :bind
-
-  (:map flyspell-mode-map
-        ("C-;" . #'flyspell-correct-word)))
 #+end_src
 
 ** Markdown mode
