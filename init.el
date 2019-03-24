@@ -30,7 +30,7 @@
 (require 'fivy)
 (require 'tags)
 (require 'vcs)
-(require 'orgs)
+(require 'forg)
 
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
