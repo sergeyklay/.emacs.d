@@ -450,51 +450,15 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
 #+end_src
 
 ** PHP
-
-Install =php-mode=, set coding style, add a hook to load =flymake=
-and configure ac company.
-
-*** ac-php
-
-#+begin_src emacs-lisp
-(use-package ac-php
-  :ensure t
-  :init
-  (progn
-    ;; TODO: Probable I'll remove this in the future
-    ;; currently needed only for PHP
-    (use-package auto-complete
-      :config
-      (setq ac-comphist-file (concat user-cache-dir "ac-comphist.dat")))))
-#+end_src
-
-*** company-php
-
-#+begin_src emacs-lisp
-(use-package company-php
-  :ensure t
-  :after ac-php
-  :config
-  (unless (executable-find "phpctags")
-    (warn "company-php: phpctags isn't installed, auto-completion will be gimped"))
-  (let ((my-cache-dir (concat user-cache-dir "ac-php/")))
-    (setq ac-php-tags-path my-cache-dir)
-    (unless (file-exists-p my-cache-dir)
-      (make-directory my-cache-dir t))))
-#+end_src
-
 *** php-mode
 
 #+begin_src emacs-lisp
 (use-package php-mode
-    :ensure t
-    :after company-php
     :mode (("\\.php[ts354]?\\'" . php-mode)
            ("\\.inc\\'" . php-mode))
-    :requires (ac-php company-php)
 
     :config
-    (defun serg/locate-php-executable ()
+    (defun my/locate-php-executable ()
       "Search for the PHP executable using ’phpenv’.
 
 This function will try to find the PHP executable by calling ’phpenv’.
@@ -508,23 +472,14 @@ or nil otherwise."
                  (shell-command-to-string (concat phpenv " which php"))))
         (setq php-executable (executable-find "php"))))
 
-    (add-hook 'php-mode-hook 'auto-complete-mode)
-    (add-hook 'php-mode-hook 'company-mode)
     (add-hook 'php-mode-hook 'subword-mode)
-    (add-hook 'php-mode-hook #'serg/locate-php-executable)
+    (add-hook 'php-mode-hook #'my/locate-php-executable)
 
-    (ac-php-remake-tags)
-    (ac-php-remake-tags-all)
-    (ac-php-core-eldoc-setup)
-    (make-local-variable 'company-backends)
-    (add-to-list 'company-backends 'company-ac-php-backend)
     (setq-default php-mode-coding-style 'psr2)
 
     :bind
     (:map php-mode-map
-          ("<C-tab>" . #'counsel-company)
-          ("C-]"     . #'ac-php-find-symbol-at-point)
-          ("C-t"     . #'ac-php-location-stack-back)
+          ("C-<tab>" . #'counsel-company)
           ("C-c /"   . #'comment-or-uncomment-region)
           ("C-c C--" . #'php-current-class)
           ("C-c C-=" . #'php-current-namespace)))
