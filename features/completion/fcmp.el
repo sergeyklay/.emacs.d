@@ -19,6 +19,11 @@
 (use-package company
   :init
   (global-company-mode)
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous))
   :config
   (setq
    ;; remove annoying blinking
@@ -31,15 +36,6 @@
    company-tooltip-idle-delay t
    ;; bigger popup window
    company-tooltip-limit 20))
-
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous)
-
-  (add-hook 'c++-mode-hook 'company-mode)
-  (add-hook 'c-mode-hook 'company-mode))
 
 ;; For more see URL `https://github.com/randomphrase/company-c-headers'
 (use-package company-c-headers

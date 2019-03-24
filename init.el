@@ -31,6 +31,7 @@
 (require 'fvcs)     ; VCS related features
 (require 'fspl)     ; Spell configuration
 (require 'forg)     ; Org related configuration
+(require 'fcc)      ; Support for the C-family of languages
 (require 'fphp)     ; PHP related configuration
 (require 'fhs)      ; Haskell configuration
 
