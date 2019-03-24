@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Setting up company
+;; Setting up company for GNU Emacs.
 
 ;;; Code:
 

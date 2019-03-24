@@ -16,6 +16,7 @@
 ;;; Code:
 
 (use-package projectile
+  :after ivy
   :diminish projectile-mode
   :init
   (setq projectile-cache-file (concat user-cache-dir "projectile.cache")
@@ -36,6 +37,7 @@
          ("C-c p s s" . projectile-ag))
   :config
   (projectile-mode t)
+  (setq projectile-completion-system 'ivy)
   (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook))
 
 (provide 'pm)

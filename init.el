@@ -27,6 +27,7 @@
 
 (require 'pm)
 (require 'fcompany)
+(require 'fivy)
 (require 'tags)
 (require 'vcs)
 (require 'orgs)
