@@ -164,5 +164,9 @@ are running on, as a string.")
 
 (setq browse-url-browser-function 'browse-url-xdg-open)
 
+;; I don't use this at all.
+;; However, it always trolls me when I want to open a file.
+(global-unset-key "\C-xf")
+
 (provide 'core)
 ;;; core.el ends here
