@@ -13,6 +13,8 @@
 
 ;; PHP related configuration for the GNU Emacs.
 
+;;; Code:
+
 (defun my//locate-php-executable ()
   "Search for the PHP executable using ’phpenv’.
 
@@ -20,7 +22,6 @@ This function will try to find the PHP executable by calling ’phpenv’.
 If it is not available, the function will utilize `executable-find'.
 The function will set `php-executable' to the actual PHP if found
 or nil otherwise."
-  (message "We're going to set php bin")
   (let ((phpenv (executable-find "phpenv")))
     (if phpenv
         (setq php-executable
@@ -32,18 +33,18 @@ or nil otherwise."
 (use-package php-mode
   :mode (("\\.php[ts354]?\\'" . php-mode)
          ("\\.inc\\'" . php-mode))
-  :hook ((php-mode . my//locate-php-executable)
-         (php-mode . subword-mode ))
-  :config
-  (setq-default php-mode-coding-style 'psr2)
+  :init
+  (progn
+    (setq php-mode-coding-style 'psr2)
+    (add-hook 'php-mode-hook #'subword-mode)
+    (add-hook 'php-mode-hook #'company-mode)
+    (add-hook 'php-mode-hook #'my//locate-php-executable))
   :bind
   (:map php-mode-map
         ("C-<tab>" . #'counsel-company)
         ("C-c /"   . #'comment-or-uncomment-region)
         ("C-c C--" . #'php-current-class)
         ("C-c C-=" . #'php-current-namespace)))
-
-;;; Code:
 
 (provide 'fphp)
 ;;; fphp.el ends here
