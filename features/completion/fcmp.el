@@ -20,13 +20,26 @@
   :init
   (global-company-mode)
   :config
-  (setq company-echo-delay 0
-        company-idle-delay .3
-        company-selection-wrap-around t
-        company-show-numbers t
-        company-tooltip-align-annotations t
-        company-tooltip-idle-delay t
-        company-tooltip-limit 20))
+  (setq
+   ;; remove annoying blinking
+   company-echo-delay 0
+   ;; decrease delay before autocompletion popup shows
+   company-idle-delay .3
+   company-selection-wrap-around t
+   company-show-numbers t
+   company-tooltip-align-annotations t
+   company-tooltip-idle-delay t
+   ;; bigger popup window
+   company-tooltip-limit 20))
+
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous)
+
+  (add-hook 'c++-mode-hook 'company-mode)
+  (add-hook 'c-mode-hook 'company-mode))
 
 ;; For more see URL `https://github.com/randomphrase/company-c-headers'
 (use-package company-c-headers
@@ -39,18 +52,6 @@
   :config
   (setq company-statistics-file
         (concat user-cache-dir "company-statistics-cache.el")))
-
-;; Company-Quickhelp: Add information about completions
-(use-package company-quickhelp
-  :if window-system
-  :hook (company-mode . company-quickhelp-mode)
-  :config
-  (setq
-   company-quickhelp-delay 0
-   company-quickhelp-use-propertized-text t
-   ;; from doom-one-theme.el
-   pos-tip-background-color "#23272e"
-   pos-tip-foreground-color "#bbc2cf"))
 
 (provide 'fcmp)
 ;;; fcmp.el ends here
