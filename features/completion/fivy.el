@@ -61,14 +61,12 @@
         "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)"))
 
 ;; Replace standard keybindings
-(global-set-key (kbd "C-x C-f") #'counsel-find-file)
-(global-set-key (kbd "C-x r")   #'counsel-recentf)
-(global-set-key (kbd "M-x")     #'counsel-M-x)
-(global-set-key (kbd "C-c k")   #'counsel-ag)
-(global-set-key (kbd "C-h a")   #'counsel-apropos)
-(global-set-key (kbd "C-h v")   #'counsel-describe-variable)
-(global-set-key (kbd "C-h f")   #'counsel-describe-function)
-(global-set-key (kbd "C-h b")   #'counsel-descbinds)
+(global-set-key (kbd "C-x r")  #'counsel-recentf)
+(global-set-key (kbd "C-c k")  #'counsel-ag)
+(global-set-key (kbd "C-h a")  #'counsel-apropos)
+(global-set-key (kbd "C-h v")  #'counsel-describe-variable)
+(global-set-key (kbd "C-h f")  #'counsel-describe-function)
+(global-set-key (kbd "C-h b")  #'counsel-descbinds)
 
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
