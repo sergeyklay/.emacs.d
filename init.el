@@ -11,8 +11,7 @@
 
 ;;; Commentary:
 
-;; This file is used to set up the packages sources and then call
-;; an org-babel tangle in order to load a literate configuration.
+;; This file is used as a bootstrap for my Emacs.
 
 ;;; Code:
 
@@ -27,17 +26,20 @@
 
 (require 'pm)
 (require 'fcompany)
-(require 'fivy)
+(require 'fivy)     ; Initialize ivy, counsel and swiper
 (require 'tags)
 (require 'vcs)
 (require 'spellcheck)
-(require 'forg)
+(require 'forg)     ; Org related configuration
+(require 'fphp)     ; PHP related configuration
+(require 'fhs)      ; Haskell configuration
 
+;; deprecated
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
 	'((org-plus-contrib . "org"))))
 
-;; See: https://emacs.stackexchange.com/a/3147/16592
+;; deprecated
 (org-babel-load-file
  (expand-file-name "settings.org" user-emacs-directory))
 

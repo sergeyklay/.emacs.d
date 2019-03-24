@@ -18,12 +18,14 @@ Prerequisite packages are
 -------------------------
 
 - Aspell
-- Exuberant Ctags (`exuberant-ctags`)
+- Exuberant Ctags
 - Fira Code Font
-- GNU Global (`global`)
+- GNU Global
 - Git
-- GnuTLS client (`gnutls-cli`)
-- The Silver Searcher (`ag`)
+- GnuTLS client
+- HLint
+- Hoogle
+- The Silver Searcher
 
 License
 -------

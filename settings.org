@@ -2,12 +2,6 @@
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
 
-Emacs has been my text editor of choice since probably about 2017 or so,
-and along the way I've become accustomed to many different tweaks for it.
-
-This configuration uses the [[https://github.com/jwiegley/use-package][use-package]] package from John Wiegley, which is
-a fantastic way to manage package configurations.
-
 * Window
 
 Ckonvenient keybindings to resize windows.
@@ -250,14 +244,6 @@ http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html
   (setq edit-server-new-frame nil))
 #+end_src
 
-** Elfeed
-
-#+begin_src emacs-lisp :tangle no
-(use-package elfeed
-  :ensure t
-  :defer t)
-#+end_src
-
 ** Expand region
 
 #+begin_src emacs-lisp
@@ -449,42 +435,6 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
   :mode "\\.ya?ml\\'")
 #+end_src
 
-** PHP
-*** php-mode
-
-#+begin_src emacs-lisp
-(use-package php-mode
-    :mode (("\\.php[ts354]?\\'" . php-mode)
-           ("\\.inc\\'" . php-mode))
-
-    :config
-    (defun my/locate-php-executable ()
-      "Search for the PHP executable using ’phpenv’.
-
-This function will try to find the PHP executable by calling ’phpenv’.
-If it is not available, the function will utilize `executable-find'.
-The function will set `php-executable' to the current PHP if found
-or nil otherwise."
-      (if-let ((phpenv (executable-find "phpenv")))
-          (setq php-executable
-                (replace-regexp-in-string
-                 "\n\\'" ""
-                 (shell-command-to-string (concat phpenv " which php"))))
-        (setq php-executable (executable-find "php"))))
-
-    (add-hook 'php-mode-hook 'subword-mode)
-    (add-hook 'php-mode-hook #'my/locate-php-executable)
-
-    (setq-default php-mode-coding-style 'psr2)
-
-    :bind
-    (:map php-mode-map
-          ("C-<tab>" . #'counsel-company)
-          ("C-c /"   . #'comment-or-uncomment-region)
-          ("C-c C--" . #'php-current-class)
-          ("C-c C-=" . #'php-current-namespace)))
-#+end_src
-
 ** Web mode
 
 [[http://web-mode.org/][web-mode]] is an autonomous emacs major-mode for editing web templates.
@@ -518,78 +468,6 @@ or nil otherwise."
         web-mode-code-indent-offset 4))
 #+end_src
 
-** Haskell
-
-Haskell configuration for Emacs.
-
-*** Prerequisites
-:PROPERTIES:
-:CUSTOM_ID: haskell-prerequisites
-:END:
-
-| Name    | ArchLinux | Gentoo                       | Ubuntu  | Optional |
-|---------+-----------+------------------------------+---------+----------|
-| [[https://github.com/DanielG/ghc-mod][ghc-mod]] | ghc-mod   | app-emacs/ghc-mod            | ghc-mod | No       |
-| [[https://github.com/ndmitchell/hlint][hlint]]   | hlint     | dev-haskell/hlint            | hlint   | No       |
-| [[https://github.com/ndmitchell/hoogle][hoogle]]  | hoogle    | dev-haskell/hoogle [haskell] | hoogle  | No       |
-
-*** Packages
-:PROPERTIES:
-:CUSTOM_ID: haskell-packages
-:END:
-
-| Package          | Description                                                        |
-|------------------+--------------------------------------------------------------------|
-| [[https://github.com/haskell/haskell-mode][haskell-mode]]     | Emacs mode for editing, debugging and developing Haskell programs. |
-| [[https://github.com/DanielG/ghc-mod][ghc-mod]]          | Haskell completion and keybindings.                                |
-| [[https://github.com/flycheck/flycheck-haskell][flycheck-haskell]] | Flycheck mode for Haskell.                                         |
-
-
-#+begin_src emacs-lisp
-(use-package haskell-mode
-  :ensure t
-  :mode "\\.l?hs\\'"
-  :init
-  (progn
-    (setq
-     haskell-interactive-popup-errors nil
-     haskell-process-log t
-     haskell-process-suggest-remove-import-lines t
-     haskell-process-auto-import-loaded-modules t
-     haskell-stylish-on-save t)
-
-    (use-package company-ghci
-      :ensure t
-      :defer t)
-
-    (use-package flycheck-haskell
-      :ensure t
-      :after flycheck
-      :init (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
-
-    (use-package intero
-      :defer t
-      :ensure t
-      :init
-      (progn
-        (setq intero-extra-ghci-options '("-fno-defer-type-errors"))))
-
-    (use-package hindent
-      :ensure t
-      :commands (hindent-mode)
-      :bind (:map hindent-mode-map
-                  ("C-c R" . hindent-reformat-buffer)))
-
-    (defun haskell-hook ()
-      (semantic-mode)
-      (flycheck-mode)
-      (intero-global-mode)
-      (hindent-mode)
-      (add-to-list (make-local-variable 'company-backends)
-                   '(company-intero company-ghci company-dabbrev-code company-yasnippet)))
-
-    (add-hook 'haskell-mode-hook 'haskell-hook)))
-#+end_src
 ** Windows scripts
 
 *** PowerShell
