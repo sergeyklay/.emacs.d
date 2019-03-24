@@ -1,4 +1,4 @@
-;;; fcompany.el --- Initialise company. -*- lexical-binding: t; -*-
+;;; fcmp.el --- Initialise company. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -52,5 +52,5 @@
    pos-tip-background-color "#23272e"
    pos-tip-foreground-color "#bbc2cf"))
 
-(provide 'fcompany)
-;;; fcompany.el ends here
+(provide 'fcmp)
+;;; fcmp.el ends here

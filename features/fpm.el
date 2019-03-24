@@ -1,4 +1,4 @@
-;;; pm.el --- Project management related features. -*- lexical-binding: t; -*-
+;;; fpm.el --- Project management related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -44,5 +44,5 @@
   (counsel-projectile-mode 1)
   (ivy-set-display-transformer #'counsel-projectile-find-file nil))
 
-(provide 'pm)
-;;; pm.el ends here
+(provide 'fpm)
+;;; fpm.el ends here

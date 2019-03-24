@@ -1,4 +1,4 @@
-;;; packaging.el --- All packaging related features. -*- lexical-binding: t; -*-
+;;; fpkg.el --- All packaging related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -94,5 +94,5 @@
 (define-key package-menu-mode-map "s" #'my/package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'my/package-menu-find-marks)
 
-(provide 'packaging)
-;;; packaging.el ends here
+(provide 'fpkg)
+;;; fpkg.el ends here

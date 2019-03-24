@@ -1,4 +1,4 @@
-;;; p14n.el --- Personalization related features. -*- lexical-binding: t; -*-
+;;; fme.el --- Personalization related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -18,5 +18,5 @@
 (setq user-full-name "Serghei Iakovlev"
       user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
 
-(provide 'p14n)
-;;; p14n.el ends here
+(provide 'fme)
+;;; fme.el ends here

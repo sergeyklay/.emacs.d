@@ -17,19 +17,19 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
-(require 'packaging)
-(require 'appearance)
-(require 'p14n)
+(require 'fpkg)     ; Packaging related features
+(require 'fui)      ; Appearance related settings
+(require 'fme)      ; Personalization
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
-(require 'pm)
-(require 'fcompany)
+(require 'fpm)      ; Project navigation and management
+(require 'fcmp)     ; Setting up company
 (require 'fivy)     ; Initialize ivy, counsel and swiper
-(require 'tags)
-(require 'vcs)
-(require 'spellcheck)
+(require 'ftag)     ; Setting up tags and code navigation
+(require 'fvcs)     ; VCS related features
+(require 'fspl)     ; Spell configuration
 (require 'forg)     ; Org related configuration
 (require 'fphp)     ; PHP related configuration
 (require 'fhs)      ; Haskell configuration

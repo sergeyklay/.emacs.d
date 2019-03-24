@@ -1,4 +1,4 @@
-;;; tags.el --- Emacs configuration for tags. -*- lexical-binding: t; -*-
+;;; ftag.el --- Emacs configuration for tags. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -54,5 +54,5 @@
     :hook
     ((c-mode-common . turn-on-ctags-auto-update-mode))))
 
-(provide 'tags)
-;;; tags.el ends here
+(provide 'ftag)
+;;; ftag.el ends here
