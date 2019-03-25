@@ -31,6 +31,7 @@
 (require 'jump)       ; Setting up tags and code navigation
 (require 'vcs)        ; VCS related features
 (require 'spell)      ; Spell configuration
+(require 'shells)     ; Shells configuration
 (require 'org-lang)   ; Org related configuration
 (require 'cc-lang)    ; Support for the C-family of languages
 (require 'php-lang)   ; PHP related configuration

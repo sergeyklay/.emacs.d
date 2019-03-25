@@ -87,5 +87,12 @@
 
     (set-face-attribute 'winum-face nil :foreground "DeepPink" :weight 'bold)))
 
+;; Revert buffer without confirmation.
+;; See URL `http://www.emacswiki.org/emacs-en/download/misc-cmds.el'
+(defun my/revert-buffer-no-confirm ()
+    "Revert buffer without confirmation."
+    (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
+
 (provide 'windows)
 ;;; windows.el ends here

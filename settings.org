@@ -9,28 +9,6 @@
   :bind ("<f10>" . whitespace-mode))
 #+end_src
 
-* Eshell
-
-Emacs shell interactive mode.
-
-Usefull links:
-- [[https://www.emacswiki.org/emacs/EshellPrompt][EshellPrompt]]
-- [[http://www.howardism.org/Technical/Emacs/eshell-fun.html][Eschewing Zshell for Emacs Shell]]
-
-#+begin_src emacs-lisp
-(use-package eshell
-  :defer t
-  :init
-  :config
-  (add-hook 'eshell-mode-hook
-            '(lambda ()
-               (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))))
-#+end_src
-
-#+begin_src emacs-lisp
-(bind-key (kbd "M-s e") 'eshell)
-#+end_src
-
 * ELPA packages
 
 ** Eldoc/C-Eldoc
@@ -377,15 +355,4 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
                  (message "Used features: %d" (length features))))
             t))
 
-#+end_src
-** Custom function
-
-Revert buffer without confirmation.
-
-#+begin_src emacs-lisp
-;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
-(defun serg/revert-buffer-no-confirm ()
-    "Revert buffer without confirmation."
-    (interactive)
-    (revert-buffer :ignore-auto :noconfirm))
 #+end_src
