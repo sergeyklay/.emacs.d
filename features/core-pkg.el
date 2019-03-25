@@ -45,6 +45,7 @@
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
 
 (eval-when-compile (require 'use-package))
@@ -54,8 +55,15 @@
 
 ;; Install diminish
 (unless (package-installed-p 'diminish)
+  (package-refresh-contents)
   (package-install 'diminish))
 
+;; Install delight
+(unless (package-installed-p 'delight)
+  (package-refresh-contents)
+  (package-install 'delight))
+
+(require 'delight)
 (require 'diminish)
 (require 'bind-key)
 
