@@ -15,6 +15,12 @@
 
 ;;; Code:
 
+(setq indent-tabs-mode nil)
+
+;; Make sure that there is one newline at the end of the file while saving,
+;; also removes all spaces at the end of lines.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;;; Undo Tree
 
 (use-package undo-tree
@@ -26,6 +32,8 @@
 ;; `https://github.com/magnars/multiple-cursors.el/issues/105'
 (use-package multiple-cursors
   :ensure t
+  :config
+  (setq mc/list-file (concat user-etc-dir "mc-lists.el"))
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)

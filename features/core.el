@@ -104,8 +104,6 @@ are running on, as a string.")
 
 ;;; Sane defaults
 
-(setq indent-tabs-mode nil)
-
 (setq-default
  debug-on-error (and (not noninteractive) emacs-debug-mode)
  history-length 500
@@ -114,7 +112,6 @@ are running on, as a string.")
  ;; Files
  recentf-save-file            (concat user-cache-dir "recentf")
  savehist-file                (concat user-cache-dir "minibuffer-history.el")
- mc/list-file                 (concat user-etc-dir "mc-lists.el")
  tramp-auto-save-directory    (concat user-cache-dir "tramp/")
  tramp-backup-directory-alist backup-directory-alist
  tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el"))
@@ -145,10 +142,6 @@ are running on, as a string.")
 (put 'upcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
-
-;; Make sure that there is one newline at the end of the file while saving,
-;; also removes all spaces at the end of lines.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Open URLs with =xdg-open=
 
