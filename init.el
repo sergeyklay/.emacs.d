@@ -24,6 +24,7 @@
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+(require 'windows)    ; Windows management features
 (require 'projects)   ; Project navigation and management
 (require 'comp-any)   ; Setting up company
 (require 'comp-ivy)   ; Initialize ivy, counsel and swiper

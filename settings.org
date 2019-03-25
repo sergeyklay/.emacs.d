@@ -2,60 +2,6 @@
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
 
-* Window
-
-Ckonvenient keybindings to resize windows.
-For more see: https://www.emacswiki.org/emacs/WindowResize
-
-#+begin_src emacs-lisp
-(bind-key "S-C-<left>"  'shrink-window-horizontally)
-(bind-key "S-C-<right>" 'enlarge-window-horizontally)
-(bind-key "S-C-<down>"  'shrink-window)
-(bind-key "S-C-<up>"    'enlarge-window)
-#+end_src
-
-Whenever I split windows, I usually do so and also switch to the other
-window as well, so might as well rebind the splitting key bindings to
-do just that to reduce the repetition.
-
-#+begin_src emacs-lisp
-(defun vsplit-other-window ()
-  "Splits the window vertically and switches to that window."
-  (interactive)
-  (split-window-vertically)
-  (other-window 1 nil))
-
-(defun hsplit-other-window ()
-  "Splits the window horizontally and switches to that window."
-  (interactive)
-  (split-window-horizontally)
-  (other-window 1 nil))
-
-(bind-key "C-x 2" 'vsplit-other-window)
-(bind-key "C-x 3" 'hsplit-other-window)
-#+end_src
-
-** Winner mode
-
-Winner mode allows you to undo/redo changes to window changes in Emacs
-and allows you.
-
-#+begin_src emacs-lisp
-(use-package winner
-  :config
-  (winner-mode t)
-  :bind (("M-s-<left>" . winner-undo)
-         ("M-s-<right>" . winner-redo)))
-#+end_src
-
-** Transpose frame
-
-#+begin_src emacs-lisp
-(use-package transpose-frame
-  :ensure t
-  :bind ("C-c t" . transpose-frame))
-#+end_src
-
 * Whitespace mode
 
 #+begin_src emacs-lisp
@@ -86,36 +32,6 @@ Usefull links:
 #+end_src
 
 * ELPA packages
-
-These are the packages that are not built into Emacs.
-
-** Winum
-
-[[https://github.com/deb0ch/emacs-winum][Window numbers]] for Emacs: Navigate your windows and frames using numbers !
-
-#+begin_src emacs-lisp
-(use-package winum
-  :ensure t
-  :config
-  (progn
-    (setq winum-auto-assign-0-to-minibuffer nil
-          winum-ignored-buffers '(" *which-key*"))
-
-    (define-key winum-keymap (kbd "M-0") 'winum-select-window-0-or-10)
-    (define-key winum-keymap (kbd "M-1") 'winum-select-window-1)
-    (define-key winum-keymap (kbd "M-2") 'winum-select-window-2)
-    (define-key winum-keymap (kbd "M-3") 'winum-select-window-3)
-    (define-key winum-keymap (kbd "M-4") 'winum-select-window-4)
-    (define-key winum-keymap (kbd "M-5") 'winum-select-window-5)
-    (define-key winum-keymap (kbd "M-6") 'winum-select-window-6)
-    (define-key winum-keymap (kbd "M-7") 'winum-select-window-7)
-    (define-key winum-keymap (kbd "M-8") 'winum-select-window-8)
-    (define-key winum-keymap (kbd "M-9") 'winum-select-window-9)
-
-    (winum-mode)
-
-    (set-face-attribute 'winum-face nil :foreground "DeepPink" :weight 'bold)))
-#+end_src
 
 ** Eldoc/C-Eldoc
    :PROPERTIES:
