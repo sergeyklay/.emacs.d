@@ -41,17 +41,26 @@
 (require 'lisp-lang)    ; Configure the Lisp-family of languages
 (require 'md-lang)      ; Add markdown support
 (require 'ms-lang)      ; Add support for M$ scripts
+(require 'web-lang)     ; Add support for the Web-based languages
+(require 'conf-lang)    ; Add support for the configuration like languages
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'irc)          ; IRC tools
 (require 'syntax-check) ; Syntax checkers
+(require 'snippets)     ; Add snippets support
 
-;; deprecated
-(when (boundp 'package-pinned-packages)
-  (setq package-pinned-packages
-	'((org-plus-contrib . "org"))))
+;; TODO: move to the hook
+(when window-system
+  (let ((elapsed (float-time (time-subtract (current-time)
+                                            emacs-start-time))))
+    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
 
-;; deprecated
-(org-babel-load-file
- (expand-file-name "settings.org" user-emacs-directory))
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)
+                 (message "Used features: %d" (length features))))
+            t))
 
 ;;; init.el ends here
