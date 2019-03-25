@@ -55,7 +55,8 @@
     :init
     (progn
       (defun ctags-common-hook ()
-        (turn-on-ctags-auto-update-mode))
+        (when (not noninteractive)
+          (turn-on-ctags-auto-update-mode)))
 
       (dolist (hook '(c-mode-common-hook
                       php-mode-hook
