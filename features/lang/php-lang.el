@@ -1,4 +1,4 @@
-;;; fphp.el --- PHP related configuration. -*- lexical-binding: t; -*-
+;;; php-lang.el --- PHP related configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -46,5 +46,5 @@ or nil otherwise."
         ("C-c C--" . #'php-current-class)
         ("C-c C-=" . #'php-current-namespace)))
 
-(provide 'fphp)
-;;; fphp.el ends here
+(provide 'php-lang)
+;;; php-lang.el ends here

@@ -1,4 +1,4 @@
-;;; fivy.el --- Initialize ivy. -*- lexical-binding: t; -*-
+;;; comp-ivy.el --- Initialize ivy. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -79,5 +79,5 @@
         :map swiper-map
         ("M-%" . swiper-query-replace)))
 
-(provide 'fivy)
-;;; fivy.el ends here
+(provide 'comp-ivy)
+;;; comp-ivy.el ends here

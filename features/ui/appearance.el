@@ -1,4 +1,4 @@
-;;; fui.el --- All appearance related setting. -*- lexical-binding: t; -*-
+;;; appearance.el --- All appearance related setting. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -100,5 +100,5 @@
   :config
   (smooth-scrolling-mode))
 
-(provide 'fui)
-;;; fui.el ends here
+(provide 'appearance)
+;;; appearance.el ends here

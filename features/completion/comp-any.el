@@ -1,4 +1,4 @@
-;;; fcmp.el --- Initialise company. -*- lexical-binding: t; -*-
+;;; comp-any.el --- Initialise company. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -49,5 +49,5 @@
   (setq company-statistics-file
         (concat user-cache-dir "company-statistics-cache.el")))
 
-(provide 'fcmp)
-;;; fcmp.el ends here
+(provide 'comp-any)
+;;; comp-any.el ends here

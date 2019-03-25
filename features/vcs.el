@@ -1,4 +1,4 @@
-;;; fvcs.el --- Emacs configuration for VCS. -*- lexical-binding: t; -*-
+;;; vcs.el --- Emacs configuration for VCS. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -56,5 +56,5 @@
   :mode (("\\.gitattributes\\'" . gitattributes-mode)
          ("\\.git/info/attributes\\'" . gitattributes-mode)))
 
-(provide 'fvcs)
-;;; fvcs.el ends here
+(provide 'vcs)
+;;; vcs.el ends here

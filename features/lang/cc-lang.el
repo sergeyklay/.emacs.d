@@ -1,4 +1,4 @@
-;;; fhs.el --- Add support for the C-family of languages. -*- lexical-binding: t; -*-
+;;; cc-lang.el --- Add support for the C-family of languages. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -35,5 +35,5 @@
 
 (add-hook 'c-mode-hook #'my/c-mode-hook)
 
-(provide 'fcc)
-;;; fcc.el ends here
+(provide 'cc-lang)
+;;; cc-lang.el ends here

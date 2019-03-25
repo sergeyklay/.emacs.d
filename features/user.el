@@ -1,4 +1,4 @@
-;;; fme.el --- Personalization related features. -*- lexical-binding: t; -*-
+;;; user.el --- Personalization related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -18,5 +18,5 @@
 (setq user-full-name "Serghei Iakovlev"
       user-mail-address (concat "sadhooklay" "@" "gmail" ".com"))
 
-(provide 'fme)
-;;; fme.el ends here
+(provide 'user)
+;;; user.el ends here

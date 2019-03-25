@@ -1,4 +1,4 @@
-;;; fhs.el --- Haskell related features. -*- lexical-binding: t; -*-
+;;; hs-lang.el --- Haskell related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -53,5 +53,5 @@
 
     (add-hook 'haskell-mode-hook 'haskell-hook)))
 
-(provide 'fhs)
-;;; fhs.el ends here
+(provide 'hs-lang)
+;;; hs-lang.el ends here

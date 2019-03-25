@@ -1,4 +1,4 @@
-;;; forg.el --- Emacs configuration for Org. -*- lexical-binding: t; -*-
+;;; org-lang.el --- Emacs configuration for Org. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -134,5 +134,5 @@
 (add-to-list 'org-structure-template-alist '("hs"  . "src haskell"))
 (add-to-list 'org-structure-template-alist '("zep" . "src zephir"))
 
-(provide 'forg)
-;;; forg.el ends here
+(provide 'org-lang)
+;;; org-lang.el ends here

@@ -1,4 +1,4 @@
-;;; fspl.el --- Spell related features. -*- lexical-binding: t; -*-
+;;; spell.el --- Spell related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -65,5 +65,5 @@
               ("C-;" . flyspell-correct-word-generic))
   :custom (flyspell-correct-interface 'flyspell-correct-ivy))
 
-(provide 'fspl)
-;;; fspl.el ends here
+(provide 'spell)
+;;; spell.el ends here

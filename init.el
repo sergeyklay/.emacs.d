@@ -17,23 +17,23 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
-(require 'fpkg)     ; Packaging related features
-(require 'fui)      ; Appearance related settings
-(require 'fme)      ; Personalization
+(require 'core-pkg)   ; Packaging related features
+(require 'appearance) ; Appearance related settings
+(require 'user)       ; Personalization
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
-(require 'fpm)      ; Project navigation and management
-(require 'fcmp)     ; Setting up company
-(require 'fivy)     ; Initialize ivy, counsel and swiper
-(require 'ftag)     ; Setting up tags and code navigation
-(require 'fvcs)     ; VCS related features
-(require 'fspl)     ; Spell configuration
-(require 'forg)     ; Org related configuration
-(require 'fcc)      ; Support for the C-family of languages
-(require 'fphp)     ; PHP related configuration
-(require 'fhs)      ; Haskell configuration
+(require 'projects)   ; Project navigation and management
+(require 'comp-any)   ; Setting up company
+(require 'comp-ivy)   ; Initialize ivy, counsel and swiper
+(require 'jump)       ; Setting up tags and code navigation
+(require 'vcs)        ; VCS related features
+(require 'spell)      ; Spell configuration
+(require 'org-lang)   ; Org related configuration
+(require 'cc-lang)    ; Support for the C-family of languages
+(require 'php-lang)   ; PHP related configuration
+(require 'hs-lang)    ; Haskell configuration
 
 ;; deprecated
 (when (boundp 'package-pinned-packages)

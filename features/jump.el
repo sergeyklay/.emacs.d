@@ -1,4 +1,4 @@
-;;; ftag.el --- Emacs configuration for tags. -*- lexical-binding: t; -*-
+;;; jump.el --- Emacs configuration for tags. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -54,5 +54,5 @@
     :hook
     ((c-mode-common . turn-on-ctags-auto-update-mode))))
 
-(provide 'ftag)
-;;; ftag.el ends here
+(provide 'jump)
+;;; jump.el ends here
