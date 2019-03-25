@@ -24,7 +24,9 @@
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+(require 'secure)     ; Security related features
 (require 'windows)    ; Windows management features
+(require 'modeline)   ; Modeline related configuration
 (require 'projects)   ; Project navigation and management
 (require 'comp-any)   ; Setting up company
 (require 'comp-ivy)   ; Initialize ivy, counsel and swiper
@@ -36,6 +38,7 @@
 (require 'cc-lang)    ; Support for the C-family of languages
 (require 'php-lang)   ; PHP related configuration
 (require 'hs-lang)    ; Haskell configuration
+(require 'lisp-lang)  ; Configure the Lisp-family of languages
 (require 'editor)     ; Features related to the behavior of the editor
 
 ;; deprecated

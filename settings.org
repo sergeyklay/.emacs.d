@@ -4,39 +4,6 @@
 
 * ELPA packages
 
-** Eldoc/C-Eldoc
-   :PROPERTIES:
-   :GitHub:   https://github.com/mooz/c-eldoc
-   :END:
-
-Documentation for elisp
-
-#+begin_src emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-#+end_src
-
-Eldoc displays information about function signatures.
-Here we reduce the delay.
-
-#+begin_src emacs-lisp
-(setq eldoc-idle-delay 0.3)
-#+end_src
-
-This package displays function signatures in the mode line.
-
-#+begin_src emacs-lisp
-(use-package c-eldoc
-  :commands c-turn-on-eldoc-mode
-  :ensure t
-  :init (add-hook 'c-mode-hook #'c-turn-on-eldoc-mode))
-#+end_src
-
-** Password store
-
-#+begin_src emacs-lisp
-(use-package password-store
-  :ensure t)
-#+end_src
 ** ERC
 
 #+begin_src emacs-lisp
@@ -159,22 +126,6 @@ According to [[http://emmet.io/][their website]], "Emmet — the essential toolk
   (add-hook 'web-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook 'emmet-mode)
   (add-hook 'rjsx-mode-hook 'emmet-mode))
-#+end_src
-
-** SLIME
-
-The Superior Lisp Interaction Mode for Emacs. First, Install SBCL with
-brew.
-
-Note: You have to install =sbcl=.
-
-#+begin_src emacs-lisp
-(use-package slime
-  :ensure t
-  :defer 10
-  :init
-  (setq inferior-lisp-program "/usr/bin/sbcl")
-  (add-to-list 'slime-contribs 'slime-fancy))
 #+end_src
 
 ** crux
