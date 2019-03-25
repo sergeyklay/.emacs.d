@@ -17,29 +17,31 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
-(require 'core-pkg)   ; Packaging related features
-(require 'appearance) ; Appearance related settings
-(require 'user)       ; Personalization
+(require 'core-pkg)     ; Packaging related features
+(require 'appearance)   ; Appearance related settings
+(require 'user)         ; Personalization
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
-(require 'secure)     ; Security related features
-(require 'windows)    ; Windows management features
-(require 'modeline)   ; Modeline related configuration
-(require 'projects)   ; Project navigation and management
-(require 'comp-any)   ; Setting up company
-(require 'comp-ivy)   ; Initialize ivy, counsel and swiper
-(require 'jump)       ; Setting up tags and code navigation
-(require 'vcs)        ; VCS related features
-(require 'spell)      ; Spell configuration
-(require 'shells)     ; Shells configuration
-(require 'org-lang)   ; Org related configuration
-(require 'cc-lang)    ; Support for the C-family of languages
-(require 'php-lang)   ; PHP related configuration
-(require 'hs-lang)    ; Haskell configuration
-(require 'lisp-lang)  ; Configure the Lisp-family of languages
-(require 'editor)     ; Features related to the behavior of the editor
+(require 'secure)       ; Security related features
+(require 'windows)      ; Windows management features
+(require 'modeline)     ; Modeline related configuration
+(require 'projects)     ; Project navigation and management
+(require 'comp-any)     ; Setting up company
+(require 'comp-ivy)     ; Initialize ivy, counsel and swiper
+(require 'jump)         ; Setting up tags and code navigation
+(require 'vcs)          ; VCS related features
+(require 'spell)        ; Spell configuration
+(require 'shells)       ; Shells configuration
+(require 'org-lang)     ; Org related configuration
+(require 'cc-lang)      ; Support for the C-family of languages
+(require 'php-lang)     ; PHP related configuration
+(require 'hs-lang)      ; Haskell configuration
+(require 'lisp-lang)    ; Configure the Lisp-family of languages
+(require 'editor)       ; Features related to the behavior of the editor
+(require 'irc)          ; IRC tools
+(require 'syntax-check) ; Syntax checkers
 
 ;; deprecated
 (when (boundp 'package-pinned-packages)
