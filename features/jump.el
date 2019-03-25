@@ -53,14 +53,13 @@
 ;; Never “Keep current list of tags tables also”
 (setq tags-add-tables nil)
 
-(when (executable-find "ctags")
+;; outside of batch mode (noninteractive is set to 't' in that case)
+(when (and (not noninteractive) (executable-find "ctags"))
   (use-package ctags-update
     :init
     (progn
       (defun ctags-common-hook ()
-        ;; outside of batch mode (noninteractive is set to 't' in that case)
-        (when (not noninteractive)
-          (turn-on-ctags-auto-update-mode)))
+        (turn-on-ctags-auto-update-mode))
 
       (dolist (hook '(c-mode-common-hook
                       php-mode-hook
