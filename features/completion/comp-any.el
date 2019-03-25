@@ -35,7 +35,14 @@
    company-tooltip-align-annotations t
    company-tooltip-idle-delay t
    ;; bigger popup window
-   company-tooltip-limit 20))
+   company-tooltip-limit 20
+   company-global-modes '(not
+                          eshell-mode
+                          comint-mode
+                          erc-mode
+                          message-mode
+                          help-mode
+                          text-mode)))
 
 ;; For more see URL `https://github.com/randomphrase/company-c-headers'
 (use-package company-c-headers

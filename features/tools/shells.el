@@ -1,4 +1,4 @@
-;;; shellsel --- Shells configuration. -*- lexical-binding: t; -*-
+;;; shells.el --- Shells configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
