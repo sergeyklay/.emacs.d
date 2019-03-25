@@ -17,13 +17,11 @@
 
 (require 'core (concat user-emacs-directory "features/core"))
 
-(require 'core-pkg)     ; Packaging related features
-(require 'appearance)   ; Appearance related settings
-(require 'user)         ; Personalization
-
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+(require 'appearance)   ; Appearance related settings
+(require 'user)         ; Personalization
 (require 'secure)       ; Security related features
 (require 'windows)      ; Windows management features
 (require 'modeline)     ; Modeline related configuration
