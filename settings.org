@@ -101,16 +101,6 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
         web-mode-code-indent-offset 4))
 #+end_src
 
-** Windows scripts
-
-*** PowerShell
-
-#+begin_src emacs-lisp
-(use-package powershell
-  :ensure t
-  :mode "\\.ps[dm]?1\\'")
-#+end_src
-
 ** Post initialization
 
 *** Measure time to init

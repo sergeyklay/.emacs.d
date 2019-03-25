@@ -40,6 +40,7 @@
 (require 'hs-lang)      ; Haskell configuration
 (require 'lisp-lang)    ; Configure the Lisp-family of languages
 (require 'md-lang)      ; Add markdown support
+(require 'ms-lang)      ; Add support for M$ scripts
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'irc)          ; IRC tools
 (require 'syntax-check) ; Syntax checkers
