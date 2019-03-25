@@ -36,6 +36,7 @@
 (require 'cc-lang)    ; Support for the C-family of languages
 (require 'php-lang)   ; PHP related configuration
 (require 'hs-lang)    ; Haskell configuration
+(require 'editor)     ; Features related to the behavior of the editor
 
 ;; deprecated
 (when (boundp 'package-pinned-packages)

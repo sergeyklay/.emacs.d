@@ -2,13 +2,6 @@
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
 
-* Whitespace mode
-
-#+begin_src emacs-lisp
-(use-package whitespace
-  :bind ("<f10>" . whitespace-mode))
-#+end_src
-
 * ELPA packages
 
 ** Eldoc/C-Eldoc
@@ -36,20 +29,6 @@ This package displays function signatures in the mode line.
   :commands c-turn-on-eldoc-mode
   :ensure t
   :init (add-hook 'c-mode-hook #'c-turn-on-eldoc-mode))
-#+end_src
-
-** Editorconfig
-
-[[https://editorconfig.org/][Editorconfig]] is a configuration format for controlling the
-text attributes for text files.  It is good to use with version
-control, especially when contributors develop on different platforms.
-
-#+begin_src emacs-lisp
-(use-package editorconfig
-  :ensure t
-  :diminish editorconfig-mode
-  :config
-  (editorconfig-mode 1))
 #+end_src
 
 ** Password store
@@ -105,39 +84,6 @@ control, especially when contributors develop on different platforms.
     (when (y-or-n-p "Start ERC? ")
       (erc :server "irc.freenode.net" :port 6667 :nick "klay"))))
 #+end_src
-** Edit With Emacs
-
-Editing input boxes from Chrome/Firefox with Emacs. Pretty useful to keep all
-significant text-writing on the web within Emacs.  I typically use this
-with posts on GitHub, which has a post editor that overrides normal
-Emacs key bindings with other functions.  As such, ~markdown-mode~ is used.
-
-For more see:
-
-- [[https://addons.mozilla.org/en-US/firefox/addon/edit-with-emacs1][Edit with Emacs Firefox Add-on]]
-- [[https://chrome.google.com/webstore/detail/edit-with-emacs/ljobjlafonikaiipfkggjbhkghgicgoh][Edit with Emacs Google Chrome Extension]]
-
-When using firefox plugin itsalltext with Emacs, finish editing on Emacs with ~C-x #~
-http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html
-
-#+begin_src emacs-lisp
-(use-package edit-server
-  :ensure t
-  :if window-system
-  :init
-  (add-hook 'after-init-hook 'server-start t)
-  (add-hook 'after-init-hook 'edit-server-start t)
-
-  :config
-  (add-to-list 'edit-server-url-major-mode-alist '("^stackoverflow" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^github.com" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^emacs\\.stackexchange" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^unix\\.stackexchange" . markdown-mode))
-
-  (setq edit-server-default-major-mode 'markdown-mode)
-  (setq edit-server-new-frame nil))
-#+end_src
-
 ** Flycheckf
 
 =Flycheck= is a general syntax highlighting framework which
@@ -174,32 +120,6 @@ Install [[https://github.com/commonmark/cmark][cmark]] or your Markdown processo
          ("\\.md\\'"       . markdown-mode))
   :config
   (setq markdown-command "cmark"))
-#+end_src
-
-** Multiple cursors
-
-We'll also need to ~(require 'multiple-cusors)~ because of [[https://github.com/magnars/multiple-cursors.el/issues/105][an autoload issue]].
-
-#+begin_src emacs-lisp
-(use-package multiple-cursors
-  :ensure t
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C->"         . mc/mark-next-like-this)
-         ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this)
-         ("C-!"         . mc/mark-next-symbol-like-this)
-         ("C-c d"       . mc/mark-all-dwim)))
-#+end_src
-
-** Smartscan
-
-Quickly jumps between other symbols found at point in Emacs.
-For more see: https://github.com/mickeynp/smart-scan
-
-#+begin_src emacs-lisp
-(use-package smartscan
-  :ensure t
-  :config (global-smartscan-mode 1))
 #+end_src
 
 ** Yasnippet
@@ -255,13 +175,6 @@ Note: You have to install =sbcl=.
   :init
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (add-to-list 'slime-contribs 'slime-fancy))
-#+end_src
-
-** Undo Tree
-
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :ensure t)
 #+end_src
 
 ** crux
