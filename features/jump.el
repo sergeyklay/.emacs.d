@@ -50,11 +50,15 @@
 ;; Increase the warning threshold to be more than normal TAGS file sizes
 (setq large-file-warning-threshold (* 50 1024 1024))
 
+;; Never “Keep current list of tags tables also”
+(setq tags-add-tables nil)
+
 (when (executable-find "ctags")
   (use-package ctags-update
     :init
     (progn
       (defun ctags-common-hook ()
+        ;; outside of batch mode (noninteractive is set to 't' in that case)
         (when (not noninteractive)
           (turn-on-ctags-auto-update-mode)))
 
