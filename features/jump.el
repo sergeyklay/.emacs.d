@@ -33,7 +33,8 @@
           ("C-c >"   . 'ggtags-next-mark))
     :config
     (progn
-      (dolist (hook '(sh-mode-hook
+      (dolist (hook '(php-mode-hook
+                      sh-mode-hook
                       c-mode-hook
                       c++-mode-hook
                       makefile-mode-hook))
@@ -50,7 +51,6 @@
 
 (when (executable-find "ctags")
   (use-package ctags-update
-    :diminish (ctags-auto-update-mode . " τ")
     :hook
     ((c-mode-common . turn-on-ctags-auto-update-mode))))
 
