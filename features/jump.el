@@ -51,8 +51,11 @@
 
 (when (executable-find "ctags")
   (use-package ctags-update
-    :hook
-    ((c-mode-common . turn-on-ctags-auto-update-mode))))
+    :init
+    (progn
+      (add-hook 'c-mode-common-hook #'turn-on-ctags-auto-update-mode)
+      (add-hook 'php-mode-hook #'turn-on-ctags-auto-update-mode)
+      (add-hook 'emacs-lisp-mode-hook #'turn-on-ctags-auto-update-mode))))
 
 (provide 'jump)
 ;;; jump.el ends here
