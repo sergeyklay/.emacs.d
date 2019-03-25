@@ -18,6 +18,7 @@ Prerequisite packages are
 -------------------------
 
 - Aspell
+- CommonMark
 - Exuberant Ctags
 - Fira Code Font
 - GNU Global

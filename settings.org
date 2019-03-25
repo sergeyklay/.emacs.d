@@ -2,21 +2,6 @@
 #+SUBTITLE: Here’s my Emacs setup that I use on the daily.
 #+AUTHOR: Serghei Iakovlev
 
-* ELPA packages
-
-** Markdown mode
-
-Install [[https://github.com/commonmark/cmark][cmark]] or your Markdown processor of choice and set it as ~markdown-command~ before using the live previewer commands.
-
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :mode (("\\.markdown\\'" . markdown-mode)
-         ("\\.md\\'"       . markdown-mode))
-  :config
-  (setq markdown-command "cmark"))
-#+end_src
-
 ** Yasnippet
 
 Yeah, snippets!
@@ -125,8 +110,6 @@ A Collection of Ridiculously Useful eXtensions for Emacs.
   :ensure t
   :mode "\\.ps[dm]?1\\'")
 #+end_src
-
-* Misc
 
 ** Post initialization
 
