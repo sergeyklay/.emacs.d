@@ -37,7 +37,8 @@
                       sh-mode-hook
                       c-mode-hook
                       c++-mode-hook
-                      makefile-mode-hook))
+                      makefile-mode-hook
+                      emacs-lisp-mode-hook))
         (add-hook hook #'ggtags-mode)))))
 
 ;; Make Emacs reload the TAGS file automatically
@@ -53,9 +54,13 @@
   (use-package ctags-update
     :init
     (progn
-      (add-hook 'c-mode-common-hook #'turn-on-ctags-auto-update-mode)
-      (add-hook 'php-mode-hook #'turn-on-ctags-auto-update-mode)
-      (add-hook 'emacs-lisp-mode-hook #'turn-on-ctags-auto-update-mode))))
+      (defun ctags-common-hook ()
+        (turn-on-ctags-auto-update-mode))
+
+      (dolist (hook '(c-mode-common-hook
+                      php-mode-hook
+                      emacs-lisp-mode-hook))
+        (add-hook hook #'ctags-common-hook)))))
 
 (provide 'jump)
 ;;; jump.el ends here
