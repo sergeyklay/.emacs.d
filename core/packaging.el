@@ -1,4 +1,4 @@
-;;; core-pkg.el --- All packaging related features. -*- lexical-binding: t; -*-
+;;; packaging.el --- Package management. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Packaging related features for GNU Emacs.
+;; Packaging related stuff for GNU Emacs.
 
 ;;; Code:
 
@@ -53,6 +53,13 @@
 ;; All packages should be installed.
 (setq use-package-always-ensure t)
 
+;; Install validate.
+;; For more see URL
+;; `http://endlessparentheses.com/validate-el-schema-validation-for-emacs-lisp.html'
+(unless (package-installed-p 'validate)
+  (package-refresh-contents)
+  (package-install 'validate))
+
 ;; Install diminish
 (unless (package-installed-p 'diminish)
   (package-refresh-contents)
@@ -66,6 +73,7 @@
 (require 'delight)
 (require 'diminish)
 (require 'bind-key)
+(require 'validate)
 
 ;;; Install quelpa
 (defvar quelpa-dir)
@@ -102,5 +110,5 @@
 (define-key package-menu-mode-map "s" #'my/package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'my/package-menu-find-marks)
 
-(provide 'core-pkg)
-;;; core-pkg.el ends here
+(provide 'packaging)
+;;; packaging.el ends here

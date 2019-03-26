@@ -44,6 +44,9 @@ external dependencies or long-term shared data.")
   "Directory for volatile storage.
 Use this for files that change often, like cache files.")
 
+(defvar user-core-dir (concat user-emacs-dir "core/")
+  "All the core configuration located here.")
+
 (defvar user-features-dir (concat user-emacs-dir "features/")
   "All the features should located here.")
 
@@ -129,6 +132,7 @@ are running on, as a string.")
   (tooltip-mode -1))
 
 ;; Setting up the dependencies, features and packages
+(add-to-list 'load-path user-core-dir)
 (add-to-list 'load-path user-features-dir)
 (add-to-list 'load-path user-host-dir)
 
@@ -151,7 +155,7 @@ are running on, as a string.")
 ;; However, it always trolls me when I want to open a file.
 (global-unset-key "\C-xf")
 
-(require 'core-pkg)
+(require 'packaging)
 
 (provide 'core)
 ;;; core.el ends here

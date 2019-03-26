@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-(require 'core (concat user-emacs-directory "features/core"))
+(require 'core (concat user-emacs-directory "core/core"))
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
