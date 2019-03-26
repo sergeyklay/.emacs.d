@@ -19,11 +19,6 @@
 (use-package company
   :init
   (global-company-mode)
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous))
   :config
   (setq
    ;; remove annoying blinking
@@ -43,6 +38,12 @@
                           message-mode
                           help-mode
                           text-mode)))
+
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))
 
 ;; For more see URL `https://github.com/randomphrase/company-c-headers'
 (use-package company-c-headers

@@ -52,6 +52,10 @@
    ;; Disable magic slash on non-match
    ivy-magic-slash-non-match-action nil))
 
+(with-eval-after-load 'ivy
+  (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
+  (add-to-list 'ivy-ignore-buffers "TAGS"))
+
 ;;; Counsel
 
 (use-package counsel
