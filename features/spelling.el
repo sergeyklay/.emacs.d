@@ -42,11 +42,10 @@
 
     (cond
      ((executable-find "hunspell")
-      (progn
-        (validate-setq
-         ispell-program-name "hunspell"
-         ispell-really-hunspell t
-         ispell-extra-args '("-a" "-i" "utf-8"))))
+      (validate-setq
+       ispell-program-name "hunspell"
+       ispell-really-hunspell t
+       ispell-extra-args '("-a" "-i" "utf-8")))
      ((executable-find "aspell")
       (progn
         (validate-setq
