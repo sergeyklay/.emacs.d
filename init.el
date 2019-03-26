@@ -30,7 +30,7 @@
 (require 'comp-ivy)     ; Initialize ivy, counsel and swiper
 (require 'jump)         ; Setting up tags and code navigation
 (require 'vcs)          ; VCS related features
-(require 'spell)        ; Spell configuration
+(require 'spelling)     ; Spell configuration
 (require 'shells)       ; Shells configuration
 (require 'org-lang)     ; Org related configuration
 (require 'cc-lang)      ; Support for the C-family of languages
