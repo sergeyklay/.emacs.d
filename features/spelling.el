@@ -62,9 +62,12 @@
 
   (use-package flyspell-correct-ivy
     :after (flyspell ivy)
+    :commands (flyspell-correct-ivy)
+    :init
+    (require 'flyspell-correct)
+    (validate-setq flyspell-correct-interface #'flyspell-correct-ivy)
     :bind (:map flyspell-mode-map
-                ("C-;" . flyspell-correct-word-generic))
-    :custom (flyspell-correct-interface 'flyspell-correct-ivy)))
+                ("C-;" . flyspell-correct-wrapper))))
 
 (provide 'spelling)
 ;;; spelling.el ends here
