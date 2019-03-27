@@ -17,27 +17,32 @@
 
 ;; For more see URL `http://company-mode.github.io'
 (use-package company
-  :init
-  (global-company-mode)
+  :custom
+  (company-async-timeout 5)
+  (company-dabbrev-code-ignore-case t)
+  (company-echo-delay 0)
+  (company-idle-delay .3)
+  (company-selection-wrap-around t)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations t)
+  (company-tooltip-idle-delay t)
+  (company-tooltip-limit 20)
+  (company-transformers '(company-sort-by-occurrence company-sort-by-backend-importance))
   :config
-  (setq
-   ;; remove annoying blinking
-   company-echo-delay 0
-   ;; decrease delay before autocompletion popup shows
-   company-idle-delay .3
-   company-selection-wrap-around t
-   company-show-numbers t
-   company-tooltip-align-annotations t
-   company-tooltip-idle-delay t
-   ;; bigger popup window
-   company-tooltip-limit 20
-   company-global-modes '(not
-                          eshell-mode
-                          comint-mode
-                          erc-mode
-                          message-mode
-                          help-mode
-                          text-mode)))
+  (defun set-company-backends (backends)
+    (make-local-variable 'company-backends)
+    (add-to-list 'company-backends (--filter (or (fboundp it) (eq it :with)) backends)))
+  (global-company-mode)
+  (setq company-global-modes
+        '(not
+          eshell-mode
+          comint-mode
+          erc-mode
+          message-mode
+          help-mode
+          text-mode
+          org-mode
+          magit-status-mode)))
 
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "M-n") nil)
