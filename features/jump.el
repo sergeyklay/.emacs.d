@@ -47,24 +47,8 @@
 ;; t=case-insensitive, nil=case-sensitive
 (setq tags-case-fold-search nil)
 
-;; Increase the warning threshold to be more than normal TAGS file sizes
-(setq large-file-warning-threshold (* 50 1024 1024))
-
 ;; Never “Keep current list of tags tables also”
 (setq tags-add-tables nil)
-
-;; outside of batch mode (noninteractive is set to 't' in that case)
-(when (and (not noninteractive) (executable-find "ctags"))
-  (use-package ctags-update
-    :init
-    (progn
-      (defun ctags-common-hook ()
-        (turn-on-ctags-auto-update-mode))
-
-      (dolist (hook '(c-mode-common-hook
-                      php-mode-hook
-                      emacs-lisp-mode-hook))
-        (add-hook hook #'ctags-common-hook)))))
 
 (provide 'jump)
 ;;; jump.el ends here
