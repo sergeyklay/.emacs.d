@@ -24,21 +24,40 @@ The function will set `php-executable' to the actual PHP if found
 or nil otherwise."
   (let ((phpenv (executable-find "phpenv")))
     (if phpenv
-        (setq php-executable
-              (replace-regexp-in-string
-               "\n\\'" ""
-               (shell-command-to-string (concat phpenv " which php"))))
-      (setq php-executable (executable-find "php")))))
+        (replace-regexp-in-string
+         "\n\\'" ""
+         (shell-command-to-string (concat phpenv " which php")))
+      (executable-find "php"))))
 
 (use-package php-mode
-  :mode (("\\.php[ts354]?\\'" . php-mode)
-         ("\\.inc\\'" . php-mode))
+  :mode "\\.php[ts354]?\\'"
+  :after (company flycheck)
   :init
   (progn
     (setq php-mode-coding-style 'psr2)
-    (add-hook 'php-mode-hook #'subword-mode)
-    (add-hook 'php-mode-hook #'company-mode)
-    (add-hook 'php-mode-hook #'my//locate-php-executable))
+
+    (use-package company-php
+      :after php-mode
+      :pin melpa
+      :defer t)
+
+    (defun php-hook ()
+      (let ((php-path (my//locate-php-executable)))
+        ((setq php-executable php-path
+               ac-php-php-executable php-path
+               ac-php-tags-path (concat user-cache-dir "ac-php/"))
+
+         (flycheck-mode)
+         (subword-mode)
+         (company-mode)
+         (yas-global-mode)
+
+         (ac-php-core-eldoc-setup)
+
+         (make-local-variable 'company-backends)
+         (add-to-list 'company-backends 'company-ac-php-backend))))
+
+    (add-hook 'php-mode-hook 'php-hook))
   :bind
   (:map php-mode-map
         ("C-<tab>" . #'counsel-company)
