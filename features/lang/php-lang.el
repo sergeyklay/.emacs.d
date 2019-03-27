@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-(defun my//locate-php-executable ()
+(defun my--locate-php-executable ()
   "Search for the PHP executable using ’phpenv’.
 
 This function will try to find the PHP executable by calling ’phpenv’.
@@ -42,8 +42,9 @@ or nil otherwise."
       :defer t)
 
     (defun php-hook ()
-      (let ((php-path (my//locate-php-executable)))
-        ((setq php-executable php-path
+      (let ((php-path (my--locate-php-executable)))
+        (progn
+         (setq php-executable php-path
                ac-php-php-executable php-path
                ac-php-tags-path (concat user-cache-dir "ac-php/"))
 
