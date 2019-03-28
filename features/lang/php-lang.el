@@ -34,8 +34,6 @@ or nil otherwise."
   :after (company flycheck)
   :init
   (progn
-    (setq php-mode-coding-style 'psr2)
-
     (use-package company-php
       :after php-mode
       :pin melpa
@@ -44,19 +42,21 @@ or nil otherwise."
     (defun php-hook ()
       (let ((php-path (my--locate-php-executable)))
         (progn
-         (setq php-executable php-path
-               ac-php-php-executable php-path
-               ac-php-tags-path (concat user-cache-dir "ac-php/"))
+          (require 'ac-php-core)
+          (validate-setq php-mode-coding-style 'psr2
+                         php-executable php-path
+                         ac-php-php-executable php-path
+                         ac-php-tags-path (concat user-cache-dir "ac-php/"))
 
-         (flycheck-mode)
-         (subword-mode)
-         (company-mode)
-         (yas-global-mode)
+          (flycheck-mode)
+          (subword-mode)
+          (company-mode)
+          (yas-global-mode)
 
-         (ac-php-core-eldoc-setup)
+          (ac-php-core-eldoc-setup)
 
-         (make-local-variable 'company-backends)
-         (add-to-list 'company-backends 'company-ac-php-backend))))
+          (make-local-variable 'company-backends)
+          (add-to-list 'company-backends 'company-ac-php-backend))))
 
     (add-hook 'php-mode-hook 'php-hook))
   :bind
