@@ -29,10 +29,7 @@
 
 (use-package magit
   :after (ivy transient)
-  :bind (("C-x g s" . magit-status)
-         ("C-x g x" . magit-checkout)
-         ("C-x g e" . magit-ediff-resolve)
-         ("C-x g r" . magit-rebase-interactive))
+  :bind (("C-x g" . magit-status))
   :config
   (setq
    ;; DWIM prompting when creating new branches.
