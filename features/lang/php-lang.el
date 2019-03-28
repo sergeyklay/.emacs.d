@@ -51,7 +51,7 @@ or nil otherwise."
           (flycheck-mode)
           (subword-mode)
           (company-mode)
-          (yas-global-mode)
+          (yas-minor-mode)
 
           (ac-php-core-eldoc-setup)
 
