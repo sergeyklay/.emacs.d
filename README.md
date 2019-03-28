@@ -18,6 +18,7 @@ Prerequisite packages are
 -------------------------
 
 - Aspell/Ispell/Hunspell
+- Cscope
 - CommonMark
 - Exuberant Ctags
 - Fira Code Font

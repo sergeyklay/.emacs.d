@@ -27,40 +27,22 @@
   (company-tooltip-align-annotations t)
   (company-tooltip-idle-delay t)
   (company-tooltip-limit 20)
-  (company-transformers '(company-sort-by-occurrence company-sort-by-backend-importance))
-  :config
-  (defun set-company-backends (backends)
-    (make-local-variable 'company-backends)
-    (add-to-list 'company-backends (--filter (or (fboundp it) (eq it :with)) backends)))
-  (global-company-mode)
-  (setq company-global-modes
-        '(not
-          eshell-mode
-          comint-mode
-          erc-mode
-          message-mode
-          help-mode
-          text-mode
-          org-mode
-          magit-status-mode)))
+  (company-transformers '(company-sort-by-occurrence company-sort-by-backend-importance)))
 
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "M-n") nil)
   (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous))
-
-;; For more see URL `https://github.com/randomphrase/company-c-headers'
-(use-package company-c-headers
-  :init
-  (add-to-list 'company-backends 'company-c-headers))
+  (define-key company-active-map (kbd "C-p") #'company-select-previous)
+  (define-key company-active-map (kbd "SPC") #'company-abort))
 
 ;; Company-Statistics: Suggest most used completions first
 (use-package company-statistics
+  :after company
   :hook (company-mode . company-statistics-mode)
   :config
-  (setq company-statistics-file
-        (concat user-cache-dir "company-statistics-cache.el")))
+  (validate-setq company-statistics-file
+                 (concat user-cache-dir "company-statistics-cache.el")))
 
 (provide 'comp-any)
 ;;; comp-any.el ends here

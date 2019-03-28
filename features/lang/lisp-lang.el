@@ -20,6 +20,10 @@
 ;; The Superior Lisp Interaction Mode for Emacs.
 ;; Note: You have to install sbcl.
 
+(with-eval-after-load 'company
+  (add-hook 'lisp-mode-hook #'company-mode)
+  (add-hook 'emacs-lisp-mode-hook #'company-mode))
+
 (use-package slime
   :defer 10
   :init

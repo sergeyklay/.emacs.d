@@ -17,23 +17,33 @@
 
 ;;; Cmake
 
-(use-package cmake-mode
-  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
-
 (with-eval-after-load 'company
   (add-hook 'c++-mode-hook #'company-mode)
   (add-hook 'c-mode-hook #'company-mode))
 
-;; Change the default way that Emacs handles indentation
+(use-package cmake-mode
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
 
-(defun my/c-mode-hook ()
-  (setq tab-width 4
-        c-basic-offset 4
-        indent-tabs-mode t)
-  (c-set-offset 'substatement-open 0)   ; Curly braces alignment
-  (c-set-offset 'case-label 4))         ; Switch case statements alignment
+(defun cc--common-hook ()
+  "Change the default way that Emacs handles indentation."
+  (validate-setq tab-width 4
+                 c-basic-offset 4
+                 indent-tabs-mode t)
 
-(add-hook 'c-mode-hook #'my/c-mode-hook)
+  (c-set-offset 'substatement-open 0)
+  (c-set-offset 'case-label 4))
+
+(add-hook 'c-mode-hook #'cc--common-hook)
+
+(defun cc--headers-hook ()
+  "Enable `company-mode' and add `company-c-headers' to the `company-backends'."
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends 'company-c-headers))
+
+(use-package company-c-headers
+  :after company
+  :hook
+  ((c-mode c++mode) . cc--headers-hook))
 
 (provide 'cc-lang)
 ;;; cc-lang.el ends here
