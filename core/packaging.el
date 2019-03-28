@@ -36,8 +36,8 @@
 
 ;; Priorities. Default priority is 0.
 (setq package-archive-priorities
-      '(("m-stable" . 20)
-        ("melpa" . 10)))
+      '(("m-stable" . 10)
+        ("melpa" . 20)))
 
 ;; Initialize package manager.
 (package-initialize)
