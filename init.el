@@ -43,6 +43,7 @@
 (require 'conf-lang)    ; Add support for the configuration like languages
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'irc)          ; IRC tools
+(require 'docker-io)    ; Docker related configuration
 (require 'syntax-check) ; Syntax checkers
 (require 'snippets)     ; Add snippets support
 
