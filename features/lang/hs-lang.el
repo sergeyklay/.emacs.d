@@ -15,9 +15,6 @@
 
 ;;; Code:
 
-(with-eval-after-load 'company
-  (add-hook 'haskell-mode-hook #'company-mode))
-
 (use-package haskell-mode
   :mode "\\.l?hs\\'"
   :init

@@ -15,9 +15,6 @@
 
 ;;; Code:
 
-(with-eval-after-load 'company
-  (add-hook 'php-mode-hook #'company-mode))
-
 (defun my--locate-php-executable ()
   "Search for the PHP executable using ’phpenv’.
 
@@ -41,7 +38,9 @@ or nil otherwise."
       :after php-mode
       :config
       (validate-setq
-       ac-sources '(ac-source-php))
+       ac-sources '(ac-source-php)
+       ;; ac-php-debug-flag t
+       )
 
       (auto-complete-mode -1)
       (ac-php-core-eldoc-setup))

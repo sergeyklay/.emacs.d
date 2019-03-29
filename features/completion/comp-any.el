@@ -27,7 +27,18 @@
   (company-tooltip-align-annotations t)
   (company-tooltip-idle-delay t)
   (company-tooltip-limit 20)
-  (company-transformers '(company-sort-by-occurrence company-sort-by-backend-importance)))
+  (company-transformers '(company-sort-by-occurrence company-sort-by-backend-importance))
+  :config
+  (global-company-mode)
+  (setq company-global-modes
+        '(not eshell-mode
+              comint-mode
+              erc-mode
+              message-mode
+              help-mode
+              text-mode
+              org-mode
+              magit-status-mode)))
 
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "M-n") nil)

@@ -17,10 +17,6 @@
 
 ;;; Cmake
 
-(with-eval-after-load 'company
-  (add-hook 'c++-mode-hook #'company-mode)
-  (add-hook 'c-mode-hook #'company-mode))
-
 (use-package cmake-mode
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
 
