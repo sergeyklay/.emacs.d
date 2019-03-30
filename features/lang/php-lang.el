@@ -37,11 +37,6 @@ or nil otherwise."
     (use-package ac-php
       :after php-mode
       :config
-      (validate-setq
-       ac-sources '(ac-source-php)
-       ;; ac-php-debug-flag t
-       )
-
       (auto-complete-mode -1)
       (ac-php-core-eldoc-setup))
 
@@ -55,6 +50,7 @@ or nil otherwise."
         (progn
           (require 'ac-php-core)
           (validate-setq php-mode-coding-style 'psr2
+                         php-manual-path "/usr/local/share/php/doc/html"
                          php-executable php-path
                          ac-php-php-executable php-path
                          ac-php-tags-path (concat user-cache-dir "ac-php/"))
