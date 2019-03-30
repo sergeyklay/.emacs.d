@@ -53,5 +53,17 @@
   :mode (("\\.gitattributes\\'" . gitattributes-mode)
          ("\\.git/info/attributes\\'" . gitattributes-mode)))
 
+;;; git-gutter
+
+(use-package git-gutter
+  :config
+  (global-git-gutter-mode +1)
+  (custom-set-variables
+   '(git-gutter:update-interval 2)
+   '(git-gutter:modified-sign "*")
+   '(git-gutter:added-sign "+")
+   '(git-gutter:deleted-sign "-")
+   '(git-gutter:hide-gutter nil)))
+
 (provide 'vcs)
 ;;; vcs.el ends here
