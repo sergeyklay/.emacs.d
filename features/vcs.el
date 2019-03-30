@@ -41,17 +41,18 @@
 (use-package git-link)
 
 (use-package gitconfig-mode
-  :mode (("\\.gitconfig\\'" . gitconfig-mode)
-	 ("\\.git/config\\'" . gitconfig-mode)
-	 ("\\.gitmodules\\'" . gitconfig-mode)))
+  :mode "\\.gitconfig\\'"
+  :mode"\\.git/config\\'"
+  :mode "\\.gitmodules\\'")
 
 (use-package gitignore-mode
-  :mode (("\\.gitignore\\'" . gitignore-mode)
-         ("\\.dockerignore\\'" . gitignore-mode)))
+  :mode "\\.gitignore\\'"
+  :mode "\\.dockerignore\\'"
+  :mode "\\..elpaignore\\'")
 
 (use-package gitattributes-mode
-  :mode (("\\.gitattributes\\'" . gitattributes-mode)
-         ("\\.git/info/attributes\\'" . gitattributes-mode)))
+  :mode "\\.gitattributes\\'"
+  :mode"\\.git/info/attributes\\'")
 
 ;;; git-gutter
 
