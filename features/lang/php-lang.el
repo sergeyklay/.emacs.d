@@ -37,6 +37,11 @@ or nil otherwise."
     (use-package ac-php
       :after php-mode
       :config
+      (validate-setq
+       ;; Currently I'm involved to develop this package
+       ac-php-debug-flag t
+       ;; My development version
+       ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
       (auto-complete-mode -1)
       (ac-php-core-eldoc-setup))
 
