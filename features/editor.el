@@ -24,6 +24,11 @@
 ;; Increase the warning threshold for big files
 (setq large-file-warning-threshold (* 50 1024 1024))
 
+;; Show Line Numbers
+(if (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode)
+  (global-linum-mode 1))
+
 ;;; Undo Tree
 
 (use-package undo-tree
