@@ -72,6 +72,8 @@
 (global-set-key (kbd "C-h f")  #'counsel-describe-function)
 (global-set-key (kbd "C-h b")  #'counsel-descbinds)
 
+(global-set-key (kbd "C-x C-i") #'counsel-imenu)
+
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
 ;;; Swiper
