@@ -90,9 +90,16 @@
 ;; Revert buffer without confirmation.
 ;; See URL `http://www.emacswiki.org/emacs-en/download/misc-cmds.el'
 (defun my/revert-buffer-no-confirm ()
-    "Revert buffer without confirmation."
-    (interactive)
-    (revert-buffer :ignore-auto :noconfirm))
+  "Revert buffer without confirmation."
+
+  (interactive)
+  (revert-buffer :ignore-auto :noconfirm))
+
+(defun my/insert-buffer-filename ()
+  "Insert file name of current buffer at current point."
+
+  (interactive)
+  (insert (buffer-file-name (current-buffer))))
 
 (provide 'windows)
 ;;; windows.el ends here
