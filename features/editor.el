@@ -25,9 +25,14 @@
 (setq large-file-warning-threshold (* 50 1024 1024))
 
 ;; Show Line Numbers
-(if (version<= "26.0.50" emacs-version)
-    (global-display-line-numbers-mode)
-  (global-linum-mode 1))
+(setq-default display-line-numbers-type 'visual
+              display-line-numbers-current-absolute t
+              display-line-numbers-width 4
+              display-line-numbers-widen t)
+
+(add-hook 'conf-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'display-line-numbers-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;;; Undo Tree
 
