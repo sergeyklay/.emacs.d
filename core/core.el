@@ -147,9 +147,11 @@ are running on, as a string.")
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
-;; Open URLs with =xdg-open=
-
+;; Open URLs with xdg-open
 (setq browse-url-browser-function 'browse-url-xdg-open)
+
+;; I use C source to understand and debug built-in functions
+(setq source-directory (expand-file-name "~/src/emacs/src"))
 
 ;; I don't use this at all.
 ;; However, it always trolls me when I want to open a file.
