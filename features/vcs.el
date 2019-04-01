@@ -57,6 +57,7 @@
 ;;; git-gutter
 
 (use-package git-gutter
+  :delight
   :config
   (global-git-gutter-mode +1)
   (custom-set-variables

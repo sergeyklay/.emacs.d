@@ -19,6 +19,7 @@
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (when (executable-find "global")
   (use-package ggtags
+    :delight " gg"
     :bind
     (:map ggtags-mode-map
           ("C-c g s" . 'ggtags-find-other-symbol)

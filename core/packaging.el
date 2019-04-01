@@ -75,6 +75,19 @@
 (require 'bind-key)
 (require 'validate)
 
+(delight '((abbrev-mode " abv" abbrev)
+           (smart-tab-mode " \\t" smart-tab)
+           (eldoc-mode nil "eldoc")
+           (rainbow-mode)
+           (overwrite-mode " ov" t)
+           (emacs-lisp-mode "elisp" :major)))
+
+;; Completely hide visual-line-mode and change auto-fill-mode to " af".
+ (use-package emacs
+  :delight
+  (auto-fill-function " af")
+  (visual-line-mode))
+
 ;;; Install quelpa
 (defvar quelpa-dir)
 
