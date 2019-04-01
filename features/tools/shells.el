@@ -30,10 +30,15 @@
 ;; Emacs shell interactive mode.
 (use-package eshell
   :commands eshell-mode
-  :init (setq eshell-directory-name (concat user-etc-dir "/eshell")
-              eshell-scroll-to-bottom-on-input 'all
-              eshell-scroll-to-bottom-on-output 'all
-              eshell-kill-processes-on-exit t))
+  :init
+  (setq eshell-directory-name (concat user-etc-dir "/eshell")
+        eshell-scroll-to-bottom-on-input 'all
+        eshell-scroll-to-bottom-on-output 'all
+        eshell-kill-processes-on-exit t)
+  :config
+  (use-package eshell-git-prompt
+    :init
+    (eshell-git-prompt-use-theme 'powerline)))
 
 (with-eval-after-load 'eshell-mode
   (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))
