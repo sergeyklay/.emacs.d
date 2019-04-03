@@ -102,5 +102,86 @@
   :ensure t
   :bind ("C-c C-f" . fold-this))
 
+(defun my--move-text-internal (arg)
+  "Move text ARG lines up or down."
+  (cond
+   ((and mark-active transient-mark-mode)
+    (if (> (point) (mark))
+        (exchange-point-and-mark))
+    (let ((column (current-column))
+          (text (delete-and-extract-region (point) (mark))))
+      (forward-line arg)
+      (move-to-column column t)
+      (set-mark (point))
+      (insert text)
+      (exchange-point-and-mark)
+      (setq deactivate-mark nil)))
+   (t
+    (let ((column (current-column)))
+      (beginning-of-line)
+      (when (or (> arg 0) (not (bobp)))
+        (forward-line)
+        (when (or (< arg 0) (not (eobp)))
+          (transpose-lines arg)
+          (when (and (eval-when-compile
+                       '(and (>= emacs-major-version 24)
+                             (>= emacs-minor-version 3)))
+                     (< arg 0))
+            (forward-line -1)))
+        (forward-line -1))
+      (move-to-column column t)))))
+
+(defun my/move-text-down (arg)
+  "Move region (transient-mark-mode active) or current line ARG lines down."
+  (interactive "*p")
+  (my--move-text-internal arg))
+
+(defun my/move-text-up (arg)
+  "Move region (transient-mark-mode active) or current line ARG lines up."
+  (interactive "*p")
+  (my--move-text-internal (- arg)))
+
+(defun my/duplicate-line (arg)
+  "Duplicate current line, ARG times leaving point in lower line.
+This function is for interactive use only;"
+
+  (interactive "*p")
+
+  ;; save the point for undo
+  (setq buffer-undo-list (cons (point) buffer-undo-list))
+
+  ;; local variables for start and end of line
+  (let ((bol
+         (save-excursion
+           (beginning-of-line)
+           (point)))
+        eol)
+
+    (save-excursion
+      ;; don't use forward-line for this, because you would have
+      ;; to check whether you are at the end of the buffer
+      (end-of-line)
+      (setq eol (point))
+
+      ;; store the line and disable the recording of undo information
+      (let ((line (buffer-substring bol eol))
+            (buffer-undo-list t)
+            (count arg))
+        ;; insert the line arg times
+        (while (> count 0)
+          (newline)         ;; because there is no newline in 'line'
+          (insert line)
+          (setq count (1- count))))
+
+      ;; create the undo information
+      (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list))))
+
+  ;; put the point in the lowest line and return
+  (next-line arg))
+
+(global-set-key [M-S-up] #'my/move-text-up)
+(global-set-key [M-S-down] #'my/move-text-down)
+(global-set-key [C-c d] #'my/duplicate-line)
+
 (provide 'editor)
 ;;; editor.el ends here

@@ -52,7 +52,7 @@ or nil otherwise."
       (company-mode)
       (yas-minor-mode)
 
-      ;; Enable eldoc support
+      ;; Enable the ElDoc support for the PHP
       (ac-php-core-eldoc-setup)
 
       (make-local-variable 'company-backends)
@@ -74,13 +74,11 @@ or nil otherwise."
         ("C-c C-=" . #'php-current-namespace)))
 
 (use-package ac-php
-  :after php-mode
-  :defer t)
+  :after php-mode)
 
 (use-package company-php
   :after ac-php
-  :pin melpa
-  :defer t)
+  :pin melpa)
 
 (provide 'php-lang)
 ;;; php-lang.el ends here
