@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-(defun my--locate-php-executable ()
+(defun my/php-locate-executable ()
   "Search for the PHP executable using ’phpenv’.
 
 This function will try to find the PHP executable by calling ’phpenv’.
@@ -30,20 +30,20 @@ or nil otherwise."
       (executable-find "php"))))
 
 (defun my/php-hook ()
-  "The hook to configure `php-mode', `ac-php' and `company-php'."
-  (let ((php-path (my--locate-php-executable)))
+  "The hook to configure `php-mode', `ac-php'  as well as `company-php'."
+  (let ((php-path (my/php-locate-executable)))
     (progn
-      (require 'php-mode)
-      (require 'ac-php-core)
-      (message "We're in the php hook")
-      (validate-setq
+      (setq
+       ;; Setting up actual path to the executable
        php-executable php-path
-
        ac-php-php-executable php-path
+
+       ;; Store all the caches in the common place
        ac-php-tags-path (concat user-cache-dir "ac-php/")
 
        ;; Currently I'm involved to develop this package
        ac-php-debug-flag t
+
        ;; My development version
        ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
 
