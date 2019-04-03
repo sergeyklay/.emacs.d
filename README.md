@@ -10,8 +10,8 @@
     </a>
 </p>
 
-This repository contains my personal GNU Emacs’ configuration
-notes and any other resources for the Emacs which I port around from system to system with me.
+This repository contains my personal configuration for GNU Emacs which I port around from system to system with me.
+
 Known to work with GNU Emacs 25.1 and later.
 
 Prerequisite packages are
