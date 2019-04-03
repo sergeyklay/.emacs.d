@@ -29,54 +29,58 @@ or nil otherwise."
          (shell-command-to-string (concat phpenv " which php")))
       (executable-find "php"))))
 
-(use-package php-mode
-  :mode "\\.php[ts354]?\\'"
-  :after (company flycheck)
-  :init
-  (progn
-    (use-package ac-php
-      :after php-mode
-      :config
+(defun my/php-hook ()
+  "The hook to configure `php-mode', `ac-php' and `company-php'."
+  (let ((php-path (my--locate-php-executable)))
+    (progn
+      (require 'php-mode)
+      (require 'ac-php-core)
+      (message "We're in the php hook")
       (validate-setq
+       php-executable php-path
+
+       ac-php-php-executable php-path
+       ac-php-tags-path (concat user-cache-dir "ac-php/")
+
        ;; Currently I'm involved to develop this package
        ac-php-debug-flag t
        ;; My development version
        ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
-      (auto-complete-mode -1)
-      (ac-php-core-eldoc-setup))
 
-    (use-package company-php
-      :after ac-php
-      :pin melpa
-      :defer t)
+      (flycheck-mode)
+      (subword-mode)
+      (company-mode)
+      (yas-minor-mode)
 
-    (defun php-hook ()
-      (let ((php-path (my--locate-php-executable)))
-        (progn
-          (require 'ac-php-core)
-          (validate-setq php-mode-coding-style 'psr2
-                         php-manual-path "/usr/local/share/php/doc/html"
-                         php-executable php-path
-                         ac-php-php-executable php-path
-                         ac-php-tags-path (concat user-cache-dir "ac-php/"))
+      ;; Enable eldoc support
+      (ac-php-core-eldoc-setup)
 
-          (flycheck-mode)
-          (subword-mode)
-          (company-mode)
-          (yas-minor-mode)
+      (make-local-variable 'company-backends)
+      (add-to-list 'company-backends 'company-ac-php-backend))))
 
-          (ac-php-core-eldoc-setup)
-
-          (make-local-variable 'company-backends)
-          (add-to-list 'company-backends 'company-ac-php-backend))))
-
-    (add-hook 'php-mode-hook 'php-hook))
+(use-package php-mode
+  :mode "\\.php[ts354]?\\'"
+  :after (company flycheck)
+  :custom
+  (php-mode-coding-style 'psr2)
+  (php-manual-path "/usr/local/share/php/doc/html")
+  :init
+  (add-hook 'php-mode-hook #'my/php-hook)
   :bind
   (:map php-mode-map
         ("C-<tab>" . #'counsel-company)
         ("C-c /"   . #'comment-or-uncomment-region)
         ("C-c C--" . #'php-current-class)
         ("C-c C-=" . #'php-current-namespace)))
+
+(use-package ac-php
+  :after php-mode
+  :defer t)
+
+(use-package company-php
+  :after ac-php
+  :pin melpa
+  :defer t)
 
 (provide 'php-lang)
 ;;; php-lang.el ends here
