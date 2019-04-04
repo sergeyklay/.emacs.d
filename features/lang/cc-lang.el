@@ -21,14 +21,15 @@
   :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
 
 (use-package c-eldoc
-  :defer t
   :init
-  (add-hook 'c-mode-common-hook #'my--cc-eldec-hook t))
+  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode))
 
 (use-package company-c-headers
   :after company
-  :hook
-  ((c-mode c++mode) . my--cc-headers-hook))
+  :init
+  (add-hook 'c-mode-hook #'my--cc-headers-hook)
+  (add-hook 'c++-mode-hook #'my--cc-headers-hook))
 
 ;;; Hooks
 
@@ -44,11 +45,6 @@
 
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4))
-
-(defun my--cc-eldec-hook ()
-  "ElDoc setup."
-  (set (make-local-variable 'eldoc-idle-delay) 0.20)
-  (c-turn-on-eldoc-mode))
 
 (defun my--cc-headers-hook ()
   "Enable `company-mode' and add `company-c-headers' to the `company-backends'."
