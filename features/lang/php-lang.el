@@ -32,8 +32,7 @@ or nil otherwise."
 (defun my/php-hook ()
   "The hook to configure `php-mode', `ac-php'  as well as `company-php'."
   (let ((php-path (my/php-locate-executable)))
-    (progn
-      (setq
+    (setq
        ;; Setting up actual path to the executable
        php-executable php-path
        ac-php-php-executable php-path
@@ -61,7 +60,7 @@ or nil otherwise."
 
       ;; Return back (optional)
       (define-key php-mode-map (kbd "M-[")
-        'ac-php-location-stack-back))))
+        'ac-php-location-stack-back)))
 
 (use-package php-mode
   :mode "\\.php[ts354]?\\'"
