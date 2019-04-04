@@ -52,11 +52,19 @@ or nil otherwise."
       (company-mode)
       (yas-minor-mode)
 
-      ;; Enable the ElDoc support for the PHP
+      ;; Enable ElDoc support
       (ac-php-core-eldoc-setup)
 
       (make-local-variable 'company-backends)
-      (add-to-list 'company-backends 'company-ac-php-backend))))
+      (add-to-list 'company-backends 'company-ac-php-backend)
+
+      ;; Jump to definition (optional)
+      (define-key php-mode-map (kbd "M-]")
+        'ac-php-find-symbol-at-point)
+
+      ;; Return back (optional)
+      (define-key php-mode-map (kbd "M-[")
+        'ac-php-location-stack-back))))
 
 (use-package php-mode
   :mode "\\.php[ts354]?\\'"
