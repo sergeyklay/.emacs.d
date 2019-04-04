@@ -26,5 +26,7 @@
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (add-to-list 'slime-contribs 'slime-fancy))
 
+(add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
