@@ -15,16 +15,9 @@
 
 ;;; Code:
 
-;;; Eldoc
-
-;; This package displays function signatures in the mode line.
-
-(use-package c-eldoc
-  :commands c-turn-on-eldoc-mode
-  :init
-    (progn
-      (add-hook 'c-mode-hook #'c-turn-on-eldoc-mode)
-      (add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)))
+;; Activate column and line number in the modeline
+(column-number-mode t)
+(line-number-mode t)
 
 (provide 'modeline)
 ;;; modeline.el ends here
