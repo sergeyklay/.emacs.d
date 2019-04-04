@@ -55,17 +55,21 @@
   :mode"\\.git/info/attributes\\'")
 
 ;;; git-gutter
-
 (use-package git-gutter
   :delight
+  :custom
+  (git-gutter:update-interval 2)
+  (git-gutter:modified-sign   "┃")
+  (git-gutter:added-sign      "┃")
+  (git-gutter:deleted-sign    "┃")
+  (git-gutter:hide-gutter     nil)
+
   :config
-  (global-git-gutter-mode +1)
-  (custom-set-variables
-   '(git-gutter:update-interval 2)
-   '(git-gutter:modified-sign "*")
-   '(git-gutter:added-sign "+")
-   '(git-gutter:deleted-sign "-")
-   '(git-gutter:hide-gutter nil)))
+  (global-git-gutter-mode +1))
+
+(set-face-foreground 'git-gutter:modified "DeepSkyBlue3")
+(set-face-foreground 'git-gutter:added "SeaGreen4")
+(set-face-foreground 'git-gutter:deleted "IndianRed3")
 
 (provide 'vcs)
 ;;; vcs.el ends here
