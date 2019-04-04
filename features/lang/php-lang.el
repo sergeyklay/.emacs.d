@@ -41,9 +41,6 @@ or nil otherwise."
        ;; Store all the caches in the common place
        ac-php-tags-path (concat user-cache-dir "ac-php/")
 
-       ;; Currently I'm involved to develop this package
-       ac-php-debug-flag t
-
        ;; My development version
        ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
 
