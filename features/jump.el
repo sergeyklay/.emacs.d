@@ -19,7 +19,6 @@
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (when (executable-find "global")
   (use-package ggtags
-    :delight " gg"
     :bind
     (:map ggtags-mode-map
           ("C-c g s" . 'ggtags-find-other-symbol)
@@ -30,16 +29,14 @@
           ("C-c g u" . 'ggtags-update-tags)
           ("M-."     . 'ggtags-find-tag-dwim)
           ("M-,"     . 'pop-tag-mark)
+          ("M-]"     . nil)
           ("C-c <"   . 'ggtags-prev-mark)
           ("C-c >"   . 'ggtags-next-mark))
     :config
     (progn
       (dolist (hook '(php-mode-hook
-                      sh-mode-hook
                       c-mode-hook
-                      c++-mode-hook
-                      makefile-mode-hook
-                      emacs-lisp-mode-hook))
+                      c++-mode-hook))
         (add-hook hook #'ggtags-mode)))))
 
 ;; Make Emacs reload the TAGS file automatically
