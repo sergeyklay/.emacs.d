@@ -15,6 +15,43 @@
 
 ;;; Code:
 
+(require 'rx)
+
+(defconst my--php-imports-start-regexp
+  (rx (group (and bol "use"))))
+
+(defconst my--php-imports-end-regexp
+  (rx (or (and bol "use") (and bol (* space) eol))))
+
+(defun my--php--search-beg-point (&optional end)
+  "Search the first import line until reach the END point."
+  (save-excursion
+    (goto-char (point-min))
+    (and (re-search-forward my--php-imports-start-regexp end t)
+         (match-beginning 1))))
+
+(defun my--php-search-end-point (begin)
+  "Search the last import line starting from BEGIN point."
+  (let (end)
+    (save-excursion
+      (goto-char begin)
+      (goto-char (point-at-bol))
+      (catch 'eof
+        (while (re-search-forward my--php-imports-end-regexp (point-at-eol) t)
+          (when (eobp)
+            (throw 'eof "End of file."))
+          (setq end (point-at-eol))
+          (forward-line 1))))
+    end))
+
+(defun my/php-optimize-imports ()
+  "Sort PHP imports from current buffer."
+  (interactive)
+  (let* ((begin (my--php--search-beg-point))
+         (end (and begin (my--php-search-end-point begin))))
+    (when (and begin end)
+      (sort-lines nil begin end))))
+
 (defun my/php-locate-executable ()
   "Search for the PHP executable using ’phpenv’.
 
@@ -60,7 +97,11 @@ or nil otherwise."
 
       ;; Return back (optional)
       (define-key php-mode-map (kbd "M-[")
-        'ac-php-location-stack-back)))
+        'ac-php-location-stack-back)
+
+      ;; Toggle debug mode for `ac-php'
+      (define-key php-mode-map (kbd "C-a C-c d")
+        'ac-php-toggle-debug)))
 
 (use-package php-mode
   :mode "\\.php[ts354]?\\'"
