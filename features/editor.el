@@ -53,21 +53,6 @@
 (use-package undo-tree
   :ensure t)
 
-;;; Multiple cursors
-
-;; We'll also need to 'require 'multiple-cusors' because of
-;; `https://github.com/magnars/multiple-cursors.el/issues/105'
-(use-package multiple-cursors
-  :ensure t
-  :config
-  (setq mc/list-file (concat user-etc-dir "mc-lists.el"))
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C->"         . mc/mark-next-like-this)
-         ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this)
-         ("C-!"         . mc/mark-next-symbol-like-this)
-         ("C-c d"       . mc/mark-all-dwim)))
-
 ;;; Edit With Emacs
 
 ;; Editing input boxes from Chrome/Firefox with Emacs. Pretty useful to keep all
