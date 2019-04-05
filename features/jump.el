@@ -34,9 +34,7 @@
           ("C-c >"   . 'ggtags-next-mark))
     :config
     (progn
-      (dolist (hook '(php-mode-hook
-                      c-mode-hook
-                      c++-mode-hook))
+      (dolist (hook '(c-mode-hook c++-mode-hook))
         (add-hook hook #'ggtags-mode)))))
 
 ;; Make Emacs reload the TAGS file automatically
