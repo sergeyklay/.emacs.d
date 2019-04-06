@@ -179,7 +179,7 @@ This function is for interactive use only;"
 
 (global-set-key [M-S-up] #'my/move-text-up)
 (global-set-key [M-S-down] #'my/move-text-down)
-(global-set-key (kbd "C-c C-d") #'my/duplicate-line)
+(global-set-key (kbd "C-c d") #'my/duplicate-line)
 
 (provide 'editor)
 ;;; editor.el ends here
