@@ -31,11 +31,7 @@
           ("M-,"     . 'pop-tag-mark)
           ("M-]"     . nil)
           ("C-c <"   . 'ggtags-prev-mark)
-          ("C-c >"   . 'ggtags-next-mark))
-    :config
-    (progn
-      (dolist (hook '(c-mode-hook c++-mode-hook))
-        (add-hook hook #'ggtags-mode)))))
+          ("C-c >"   . 'ggtags-next-mark))))
 
 ;; Make Emacs reload the TAGS file automatically
 (setq tags-revert-without-query 1)
