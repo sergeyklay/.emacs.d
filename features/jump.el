@@ -15,15 +15,16 @@
 
 ;;; Code:
 
-(require 'config)
+(defconst global-executable-path (executable-find "global")
+  "The global executable path on this system.")
 
-(defvar gtags-enable-by-default t
+(defconst gtags-enable-by-default t
   "Whether or not to enable ggtags-mode.")
 
 ;; A front-end for accessing the gtags-generated tags.
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (use-package ggtags
-    :if (and global-found gtags-enable-by-default)
+    :if (and global-executable-path gtags-enable-by-default)
     :bind
     (:map ggtags-mode-map
           ("C-c g s" . 'ggtags-find-other-symbol)
@@ -52,7 +53,7 @@
 
 For eldoc, ggtags advises the eldoc function at the lowest priority
 so that if the major mode has better support it will use it first."
-  (when (and global-found gtags-enable-by-default)
+  (when (and global-executable-path gtags-enable-by-default)
     (ggtags-mode 1)
     (eldoc-mode 1)))
 

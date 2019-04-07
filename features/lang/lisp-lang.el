@@ -20,10 +20,13 @@
 ;; The Superior Lisp Interaction Mode for Emacs.
 ;; Note: You have to install sbcl.
 
+(defconst sbcl-executable-path (executable-find "sbcl")
+  "The sbcl executable path on this system.")
+
 (use-package slime
   :defer 10
   :init
-  (setq inferior-lisp-program "/usr/bin/sbcl")
+  (setq inferior-lisp-program sbcl-executable-path)
   (add-to-list 'slime-contribs 'slime-fancy))
 
 (use-package elisp-mode
