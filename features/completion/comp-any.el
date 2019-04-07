@@ -26,6 +26,7 @@
 
 ;; For more see URL `http://company-mode.github.io'
 (use-package company
+  :delight
   :defer t
   :init
   (progn
@@ -62,6 +63,20 @@
     (setq company-statistics-file
           (concat user-cache-dir "company-statistics-cache.el"))
     (add-hook 'company-mode-hook 'company-statistics-mode)))
+
+(use-package company-quickhelp
+  :if window-system
+  :commands company-quickhelp-manual-begin
+  :init
+  (progn
+    (with-eval-after-load 'company
+      (setq company-frontends
+            (delq 'company-echo-metadata-frontend company-frontends))
+
+      (define-key company-active-map (kbd "M-h")
+        #'company-quickhelp-manual-begin)
+
+      (company-quickhelp-mode))))
 
 ;; from (concat "https://github.com/syl20bnr/spacemacs"
 ;;              "/blob/develop/layers/%2Bcompletion"
