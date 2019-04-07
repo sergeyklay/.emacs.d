@@ -20,20 +20,63 @@
 
 ;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
-  :defer 10
+  :commands slime-mode
   :init
-  (setq inferior-lisp-program sbcl-executable-path)
-  (add-to-list 'slime-contribs 'slime-fancy))
+  (progn
+    (setq inferior-lisp-program sbcl-executable-path)
+
+    ;; enable fuzzy matching in code buffer and SLIME REPL
+    (setq slime-complete-symbol*-fancy t)
+    (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
+
+    (slime-setup '(slime-asdf
+                   slime-fancy
+                   slime-indentation
+                   slime-sbcl-exts
+                   slime-scratch))
+
+    (my|add-company-backends :backends (company-files company-capf)
+                             :modes slime-mode)
+
+    (add-hook 'lisp-mode-hook #'slime-mode)))
+
+(use-package slime-company
+  :after (slime company)
+  :defer t
+  :init
+  (slime-setup '(slime-fancy slime-company)))
+
+(use-package ielm
+  :ensure nil
+  :init
+  (my|add-company-backends :backends (company-files company-capf)
+                           :modes ielm-mode))
+
+(use-package lisp-mode
+  :ensure nil
+  :init
+  (progn
+    (my/add-to-hooks #'my/ggtags-mode-enable '(lisp-mode-hook))
+    (my/add-to-hooks #'turn-on-eldoc-mode '(lisp-mode-hook))))
 
 (use-package elisp-mode
   :ensure nil
-  :config
+  :init
   (progn
-    (add-hook 'emacs-lisp-mode-hook #'my/ggtags-mode-enable)
-    (add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+    (my/add-to-hooks #'my/ggtags-mode-enable
+                     '(emacs-lisp-mode-hook
+                       lisp-interaction-mode-hook))
 
-    (add-hook 'lisp-interaction-mode-hook #'my/ggtags-mode-enable)
-    (add-hook 'lisp-interaction-mode-hook #'turn-on-eldoc-mode)))
+    (my/add-to-hooks #'turn-on-eldoc-mode
+                     '(emacs-lisp-mode-hook
+                       lisp-interaction-mode-hook))
+
+    (my/add-to-hooks #'company-mode
+                     '(emacs-lisp-mode-hook
+                       lisp-interaction-mode-hook))
+
+    (my|add-company-backends :backends company-capf
+                             :modes emacs-lisp-mode)))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
