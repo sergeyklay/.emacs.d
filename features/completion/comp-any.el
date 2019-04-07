@@ -127,8 +127,6 @@ Available PROPS:
         (push `(defun ,init-func-name ()
                 ,(format "Initialize company for %S." mode)
                 (setq ,backends-var-name ,raw-backends-var-name)
-                (set (make-variable-buffer-local 'auto-completion-front-end)
-                     'company)
                 (set (make-variable-buffer-local 'company-backends)
                      ,backends-var-name)) result)
         (when call-hooks

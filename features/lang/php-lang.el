@@ -82,14 +82,7 @@ or nil otherwise."
 
       (flycheck-mode)
       (subword-mode)
-      (company-mode)
       (yas-minor-mode)
-
-      ;; Enable ElDoc support
-      (ac-php-core-eldoc-setup)
-
-      (make-local-variable 'company-backends)
-      (add-to-list 'company-backends 'company-ac-php-backend)
 
       ;; Jump to definition (optional)
       (define-key php-mode-map (kbd "M-]")
@@ -104,13 +97,15 @@ or nil otherwise."
         'ac-php-toggle-debug)))
 
 (use-package php-mode
+  :defer t
   :mode "\\.php[ts354]?\\'"
-  :after (company flycheck)
-  :custom
-  (php-mode-coding-style 'psr2)
-  (php-manual-path "/usr/local/share/php/doc/html")
   :init
   (progn
+    (setq php-mode-coding-style 'psr2
+          php-manual-path "/usr/local/share/php/doc/html")
+
+    (add-hook 'php-mode-hook #'company-mode)
+    (add-hook 'php-mode-hook #'eldoc-mode)
     (add-hook 'php-mode-hook #'my/php-hook)
     (add-hook 'php-mode-hook #'my/ggtags-mode-enable))
   :bind
@@ -120,12 +115,16 @@ or nil otherwise."
         ("C-c C--" . #'php-current-class)
         ("C-c C-=" . #'php-current-namespace)))
 
-(use-package ac-php
-  :after php-mode)
-
 (use-package company-php
-  :after ac-php
-  :pin melpa)
+  :defer t
+  :requires company
+  :pin melpa
+  :init
+  (progn
+    (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
+    (my|add-company-backends
+        :modes php-mode
+        :backends company-ac-php-backend)))
 
 (provide 'php-lang)
 ;;; php-lang.el ends here
