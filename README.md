@@ -18,8 +18,8 @@ Prerequisite packages are
 -------------------------
 
 - Aspell/Ispell/Hunspell
-- Cscope
 - CommonMark
+- Cscope
 - Exuberant Ctags
 - Fira Code Font
 - GNU Global
@@ -27,6 +27,7 @@ Prerequisite packages are
 - GnuTLS client
 - HLint
 - Hoogle
+- Steel Bank Common Lisp (SBCL)
 - The Silver Searcher
 
 License

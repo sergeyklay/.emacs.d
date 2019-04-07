@@ -15,14 +15,10 @@
 
 ;;; Code:
 
-;;; SLIME
-
-;; The Superior Lisp Interaction Mode for Emacs.
-;; Note: You have to install sbcl.
-
 (defconst sbcl-executable-path (executable-find "sbcl")
   "The sbcl executable path on this system.")
 
+;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
   :defer 10
   :init
