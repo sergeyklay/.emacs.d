@@ -67,7 +67,7 @@ or nil otherwise."
       (executable-find "php"))))
 
 (defun my/php-hook ()
-  "The hook to configure `php-mode', `ac-php'  as well as `company-php'."
+  "The hook to configure `php-mode' as well as `company-php'."
   (let ((php-path (my/php-locate-executable)))
     (setq
        ;; Setting up actual path to the executable
