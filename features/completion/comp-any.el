@@ -42,7 +42,7 @@
           ;; See URL `https://github.com/company-mode/company-mode/issues/146'
           company-tooltip-align-annotations t
           company-tooltip-idle-delay t
-          company-tooltip-limit 20
+          company-tooltip-limit 9
           ;; make previous/next selection in the popup cycles
           company-selection-wrap-around t
           company-show-numbers t)))
@@ -69,9 +69,16 @@
   :commands company-quickhelp-manual-begin
   :init
   (progn
+    (use-package pos-tip
+      :defer t
+      :pin melpa)
+
     (with-eval-after-load 'company
       (setq company-frontends
-            (delq 'company-echo-metadata-frontend company-frontends))
+            (delq 'company-echo-metadata-frontend company-frontends)
+            company-quickhelp-use-propertized-text t
+            company-quickhelp-max-lines 10
+            company-quickhelp-delay 0.3)
 
       (define-key company-active-map (kbd "M-h")
         #'company-quickhelp-manual-begin)
