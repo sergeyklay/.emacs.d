@@ -39,14 +39,18 @@
 (global-visual-line-mode)
 
 ;; Show Line Numbers
-(setq-default display-line-numbers-type 'visual
-              display-line-numbers-current-absolute t
-              display-line-numbers-width 4
-              display-line-numbers-widen t)
+(use-package display-line-numbers
+  :ensure nil
+  :defer t
+  :init
+  (progn
+    (setq display-line-numbers-type t
+          display-line-numbers-width 4
+          display-line-numbers-width 4)
 
-(add-hook 'conf-mode-hook #'display-line-numbers-mode)
-(add-hook 'text-mode-hook #'display-line-numbers-mode)
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+    (add-hook 'conf-mode-hook #'display-line-numbers-mode)
+    (add-hook 'text-mode-hook #'display-line-numbers-mode)
+    (add-hook 'prog-mode-hook #'display-line-numbers-mode)))
 
 ;;; Undo Tree
 
