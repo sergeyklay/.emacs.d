@@ -72,13 +72,7 @@ or nil otherwise."
     (setq
        ;; Setting up actual path to the executable
        php-executable php-path
-       ac-php-php-executable php-path
-
-       ;; Store all the caches in the common place
-       ac-php-tags-path (concat user-cache-dir "ac-php/")
-
-       ;; My development version
-       ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
+       ac-php-php-executable php-path)
 
       (flycheck-mode)
       (subword-mode)
@@ -121,7 +115,12 @@ or nil otherwise."
   :pin melpa
   :init
   (progn
+    (setq ac-php-tags-path (concat user-cache-dir "ac-php/")
+          ;; My development version
+          ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
+
     (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
+
     (my|add-company-backends
         :modes php-mode
         :backends company-ac-php-backend)))
