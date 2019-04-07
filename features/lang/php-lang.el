@@ -98,8 +98,6 @@ or nil otherwise."
     (setq php-mode-coding-style 'psr2
           php-manual-path "/usr/local/share/php/doc/html")
 
-    (add-hook 'php-mode-hook #'company-mode)
-    (add-hook 'php-mode-hook #'eldoc-mode)
     (add-hook 'php-mode-hook #'my/php-hook)
     (add-hook 'php-mode-hook #'my/ggtags-mode-enable))
   :bind
@@ -111,7 +109,6 @@ or nil otherwise."
 
 (use-package company-php
   :defer t
-  :requires company
   :pin melpa
   :init
   (progn
@@ -119,6 +116,9 @@ or nil otherwise."
           ;; My development version
           ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
 
+    (my/add-to-hooks #'company-mode '(php-mode-hook))
+
+    (add-hook 'php-mode-hook #'eldoc-mode)
     (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
 
     (my|add-company-backends
