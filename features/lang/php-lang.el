@@ -110,7 +110,9 @@ or nil otherwise."
   (php-mode-coding-style 'psr2)
   (php-manual-path "/usr/local/share/php/doc/html")
   :init
-  (add-hook 'php-mode-hook #'my/php-hook)
+  (progn
+    (add-hook 'php-mode-hook #'my/php-hook)
+    (add-hook 'php-mode-hook #'my/ggtags-mode-enable))
   :bind
   (:map php-mode-map
         ("C-<tab>" . #'counsel-company)

@@ -15,10 +15,15 @@
 
 ;;; Code:
 
+(require 'config)
+
+(defvar gtags-enable-by-default t
+  "Whether or not to enable ggtags-mode.")
+
 ;; A front-end for accessing the gtags-generated tags.
 ;; For more see URL `https://github.com/leoliu/ggtags'
-(when (executable-find "global")
-  (use-package ggtags
+(use-package ggtags
+    :if (and global-found gtags-enable-by-default)
     :bind
     (:map ggtags-mode-map
           ("C-c g s" . 'ggtags-find-other-symbol)
@@ -31,7 +36,7 @@
           ("M-,"     . 'pop-tag-mark)
           ("M-]"     . nil)
           ("C-c <"   . 'ggtags-prev-mark)
-          ("C-c >"   . 'ggtags-next-mark))))
+          ("C-c >"   . 'ggtags-next-mark)))
 
 ;; Make Emacs reload the TAGS file automatically
 (setq tags-revert-without-query 1)
@@ -41,6 +46,15 @@
 
 ;; Never “Keep current list of tags tables also”
 (setq tags-add-tables nil)
+
+(defun my/ggtags-mode-enable ()
+  "Enable ggtags and eldoc mode.
+
+For eldoc, ggtags advises the eldoc function at the lowest priority
+so that if the major mode has better support it will use it first."
+  (when (and global-found gtags-enable-by-default)
+    (ggtags-mode 1)
+    (eldoc-mode 1)))
 
 (provide 'jump)
 ;;; jump.el ends here

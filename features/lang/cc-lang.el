@@ -49,17 +49,10 @@
   (make-local-variable 'company-backends)
   (add-to-list 'company-backends 'company-c-headers))
 
-(defun my--cc-tags ()
-  "Enable ggtags-mode for C/C++/Java modes."
-  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-    (progn
-      (require 'ggtags)
-      (ggtags-mode 1))))
-
 ;;; Hooks
 
 (add-hook 'c-mode-hook #'cc--common-hook)
-(add-hook 'c-mode-common-hook #'my--cc-tags)
+(add-hook 'c-mode-common-hook #'my/ggtags-mode-enable)
 
 (provide 'cc-lang)
 ;;; cc-lang.el ends here

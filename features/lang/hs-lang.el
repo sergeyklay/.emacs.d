@@ -51,7 +51,8 @@
       (add-to-list (make-local-variable 'company-backends)
                    '(company-intero company-ghci company-dabbrev-code company-yasnippet)))
 
-    (add-hook 'haskell-mode-hook 'haskell-hook)))
+    (add-hook 'haskell-mode-hook #'haskell-hook)
+    (add-hook 'haskell-mode-hook #'my/ggtags-mode-enable)))
 
 (provide 'hs-lang)
 ;;; hs-lang.el ends here

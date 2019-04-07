@@ -26,7 +26,14 @@
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (add-to-list 'slime-contribs 'slime-fancy))
 
-(add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+(use-package elisp-mode
+  :init
+  (progn
+    (add-hook 'emacs-lisp-mode-hook #'my/ggtags-mode-enable)
+    (add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
+
+    (add-hook 'lisp-interaction-mode-hook #'my/ggtags-mode-enable)
+    (add-hook 'lisp-interaction-mode-hook #'turn-on-eldoc-mode)))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here

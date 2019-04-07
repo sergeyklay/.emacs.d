@@ -55,8 +55,6 @@ Use this for files that change often, like cache files.")
 Function `system-name' returns the host name of the machine you
 are running on, as a string.")
 
-;;; Encoding
-
 (when (fboundp 'set-charset-priority)
   (set-charset-priority 'unicode))
 
