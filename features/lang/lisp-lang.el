@@ -27,7 +27,8 @@
   (add-to-list 'slime-contribs 'slime-fancy))
 
 (use-package elisp-mode
-  :init
+  :ensure nil
+  :config
   (progn
     (add-hook 'emacs-lisp-mode-hook #'my/ggtags-mode-enable)
     (add-hook 'emacs-lisp-mode-hook #'turn-on-eldoc-mode)
