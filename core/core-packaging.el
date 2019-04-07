@@ -1,4 +1,4 @@
-;;; packaging.el --- Package management. -*- lexical-binding: t; -*-
+;;; core-packaging.el --- Package management. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev
 
@@ -123,5 +123,5 @@
 (define-key package-menu-mode-map "s" #'my/package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'my/package-menu-find-marks)
 
-(provide 'packaging)
-;;; packaging.el ends here
+(provide 'core-packaging)
+;;; core-packaging.el ends here

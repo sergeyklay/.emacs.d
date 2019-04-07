@@ -155,7 +155,8 @@ are running on, as a string.")
 ;; However, it always trolls me when I want to open a file.
 (global-unset-key "\C-xf")
 
-(require 'packaging)
+(require 'core-defuns)
+(require 'core-packaging)
 
 (provide 'core)
 ;;; core.el ends here
