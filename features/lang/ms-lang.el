@@ -1,8 +1,8 @@
 ;;; ms-lang.el --- Add support for M$ scripts. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Serghei Iakovlev
+;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
 
-;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
+;; Author: Serghei Iakovlev <sadhooklay@gmail.com>
 ;; URL: https://github.com/sergeyklay/.emacs.d
 ;;
 ;; This file is not part of GNU Emacs.
