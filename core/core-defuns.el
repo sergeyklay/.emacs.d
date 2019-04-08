@@ -1,8 +1,9 @@
 ;;; core-defuns.el --- Core defuns. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Serghei Iakovlev
+;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
+;; Copyright (c) 2019 Sylvain Benner <sylvain.benner@gmail.com>
 
-;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
+;; Author: Serghei Iakovlev <sadhooklay@gmail.com>
 ;; URL: https://github.com/sergeyklay/.emacs.d
 ;;
 ;; This file is not part of GNU Emacs.
@@ -21,7 +22,6 @@
   (dolist (hook hooks)
     (add-hook hook func)))
 
-;; from https://github.com/syl20bnr/spacemacs/blob/develop/core/core-funcs.el
 (defun my/mplist-get-values (plist prop)
   "Get the values associated to PROP in PLIST, a modified plist.
 

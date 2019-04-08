@@ -1,8 +1,9 @@
 ;;; comp-any.el --- Initialise company. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019 Serghei Iakovlev
+;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
+;; Copyright (c) 2019 Sylvain Benner <sylvain.benner@gmail.com>
 
-;; Author: Serghei Iakovlev (concat "sadhooklay" "@" "gmail" ".com")
+;; Author: Serghei Iakovlev <sadhooklay@gmail.com>
 ;; URL: https://github.com/sergeyklay/.emacs.d
 ;;
 ;; This file is not part of GNU Emacs.
@@ -85,9 +86,6 @@
 
       (company-quickhelp-mode))))
 
-;; from (concat "https://github.com/syl20bnr/spacemacs"
-;;              "/blob/develop/layers/%2Bcompletion"
-;;              "/auto-completion/funcs.el")
 (defmacro my|add-company-backends (&rest props)
   "Add and enable company backends.
 
