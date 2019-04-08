@@ -16,11 +16,22 @@
 
 ;;; Code:
 
-;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el#L38
+;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el
 (defun my/add-to-hooks (func hooks)
   "Add FUNC to HOOKS."
   (dolist (hook hooks)
     (add-hook hook func)))
+
+;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el
+(defun my/add-all-to-hook (hook &rest funs)
+  "Add FUNS to HOOK."
+  (my/add-to-hook hook funs))
+
+;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el
+(defun my/add-to-hook (hook funs)
+  "Add list of FUNS to HOOK."
+  (dolist (fun funs)
+    (add-hook hook fun)))
 
 (defun my/mplist-get-values (plist prop)
   "Get the values associated to PROP in PLIST, a modified plist.
