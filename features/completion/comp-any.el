@@ -21,7 +21,6 @@
      company-gtags
      company-etags
      company-keywords)
-    company-files
     company-dabbrev)
   "The list of default company backends used by my Emacs.")
 
@@ -31,10 +30,9 @@
   :defer t
   :init
   (progn
-    (setq company-idle-delay 0.2
+    (setq company-idle-delay 0.3
           company-echo-delay 0
-          company-async-timeout 5
-          company-minimum-prefix-length 2
+          company-minimum-prefix-length 3
           ;; Some languages use camel case naming convention,
           ;; so company should be case sensitive.
           company-dabbrev-ignore-case nil

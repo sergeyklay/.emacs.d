@@ -102,8 +102,7 @@ or nil otherwise."
     (add-hook 'php-mode-hook #'my/ggtags-mode-enable))
   :bind
   (:map php-mode-map
-        ("C-<tab>" . #'counsel-company)
-        ("C-c /"   . #'comment-or-uncomment-region)
+        ("C-?"     . #'comment-or-uncomment-region)
         ("C-c C--" . #'php-current-class)
         ("C-c C-=" . #'php-current-namespace)))
 
@@ -123,7 +122,7 @@ or nil otherwise."
 
     (my|add-company-backends
         :modes php-mode
-        :backends company-ac-php-backend)))
+        :backends (company-ac-php-backend company-capf))))
 
 (provide 'php-lang)
 ;;; php-lang.el ends here

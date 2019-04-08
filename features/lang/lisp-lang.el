@@ -35,7 +35,7 @@
                    slime-sbcl-exts
                    slime-scratch))
 
-    (my|add-company-backends :backends (company-files company-capf)
+    (my|add-company-backends :backends (company-capf company-files)
                              :modes slime-mode)
 
     (add-hook 'lisp-mode-hook #'slime-mode)))
