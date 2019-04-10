@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; This file is used as a bootstrap for my Emacs.
+;; This file is used as a bootstrap for GNU Emacs.
 
 ;;; Code:
 
@@ -32,6 +32,7 @@
 (require 'vcs)          ; VCS related features
 (require 'spelling)     ; Spell configuration
 (require 'shells)       ; Shells configuration
+
 (require 'org-lang)     ; Org related configuration
 (require 'cc-lang)      ; Support for the C-family of languages
 (require 'php-lang)     ; PHP related configuration
@@ -41,6 +42,8 @@
 (require 'ms-lang)      ; Add support for M$ scripts
 (require 'web-lang)     ; Add support for the Web-based languages
 (require 'conf-lang)    ; Add support for the configuration like languages
+(require 'go-lang)      ; Go related configuration
+
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'irc)          ; IRC tools
 (require 'docker-io)    ; Docker related configuration
