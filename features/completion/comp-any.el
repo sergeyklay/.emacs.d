@@ -26,7 +26,7 @@
 
 ;; For more see URL `http://company-mode.github.io'
 (use-package company
-  :delight
+  :diminish (company-mode . " Co")
   :defer t
   :init
   (progn
@@ -64,7 +64,7 @@
     (add-hook 'company-mode-hook 'company-statistics-mode)))
 
 (use-package company-quickhelp
-  :if window-system
+  :if (display-graphic-p)
   :commands company-quickhelp-manual-begin
   :init
   (progn
@@ -78,10 +78,6 @@
             company-quickhelp-use-propertized-text t
             company-quickhelp-max-lines 10
             company-quickhelp-delay 0.3)
-
-      (define-key company-active-map (kbd "M-h")
-        #'company-quickhelp-manual-begin)
-
       (company-quickhelp-mode))))
 
 (defmacro my|add-company-backends (&rest props)
