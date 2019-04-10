@@ -15,7 +15,10 @@
 
 ;;; Code:
 
-;;; Bell configuration
+;; Throw away the mouse when typing.
+;; Move the mouse to the corner only if the cursor gets too close,
+;; and allow it to return once the cursor is out of the way.
+(mouse-avoidance-mode 'exile)
 
 ;; Don't beep at me
 (setq visible-bell t)
@@ -26,7 +29,6 @@
         (invert-face 'mode-line)
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
-;;; Misc
 (when window-system
   ;; More useful frame title, that show either a file or a
   ;; buffer name (if the buffer isn't visiting a file).
@@ -51,10 +53,7 @@
 ;; delete the region when typing, just like as we expect nowadays.
 (delete-selection-mode t)
 
-;;; Theme & font
-
 ;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
-
 (cond
  ((string-equal system-type "gnu/linux")
   (when (member "Fira Code" (font-family-list))
@@ -69,8 +68,6 @@
   :config
   (load-theme 'doom-one t))
 
-;;; Scrolling
-
 ;; nice scrolling
 (setq scroll-margin 0
       scroll-conservatively 100000
@@ -78,7 +75,6 @@
 
 ;; This makes it so C-n and C-p  won't make the buffer
 ;; jump around so much.
-
 (use-package smooth-scrolling
   :config
   (smooth-scrolling-mode))
