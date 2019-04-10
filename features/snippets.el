@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Add snippets support for the GNU Emacs
+;; Add snippets support for GNU Emacs
 
 ;;; Code:
 

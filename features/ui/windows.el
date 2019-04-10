@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Windows management features for the GNU Emacs.
+;; Windows management features for GNU Emacs.
 
 ;;; Code:
 

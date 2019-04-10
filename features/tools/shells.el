@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Shells related features for the GNU Emacs.
+;; Shell related features for GNU Emacs.
 
 ;;; Code:
 

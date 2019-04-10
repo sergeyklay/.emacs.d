@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; PHP related configuration for the GNU Emacs.
+;; PHP related configuration for GNU Emacs.
 
 ;;; Code:
 
@@ -52,7 +52,7 @@
     (when (and begin end)
       (sort-lines nil begin end))))
 
-(defun my/php-locate-executable ()
+(defun my--php-locate-executable ()
   "Search for the PHP executable using ’phpenv’.
 
 This function will try to find the PHP executable by calling ’phpenv’.
@@ -66,9 +66,9 @@ or nil otherwise."
          (shell-command-to-string (concat phpenv " which php")))
       (executable-find "php"))))
 
-(defun my/php-hook ()
+(defun my--php-hook ()
   "The hook to configure `php-mode' as well as `company-php'."
-  (let ((php-path (my/php-locate-executable)))
+  (let ((php-path (my--php-locate-executable)))
     (setq
        ;; Setting up actual path to the executable
        php-executable php-path
@@ -93,13 +93,12 @@ or nil otherwise."
 (use-package php-mode
   :defer t
   :mode "\\.php[ts354]?\\'"
-  :init
-  (progn
-    (setq php-mode-coding-style 'psr2
-          php-manual-path "/usr/local/share/php/doc/html")
-
-    (add-hook 'php-mode-hook #'my/php-hook)
-    (add-hook 'php-mode-hook #'my/ggtags-mode-enable))
+  :hook
+  ((php-mode . my--php-hook)
+   (php-mode . my/ggtags-mode-enable))
+  :config
+  (setq php-mode-coding-style 'psr2
+        php-manual-path "/usr/local/share/php/doc/html")
   :bind
   (:map php-mode-map
         ("C-?"     . #'comment-or-uncomment-region)

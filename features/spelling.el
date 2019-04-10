@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Spell related features for the GNU Emacs.
+;; Spell related features for GNU Emacs.
 
 ;;; Code:
 

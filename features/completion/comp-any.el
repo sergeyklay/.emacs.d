@@ -97,7 +97,7 @@ Available PROPS:
     One or several modes where BACKENDS will be added.
 
 :variables VAR VALUE'
-    One or several VAR VALUE pairs (similar to layer variables).
+    One or several VAR VALUE pairs.
     These variables are made buffer local so their values are set only for
     the given MODES.
 

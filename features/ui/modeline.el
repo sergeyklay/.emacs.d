@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Modeline related configuration for the GNU Emacs.
+;; Modeline related configuration for GNU Emacs.
 
 ;;; Code:
 
