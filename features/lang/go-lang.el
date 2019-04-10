@@ -16,7 +16,7 @@
 ;;; Code:
 
 (defun my--go-setup-env-vars ()
-  "Setting up enviroment variables for Go language."
+  "Setting up enviroment variables for Go lang."
   (unless gopath
     (setq gopath (concat (getenv "HOME") "/go")))
 
@@ -27,11 +27,23 @@
     (setenv "PATH" (concat (getenv "PATH") ":" (concat gopath "/bin")))
     (setq exec-path (append exec-path (list (concat gopath "/bin"))))))
 
+(defun my--go-common-hook ()
+  "Common configuration for Go lang."
+  ;; Call Gofmt before saving
+  (add-hook 'before-save-hook 'gofmt-before-save t)
+  (subword-mode 1))
+
 (use-package go-mode
   :defer t
   :mode "\\.go\\'"
+  :preface
+  (use-package go-eldoc
+    :defer t)
+
   :hook
-  (go-mode . my--go-setup-env-vars))
+  ((go-mode . my--go-setup-env-vars)
+   (go-mode . go-eldoc-setup)
+   (go-mode . my--go-common-hook)))
 
 (use-package company-go
   :defer t
