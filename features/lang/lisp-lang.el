@@ -21,13 +21,13 @@
 ;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
   :commands slime-mode
+  :hook
+  (lisp-mode . slime-mode)
   :init
   (progn
-    (setq inferior-lisp-program sbcl-executable-path)
-
-    ;; enable fuzzy matching in code buffer and SLIME REPL
-    (setq slime-complete-symbol*-fancy t)
-    (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
+    (setq inferior-lisp-program sbcl-executable-path
+          slime-complete-symbol*-fancy t
+          slime-completion-at-point-functions 'slime-fuzzy-complete-symbol)
 
     (slime-setup '(slime-asdf
                    slime-fancy
@@ -36,9 +36,7 @@
                    slime-scratch))
 
     (add-company-backends!! :backends (company-capf company-files)
-                            :modes slime-mode)
-
-    (add-hook 'lisp-mode-hook #'slime-mode)))
+                            :modes slime-mode)))
 
 (use-package slime-company
   :after (slime company)
@@ -76,7 +74,14 @@
                        lisp-interaction-mode-hook))
 
     (add-company-backends!! :backends company-capf
-                            :modes emacs-lisp-mode)))
+                            :modes emacs-lisp-mode))
+  :bind
+  (:map emacs-lisp-mode-map
+        ("C-c C-b" . #'eval-buffer)))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
