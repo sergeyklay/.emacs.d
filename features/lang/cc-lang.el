@@ -11,31 +11,34 @@
 
 ;;; Commentary:
 
-;; Add support for the C-family of languages for the GUN Emacs.
+;; Add support for the C-family of languages for GUN Emacs.
 
 ;;; Code:
 
-;;; Packages
-
 (use-package cmake-mode
-  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
+  :mode "CMakeLists\\.txt\\'"
+  :mode "\\.cmake\\'"
+  :init
+  (add-company-backends!!
+    :modes cmake-mode
+    :backends company-cmake))
 
 (use-package c-eldoc
-  :init
-  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  :hook
+  ((c-mode . c-turn-on-eldoc-mode)
+   (c++-mode . c-turn-on-eldoc-mode))
   :config
   (setq c-eldoc-buffer-regenerate-time 60))
 
 (use-package company-c-headers
   :after company
+  :defer t
   :init
-  (add-hook 'c-mode-hook #'my--cc-headers-hook)
-  (add-hook 'c++-mode-hook #'my--cc-headers-hook))
+  (add-company-backends!!
+    :modes c-mode-common
+    :backends company-c-headers))
 
-;;; Defuns
-
-(defun my--cc-common-hook ()
+(defun my|cc-common-hook ()
   "Change the default way that Emacs handles indentation."
   (validate-setq tab-width 4
                  c-basic-offset 4
@@ -44,14 +47,7 @@
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4))
 
-(defun my--cc-headers-hook ()
-  "Enable `company-mode' and add `company-c-headers' to the `company-backends'."
-  (make-local-variable 'company-backends)
-  (add-to-list 'company-backends 'company-c-headers))
-
-;;; Hooks
-
-(add-hook 'c-mode-hook #'cc--common-hook)
+(add-hook 'c-mode-hook #'cc|common-hook)
 (add-hook 'c-mode-common-hook #'my/ggtags-mode-enable)
 
 (provide 'cc-lang)
