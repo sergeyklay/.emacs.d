@@ -35,8 +35,8 @@
                    slime-sbcl-exts
                    slime-scratch))
 
-    (my|add-company-backends :backends (company-capf company-files)
-                             :modes slime-mode)
+    (add-company-backends!! :backends (company-capf company-files)
+                            :modes slime-mode)
 
     (add-hook 'lisp-mode-hook #'slime-mode)))
 
@@ -49,8 +49,8 @@
 (use-package ielm
   :ensure nil
   :init
-  (my|add-company-backends :backends (company-files company-capf)
-                           :modes ielm-mode))
+  (add-company-backends!! :backends (company-files company-capf)
+                          :modes ielm-mode))
 
 (use-package lisp-mode
   :ensure nil
@@ -75,8 +75,8 @@
                      '(emacs-lisp-mode-hook
                        lisp-interaction-mode-hook))
 
-    (my|add-company-backends :backends company-capf
-                             :modes emacs-lisp-mode)))
+    (add-company-backends!! :backends company-capf
+                            :modes emacs-lisp-mode)))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here

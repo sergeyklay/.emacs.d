@@ -49,7 +49,7 @@
   :defer t
   :init
   (progn
-    (my|add-company-backends
+    (add-company-backends!!
       :modes go-mode
       :backends company-go
       :variables company-go-show-annotation t)))

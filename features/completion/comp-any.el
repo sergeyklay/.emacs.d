@@ -80,7 +80,7 @@
             company-quickhelp-delay 0.3)
       (company-quickhelp-mode))))
 
-(defmacro my|add-company-backends (&rest props)
+(defmacro add-company-backends!! (&rest props)
   "Add and enable company backends.
 
 Available PROPS:

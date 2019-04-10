@@ -119,9 +119,9 @@ or nil otherwise."
     (add-hook 'php-mode-hook #'eldoc-mode)
     (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
 
-    (my|add-company-backends
-        :modes php-mode
-        :backends (company-ac-php-backend company-capf))))
+    (add-company-backends!!
+     :modes php-mode
+     :backends (company-ac-php-backend company-capf))))
 
 (provide 'php-lang)
 ;;; php-lang.el ends here
