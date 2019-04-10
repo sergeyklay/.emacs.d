@@ -40,9 +40,9 @@
 
 (defun my|cc-common-hook ()
   "Change the default way that Emacs handles indentation."
-  (validate-setq tab-width 4
-                 c-basic-offset 4
-                 indent-tabs-mode t)
+  (setq tab-width 4
+        c-basic-offset 4
+        indent-tabs-mode t)
 
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4))
@@ -52,3 +52,7 @@
 
 (provide 'cc-lang)
 ;;; cc-lang.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
