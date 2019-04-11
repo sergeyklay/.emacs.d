@@ -24,20 +24,20 @@
 ;; A front-end for accessing the gtags-generated tags.
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (use-package ggtags
-    :if (and global-executable-path gtags-enable-by-default)
-    :bind
-    (:map ggtags-mode-map
-          ("C-c g s" . 'ggtags-find-other-symbol)
-          ("C-c g h" . 'ggtags-view-tag-history)
-          ("C-c g r" . 'ggtags-find-reference)
-          ("C-c g f" . 'ggtags-find-file)
-          ("C-c g c" . 'ggtags-create-tags)
-          ("C-c g u" . 'ggtags-update-tags)
-          ("M-."     . 'ggtags-find-tag-dwim)
-          ("M-,"     . 'pop-tag-mark)
-          ("M-]"     . nil)
-          ("C-c <"   . 'ggtags-prev-mark)
-          ("C-c >"   . 'ggtags-next-mark)))
+  :if (and global-executable-path gtags-enable-by-default)
+  :bind
+  (:map ggtags-mode-map
+        ("C-c g s" . 'ggtags-find-other-symbol)
+        ("C-c g h" . 'ggtags-view-tag-history)
+        ("C-c g r" . 'ggtags-find-reference)
+        ("C-c g f" . 'ggtags-find-file)
+        ("C-c g c" . 'ggtags-create-tags)
+        ("C-c g u" . 'ggtags-update-tags)
+        ("M-."     . 'ggtags-find-tag-dwim)
+        ("M-,"     . 'pop-tag-mark)
+        ("M-]"     . nil)
+        ("C-c <"   . 'ggtags-prev-mark)
+        ("C-c >"   . 'ggtags-next-mark)))
 
 ;; Make Emacs reload the TAGS file automatically
 (setq tags-revert-without-query 1)
