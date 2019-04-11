@@ -108,6 +108,9 @@ or nil otherwise."
 (use-package company-php
   :defer t
   :pin melpa
+  :hook
+  ((php-mode . eldoc-mode)
+   (php-mode . ac-php-core-eldoc-setup))
   :init
   (progn
     (setq ac-php-tags-path (concat user-cache-dir "ac-php/")
@@ -116,12 +119,13 @@ or nil otherwise."
 
     (my/add-to-hooks #'company-mode '(php-mode-hook))
 
-    (add-hook 'php-mode-hook #'eldoc-mode)
-    (add-hook 'php-mode-hook #'ac-php-core-eldoc-setup)
-
     (add-company-backends!!
      :modes php-mode
      :backends (company-ac-php-backend company-capf))))
 
 (provide 'php-lang)
 ;;; php-lang.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
