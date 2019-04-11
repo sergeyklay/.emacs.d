@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; This file is used to set up base features
+;; This file is used to set up base features.
 
 ;;; Code:
 
@@ -111,7 +111,6 @@ are running on, as a string.")
  history-delete-duplicates t
  vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
  ;; Files
- recentf-save-file            (concat user-cache-dir "recentf")
  savehist-file                (concat user-cache-dir "minibuffer-history.el")
  tramp-auto-save-directory    (concat user-cache-dir "tramp/")
  tramp-backup-directory-alist backup-directory-alist

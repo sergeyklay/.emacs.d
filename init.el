@@ -20,6 +20,7 @@
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+(require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'appearance)   ; Appearance related settings
 (require 'user)         ; Personalization
 (require 'secure)       ; Security related features
