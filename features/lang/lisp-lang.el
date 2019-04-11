@@ -69,12 +69,9 @@
                      '(emacs-lisp-mode-hook
                        lisp-interaction-mode-hook))
 
-    (my/add-to-hooks #'company-mode
-                     '(emacs-lisp-mode-hook
-                       lisp-interaction-mode-hook))
-
-    (add-company-backends!! :backends company-capf
-                            :modes emacs-lisp-mode))
+    (add-company-backends!!
+      :backends company-capf
+      :modes emacs-lisp-mode lisp-interaction-mode))
   :bind
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)))
