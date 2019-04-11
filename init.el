@@ -21,6 +21,7 @@
 (load custom-file t)
 
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
+(require 'docs)         ; Setting up documentation features
 (require 'appearance)   ; Appearance related settings
 (require 'user)         ; Personalization
 (require 'secure)       ; Security related features

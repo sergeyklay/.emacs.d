@@ -77,7 +77,6 @@
 
 (delight '((abbrev-mode " abv" abbrev)
            (smart-tab-mode " \\t" smart-tab)
-           (eldoc-mode nil "eldoc")
            (rainbow-mode)
            (overwrite-mode " ov" t)
            (emacs-lisp-mode "elisp" :major)))
