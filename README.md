@@ -25,6 +25,7 @@ Prerequisite packages are
 - GNU Global
 - Git
 - GnuTLS client
+- Gocode
 - HLint
 - Hoogle
 - Steel Bank Common Lisp (SBCL)
