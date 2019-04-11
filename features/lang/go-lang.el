@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-(defun my--go-setup-env-vars ()
+(defun my|go-setup-env-vars ()
   "Setting up enviroment variables for Go lang."
   (unless gopath
     (setq gopath (concat (getenv "HOME") "/go")))
@@ -27,11 +27,9 @@
     (setenv "PATH" (concat (getenv "PATH") ":" (concat gopath "/bin")))
     (setq exec-path (append exec-path (list (concat gopath "/bin"))))))
 
-(defun my--go-common-hook ()
+(defun my|go-common-hook ()
   "Common configuration for Go lang."
-  ;; Call Gofmt before saving
-  (add-hook 'before-save-hook 'gofmt-before-save t)
-  (subword-mode 1))
+  (add-hook 'before-save-hook 'gofmt-before-save t))
 
 (use-package go-mode
   :defer t
@@ -39,16 +37,19 @@
   :preface
   (use-package go-eldoc
     :defer t)
-
   :hook
-  ((go-mode . my--go-setup-env-vars)
+  ((go-mode . subword-mode)
+   (go-mode . eldoc-mode)
    (go-mode . go-eldoc-setup)
-   (go-mode . my--go-common-hook)))
+   (go-mode . my|go-setup-env-vars)
+   (go-mode . my|go-common-hook)))
 
 (use-package company-go
   :defer t
   :init
   (progn
+    (my/add-to-hooks #'company-mode '(go-mode-hook))
+
     (add-company-backends!!
       :modes go-mode
       :backends company-go
@@ -56,3 +57,7 @@
 
 (provide 'go-lang)
 ;;; go-lang.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
