@@ -12,7 +12,7 @@
 
 ;;; Commentary:
 
-;; Setting up company for GNU Emacs.
+;; This feature adds auto-completion support to all used languages.
 
 ;;; Code:
 
@@ -24,61 +24,52 @@
     company-dabbrev)
   "The list of default company backends used by my Emacs.")
 
-;; For more see URL `http://company-mode.github.io'
 (use-package company
-  :diminish (company-mode . " Co")
+  :diminish (company-mode . " Ⓐ")
   :defer t
   :init
-  (progn
-    (setq company-idle-delay 0.3
-          company-echo-delay 0
-          company-minimum-prefix-length 3
-          ;; Some languages use camel case naming convention,
-          ;; so company should be case sensitive.
-          company-dabbrev-ignore-case nil
-          ;; I don't like the downcase word in company-dabbrev
-          company-dabbrev-downcase nil
-          ;; See URL `https://github.com/company-mode/company-mode/issues/146'
-          company-tooltip-align-annotations t
-          company-tooltip-idle-delay t
-          company-tooltip-limit 9
-          ;; make previous/next selection in the popup cycles
-          company-selection-wrap-around t
-          company-show-numbers t)))
+  (setq company-idle-delay 1
+        company-echo-delay 0
+        company-minimum-prefix-length 3
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase nil
+        company-tooltip-align-annotations t
+        company-tooltip-idle-delay t
+        company-tooltip-limit 9
+        company-selection-wrap-around t
+        company-show-numbers t)
+  :bind
+  (:map company-active-map
+        ("M-n" . nil)
+        ("M-p" . nil)
+        ("C-n" . company-select-next)
+        ("C-p" . company-select-previous)
+        ("SPC" . company-abort)))
 
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous)
-  (define-key company-active-map (kbd "SPC") #'company-abort))
-
-;; Company-Statistics: Suggest most used completions first
 (use-package company-statistics
   :after company
   :defer t
+  :hook
+  (company-mode . company-statistics-mode)
   :init
-  (progn
-    (setq company-statistics-file
-          (concat user-cache-dir "company-statistics-cache.el"))
-    (add-hook 'company-mode-hook 'company-statistics-mode)))
+  (setq company-statistics-file
+        (concat user-cache-dir "company-statistics-cache.el")))
 
 (use-package company-quickhelp
   :if (display-graphic-p)
   :commands company-quickhelp-manual-begin
+  :preface
+  (use-package pos-tip
+    :defer t
+    :pin melpa)
   :init
-  (progn
-    (use-package pos-tip
-      :defer t
-      :pin melpa)
-
-    (with-eval-after-load 'company
-      (setq company-frontends
-            (delq 'company-echo-metadata-frontend company-frontends)
-            company-quickhelp-use-propertized-text t
-            company-quickhelp-max-lines 10
-            company-quickhelp-delay 0.3)
-      (company-quickhelp-mode))))
+  (with-eval-after-load 'company
+    (setq company-frontends
+          (delq 'company-echo-metadata-frontend company-frontends)
+          company-quickhelp-use-propertized-text t
+          company-quickhelp-max-lines 10
+          company-quickhelp-delay 0.3)
+      (company-quickhelp-mode)))
 
 (defmacro add-company-backends!! (&rest props)
   "Add and enable company backends.
@@ -172,3 +163,7 @@ Available PROPS:
 
 (provide 'comp-any)
 ;;; comp-any.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
