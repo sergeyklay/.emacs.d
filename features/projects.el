@@ -36,6 +36,7 @@
   :config
   (projectile-mode t)
   (setq projectile-completion-system 'ivy)
+  (add-to-list 'projectile-globally-ignored-directories "elpa")
   (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook))
 
 (use-package counsel-projectile
@@ -46,3 +47,7 @@
 
 (provide 'projects)
 ;;; projects.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
