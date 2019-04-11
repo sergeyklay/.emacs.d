@@ -16,6 +16,18 @@
 
 ;;; Code:
 
+(defun my/buffer-revert-no-confirm ()
+  "Revert buffer without confirmation."
+
+  (interactive)
+  (revert-buffer :ignore-auto :noconfirm))
+
+(defun my/buffer-insert-filename ()
+  "Insert file name of current buffer at current point."
+
+  (interactive)
+  (insert (buffer-file-name (current-buffer))))
+
 ;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el
 (defun my/add-to-hooks (func hooks)
   "Add FUNC to HOOKS."
