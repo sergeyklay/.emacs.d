@@ -20,9 +20,9 @@
 
 ;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
+  :if sbcl-executable-path
   :commands slime-mode
-  :hook
-  (lisp-mode . slime-mode)
+  :hook (lisp-mode . slime-mode)
   :init
   (progn
     (setq inferior-lisp-program sbcl-executable-path
@@ -74,7 +74,8 @@
       :modes emacs-lisp-mode lisp-interaction-mode))
   :bind
   (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer)))
+        ("C-c C-b" . #'eval-buffer)
+        ("C-?"     . #'comment-or-uncomment-region)))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
