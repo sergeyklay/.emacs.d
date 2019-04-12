@@ -29,18 +29,6 @@
         (invert-face 'mode-line)
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
-(when window-system
-  ;; More useful frame title, that show either a file or a
-  ;; buffer name (if the buffer isn't visiting a file).
-  (setq frame-title-format
-        '("" invocation-name " Emacs - "
-          (:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))
-                   "%b"))))
-  (tooltip-mode -1)
-  ;; Turn off the blinking cursor
-  (blink-cursor-mode -1))
-
 ;; Pretify page breaks
 (use-package page-break-lines
   :diminish page-break-lines-mode
@@ -81,3 +69,7 @@
 
 (provide 'appearance)
 ;;; appearance.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
