@@ -42,7 +42,7 @@
 
 (use-package gitconfig-mode
   :mode "\\.gitconfig\\'"
-  :mode"\\.git/config\\'"
+  :mode "\\.git/config\\'"
   :mode "\\.gitmodules\\'")
 
 (use-package gitignore-mode
@@ -52,7 +52,7 @@
 
 (use-package gitattributes-mode
   :mode "\\.gitattributes\\'"
-  :mode"\\.git/info/attributes\\'")
+  :mode "\\.git/info/attributes\\'")
 
 ;;; git-gutter
 (use-package git-gutter
