@@ -48,31 +48,28 @@
           display-line-numbers-width 4
           display-line-numbers-width 4)
 
-    (add-hook 'conf-mode-hook #'display-line-numbers-mode)
-    (add-hook 'text-mode-hook #'display-line-numbers-mode)
-    (add-hook 'prog-mode-hook #'display-line-numbers-mode)))
+    (my/add-to-hooks #'display-line-numbers-mode
+                     '(conf-mode-hook
+                       text-mode-hook
+                       prog-mode-hook))))
 
-;;; Undo Tree
+;; Undo Tree
+(use-package undo-tree)
 
-(use-package undo-tree
-  :ensure t)
-
-;;; Edit With Emacs
-
+;; Edit With Emacs
+;;
 ;; Editing input boxes from Chrome/Firefox with Emacs. Pretty useful to keep all
 ;; significant text-writing on the web within Emacs.  I typically use this
 ;; with posts on GitHub, which has a post editor that overrides normal
-;; Emacs key bindings with other functions.  As such, ~markdown-mode~ is used.
+;; Emacs key bindings with other functions.  As such, `markdown-mode' is used.
 ;;
 ;; For more see URL
 ;; `http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html'
-
 (use-package edit-server
   :if window-system
-  :init
-  (add-hook 'after-init-hook 'server-start t)
-  (add-hook 'after-init-hook 'edit-server-start t)
-
+  :hook
+  ((after-init . server-start)
+   (after-init . edit-server-start))
   :config
   (add-to-list 'edit-server-url-major-mode-alist '("^stackoverflow" . markdown-mode))
   (add-to-list 'edit-server-url-major-mode-alist '("^github.com" . markdown-mode))
@@ -176,7 +173,7 @@ This function is for interactive use only;"
       (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list))))
 
   ;; put the point in the lowest line and return
-  (next-line arg))
+  (forward-line arg))
 
 (global-set-key [M-S-up] #'my/move-text-up)
 (global-set-key [M-S-down] #'my/move-text-down)
@@ -184,3 +181,7 @@ This function is for interactive use only;"
 
 (provide 'editor)
 ;;; editor.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
