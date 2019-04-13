@@ -97,6 +97,7 @@
 
 ;; Folding
 (use-package hideshow
+  :diminish hs-minor-mode
   :preface
   (defun my/toggle-fold ()
     "Toggle hiding/showing of a block."
@@ -104,8 +105,11 @@
     (save-excursion
       (end-of-line)
       (hs-toggle-hiding)))
-  :hook
-  (prog-mode . hs-minor-mode)
+  :init
+  (my/add-to-hooks #'hs-minor-mode
+                     '(conf-mode-hook
+                       text-mode-hook
+                       prog-mode-hook))
   :bind ("C-x t f" . my/toggle-fold))
 
 (defun my--move-text-internal (arg)
