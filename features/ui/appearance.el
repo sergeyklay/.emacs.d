@@ -52,6 +52,17 @@
     (add-to-list 'initial-frame-alist '(font . "Fira Code-14"))
     (add-to-list 'default-frame-alist '(font . "Fira Code-14")))))
 
+(use-package unicode-fonts)
+
+(use-package all-the-icons
+  :ensure t
+  :config
+  (unless (package-installed-p 'all-the-icons)
+    (all-the-icons:all-the-icons-install-fonts)))
+
+(add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
+(add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
+
 (use-package doom-themes
   :config
   (load-theme 'doom-one t))
