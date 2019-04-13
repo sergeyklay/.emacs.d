@@ -19,7 +19,8 @@ git:
 env:
   matrix:
     - EMACS_VERSION=26.1
-    - EMACS_VERSION=26.2
+    # I'll enable 26.2 a bit later
+    # - EMACS_VERSION=26.2
     - EMACS_VERSION=git-snapshot
   global:
     - PATH="$HOME/bin:$HOME/.cask/bin:$HOME/.evm/bin:$PATH"
