@@ -42,6 +42,7 @@
 (use-package display-line-numbers
   :ensure nil
   :defer t
+  :bind ("C-x t l" . #'display-line-numbers-mode)
   :init
   (progn
     (setq display-line-numbers-type t
@@ -79,27 +80,33 @@
   (setq edit-server-default-major-mode 'markdown-mode)
   (setq edit-server-new-frame nil))
 
-;;; Editorconfig
-
+;; Editorconfig
+;;
 ;; Editorconfig is a configuration format for controlling the
 ;; text attributes for text files.  It is good to use with version
 ;; control, especially when contributors develop on different platforms.
 ;; For more see URL `https://editorconfig.org'
-
 (use-package editorconfig
   :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
-;;; Whitespace mode
-
+;; Whitespace mode
 (use-package whitespace
-  :bind ("<f10>" . whitespace-mode))
+  :bind ("C-x t w" . #'whitespace-mode))
 
-;;; Folding
-
-(use-package fold-this
-  :bind ("C-c C-f" . fold-this))
+;; Folding
+(use-package hideshow
+  :preface
+  (defun my/toggle-fold ()
+    "Toggle hiding/showing of a block."
+    (interactive)
+    (save-excursion
+      (end-of-line)
+      (hs-toggle-hiding)))
+  :hook
+  (prog-mode . hs-minor-mode)
+  :bind ("C-x t f" . my/toggle-fold))
 
 (defun my--move-text-internal (arg)
   "Move text ARG lines up or down."

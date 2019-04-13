@@ -55,6 +55,8 @@ Use this for files that change often, like cache files.")
 Function `system-name' returns the host name of the machine you
 are running on, as a string.")
 
+(global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
+
 (when (fboundp 'set-charset-priority)
   (set-charset-priority 'unicode))
 

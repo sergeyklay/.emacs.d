@@ -81,5 +81,18 @@ and its values is returned.
 Currently this function infloops when the list is circular."
   (car (my/mplist-get-values plist prop)))
 
+(defun my/read-write-toggle ()
+  "Toggle read-only in any relevant mode."
+  (interactive)
+  (if (equal major-mode 'ag-mode)
+      ;; wgrep-ag can support ag-mode
+      (wgrep-change-to-wgrep-mode)
+    ;; dired-toggle-read-only has its own conditional:
+    ;; if the mode is Dired, it will make the directory writable
+    ;; if it is not, it will just toggle read only, as desired
+    (dired-toggle-read-only)))
+
+(global-set-key (kbd "C-x t r") #'my/read-write-toggle)
+
 (provide 'core-defuns)
 ;;; core-defuns.el ends here
