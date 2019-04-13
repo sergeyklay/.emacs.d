@@ -12,7 +12,7 @@
 
 This repository contains my personal configuration for GNU Emacs which I port around from system to system with me.
 
-Known to work with GNU Emacs 25.1 and later.
+Known to work with GNU Emacs 26.1 and later.
 
 Prerequisite packages are
 -------------------------
