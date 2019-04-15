@@ -66,7 +66,7 @@ or nil otherwise."
          (shell-command-to-string (concat phpenv " which php")))
       (executable-find "php"))))
 
-(defun my--php-hook ()
+(defun my|common-php-hook ()
   "The hook to configure `php-mode' as well as `company-php'."
   (let ((php-path (my--php-locate-executable)))
     (setq
@@ -94,8 +94,8 @@ or nil otherwise."
   :defer t
   :mode "\\.php[ts354]?\\'"
   :hook
-  ((php-mode . my--php-hook)
-   (php-mode . my/ggtags-mode-enable))
+  ((php-mode . my|common-php-hook)
+   (php-mode . my|ggtags-mode-enable))
   :config
   (setq php-mode-coding-style 'psr2
         php-manual-path "/usr/local/share/php/doc/html")

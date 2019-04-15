@@ -17,13 +17,13 @@
 
 (defun my|go-setup-env-vars ()
   "Setting up enviroment variables for Go lang."
-  (unless gopath
-    (setq gopath (concat (getenv "HOME") "/go")))
-  (unless (getenv "GOPATH")
-    (setenv "GOPATH" gopath))
-  (unless (member (concat gopath "/bin") exec-path)
-    (setenv "PATH" (concat (getenv "PATH") ":" (concat gopath "/bin")))
-    (setq exec-path (append exec-path (list (concat gopath "/bin"))))))
+  (let (gopath)
+    (setq gopath (concat (getenv "HOME") "/go"))
+    (unless (getenv "GOPATH")
+      (setenv "GOPATH" gopath))
+    (unless (member (concat gopath "/bin") exec-path)
+      (setenv "PATH" (concat (getenv "PATH") ":" (concat gopath "/bin")))
+      (setq exec-path (append exec-path (list (concat gopath "/bin")))))))
 
 (defconst gocode-executable-path (executable-find "gocode")
   "The gocode executable path on this system.")
@@ -35,23 +35,25 @@
 (use-package go-mode
   :defer t
   :mode "\\.go\\'"
+  :interpreter "go"
   :hook
   ((go-mode . subword-mode)
    (go-mode . my|go-setup-env-vars)
-   (go-mode . my|go-common-hook))
+   (go-mode . my|go-common-hook)
+   (go-mode . my|ggtags-mode-enable))
   :bind
   (:map go-mode-map
         ("C-?" . #'comment-or-uncomment-region)))
 
 (use-package company-go
-  :defer t
+  :after (go-mode company)
+  :hook
+  (go-mode . company-mode)
   :init
-  (progn
-    (my/add-to-hooks #'company-mode '(go-mode-hook))
-    (add-company-backends!!
-      :modes go-mode
-      :backends company-go
-      :variables company-go-show-annotation t)))
+  (add-company-backends!!
+    :modes go-mode
+    :backends company-go
+    :variables company-go-show-annotation t))
 
 (use-package go-eldoc
   :if gocode-executable-path

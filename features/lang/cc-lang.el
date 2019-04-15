@@ -47,8 +47,8 @@
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4))
 
-(add-hook 'c-mode-hook #'cc|common-hook)
-(add-hook 'c-mode-common-hook #'my/ggtags-mode-enable)
+(add-hook 'c-mode-hook #'my|cc-common-hook)
+(add-hook 'c-mode-common-hook #'my|ggtags-mode-enable)
 
 (provide 'cc-lang)
 ;;; cc-lang.el ends here

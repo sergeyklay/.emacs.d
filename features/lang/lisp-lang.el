@@ -52,26 +52,21 @@
 
 (use-package lisp-mode
   :ensure nil
-  :init
-  (progn
-    (my/add-to-hooks #'my/ggtags-mode-enable '(lisp-mode-hook))
-    (my/add-to-hooks #'turn-on-eldoc-mode '(lisp-mode-hook))))
+  :hook
+  ((lisp-mode . my|ggtags-mode-enable)
+   (lisp-mode . turn-on-eldoc-mode)))
 
 (use-package elisp-mode
   :ensure nil
+  :hook
+  ((emacs-lisp-mode . my|ggtags-mode-enable)
+   (emacs-lisp-mode . turn-on-eldoc-mode)
+   (lisp-interaction-mode . my|ggtags-mode-enable)
+   (lisp-interaction-mode . turn-on-eldoc-mode))
   :init
-  (progn
-    (my/add-to-hooks #'my/ggtags-mode-enable
-                     '(emacs-lisp-mode-hook
-                       lisp-interaction-mode-hook))
-
-    (my/add-to-hooks #'turn-on-eldoc-mode
-                     '(emacs-lisp-mode-hook
-                       lisp-interaction-mode-hook))
-
-    (add-company-backends!!
-      :backends company-capf
-      :modes emacs-lisp-mode lisp-interaction-mode))
+  (add-company-backends!!
+    :backends company-capf
+    :modes emacs-lisp-mode lisp-interaction-mode)
   :bind
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)

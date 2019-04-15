@@ -30,13 +30,13 @@
 
     (use-package flycheck-haskell
       :after flycheck
-      :init (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
+      :hook
+      (flycheck-mode . flycheck-haskell-setup))
 
     (use-package intero
       :defer t
       :init
-      (progn
-        (setq intero-extra-ghci-options '("-fno-defer-type-errors"))))
+      (setq intero-extra-ghci-options '("-fno-defer-type-errors")))
 
     (use-package hindent
       :commands (hindent-mode)
@@ -52,7 +52,7 @@
                    '(company-intero company-ghci company-dabbrev-code company-yasnippet)))
 
     (add-hook 'haskell-mode-hook #'haskell-hook)
-    (add-hook 'haskell-mode-hook #'my/ggtags-mode-enable)))
+    (add-hook 'haskell-mode-hook #'my|ggtags-mode-enable)))
 
 (provide 'hs-lang)
 ;;; hs-lang.el ends here

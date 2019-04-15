@@ -20,6 +20,9 @@
 (setq custom-file (concat user-etc-dir "custom.el"))
 (load custom-file t)
 
+;; One less file to load at startup
+(setq site-run-file nil)
+
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'docs)         ; Setting up documentation features
 (require 'appearance)   ; Appearance related settings

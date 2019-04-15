@@ -49,7 +49,7 @@
 ;; Never “Keep current list of tags tables also”
 (setq tags-add-tables nil)
 
-(defun my/ggtags-mode-enable ()
+(defun my|ggtags-mode-enable ()
   "Enable ggtags and eldoc mode.
 
 For eldoc, ggtags advises the eldoc function at the lowest priority
