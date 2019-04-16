@@ -100,6 +100,22 @@
 (use-package paredit
   :diminish (paredit-mode . " Ⓟ"))
 
+(defconst my/electrify-return-match "[\]}\)\"]"
+  "If this regexp matches the text after the cursor, do an 'electric' return.")
+
+(defun my/electrify-return-if-match (arg)
+  "Insert an 'electric' newline.
+
+If the text after the cursor matches `electrify-return-match' then open and
+indent an empty line between the cursor and the text.  Move the cursor to
+the new line.  With ARG, insert that many newlines.  Meant for `paredit-mode'."
+  (interactive "P")
+  (let ((case-fold-search nil))
+    (if (looking-at my/electrify-return-match)
+        (save-excursion (newline-and-indent)))
+    (newline arg)
+    (indent-according-to-mode)))
+
 ;; Folding
 (use-package hideshow
   :diminish hs-minor-mode

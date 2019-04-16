@@ -44,28 +44,39 @@
   :init
   (slime-setup '(slime-fancy slime-company)))
 
+(defun my|common-lisp-hook ()
+  "A common hook for Lisp modes."
+  (enable-paredit-mode)
+
+  (turn-on-eldoc-mode)
+  (eldoc-add-command
+   'paredit-backward-delete
+   'paredit-close-round)
+
+  (local-set-key (kbd "RET") #'my/electrify-return-if-match)
+  (eldoc-add-command #'my/electrify-return-if-match))
+
 (use-package ielm
   :ensure nil
   :init
   (add-company-backends!! :backends (company-files company-capf)
-                          :modes ielm-mode))
-
-(defun my|common-lisp-hook ()
-  "A common hook for Lisp modes."
-  (enable-paredit-mode)
-  (turn-on-eldoc-mode)
-  (my|ggtags-mode-enable))
+                          :modes ielm-mode)
+  :hook
+  (ielm-mode . my|common-lisp-hook))
 
 (use-package lisp-mode
   :ensure nil
   :hook
-  (lisp-mode . my|common-lisp-hook))
+  ((lisp-mode . my|common-lisp-hook)
+   (lisp-mode . my|ggtags-mode-enable)))
 
 (use-package elisp-mode
   :ensure nil
   :hook
   ((emacs-lisp-mode . my|common-lisp-hook)
-   (lisp-interaction-mode . my|common-lisp-hook))
+   (emacs-lisp-mode . my|ggtags-mode-enable)
+   (lisp-interaction-mode . my|common-lisp-hook)
+   (lisp-interaction-mode . my|ggtags-mode-enable))
   :init
   (add-company-backends!!
     :backends company-capf
