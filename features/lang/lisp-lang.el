@@ -53,16 +53,13 @@
 (use-package lisp-mode
   :ensure nil
   :hook
-  ((lisp-mode . my|ggtags-mode-enable)
-   (lisp-mode . turn-on-eldoc-mode)))
+  (lisp-mode . my|common-lisp-hook))
 
 (use-package elisp-mode
   :ensure nil
   :hook
-  ((emacs-lisp-mode . my|ggtags-mode-enable)
-   (emacs-lisp-mode . turn-on-eldoc-mode)
-   (lisp-interaction-mode . my|ggtags-mode-enable)
-   (lisp-interaction-mode . turn-on-eldoc-mode))
+  ((emacs-lisp-mode . my|common-lisp-hook)
+   (lisp-interaction-mode . my|common-lisp-hook))
   :init
   (add-company-backends!!
     :backends company-capf
@@ -71,6 +68,12 @@
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)
         ("C-?"     . #'comment-or-uncomment-region)))
+
+(defun my|common-lisp-hook ()
+  "A common hook for Lisp modes."
+  (enable-paredit-mode)
+  (turn-on-eldoc-mode)
+  (my|ggtags-mode-enable))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here

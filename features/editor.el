@@ -96,6 +96,10 @@
 (use-package whitespace
   :bind ("C-x t w" . #'whitespace-mode))
 
+;; paraedit
+(use-package paredit
+  :diminish (paredit-mode . " Ⓟ"))
+
 ;; Folding
 (use-package hideshow
   :diminish hs-minor-mode
