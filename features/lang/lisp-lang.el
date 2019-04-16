@@ -50,6 +50,12 @@
   (add-company-backends!! :backends (company-files company-capf)
                           :modes ielm-mode))
 
+(defun my|common-lisp-hook ()
+  "A common hook for Lisp modes."
+  (enable-paredit-mode)
+  (turn-on-eldoc-mode)
+  (my|ggtags-mode-enable))
+
 (use-package lisp-mode
   :ensure nil
   :hook
@@ -68,12 +74,6 @@
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)
         ("C-?"     . #'comment-or-uncomment-region)))
-
-(defun my|common-lisp-hook ()
-  "A common hook for Lisp modes."
-  (enable-paredit-mode)
-  (turn-on-eldoc-mode)
-  (my|ggtags-mode-enable))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
