@@ -117,7 +117,7 @@ or nil otherwise."
           ;; My development version
           ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
 
-    (my/add-to-hooks #'company-mode '(php-mode-hook))
+    (my/add-all-to-hook #'company-mode 'php-mode-hook)
 
     (add-company-backends!!
      :modes php-mode
