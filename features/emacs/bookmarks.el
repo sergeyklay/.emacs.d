@@ -15,15 +15,19 @@
 
 ;;; Code:
 
+(defun my|common-recentf-hook ()
+  "Common hook for function `recentf-mode'."
+  (unless recentf-mode
+    (recentf-mode)
+    (recentf-track-opened-file)))
+
 (use-package recentf
   :ensure nil
   ;; lazy load recentf
-  :hook (find-file . (lambda () (unless recentf-mode
-                                  (recentf-mode)
-                                  (recentf-track-opened-file))))
+  :hook (find-file . my|common-recentf-mode)
   :init
-  (setq recentf-save-file (concat user-cache-dir "recentf"))
-  (setq recentf-max-saved-items 200)
+  (setq recentf-save-file (concat user-cache-dir "recentf")
+        recentf-max-saved-items 200)
   :config
   (add-to-list 'recentf-exclude (expand-file-name package-user-dir))
   (add-to-list 'recentf-exclude ".cache")
