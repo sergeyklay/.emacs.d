@@ -55,6 +55,18 @@ Use this for files that change often, like cache files.")
 Function `system-name' returns the host name of the machine you
 are running on, as a string.")
 
+;; Setting up the dependencies, features and packages
+(add-to-list 'load-path user-core-dir)
+(add-to-list 'load-path user-features-dir)
+(add-to-list 'load-path user-host-dir)
+
+;; Add feature groups to the load path
+(dolist (feature-group (directory-files user-features-dir t "\\w+"))
+  (when (file-directory-p feature-group)
+    (add-to-list 'load-path feature-group)))
+
+(require 'core-backup)
+
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 
 (when (fboundp 'set-charset-priority)
@@ -69,56 +81,15 @@ are running on, as a string.")
 (setq locale-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 
-;;; Backup behaviour
-
-;; Delete excess backup versions silently
-(setq delete-old-versions t)
-
-;; Make numeric backup versions unconditionally.
-(setq version-control t)
-
-;; Make backup files even in version controlled directories
-(setq vc-make-backup-files t)
-
-;; Keep all backup in one directory.
-(let ((my-backup-dir (concat user-cache-dir "backup/")))
-  (setq backup-directory-alist
-        `(("." . ,(file-name-as-directory my-backup-dir))))
-  (unless (file-exists-p my-backup-dir)
-    (make-directory my-backup-dir t)))
-
-;; Setting up Auto-Saving.
-;; For more see URL `https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dSaving.html'
-(let ((my-auto-save-dir (concat user-cache-dir "autosave/")))
-  (setq
-   auto-save-file-name-transforms
-   `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t))
-
-   auto-save-list-file-name
-   (concat my-auto-save-dir
-            (format ".saves-%d-%s~" (emacs-pid) (system-name))))
-
-  (unless (file-exists-p my-auto-save-dir)
-    (make-directory my-auto-save-dir t)))
-
-(setq auto-save-default t
-      auto-save-timeout 10
-      auto-save-interval 200)
-
 ;;; Sane defaults
 
 (setq-default
  debug-on-error (and (not noninteractive) emacs-debug-mode)
- history-length 500
- history-delete-duplicates t
  vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
  ;; Files
- savehist-file                (concat user-cache-dir "minibuffer-history.el")
  tramp-auto-save-directory    (concat user-cache-dir "tramp/")
  tramp-backup-directory-alist backup-directory-alist
  tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el"))
-
-(savehist-mode 1)
 
 ;; Startup message customization
 (setq inhibit-startup-message t)
@@ -130,21 +101,9 @@ are running on, as a string.")
   (scroll-bar-mode -1)
   (tooltip-mode -1))
 
-;; Setting up the dependencies, features and packages
-(add-to-list 'load-path user-core-dir)
-(add-to-list 'load-path user-features-dir)
-(add-to-list 'load-path user-host-dir)
-
-;; Add feature groups to the load path
-(dolist (feature-group (directory-files user-features-dir t "\\w+"))
-  (when (file-directory-p feature-group)
-    (add-to-list 'load-path feature-group)))
-
 ;; Enable disabled by default commands permanently
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
 
 ;; Open URLs with xdg-open
 (setq browse-url-browser-function 'browse-url-xdg-open)
