@@ -24,7 +24,7 @@
 (use-package recentf
   :ensure nil
   ;; lazy load recentf
-  :hook (find-file . my|common-recentf-mode)
+  :hook (find-file . my|common-recentf-hook)
   :init
   (setq recentf-save-file (concat user-cache-dir "recentf")
         recentf-max-saved-items 200)
