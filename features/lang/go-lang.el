@@ -45,6 +45,9 @@
   (:map go-mode-map
         ("C-?" . #'comment-or-uncomment-region)))
 
+(use-package go-guru
+  :hook (go-mode . go-guru-hl-identifier-mode))
+
 (use-package company-go
   :after (go-mode company)
   :hook
