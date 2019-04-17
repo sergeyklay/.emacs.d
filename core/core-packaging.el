@@ -19,9 +19,14 @@
 
 (require 'package)
 
-(setq
- package--init-file-ensured t
- package-user-dir (concat user-local-dir "packages/" emacs-version "/elpa"))
+(setq package--init-file-ensured t)
+(setq package-user-dir
+      (concat
+       (substitute-in-file-name "$HOME/.local/lib/emacs")
+       "packages/" emacs-version "/elpa"))
+
+(unless (file-exists-p package-user-dir)
+    (make-directory package-user-dir t))
 
 ;; Emacs >= 26.1
 (when (boundp 'package-gnupghome-dir)
@@ -75,16 +80,14 @@
 (require 'bind-key)
 (require 'validate)
 
-(delight '((abbrev-mode " abv" abbrev)
-           (smart-tab-mode " \\t" smart-tab)
-           (rainbow-mode)
-           (overwrite-mode " ov" t)
-           (emacs-lisp-mode "elisp" :major)))
+(delight '((abbrev-mode " Ⓑ" abbrev)
+           (smart-tab-mode " Ⓣ" smart-tab)
+           (overwrite-mode " Ⓘ" t)
+           (emacs-lisp-mode "Elisp" :major)))
 
-;; Completely hide visual-line-mode and change auto-fill-mode to " af".
  (use-package emacs
   :delight
-  (auto-fill-function " af")
+  (auto-fill-function " Ⓕ")
   (visual-line-mode))
 
 ;;; Install quelpa
@@ -92,8 +95,11 @@
 
 (use-package quelpa
   :init
-  (setq quelpa-dir (concat user-local-dir "packages/" emacs-version "/quelpa")
-        quelpa-checkout-melpa-p nil
+  (setq quelpa-dir
+        (concat
+         (substitute-in-file-name "$HOME/.local/lib/emacs")
+         "packages/" emacs-version "/quelpa"))
+  (setq quelpa-checkout-melpa-p nil
         quelpa-update-melpa-p nil))
 
 (use-package quelpa-use-package
