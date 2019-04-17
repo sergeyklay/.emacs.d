@@ -38,9 +38,6 @@
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
 
-;; delete the region when typing, just like as we expect nowadays.
-(delete-selection-mode t)
-
 ;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
 (cond
  ((string-equal system-type "gnu/linux")

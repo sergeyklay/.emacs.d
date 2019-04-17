@@ -50,7 +50,7 @@
           display-line-numbers-width 4)
 
     (my/add-all-to-hook
-     #'display-line-numbers-mode
+     'display-line-numbers-mode
      'conf-mode-hook
      'text-mode-hook
      'prog-mode-hook)))
@@ -153,7 +153,6 @@
 (defun my/duplicate-line (arg)
   "Duplicate current line, ARG times leaving point in lower line.
 This function is for interactive use only;"
-
   (interactive "*p")
 
   ;; save the point for undo
