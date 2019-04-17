@@ -47,25 +47,37 @@
 (use-package ielm
   :ensure nil
   :init
+  (my/add-to-hook
+   #'ielm-mode-hook
+   '(turn-on-eldoc-mode
+     electric-pair-mode))
   (add-company-backends!! :backends (company-files company-capf)
-                          :modes ielm-mode)
-  :hook
-  (ielm-mode . turn-on-eldoc-mode))
+                          :modes ielm-mode))
 
 (use-package lisp-mode
   :ensure nil
-  :hook
-  ((lisp-mode . turn-on-eldoc-mode)
-   (lisp-mode . my|ggtags-mode-enable)))
+  :init
+  (my/add-to-hook
+   #'lisp-mode-hook
+   '(turn-on-eldoc-mode
+     my|ggtags-mode-enable
+     electric-pair-mode)))
 
 (use-package elisp-mode
   :ensure nil
-  :hook
-  ((emacs-lisp-mode . turn-on-eldoc-mode)
-   (emacs-lisp-mode . my|ggtags-mode-enable)
-   (lisp-interaction-mode . turn-on-eldoc-mode)
-   (lisp-interaction-mode . my|ggtags-mode-enable))
   :init
+  (my/add-to-hook
+   #'emacs-lisp-mode-hook
+   '(turn-on-eldoc-mode
+     my|ggtags-mode-enable
+     electric-pair-mode))
+
+  (my/add-to-hook
+   #'lisp-interaction-mode-hook
+   '(turn-on-eldoc-mode
+     my|ggtags-mode-enable
+     electric-pair-mode))
+
   (add-company-backends!!
     :backends company-capf
     :modes emacs-lisp-mode lisp-interaction-mode)
