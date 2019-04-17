@@ -18,9 +18,7 @@
 ;; Markdown mode
 
 (use-package markdown-mode
-  :mode "/README$"
-  :mode "\\.m\\(d\\|arkdown\\)$"
-  :mode ("/README\\.md$" . gfm-mode)
+  :mode ("/README\\(?:\\.\\(?:markdown\\|md\\)\\)?\\'" . gfm-mode)
   :config
   (setq markdown-command "cmark"
         markdown-enable-wiki-links t
@@ -29,8 +27,11 @@
         markdown-asymmetric-header t
         markdown-make-gfm-checkboxes-buttons t
         markdown-gfm-additional-languages '("sh")
+        markdown-gfm-uppercase-checkbox t
         markdown-fontify-code-blocks-natively t
-        markdown-hide-urls nil))
+        markdown-hide-urls nil)
+  :hook
+  (markdown-mode . auto-fill-mode))
 
 (use-package markdown-toc
   :commands markdown-toc-generate-toc)
