@@ -49,11 +49,11 @@
           display-line-numbers-width 4
           display-line-numbers-width 4)
 
-    (my/add-all-to-hook
-     'display-line-numbers-mode
-     'conf-mode-hook
-     'text-mode-hook
-     'prog-mode-hook)))
+    (my/add-to-hooks
+     #'display-line-numbers-mode
+     '(conf-mode-hook
+       text-mode-hook
+       prog-mode-hook))))
 
 ;; Undo Tree
 (use-package undo-tree)
@@ -107,11 +107,11 @@
       (end-of-line)
       (hs-toggle-hiding)))
   :init
-  (my/add-all-to-hook
+  (my/add-to-hooks
    #'hs-minor-mode
-   'conf-mode-hook
-   'text-mode-hook
-   'prog-mode-hook)
+   '(conf-mode-hook
+     text-mode-hook
+     prog-mode-hook))
   :bind ("C-x t f" . my/toggle-fold))
 
 (defun my--move-text-internal (arg)

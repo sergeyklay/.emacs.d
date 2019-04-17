@@ -108,16 +108,17 @@ or nil otherwise."
 (use-package company-php
   :defer t
   :pin melpa
-  :hook
-  ((php-mode . eldoc-mode)
-   (php-mode . ac-php-core-eldoc-setup))
   :init
   (progn
     (setq ac-php-tags-path (concat user-cache-dir "ac-php/")
           ;; My development version
           ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
 
-    (my/add-all-to-hook #'company-mode 'php-mode-hook)
+    (my/add-all-to-hook
+     #'php-mode-hook
+     '(company-mode
+       turn-on-eldoc-mode
+       ac-php-core-eldoc-setup))
 
     (add-company-backends!!
      :modes php-mode
