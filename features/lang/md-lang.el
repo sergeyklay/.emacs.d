@@ -20,7 +20,7 @@
 (use-package markdown-mode
   :mode ("/README\\(?:\\.\\(?:markdown\\|md\\)\\)?\\'" . gfm-mode)
   :config
-  (setq markdown-command "cmark"
+  (setq markdown-command "pandoc"
         markdown-enable-wiki-links t
         markdown-enable-math t
         markdown-italic-underscore t

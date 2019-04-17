@@ -18,7 +18,6 @@ Prerequisite packages are
 -------------------------
 
 - Aspell/Ispell/Hunspell
-- CommonMark
 - Cscope
 - Exuberant Ctags
 - Fira Code Font
@@ -28,6 +27,7 @@ Prerequisite packages are
 - Gocode
 - HLint
 - Hoogle
+- Pandoc
 - Steel Bank Common Lisp (SBCL)
 - The Silver Searcher
 
