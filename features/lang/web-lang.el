@@ -39,18 +39,17 @@
   ;; indentation
   (setq-default indent-tabs-mode nil)
   (setq web-mode-markup-indent-offset 4
-        web-mode-css-indent-offset 2
         web-mode-code-indent-offset 4))
 
 (use-package emmet-mode
-  :ensure t
   :commands emmet-mode
-  :config
-  (add-hook 'html-mode-hook 'emmet-mode)
-  (add-hook 'sgml-mode-hook 'emmet-mode)
-  (add-hook 'web-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook 'emmet-mode)
-  (add-hook 'rjsx-mode-hook 'emmet-mode))
+  :init
+  (my/add-to-hooks
+   #'emmet-mode
+   '(html-mode-hook
+     sgml-mode-hook
+     web-mode-hook
+     css-mode-hook)))
 
 (provide 'web-lang)
 ;;; web-lang.el ends here
