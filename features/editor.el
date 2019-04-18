@@ -46,7 +46,6 @@
   :init
   (progn
     (setq display-line-numbers-type t
-          display-line-numbers-width 4
           display-line-numbers-width 4)
 
     (my/add-to-hooks
@@ -57,29 +56,6 @@
 
 ;; Undo Tree
 (use-package undo-tree)
-
-;; Edit With Emacs
-;;
-;; Editing input boxes from Chrome/Firefox with Emacs. Pretty useful to keep all
-;; significant text-writing on the web within Emacs.  I typically use this
-;; with posts on GitHub, which has a post editor that overrides normal
-;; Emacs key bindings with other functions.  As such, `markdown-mode' is used.
-;;
-;; For more see URL
-;; `http://psung.blogspot.com.es/2009/05/using-itsalltext-with-emacsemacsclient.html'
-(use-package edit-server
-  :if window-system
-  :hook
-  ((after-init . server-start)
-   (after-init . edit-server-start))
-  :config
-  (add-to-list 'edit-server-url-major-mode-alist '("^stackoverflow" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^github.com" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^emacs\\.stackexchange" . markdown-mode))
-  (add-to-list 'edit-server-url-major-mode-alist '("^unix\\.stackexchange" . markdown-mode))
-
-  (setq edit-server-default-major-mode 'markdown-mode)
-  (setq edit-server-new-frame nil))
 
 ;; Editorconfig
 ;;
