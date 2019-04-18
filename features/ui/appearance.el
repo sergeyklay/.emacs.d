@@ -64,17 +64,6 @@
   :config
   (load-theme 'doom-one t))
 
-;; nice scrolling
-(setq scroll-margin 0
-      scroll-conservatively 100000
-      scroll-preserve-screen-position 1)
-
-;; This makes it so C-n and C-p  won't make the buffer
-;; jump around so much.
-(use-package smooth-scrolling
-  :config
-  (smooth-scrolling-mode))
-
 (provide 'appearance)
 ;;; appearance.el ends here
 
