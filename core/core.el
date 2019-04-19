@@ -17,9 +17,6 @@
 
 ;;; Setting up global variables and directories
 
-(defconst emacs-start-time (current-time)
-  "This variable used for the profiling purposes.")
-
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
