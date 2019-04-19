@@ -30,7 +30,13 @@
 
 (defun my|go-common-hook ()
   "Common configuration for Go lang."
-  (add-hook 'before-save-hook 'gofmt-before-save t))
+  (add-hook 'before-save-hook 'gofmt-before-save t)
+  ; gofmt uses invokes goimports
+  (setq gofmt-command "goimports")
+  ; set compile command default
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v && go test -v && go vet")))
 
 (use-package go-mode
   :defer t
@@ -38,14 +44,22 @@
   :interpreter "go"
   :hook
   ((go-mode . subword-mode)
+   (go-mode . electric-pair-mode)
    (go-mode . my|go-setup-env-vars)
-   (go-mode . my|go-common-hook)
-   (go-mode . my|ggtags-mode-enable))
+   (go-mode . my|go-common-hook))
   :bind
   (:map go-mode-map
-        ("C-?" . #'comment-or-uncomment-region)))
+        ("C-?" . #'comment-or-uncomment-region)
+        ("M-." . #'godef-jump)
+        ("M-*" . #'pop-tag-mark)
+        ("M-p" . #'compile)
+        ("M-P" . #'recompile)
+        ("M-]" . #'next-error)
+        ("M-[" . #'previous-error)))
 
 (use-package go-guru
+  :after go-mode
+  ;; highlight identifiers
   :hook (go-mode . go-guru-hl-identifier-mode))
 
 (use-package company-go
