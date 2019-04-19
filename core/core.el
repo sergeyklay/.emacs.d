@@ -118,5 +118,9 @@ are running on, as a string.")
 (require 'core-defuns)
 (require 'core-packaging)
 
+(require 'server)
+(unless (server-running-p)
+    (server-start))
+
 (provide 'core)
 ;;; core.el ends here

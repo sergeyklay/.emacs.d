@@ -1,4 +1,7 @@
-<p align="center"><img src="https://www.gnu.org/software/emacs/images/emacs.png" width=150 height=150 alt=""/></p>
+<p align="center">
+    <img src="https://www.gnu.org/software/emacs/images/emacs.png" width=150 height=150 alt=""/>
+</p>
+
 <p align="center"><a href="https://www.gnu.org/software/emacs/"><b>GNU Emacs</b></a></p>
 
 <p align="center">
