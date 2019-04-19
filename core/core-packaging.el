@@ -28,10 +28,8 @@
 (unless (file-exists-p package-user-dir)
     (make-directory package-user-dir t))
 
-;; Emacs >= 26.1
-(when (boundp 'package-gnupghome-dir)
-  (setq package-gnupghome-dir
-        (expand-file-name "gnupg" user-local-dir)))
+(setq package-gnupghome-dir
+      (expand-file-name "gnupg" user-local-dir))
 
 (setq package-archives
       '(("org"      . "http://orgmode.org/elpa/")
@@ -57,7 +55,7 @@
 
 ;; All packages should be installed.
 (setq use-package-always-ensure t)
-
+(setq use-package-verbose emacs-debug-mode)
 ;; Install validate.
 ;; For more see URL
 ;; `http://endlessparentheses.com/validate-el-schema-validation-for-emacs-lisp.html'

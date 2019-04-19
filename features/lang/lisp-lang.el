@@ -51,7 +51,7 @@
    #'ielm-mode-hook
    '(turn-on-eldoc-mode
      electric-pair-mode))
-  (add-company-backends!! :backends (company-files company-capf)
+  (add-company-backends!! :backends (company-files company-capf) company-elisp
                           :modes ielm-mode))
 
 (use-package lisp-mode
@@ -79,7 +79,7 @@
      electric-pair-mode))
 
   (add-company-backends!!
-    :backends company-capf
+    :backends company-capf company-elisp
     :modes emacs-lisp-mode lisp-interaction-mode)
   :bind
   (:map emacs-lisp-mode-map
