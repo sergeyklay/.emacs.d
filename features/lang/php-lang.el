@@ -94,8 +94,7 @@ or nil otherwise."
   :defer t
   :mode "\\.php[ts354]?\\'"
   :hook
-  ((php-mode . my|common-php-hook)
-   (php-mode . my|ggtags-mode-enable))
+  (php-mode . my|common-php-hook)
   :config
   (setq php-mode-coding-style 'psr2
         php-manual-path "/usr/local/share/php/doc/html")
