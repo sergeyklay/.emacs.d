@@ -33,5 +33,8 @@
 (use-package yaml-mode
   :mode "\\.ya?ml$")
 
+(add-to-list 'auto-mode-alist
+             '("/config\\.\\(ac\\|in\\|m4\\)\\'" . autoconf-mode))
+
 (provide 'conf-lang)
 ;;; conf-lang.el ends here
