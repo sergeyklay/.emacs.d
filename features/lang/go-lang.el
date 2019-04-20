@@ -48,7 +48,6 @@
    (go-mode . my|go-common-hook))
   :bind
   (:map go-mode-map
-        ("C-?" . #'comment-or-uncomment-region)
         ("M-." . #'godef-jump)
         ("M-*" . #'pop-tag-mark)
         ("M-p" . #'compile)

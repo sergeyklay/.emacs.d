@@ -79,8 +79,7 @@
     :modes emacs-lisp-mode lisp-interaction-mode)
   :bind
   (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer)
-        ("C-?"     . #'comment-or-uncomment-region)))
+        ("C-c C-b" . #'eval-buffer))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here

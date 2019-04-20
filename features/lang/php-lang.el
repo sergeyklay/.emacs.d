@@ -101,7 +101,6 @@ or nil otherwise."
         php-manual-path "/usr/local/share/php/doc/html")
   :bind
   (:map php-mode-map
-        ("C-?"     . #'comment-or-uncomment-region)
         ("C-c C--" . #'php-current-class)
         ("C-c C-=" . #'php-current-namespace)))
 
