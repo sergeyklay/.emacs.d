@@ -38,6 +38,8 @@
 ;; visual lines, not logical lines.
 (global-visual-line-mode)
 
+(electric-pair-mode t)
+
 ;; Show Line Numbers
 (use-package display-line-numbers
   :ensure nil

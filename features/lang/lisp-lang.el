@@ -49,8 +49,7 @@
   :init
   (my/add-to-hook
    #'ielm-mode-hook
-   '(turn-on-eldoc-mode
-     electric-pair-mode))
+   '(turn-on-eldoc-mode))
   (add-company-backends!! :backends (company-files company-capf) company-elisp
                           :modes ielm-mode))
 
@@ -60,8 +59,7 @@
   (my/add-to-hook
    #'lisp-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable
-     electric-pair-mode)))
+     my|ggtags-mode-enable)))
 
 (use-package elisp-mode
   :ensure nil
@@ -69,14 +67,12 @@
   (my/add-to-hook
    #'emacs-lisp-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable
-     electric-pair-mode))
+     my|ggtags-mode-enable))
 
   (my/add-to-hook
    #'lisp-interaction-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable
-     electric-pair-mode))
+     my|ggtags-mode-enable))
 
   (add-company-backends!!
     :backends company-capf company-elisp

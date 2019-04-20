@@ -44,7 +44,6 @@
   :interpreter "go"
   :hook
   ((go-mode . subword-mode)
-   (go-mode . electric-pair-mode)
    (go-mode . my|go-setup-env-vars)
    (go-mode . my|go-common-hook))
   :bind
