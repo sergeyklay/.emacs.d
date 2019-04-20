@@ -21,33 +21,36 @@
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
-(defvar user-emacs-dir (file-truename user-emacs-directory)
+(defconst user-emacs-dir (file-truename user-emacs-directory)
   "The path to this emacs.d directory.
 The real path of this directory is found by chasing symbolic links
 both at the level of the file and at the level of the directories
 containing it, until no links are left at any level.")
 
-(defvar user-local-dir (concat user-emacs-dir ".local/")
+(defconst user-site-lisp-dir (concat user-emacs-dir "site-lisp/")
+  "Local site-lisp directory.")
+
+(defconst user-local-dir (concat user-emacs-dir ".local/")
   "Root directory for local Emacs files.
 Use this as permanent storage for files that are safe to share across
 systems (if this config is symlinked across several computers).")
 
-(defvar user-etc-dir (concat user-local-dir "etc/")
+(defconst user-etc-dir (concat user-local-dir "etc/")
   "Directory for non-volatile storage.
 Use this for files that don't change much, like servers binaries,
 external dependencies or long-term shared data.")
 
-(defvar user-cache-dir (concat user-local-dir "cache/")
+(defconst user-cache-dir (concat user-local-dir "cache/")
   "Directory for volatile storage.
 Use this for files that change often, like cache files.")
 
-(defvar user-core-dir (concat user-emacs-dir "core/")
+(defconst user-core-dir (concat user-emacs-dir "core/")
   "All the core configuration located here.")
 
-(defvar user-features-dir (concat user-emacs-dir "features/")
+(defconst user-features-dir (concat user-emacs-dir "features/")
   "All the features should located here.")
 
-(defvar user-host-dir (concat user-etc-dir "hosts/" (system-name))
+(defconst user-host-dir (concat user-etc-dir "hosts/" (system-name))
   "The directory with user-specific Emacs settings.
 Function `system-name' returns the host name of the machine you
 are running on, as a string.")
@@ -56,6 +59,7 @@ are running on, as a string.")
 (add-to-list 'load-path user-core-dir)
 (add-to-list 'load-path user-features-dir)
 (add-to-list 'load-path user-host-dir)
+(add-to-list 'load-path user-site-lisp-dir)
 
 ;; Add feature groups to the load path
 (dolist (feature-group (directory-files user-features-dir t "\\w+"))

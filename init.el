@@ -47,6 +47,7 @@
 (require 'web-lang)     ; Add support for the Web-based languages
 (require 'conf-lang)    ; Add support for the configuration like languages
 (require 'go-lang)      ; Go related configuration
+(require 'autoconf-lang); Support for the m4-family of languages
 
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'irc)          ; IRC tools
