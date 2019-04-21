@@ -28,7 +28,7 @@
   :diminish (company-mode . " Ⓐ")
   :defer t
   :init
-  (setq company-idle-delay .6
+  (setq company-idle-delay 1
         company-echo-delay 0
         company-minimum-prefix-length 3
         company-dabbrev-ignore-case nil
