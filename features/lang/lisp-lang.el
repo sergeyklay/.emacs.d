@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Configure the Lisp-family of languages for the GUN Emacs.
+;; Configure the Lisp-family of languages for GNU Emacs.
 
 ;;; Code:
 
@@ -61,25 +61,30 @@
    '(turn-on-eldoc-mode
      my|ggtags-mode-enable)))
 
+
 (use-package elisp-mode
   :ensure nil
   :init
+  (require 'show-point-mode)
+
   (my/add-to-hook
    #'emacs-lisp-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable))
+     my|ggtags-mode-enable
+     show-point-mode))
 
   (my/add-to-hook
    #'lisp-interaction-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable))
+     my|ggtags-mode-enable
+     show-point-mode))
 
   (add-company-backends!!
     :backends company-capf company-elisp
     :modes emacs-lisp-mode lisp-interaction-mode)
   :bind
   (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer))
+        ("C-c C-b" . #'eval-buffer)))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
