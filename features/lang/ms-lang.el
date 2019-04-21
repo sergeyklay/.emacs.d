@@ -17,9 +17,16 @@
 
 ;;; PowerShell
 
+(defconst my/pwsh-executable-path (executable-find "pwsh")
+  "The PowerShell executable path on this system.")
+
 (use-package powershell
-  :mode "\\.ps[dm]?1\\'"
-  :commands (powershell-mode powershell))
+  :if my/pwsh-executable-path
+  :mode (("\\.ps1\\'"  . powershell-mode)
+         ("\\.psm1\\'" . powershell-mode))
+  :interpreter "pwsh"
+  :config
+  (setq powershell-location-of-exe my/pwsh-executable-path))
 
 (provide 'ms-lang)
 ;;; ms-lang.el ends here
