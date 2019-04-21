@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Add support for the C-family of languages for GUN Emacs.
+;; Add support for the C-family of languages for GNU Emacs.
 
 ;;; Code:
 

@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Haskell configuration for the GUN Emacs.
+;; Haskell configuration for GNU Emacs.
 
 ;;; Code:
 

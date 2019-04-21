@@ -11,27 +11,29 @@
 
 ;;; Commentary:
 
-;; Add support for the configuration like languages for the GUN Emacs.
+;; Add support for the configuration like languages for GNU Emacs.
 
 ;;; Code:
 
-;;; JSON
+;;;; JSON
 
 (use-package json-mode
- :mode "\\.js\\(on\\|[hl]int\\(rc\\)?\\)$")
+ :mode "\\.js\\(on\\|[hl]int\\(rc\\)?\\)\\'")
 
-;;; Vim
+;;;; Vim
 
 (use-package vimrc-mode
-  :mode "/\\.?g?vimrc$"
-  :mode "\\.vim$"
-  :mode "\\.?vimperatorrc$"
-  :mode "\\.vimp$")
+  :mode "/\\.?g?vimrc\\'"
+  :mode "\\.vim\\'"
+  :mode "\\.?vimperatorrc\\'"
+  :mode "\\.vimp\\'")
 
-;; Yaml
+;;;; Yaml
 
 (use-package yaml-mode
-  :mode "\\.ya?ml$")
+  :mode "\\.ya?ml\\'")
+
+;;;; Autoconf
 
 (add-to-list 'auto-mode-alist
              '("/config\\.\\(ac\\|in\\|m4\\)\\'" . autoconf-mode))

@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Add support for the Web-based languages for the GUN Emacs.
+;; Add support for the Web-based languages for GNU Emacs.
 
 ;;; Code:
 
