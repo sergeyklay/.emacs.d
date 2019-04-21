@@ -42,17 +42,6 @@
 (bind-key "C-x 2" 'my/vsplit-other-window)
 (bind-key "C-x 3" 'my/hsplit-other-window)
 
-;;; Winner mode
-
-;; Winner mode allows you to undo/redo changes to window changes
-;; in GNU Emacs and allows you.
-
-(use-package winner
-  :config
-  (winner-mode t)
-  :bind (("M-s-<left>" . winner-undo)
-         ("M-s-<right>" . winner-redo)))
-
 ;;; Transpose frame
 
 ;; Provides some interactive functions which allows users to transpose
