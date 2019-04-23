@@ -71,7 +71,8 @@
    #'emacs-lisp-mode-hook
    '(turn-on-eldoc-mode
      my|ggtags-mode-enable
-     show-point-mode))
+     show-point-mode
+     hs-minor-mode))
 
   (my/add-to-hook
    #'lisp-interaction-mode-hook

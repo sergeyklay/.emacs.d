@@ -84,12 +84,6 @@
     (save-excursion
       (end-of-line)
       (hs-toggle-hiding)))
-  :init
-  (my/add-to-hooks
-   #'hs-minor-mode
-   '(conf-mode-hook
-     text-mode-hook
-     prog-mode-hook))
   :bind ("C-x t f" . my/toggle-fold))
 
 (defun my--move-text-internal (arg)
