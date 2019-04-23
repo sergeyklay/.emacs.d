@@ -39,6 +39,20 @@
   (split-window-horizontally)
   (other-window 1 nil))
 
+(defun my/kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+(defun my/kill-dired-buffers ()
+  "Kill all dired buffers."
+  (interactive)
+  (mapc (lambda (buffer)
+          (when (eq 'dired-mode
+                    (buffer-local-value 'major-mode buffer))
+            (kill-buffer buffer)))
+        (buffer-list)))
+
 (bind-key "C-x 2" 'my/vsplit-other-window)
 (bind-key "C-x 3" 'my/hsplit-other-window)
 
