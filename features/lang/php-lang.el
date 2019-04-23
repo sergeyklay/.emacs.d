@@ -112,7 +112,7 @@ or nil otherwise."
           ;; My development version
           ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
 
-    (my/add-all-to-hook
+    (my/add-to-hook
      #'php-mode-hook
      '(company-mode
        turn-on-eldoc-mode
