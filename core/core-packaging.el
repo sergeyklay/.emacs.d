@@ -22,7 +22,7 @@
 (setq package--init-file-ensured t)
 (setq package-user-dir
       (concat
-       (substitute-in-file-name "$HOME/.local/lib/emacs")
+       (substitute-in-file-name "$HOME/.local/lib/emacs/")
        "packages/" emacs-version "/elpa"))
 
 (unless (file-exists-p package-user-dir)
@@ -95,7 +95,7 @@
   :init
   (setq quelpa-dir
         (concat
-         (substitute-in-file-name "$HOME/.local/lib/emacs")
+         (substitute-in-file-name "$HOME/.local/lib/emacs/")
          "packages/" emacs-version "/quelpa"))
   (setq quelpa-checkout-melpa-p nil
         quelpa-update-melpa-p nil))
