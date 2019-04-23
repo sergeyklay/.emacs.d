@@ -86,6 +86,16 @@
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)))
 
+(use-package cask-mode
+  :mode "Cask")
+
+(use-package flycheck-cask
+  :after flycheck-mode
+  :hook
+  (flycheck-mode . flycheck-cask-setup)
+  :init
+  (setq-default flycheck-emacs-lisp-load-path 'inherit))
+
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
 
