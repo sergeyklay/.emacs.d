@@ -36,25 +36,24 @@
            (markdown-mode   . flyspell-mode)
            (latex-mode      . flyspell-mode))
     :config
-    (validate-setq
-     ;; Be silent when checking words.
-     flyspell-issue-message-flag nil)
+    ;; Be silent when checking words.
+    (setq flyspell-issue-message-flag nil)
 
     (cond
      ((executable-find "hunspell")
-      (validate-setq
+      (setq
        ispell-program-name "hunspell"
        ispell-really-hunspell t
        ispell-extra-args '("-a" "-i" "utf-8")))
      ((executable-find "aspell")
       (progn
-        (validate-setq
+        (setq
          ispell-program-name "aspell"
          ispell-really-aspell t
          ;; Improve performance by reducing suggestions.
          ispell-extra-args '("--sug-mode=ultra" "--dont-suggest"))
         (when (boundp 'flyspell-list-command)
-          (validate-setq
+          (setq
            flyspell-list-command "--list"))))))
 
   (use-package auto-correct
@@ -65,7 +64,7 @@
     :commands (flyspell-correct-ivy)
     :init
     (require 'flyspell-correct)
-    (validate-setq flyspell-correct-interface #'flyspell-correct-ivy)
+    (setq flyspell-correct-interface #'flyspell-correct-ivy)
     :bind (:map flyspell-mode-map
                 ("C-;" . flyspell-correct-wrapper))))
 

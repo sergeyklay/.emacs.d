@@ -56,12 +56,6 @@
 ;; All packages should be installed.
 (setq use-package-always-ensure t)
 (setq use-package-verbose emacs-debug-mode)
-;; Install validate.
-;; For more see URL
-;; `http://endlessparentheses.com/validate-el-schema-validation-for-emacs-lisp.html'
-(unless (package-installed-p 'validate)
-  (package-refresh-contents)
-  (package-install 'validate))
 
 ;; Install diminish
 (unless (package-installed-p 'diminish)
@@ -76,7 +70,6 @@
 (require 'delight)
 (require 'diminish)
 (require 'bind-key)
-(require 'validate)
 
 (delight '((abbrev-mode " Ⓑ" abbrev)
            (smart-tab-mode " Ⓣ" smart-tab)
