@@ -110,7 +110,7 @@ are running on, as a string.")
 (setq browse-url-browser-function 'browse-url-xdg-open)
 
 ;; I use C source to understand and debug built-in functions
-(setq source-directory (expand-file-name "~/src/emacs/src"))
+(setq source-directory (expand-file-name (substitute-in-file-name "$HOME/src/emacs")))
 
 ;; I don't use this at all.
 ;; However, it always trolls me when I want to open a file.
