@@ -40,10 +40,21 @@
   org-agenda-todo-ignore-scheduled
   org-agenda-sorting-strategy
   org-agenda-skip-deadline-prewarning-if-scheduled
-  org-src-strip-leading-and-trailing-blank-lines)
-
-(defconst my|org-default-directory
-  (substitute-in-file-name "$HOME/Dropbox/Org/"))
+  org-src-strip-leading-and-trailing-blank-lines
+  :init
+  ;;
+  ;;   $ tree ~/Dropbox/Org/
+  ;;   ~/Dropbox/Org/
+  ;;   ├── Agenda
+  ;;   │    └── Default.org
+  ;;   │    ...
+  ;;   │    ...
+  ;;   ├── Later.org
+  ;;   └── Notes.org
+  ;;   ...
+  ;;   ...
+  ;;
+  (setq org-directory (substitute-in-file-name "$HOME/Dropbox/Org")))
 
 ;;; Org activation bindings
 
@@ -55,19 +66,13 @@
 
 ;;; Org agenda
 
-(setq org-agenda-files
-      (delq nil
-            (mapcar
-             (lambda (x)
-               (and (file-exists-p x) x))
-             '((concat my|org-default-directory "Agenda.org")))))
+(setq org-agenda-files (expand-file-name "Agenda" org-directory))
 
 ;;; Org capture
 
 (bind-key "C-c c" 'org-capture)
 
-(setq org-default-notes-file
-       (concat my|org-default-directory "Notes.org"))
+(setq org-default-notes-file (concat org-directory "Notes.org"))
 (setq org-capture-bookmark nil)
 
 ;;; Org setup
