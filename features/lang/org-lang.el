@@ -66,7 +66,8 @@
 
 ;;; Org agenda
 
-(setq org-agenda-files (expand-file-name "Agenda" org-directory))
+(setq org-agenda-files
+      (list org-directory (expand-file-name "Agenda" org-directory)))
 
 ;;; Org capture
 
