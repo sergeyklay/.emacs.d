@@ -1,6 +1,7 @@
 ;;; core.el --- Base initialization file. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
+;; Copyright (c) 2016-2019 Henrik Lissner
 
 ;; Author: Serghei Iakovlev <sadhooklay@gmail.com>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -11,9 +12,24 @@
 
 ;;; Commentary:
 
-;; This file is used to set up base features.
+;; This file is used to set up GNU Emacs configuration.
+;;
+;; Some code parts was created in inspiration of Doom Emacs by Henrik Lissner
+;; which is licensed under the MIT License.  For more see URL
+;; `https://github.com/hlissner/doom-emacs'.
 
 ;;; Code:
+
+;; Actually this project is my personal configuration
+;; so I use GNU Emacs 26.1 now.
+(eval-when-compile
+  (and (version< emacs-version "26.1")
+       (error
+        (concat
+         "Detected Emacs %s. "
+         "This configuration is designed to work "
+         "only with Emacs 26.1 and higher. I'm sorry.")
+        emacs-version)))
 
 ;;; Setting up global variables and directories
 
