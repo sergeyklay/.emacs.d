@@ -42,6 +42,9 @@
   org-agenda-skip-deadline-prewarning-if-scheduled
   org-src-strip-leading-and-trailing-blank-lines)
 
+(defconst my|org-default-directory
+  (substitute-in-file-name "$HOME/Dropbox/Org/"))
+
 ;;; Org activation bindings
 
 ;; Set up some global key bindings that integrate with Org Mode features.
@@ -54,14 +57,17 @@
 
 (setq org-agenda-files
       (delq nil
-            (mapcar (lambda (x) (and (file-exists-p x) x))
-                    '("~/Dropbox/Agenda.org"))))
+            (mapcar
+             (lambda (x)
+               (and (file-exists-p x) x))
+             '((concat my|org-default-directory "Agenda.org")))))
 
 ;;; Org capture
 
 (bind-key "C-c c" 'org-capture)
 
-(setq org-default-notes-file "~/Dropbox/Notes/notes.org")
+(setq org-default-notes-file
+       (concat my|org-default-directory "Notes.org"))
 (setq org-capture-bookmark nil)
 
 ;;; Org setup
