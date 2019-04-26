@@ -41,13 +41,13 @@
 ;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
 (cond
  ((string-equal system-type "gnu/linux")
-  (when (member "Fira Code" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Fira Code-12"))
-    (add-to-list 'default-frame-alist '(font . "Fira Code-12"))))
+  (when (member "Menlo" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "Menlo-13"))
+    (add-to-list 'default-frame-alist '(font . "Menlo-13"))))
  ((string-equal system-type "darwin")
-    (when (member "Fira Code" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Fira Code-14"))
-    (add-to-list 'default-frame-alist '(font . "Fira Code-14")))))
+  (when (member "Menlo" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "Menlo-13"))
+    (add-to-list 'default-frame-alist '(font . "Menlo-13")))))
 
 (use-package unicode-fonts)
 
