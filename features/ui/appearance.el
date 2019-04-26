@@ -41,13 +41,13 @@
 ;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
 (cond
  ((string-equal system-type "gnu/linux")
-  (when (member "Menlo" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Menlo-13"))
-    (add-to-list 'default-frame-alist '(font . "Menlo-13"))))
+  (when (member "Source Code Pro" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
+    (add-to-list 'default-frame-alist '(font . "Source Code Pro-13"))))
  ((string-equal system-type "darwin")
-  (when (member "Menlo" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Menlo-13"))
-    (add-to-list 'default-frame-alist '(font . "Menlo-13")))))
+  (when (member "Source Code Pro" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
+    (add-to-list 'default-frame-alist '(font . "Source Code Pro-13")))))
 
 (use-package unicode-fonts)
 
@@ -62,7 +62,9 @@
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-one t))
+  (load-theme 'doom-one t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
 
 (provide 'appearance)
 ;;; appearance.el ends here
