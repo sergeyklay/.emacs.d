@@ -32,12 +32,11 @@
         projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS")
         projectile-globally-ignored-file-suffixes
         '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock"))
-  :bind (("s-p"   . projectile-switch-project))
+  :bind (("M-p"   . projectile-switch-project))
   :config
   (projectile-mode t)
   (setq projectile-completion-system 'ivy)
-  (add-to-list 'projectile-globally-ignored-directories "elpa")
-  (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook))
+  (add-to-list 'projectile-globally-ignored-directories "elpa"))
 
 (use-package counsel-projectile
   :after (ivy counsel projectile)
