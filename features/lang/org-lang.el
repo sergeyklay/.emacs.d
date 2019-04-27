@@ -64,6 +64,9 @@
 (bind-key "C-c c" 'org-capture)
 (bind-key "C-c a" 'org-agenda)
 
+(setq org-todo-keywords
+      '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED")))
+
 ;;; Org agenda
 
 (setq org-agenda-files
