@@ -49,6 +49,8 @@
   ;;   │    └── Default.org
   ;;   │    ...
   ;;   │    ...
+  ;;   ├── Capture.org
+  ;;   ├── Inbox.org
   ;;   ├── Later.org
   ;;   └── Notes.org
   ;;   ...
@@ -65,7 +67,7 @@
 (bind-key "C-c a" 'org-agenda)
 
 (setq org-todo-keywords
-      '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED")))
+      '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED" "INVALID")))
 
 ;;; Org agenda
 
@@ -76,7 +78,7 @@
 
 (bind-key "C-c c" 'org-capture)
 
-(setq org-default-notes-file (concat org-directory "Notes.org"))
+(setq org-default-notes-file (expand-file-name "Capture.org" org-directory))
 (setq org-capture-bookmark nil)
 
 ;;; Org setup
