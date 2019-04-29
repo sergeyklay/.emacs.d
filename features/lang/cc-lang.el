@@ -43,12 +43,13 @@
   (setq tab-width 4
         c-basic-offset 4
         indent-tabs-mode t)
-
   (c-set-offset 'substatement-open 0)
-  (c-set-offset 'case-label 4))
+  (c-set-offset 'case-label 4)
 
-(add-hook 'c-mode-hook #'my|cc-common-hook)
-(add-hook 'c-mode-common-hook #'my|ggtags-mode-enable)
+  (hs-minor-mode t)
+  (my|ggtags-mode-enable))
+
+(add-hook 'c-mode-common-hook #'my|cc-common-hook)
 
 (provide 'cc-lang)
 ;;; cc-lang.el ends here
