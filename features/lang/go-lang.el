@@ -63,7 +63,8 @@
 (use-package company-go
   :after (go-mode company)
   :hook
-  (go-mode . company-mode)
+  ((go-mode . company-mode)
+   (go-mode . hs-minor-mode))
   :init
   (add-company-backends!!
     :modes go-mode
