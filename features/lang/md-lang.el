@@ -31,7 +31,13 @@
         markdown-fontify-code-blocks-natively t
         markdown-hide-urls nil)
   :hook
-  (markdown-mode . auto-fill-mode))
+  (markdown-mode . auto-fill-mode)
+  :bind
+  (:map markdown-mode-map
+        ("M-n"   . nil)
+        ("M-p"   . nil)
+        ("C-x n" . #'markdown-next-link)
+        ("C-x p" . #'markdown-previous-link)))
 
 (use-package markdown-toc
   :commands markdown-toc-generate-toc)

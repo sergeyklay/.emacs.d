@@ -48,12 +48,12 @@
    (go-mode . my|go-common-hook))
   :bind
   (:map go-mode-map
-        ("M-." . #'godef-jump)
-        ("M-*" . #'pop-tag-mark)
-        ("M-p" . #'compile)
-        ("M-P" . #'recompile)
-        ("M-]" . #'next-error)
-        ("M-[" . #'previous-error)))
+        ("M-."   . #'godef-jump)
+        ("M-*"   . #'pop-tag-mark)
+        ("C-x p" . #'compile)
+        ("C-x P" . #'recompile)
+        ("M-]"   . #'next-error)
+        ("M-["   . #'previous-error)))
 
 (use-package go-guru
   :after go-mode
