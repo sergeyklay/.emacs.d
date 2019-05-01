@@ -38,6 +38,8 @@
 (add-to-list 'auto-mode-alist
              '("/config\\.\\(ac\\|in\\|m4\\)\\'" . autoconf-mode))
 
+;;;; Nginx
+
 (use-package nginx-mode
   :mode (("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)
          ("nginx.conf" . nginx-mode)))
@@ -47,6 +49,17 @@
   :hook
   ((nginx-mode . company-mode)
    (nginx-mode . company-nginx-keywords)))
+
+;;;; SSH
+
+(use-package ssh-config-mode
+  :mode (("/\\.ssh/config\\'" . ssh-config-mode)
+         ("/sshd?_config\\'" . ssh-config-mode)
+         ("/known_hosts\\'" . ssh-known-hosts-mode)
+         ("/authorized_keys\\'" . ssh-authorized-keys-mode))
+  :hook
+  (ssh-config-mode . turn-on-font-lock))
+
 
 (provide 'conf-lang)
 ;;; conf-lang.el ends here
