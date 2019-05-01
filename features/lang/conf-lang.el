@@ -38,5 +38,15 @@
 (add-to-list 'auto-mode-alist
              '("/config\\.\\(ac\\|in\\|m4\\)\\'" . autoconf-mode))
 
+(use-package nginx-mode
+  :mode (("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)
+         ("nginx.conf" . nginx-mode)))
+
+(use-package company-nginx
+  :after (company nginx-mode)
+  :hook
+  ((nginx-mode . company-mode)
+   (nginx-mode . company-nginx-keywords)))
+
 (provide 'conf-lang)
 ;;; conf-lang.el ends here
