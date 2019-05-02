@@ -26,7 +26,8 @@
      haskell-process-auto-import-loaded-modules t
      haskell-stylish-on-save t)
 
-    (use-package company-ghci :defer t)
+    (use-package company-ghci
+      :defer t)
 
     (use-package flycheck-haskell
       :after flycheck
@@ -40,8 +41,9 @@
 
     (use-package hindent
       :commands (hindent-mode)
-      :bind (:map hindent-mode-map
-                  ("C-c R" . hindent-reformat-buffer)))
+      :bind
+      (:map hindent-mode-map
+            ("C-c R" . hindent-reformat-buffer)))
 
     (defun haskell-hook ()
       (semantic-mode)

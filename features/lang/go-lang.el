@@ -69,7 +69,10 @@
   (add-company-backends!!
     :modes go-mode
     :backends company-go
-    :variables company-go-show-annotation t))
+    :variables company-go-show-annotation t)
+  :bind
+  (:map go-mode-map
+        ("C-<tab>" . #'company-complete)))
 
 (use-package go-eldoc
   :if gocode-executable-path

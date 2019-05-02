@@ -47,7 +47,9 @@
   (c-set-offset 'case-label 4)
 
   (hs-minor-mode t)
-  (my|ggtags-mode-enable))
+  (my|ggtags-mode-enable)
+
+  (local-set-key (kbd "<C-tab>") #'company-complete))
 
 (add-hook 'c-mode-common-hook #'my|cc-common-hook)
 

@@ -120,7 +120,10 @@ or nil otherwise."
 
     (add-company-backends!!
      :modes php-mode
-     :backends (company-ac-php-backend company-capf))))
+     :backends (company-ac-php-backend company-capf)))
+  :bind
+  (:map php-mode-map
+        ("C-<tab>" . #'company-complete)))
 
 (provide 'php-lang)
 ;;; php-lang.el ends here

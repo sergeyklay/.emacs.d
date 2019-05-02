@@ -48,7 +48,9 @@
   :after (company nginx-mode)
   :hook
   ((nginx-mode . company-mode)
-   (nginx-mode . company-nginx-keywords)))
+   (nginx-mode . company-nginx-keywords))
+  :bind
+  ("C-<tab>" . #'company-complete))
 
 ;;;; SSH
 

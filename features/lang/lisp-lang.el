@@ -59,8 +59,10 @@
   (my/add-to-hook
    #'lisp-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable)))
-
+     my|ggtags-mode-enable))
+  :bind
+  (:map lisp-mode-map
+        ("C-<tab>" . #'company-complete)))
 
 (use-package elisp-mode
   :ensure nil
@@ -85,7 +87,8 @@
     :modes emacs-lisp-mode lisp-interaction-mode)
   :bind
   (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer)))
+        ("C-c C-b" . #'eval-buffer)
+        ("C-<tab>" . #'company-complete)))
 
 (use-package cask-mode
   :mode "Cask")
