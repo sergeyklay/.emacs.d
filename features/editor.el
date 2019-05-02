@@ -27,6 +27,14 @@
 ;; Set the default width of fill mode to 80
 (setq-default fill-column 80)
 
+;; Show column ruler
+(use-package fill-column-indicator
+  :init
+  (my/add-to-hooks
+   #'fci-mode
+   '(conf-mode-hook
+     prog-mode-hook)))
+
 ;; Visually indicate empty lines after the buffer end
 (setq-default indicate-empty-lines t)
 
