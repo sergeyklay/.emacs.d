@@ -23,7 +23,6 @@ Prerequisite packages are
 - Aspell/Ispell/Hunspell
 - Cscope
 - Exuberant Ctags
-- Fira Code Font
 - GNU Global
 - Git
 - GnuTLS client
