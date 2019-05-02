@@ -49,7 +49,8 @@
   (hs-minor-mode t)
   (my|ggtags-mode-enable)
 
-  (local-set-key (kbd "<C-tab>") #'company-complete))
+  (local-set-key (kbd "<C-tab>") #'company-complete)
+  (local-set-key (kbd "C-c j") #'find-tag))
 
 (add-hook 'c-mode-common-hook #'my|cc-common-hook)
 
