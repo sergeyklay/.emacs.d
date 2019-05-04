@@ -35,8 +35,9 @@
                    slime-sbcl-exts
                    slime-scratch))
 
-    (add-company-backends!! :backends (company-capf company-files)
-                            :modes slime-mode)))
+    (add-company-backends!!
+      :backends (company-capf company-files)
+      :modes slime-mode)))
 
 (use-package slime-company
   :after (slime company)
@@ -50,8 +51,9 @@
   (my/add-to-hook
    #'ielm-mode-hook
    '(turn-on-eldoc-mode))
-  (add-company-backends!! :backends (company-files company-capf) company-elisp
-                          :modes ielm-mode))
+  (add-company-backends!!
+    :backends (company-files company-capf) company-elisp
+    :modes ielm-mode))
 
 (use-package lisp-mode
   :ensure nil
