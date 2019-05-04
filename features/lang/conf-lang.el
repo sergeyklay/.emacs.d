@@ -20,6 +20,11 @@
 (use-package json-mode
  :mode "\\.js\\(on\\|[hl]int\\(rc\\)?\\)\\'")
 
+;;;; Ini
+
+(use-package ini-mode
+  :mode "\\.ini\\'")
+
 ;;;; Vim
 
 (use-package vimrc-mode
