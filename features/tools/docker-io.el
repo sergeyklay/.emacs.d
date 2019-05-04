@@ -11,22 +11,21 @@
 
 ;;; Commentary:
 
-;; Docker related configuration
+;;  Packages for working with Docker's configuration files.
 
 ;;; Code:
 
 (use-package docker
   :defer t
   :init
-  (progn
-    (use-package docker-tramp
-      :defer t)
+  (use-package docker-tramp
+    :defer t))
 
-    (use-package dockerfile-mode
-      :mode "Dockerfile\\'")
+(use-package dockerfile-mode
+  :mode "Dockerfile\\'")
 
-    (use-package docker-compose-mode
-      :mode "docker-compose[^/]*\\.yml\\'")))
+(use-package docker-compose-mode
+  :mode "docker-compose\\.ya?ml\\'")
 
 (provide 'docker-io)
 ;;; docker-io.el ends here

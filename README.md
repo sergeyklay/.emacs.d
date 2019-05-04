@@ -22,6 +22,7 @@ Prerequisite packages are
 
 - Aspell/Ispell/Hunspell
 - Cscope
+- Docker
 - Exuberant Ctags
 - GNU Global
 - Git
