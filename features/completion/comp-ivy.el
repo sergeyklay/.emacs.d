@@ -73,6 +73,7 @@
 (global-set-key (kbd "C-h b")  #'counsel-descbinds)
 
 (global-set-key (kbd "C-x C-i") #'counsel-imenu)
+(global-set-key (kbd "M-x") #'counsel-M-x)
 
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
