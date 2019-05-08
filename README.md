@@ -26,6 +26,7 @@ Prerequisite packages are
 - Exuberant Ctags
 - GNU Global
 - Git
+- GnuPG
 - GnuTLS client
 - Gocode
 - HLint
