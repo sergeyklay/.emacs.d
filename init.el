@@ -54,6 +54,5 @@
 (require 'docker-io)    ; Docker related configuration
 (require 'syntax-check) ; Syntax checkers
 (require 'snippets)     ; Add snippets support
-(require 'news)         ; News/Email related features
 
 ;;; init.el ends here
