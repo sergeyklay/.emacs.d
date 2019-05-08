@@ -29,6 +29,7 @@
   (use-package flyspell
     :defer t
     :delight
+    ;; TODO: Use per feature configuration
     :hook ((org-mode        . flyspell-mode)
            (text-mode       . flyspell-mode)
            (change-log-mode . flyspell-mode)
