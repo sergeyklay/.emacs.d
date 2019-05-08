@@ -33,8 +33,9 @@
         (flycheck-display-error-messages errors)))
 
     (setq flycheck-indication-mode 'right-fringe
-        flycheck-standard-error-navigation nil
-        flycheck-display-errors-function #'unless-error-buffer)))
+          flycheck-standard-error-navigation nil
+          flycheck-display-errors-function #'unless-error-buffer
+          flycheck-emacs-lisp-load-path load-path)))
 
 (provide 'syntax-check)
 ;;; syntax-check.el ends here
