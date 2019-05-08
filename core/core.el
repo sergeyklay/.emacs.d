@@ -98,6 +98,8 @@ are running on, as a string.")
 (setq locale-coding-system 'utf-8)
 (setq-default buffer-file-coding-system 'utf-8)
 
+(add-to-list 'auto-coding-alist '("/#[^/]+#\\'" . utf-8))
+
 ;;; Sane defaults
 
 (setq-default
