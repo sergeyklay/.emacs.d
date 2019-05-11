@@ -32,8 +32,8 @@ Prerequisite packages are
 - HLint
 - Hoogle
 - Pandoc
-- Password Store
-- Steel Bank Common Lisp (SBCL)
+- Password Store (`pass`)
+- Steel Bank Common Lisp (`sbcl`)
 - The Silver Searcher
 
 License
