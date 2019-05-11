@@ -26,7 +26,6 @@
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'docs)         ; Setting up documentation features
 (require 'appearance)   ; Appearance related settings
-(require 'secure)       ; Security related features
 (require 'windows)      ; Windows management features
 (require 'modeline)     ; Modeline related configuration
 (require 'projects)     ; Project navigation and management

@@ -135,10 +135,9 @@ are running on, as a string.")
 ;; However, it always trolls me when I want to open a file.
 (global-unset-key "\C-xf")
 
-(setenv "GPG_AGENT_INFO" nil)
-
-(require 'core-defuns)
 (require 'core-packaging)
+(require 'core-gpg)
+(require 'core-defuns)
 (require 'core-news)
 
 (require 'server)
