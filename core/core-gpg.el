@@ -15,6 +15,7 @@
 
 ;;; Code:
 
+;; non-GUI password dialog
 (setenv "GPG_AGENT_INFO" nil)
 
 ;;;; EasyPG Assistant
@@ -37,15 +38,6 @@
 (use-package auth-source
   :init
   (add-to-list 'auth-sources (concat user-local-dir "etc/.authinfo.gpg")))
-
-;;;; ID Manager
-
-(use-package id-manager
-  :commands id-manager
-  :init
-  (progn
-    (setq idm-database-file (concat user-local-dir "etc/.idm-db.gpg"))
-    (bind-key* "C-c i" 'id-manager)))
 
 ;;;; Password store
 
