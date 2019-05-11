@@ -20,56 +20,8 @@
 
 ;;; Code:
 
-;; Actually this project is my personal configuration
-;; so I use GNU Emacs 26.1 now.
-(eval-when-compile
-  (and (version< emacs-version "26.1")
-       (error
-        (concat
-         "Detected Emacs %s. "
-         "This configuration is designed to work "
-         "only with Emacs 26.1 and higher. I'm sorry.")
-        emacs-version)))
-
-;;; Setting up global variables and directories
-
-(defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
-  "If non-nil, all Emacs will be verbose.
-Set DEBUG=1 in the command line or use --debug-init to enable this.")
-
-(defconst user-emacs-dir (file-truename user-emacs-directory)
-  "The path to this emacs.d directory.
-The real path of this directory is found by chasing symbolic links
-both at the level of the file and at the level of the directories
-containing it, until no links are left at any level.")
-
-(defconst user-site-lisp-dir (concat user-emacs-dir "site-lisp/")
-  "Local site-lisp directory.")
-
-(defconst user-local-dir (concat user-emacs-dir ".local/")
-  "Root directory for local Emacs files.
-Use this as permanent storage for files that are safe to share across
-systems (if this config is symlinked across several computers).")
-
-(defconst user-etc-dir (concat user-local-dir "etc/")
-  "Directory for non-volatile storage.
-Use this for files that don't change much, like servers binaries,
-external dependencies or long-term shared data.")
-
-(defconst user-cache-dir (concat user-local-dir "cache/")
-  "Directory for volatile storage.
-Use this for files that change often, like cache files.")
-
-(defconst user-core-dir (concat user-emacs-dir "core/")
-  "All the core configuration located here.")
-
-(defconst user-features-dir (concat user-emacs-dir "features/")
-  "All the features should located here.")
-
-(defconst user-host-dir (concat user-etc-dir "hosts/" (system-name))
-  "The directory with user-specific Emacs settings.
-Function `system-name' returns the host name of the machine you
-are running on, as a string.")
+(require 'core-startup (concat user-emacs-directory "core/core-startup.el"))
+(require 'core-dirs (concat user-emacs-directory "core/core-dirs.el"))
 
 ;; Setting up the dependencies, features and packages
 (add-to-list 'load-path user-core-dir)

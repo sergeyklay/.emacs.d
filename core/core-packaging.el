@@ -18,6 +18,8 @@
 ;;; Bootstrap packaging system
 
 (require 'package)
+(require 'core-dirs)
+(require 'core-startup)
 
 (setq package--init-file-ensured t)
 (setq package-user-dir

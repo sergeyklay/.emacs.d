@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'core-dirs)
+
 ;; non-GUI password dialog
 (setenv "GPG_AGENT_INFO" nil)
 

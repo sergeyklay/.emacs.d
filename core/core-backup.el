@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'core-dirs)
+
 ;;;; Backup
 
 ;; Delete excess backup versions silently

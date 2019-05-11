@@ -16,6 +16,8 @@
 
 ;;; Code:
 
+(require 'dired)
+
 (defun my/buffer-revert-no-confirm ()
   "Revert buffer without confirmation."
 
@@ -99,7 +101,8 @@ Currently this function infloops when the list is circular."
 (defun my/read-write-toggle ()
   "Toggle read-only in any relevant mode."
   (interactive)
-  (if (equal major-mode 'ag-mode)
+  (if (and (fboundp 'wgrep-change-to-wgrep-mode)
+           (equal major-mode 'ag-mode))
       ;; wgrep-ag can support ag-mode
       (wgrep-change-to-wgrep-mode)
     ;; dired-toggle-read-only has its own conditional:
