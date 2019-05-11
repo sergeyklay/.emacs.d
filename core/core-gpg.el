@@ -36,7 +36,7 @@
 
 (use-package auth-source
   :init
-  (add-to-list 'auth-sources (concat user-local-dir "authinfo.gpg")))
+  (add-to-list 'auth-sources (concat user-local-dir "etc/.authinfo.gpg")))
 
 ;;;; ID Manager
 
@@ -44,7 +44,7 @@
   :commands id-manager
   :init
   (progn
-    (setq idm-database-file (concat user-local-dir "idm-db.gpg"))
+    (setq idm-database-file (concat user-local-dir "etc/.idm-db.gpg"))
     (bind-key* "C-c i" 'id-manager)))
 
 ;;;; Password store
