@@ -20,6 +20,7 @@
 
 ;;; Code:
 
+(require 'nsm)
 (require 'core-startup (concat user-emacs-directory "core/core-startup.el"))
 (require 'core-dirs (concat user-emacs-directory "core/core-dirs.el"))
 
@@ -60,7 +61,8 @@
  ;; Files
  tramp-auto-save-directory    (concat user-cache-dir "tramp/")
  tramp-backup-directory-alist backup-directory-alist
- tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el"))
+ tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el")
+ nsm-settings-file            (concat user-etc-dir "network-security.data"))
 
 ;; Startup message customization
 (setq inhibit-startup-message t)
