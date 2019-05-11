@@ -17,14 +17,18 @@
 
 (require 'core-dirs)
 
-;; non-GUI password dialog
-(setenv "GPG_AGENT_INFO" nil)
-
 ;;;; EasyPG Assistant
 
 (use-package epa
   :ensure nil
+  :init
+  ;; non-GUI password dialog
+  (setenv "GPG_AGENT_INFO" nil)
+  ;; For more see "man 1 gpg2" for option "--pinentry-mode"
+  (unless (eq (window-system) 'w32)
+    (setq epa-pinentry-mode 'loopback))
   :config
+  ;; Enable automatic encryption/decryption of *.gpg files
   (epa-file-enable))
 
 ;;;; Pin Entry
