@@ -24,6 +24,8 @@
   :init
   ;; non-GUI password dialog
   (setenv "GPG_AGENT_INFO" nil)
+  ;; GnuPG 2.2.x
+  (setq epg-gpg-program "/usr/local/bin/gpg")
   ;; For more see "man 1 gpg2" for option "--pinentry-mode"
   (unless (eq (window-system) 'w32)
     (setq epa-pinentry-mode 'loopback))
