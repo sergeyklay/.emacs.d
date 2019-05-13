@@ -15,9 +15,25 @@
 
 ;;; Code:
 
-;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use/
+(require 'core-dirs)
+(require 'erc-log)
+
+(defun my|erc-key-bindings ()
+  "Change `erc' key bindings."
+  (require 'projectile)
+  (local-set-key (kbd "M-p") #'projectile-switch-project))
+
+(defun my|erc-logging ()
+  "Setting up channel logging for `erc'."
+  (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
+    (setq erc-log-channels-directory log-channels-directory
+          erc-log-insert-log-on-open t)
+    (unless (file-exists-p log-channels-directory)
+      (make-directory log-channels-directory t))))
+
+;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use
 (use-package erc
-  :after password-store
+  :after (auth-source password-store)
   :defer t
   :custom
   (erc-autojoin-channels-alist
@@ -36,12 +52,19 @@
   (erc-server-reconnect-timeout 3)
   (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                              "324" "329" "332" "333" "353" "477"))
-
   :config
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling)
+  (add-to-list 'erc-modules 'log)
   (erc-services-mode 1)
-  (erc-update-modules))
+  (erc-update-modules)
+  :hook
+  ((erc-mode . my|erc-key-bindings)
+   (erc-mode . my|erc-logging))
+  :bind
+  (:map erc-mode-map
+        ("M-<down>" . erc-next-command)
+        ("M-<up>" . erc-previous-command)))
 
 (use-package erc-hl-nicks
   :after erc)
