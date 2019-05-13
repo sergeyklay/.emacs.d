@@ -76,7 +76,7 @@ This moves them into the Spam folder."
         ;; I don't want local, unencrypted copies of emails I write.
         gnus-message-archive-group nil
 
-        mml-secure-openpgp-signers '("DC898A5F")
+        mml-secure-openpgp-signers '("1E0B5331219BEA88")
         ;; I want to be able to read the emails I wrote.
         mml-secure-openpgp-encrypt-to-self t)
   :hook
