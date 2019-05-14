@@ -81,10 +81,18 @@ This moves them into the Spam folder."
         mml-secure-openpgp-encrypt-to-self t)
   :hook
   ((gnus-summary-mode . my|gnus-summary-keys)
-   (message-mode . my|common-message-hook))
+   (message-mode . my|common-message-hook)
+   (gnus-group-mode . gnus-topic-mode))
   :bind
   (:map gnus-group-mode-map
         ("o" . #'my/gnus-group-list-subscribed-groups)))
+
+(eval-after-load 'gnus-topic
+  '(progn
+     (setq gnus-topic-topology '(("Gnus" visible)
+                                 (("Mail" visible nil nil))
+                                 (("News" visible nil nil))
+                                 (("Misc" visible nil nil))))))
 
 (use-package bbdb
   :after (gnus message)
