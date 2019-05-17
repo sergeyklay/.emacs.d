@@ -56,11 +56,17 @@
 
 ;;;; Password store
 
-(use-package pass
-  :if (executable-find "pass"))
-
 (use-package password-store
   :if (executable-find "pass"))
+
+;; See https://www.passwordstore.org/
+(use-package pass
+  :if (executable-find "pass")
+  :after password-store
+  :init
+  (let ((passwd-dir (substitute-in-file-name "$HOME/.password-store")))
+    (unless (file-exists-p passwd-dir)
+      (make-directory passwd-dir t))))
 
 (use-package auth-password-store
   :if (executable-find "pass")
