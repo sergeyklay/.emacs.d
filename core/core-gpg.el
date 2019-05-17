@@ -32,8 +32,6 @@
   :ensure nil
   :after epg
   :init
-  ;; non-GUI password dialog
-  (setenv "GPG_AGENT_INFO" nil)
   ;; For more see "man 1 gpg2" for option "--pinentry-mode"
   (unless (eq (window-system) 'w32)
     (setq epa-pinentry-mode 'loopback))
@@ -43,6 +41,7 @@
 
 ;;;; Pin Entry
 
+;; For more see https://emacs.stackexchange.com/a/32882/16592
 (use-package pinentry
   :init
   (setenv "INSIDE_EMACS" "t")
