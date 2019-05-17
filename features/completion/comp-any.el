@@ -40,10 +40,6 @@
         company-show-numbers t)
   :bind
   (:map company-active-map
-        ("M-n" . nil)
-        ("M-p" . nil)
-        ("C-n" . company-select-next)
-        ("C-p" . company-select-previous)
         ("SPC" . company-abort)))
 
 (use-package company-statistics

@@ -18,11 +18,6 @@
 (require 'core-dirs)
 (require 'erc-log)
 
-(defun my|erc-key-bindings ()
-  "Change `erc' key bindings."
-  (require 'projectile)
-  (local-set-key (kbd "M-p") #'projectile-switch-project))
-
 (defun my|erc-logging ()
   "Setting up channel logging for `erc'."
   (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
@@ -59,12 +54,7 @@
   (erc-services-mode 1)
   (erc-update-modules)
   :hook
-  ((erc-mode . my|erc-key-bindings)
-   (erc-mode . my|erc-logging))
-  :bind
-  (:map erc-mode-map
-        ("M-<down>" . erc-next-command)
-        ("M-<up>" . erc-previous-command)))
+  (erc-mode . my|erc-logging))
 
 (use-package erc-hl-nicks
   :after erc)

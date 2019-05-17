@@ -32,7 +32,7 @@
         projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS")
         projectile-globally-ignored-file-suffixes
         '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock"))
-  :bind (("M-p"   . projectile-switch-project))
+  :bind (([f12] . projectile-switch-project))
   :config
   (projectile-mode t)
   (setq projectile-completion-system 'ivy)
