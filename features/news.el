@@ -29,11 +29,13 @@
                 (nnimap-expunge t)
                 (nnimap-split-methods default)
                 (nnir-search-engine imap)
-                (nnmail-expiry-wait 7)
+                (nnmail-expiry-wait 30)
                 (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash"))
 
         (nntp "gmane"
-              (nntp-address "news.gmane.org"))))
+              (nntp-address "news.gmane.org"))
+
+        (nnml "")))
 
 (setq nnmail-split-methods
       '(("mail.emacs" "^\\(To\\|From\\|Cc\\):.*emacs-devel@gnu\\.org.*")
@@ -60,6 +62,14 @@
 (setq gnus-message-archive-method '(nnimap "imap.gmail.com")
       gnus-message-archive-group "[Gmail]/Sent Mail")
 
+;;
+(defconst my-gmail-trash-newsgroup "nnimap+gmail:[Gmail]/Trash")
+
+(defun my/gmail-move-to-trash ()
+  "Move mails to trash using Google Mail."
+  (interactive)
+  (gnus-summary-move-article nil my-gmail-trash-newsgroup))
+
 (defun my/gmail-archive ()
   "Archive the current or marked mails.
 This moves them into the All Mail folder."
@@ -75,7 +85,8 @@ This moves them into the Spam folder."
 (defun my|gnus-summary-keys ()
   "Create two key bindings for my Gmail experience."
   (local-set-key "y" #'my/gmail-archive)
-  (local-set-key "$" #'my/gmail-report-spam))
+  (local-set-key "$" #'my/gmail-report-spam)
+  (local-set-key "D" #'my/gmail-move-to-trash))
 
 (add-hook 'gnus-summary-mode-hook #'my|gnus-summary-keys)
 

@@ -37,6 +37,20 @@
   (flyspell-mode 1)
   (local-set-key [(tab)] #'bbdb-complete-mail))
 
+(defun my|common-article-hook ()
+  "Common Gnus article hook."
+  (setq gnus-visible-headers
+          (concat "^From:\\|^Reply-To\\|^Organization:\\|^To:\\|^Cc:"
+                  "\\|^Newsgroups:\\|^Subject:\\|^Date:\\|^Gnus"))
+
+  ;; Show the article headers in this order.
+  (setq gnus-sorted-header-list
+        '("^From:" "^Reply-To" "^Organization:" "^To:" "^Cc:" "^Newsgroups:"
+          "^Subject:" "^Date:" "^Gnus"))
+  (gnus-article-highlight)
+  (gnus-article-hide-headers-if-wanted)
+  (article-emphasize))
+
 (use-package gnus
   :ensure nil
   :defer t
@@ -45,18 +59,7 @@
   (progn
     ;; No primary server
     (setq gnus-select-method '(nnnil ""))
-
     (setq gnus-startup-file (concat user-etc-dir "newsrc"))
-
-    (setq gnus-visible-headers
-          (concat "^From:\\|^Reply-To\\|^Organization:\\|^To:\\|^Cc:"
-                  "\\|^Newsgroups:\\|^Subject:\\|^Date:\\|^Gnus"))
-
-    ;; Show the article headers in this order.
-    (setq gnus-sorted-header-list
-          '("^From:" "^Reply-To" "^Organization:" "^To:" "^Cc:" "^Newsgroups:"
-            "^Subject:" "^Date:" "^Gnus"))
-
     ;; Do not store local, unencrypted copies of emails.
     (setq gnus-message-archive-group nil)
 
@@ -68,9 +71,9 @@
        gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
        gnus-sum-thread-tree-false-root ""
        gnus-sum-thread-tree-indent " "
-       gnus-sum-thread-tree-leaf-with-other "├► "
+       gnus-sum-thread-tree-leaf-with-other "├─ "
        gnus-sum-thread-tree-root ""
-       gnus-sum-thread-tree-single-leaf "╰► "
+       gnus-sum-thread-tree-single-leaf "└─ "
        gnus-sum-thread-tree-vertical "│"
        gnus-article-browse-delete-temp t
        gnus-treat-strip-trailing-blank-lines 'last
@@ -79,17 +82,23 @@
        gnus-mime-display-multipart-related-as-mixed t ; Show more MIME-stuff:
        gnus-auto-select-first nil ; Don't get the first article automatically:
        smiley-style 'medium
-       gnus-keep-backlog '0)
-
-    (add-to-list 'nnmail-extra-headers nnrss-url-field)
-
-    ;; Use topics per default
-    (add-hook 'gnus-group-mode-hook 'gnus-topic-mode))
+       gnus-keep-backlog '0))
   :hook
-  ((message-mode . my|common-message-hook))
+  ((message-mode . my|common-message-hook)
+   (gnus-group-mode . gnus-topic-mode)
+   (gnus-article-display . my|common-article-hook))
   :bind
   (:map gnus-group-mode-map
         ("o" . #'my/gnus-group-list-subscribed-groups)))
+
+
+;; I'd like Gnus NOT to render HTML-mails
+;; but show me the text part if it's available.
+(with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext")
+
+  (setq mm-text-html-renderer 'gnus-w3m))
 
 (use-package bbdb
   :after (gnus message)
