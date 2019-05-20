@@ -28,8 +28,14 @@
 
 (defun my|common-message-hook ()
   "Common Gnus message hook."
+  (unless (fboundp 'bbdb-com) (require 'bbdb-com))
   (setq fill-column 69)
-  (turn-on-auto-fill))
+
+  (auto-fill-mode t)
+  (font-lock-mode t)
+  (abbrev-mode t)
+  (flyspell-mode 1)
+  (local-set-key [(tab)] #'bbdb-complete-mail))
 
 (use-package gnus
   :ensure nil
@@ -105,7 +111,7 @@
   (bbdb-initialize)
   :hook
   ((gnus-startup . bbdb-insinuate-gnus)
-   (message-setup . bbdb-define-all-aliases)))
+   (mail-setup . bbdb-define-all-aliases)))
 
 (use-package bbdb-gnus
   :ensure bbdb
