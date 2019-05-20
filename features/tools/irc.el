@@ -16,7 +16,9 @@
 ;;; Code:
 
 (require 'core-dirs)
+(require 'erc)
 (require 'erc-log)
+(require 'erc-track)
 
 (defun my|erc-logging ()
   "Setting up channel logging for `erc'."
