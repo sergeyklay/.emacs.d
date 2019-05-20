@@ -35,6 +35,7 @@ Prerequisite packages are
 - Password Store (`pass`)
 - Steel Bank Common Lisp (`sbcl`)
 - The Silver Searcher
+- movemail.mailutils
 
 License
 -------
