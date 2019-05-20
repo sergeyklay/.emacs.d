@@ -1,4 +1,4 @@
-;;; core-news.el --- News/Email related features. -*- lexical-binding: t; -*-
+;;; core-news.el --- News/Email configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
 
@@ -11,38 +11,20 @@
 
 ;;; Commentary:
 
-;; News/Email related features for GNU Emacs.
+;; Core News/Email configuration for GNU Emacs.
 
 ;;; Code:
 
-(require 'gnus-sum)
-(require 'gnus-group)
+(require 'core-dirs)
 (require 'gnus-start)
-(require 'message)
-(require 'smtpmail)
-(require 'mml-sec)
+(require 'gnus-art)
+(require 'gnus-group)
+(require 'nnrss)
 
 (defun my/gnus-group-list-subscribed-groups ()
   "List all subscribed groups with or without un-read messages."
   (interactive)
   (gnus-group-list-all-groups 5))
-
-(defun my/gmail-archive ()
-  "Archive the current or marked mails.
-This moves them into the All Mail folder."
-  (interactive)
-  (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/All Mail"))
-
-(defun my/gmail-report-spam ()
-  "Report the current or marked mails as spam.
-This moves them into the Spam folder."
-  (interactive)
-  (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/Spam"))
-
-(defun my|gnus-summary-keys ()
-  "Create two key bindings for my Gmail experience."
-  (local-set-key "y" #'my/gmail-archive)
-  (local-set-key "$" #'my/gmail-report-spam))
 
 (defun my|common-message-hook ()
   "Common Gnus message hook."
@@ -51,48 +33,57 @@ This moves them into the Spam folder."
 
 (use-package gnus
   :ensure nil
-  :init
-  (setq gnus-select-method
-        ;; This tells Gnus to get email from Gmail via IMAP.
-        '(nnimap "gmail"
-                 ;; it could also be imap.googlemail.com if that's your server.
-                 (nnimap-address "imap.gmail.com")
-                 (nnimap-server-port "imaps")
-                 (nnimap-stream ssl))
+  :defer t
+  :commands gnus
+  :config
+  (progn
+    ;; No primary server
+    (setq gnus-select-method '(nnnil ""))
 
-        ;; This tells Gnus to use the Gmail SMTP server. This
-        ;; automatically leaves a copy in the Gmail Sent folder.
-        smtpmail-smtp-server "smtp.gmail.com"
-        smtpmail-smtp-service 587
+    (setq gnus-startup-file (concat user-etc-dir "newsrc"))
 
-        ;; Tell message mode to use SMTP.
-        message-send-mail-function 'smtpmail-send-it
+    (setq gnus-visible-headers
+          (concat "^From:\\|^Reply-To\\|^Organization:\\|^To:\\|^Cc:"
+                  "\\|^Newsgroups:\\|^Subject:\\|^Date:\\|^Gnus"))
 
-        ;; Gmail system labels have the prefix [Gmail], which matches
-        ;; the default value of gnus-ignored-newsgroups. That's why we
-        ;; redefine it.
-        gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]"
+    ;; Show the article headers in this order.
+    (setq gnus-sorted-header-list
+          '("^From:" "^Reply-To" "^Organization:" "^To:" "^Cc:" "^Newsgroups:"
+            "^Subject:" "^Date:" "^Gnus"))
 
-        ;; I don't want local, unencrypted copies of emails I write.
-        gnus-message-archive-group nil
+    ;; Do not store local, unencrypted copies of emails.
+    (setq gnus-message-archive-group nil)
 
-        mml-secure-openpgp-signers '("1E0B5331219BEA88")
-        ;; I want to be able to read the emails I wrote.
-        mml-secure-openpgp-encrypt-to-self t)
+    (setq-default
+       gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B (%c) %s%)\n"
+       gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
+       gnus-group-line-format "%M%S%p%P%5y:%B %G\n"
+       gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
+       gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
+       gnus-sum-thread-tree-false-root ""
+       gnus-sum-thread-tree-indent " "
+       gnus-sum-thread-tree-leaf-with-other "├► "
+       gnus-sum-thread-tree-root ""
+       gnus-sum-thread-tree-single-leaf "╰► "
+       gnus-sum-thread-tree-vertical "│"
+       gnus-article-browse-delete-temp t
+       gnus-treat-strip-trailing-blank-lines 'last
+       gnus-keep-backlog 'nil
+       gnus-summary-display-arrow nil ; Don't show that annoying arrow:
+       gnus-mime-display-multipart-related-as-mixed t ; Show more MIME-stuff:
+       gnus-auto-select-first nil ; Don't get the first article automatically:
+       smiley-style 'medium
+       gnus-keep-backlog '0)
+
+    (add-to-list 'nnmail-extra-headers nnrss-url-field)
+
+    ;; Use topics per default
+    (add-hook 'gnus-group-mode-hook 'gnus-topic-mode))
   :hook
-  ((gnus-summary-mode . my|gnus-summary-keys)
-   (message-mode . my|common-message-hook)
-   (gnus-group-mode . gnus-topic-mode))
+  ((message-mode . my|common-message-hook))
   :bind
   (:map gnus-group-mode-map
         ("o" . #'my/gnus-group-list-subscribed-groups)))
-
-(eval-after-load 'gnus-topic
-  '(progn
-     (setq gnus-topic-topology '(("Gnus" visible)
-                                 (("Mail" visible nil nil))
-                                 (("News" visible nil nil))
-                                 (("Misc" visible nil nil))))))
 
 (use-package bbdb
   :after (gnus message)
@@ -111,7 +102,10 @@ This moves them into the Spam folder."
         bbdb-pop-up-layout 'multi-line
         bbdb-mua-pop-up nil
         bbdb-default-country "Ukraine")
-  (bbdb-initialize))
+  (bbdb-initialize)
+  :hook
+  ((gnus-startup . bbdb-insinuate-gnus)
+   (message-setup . bbdb-define-all-aliases)))
 
 (use-package bbdb-gnus
   :ensure bbdb
