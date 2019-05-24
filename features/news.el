@@ -12,75 +12,81 @@
 ;;; Commentary:
 
 ;; News/Email related features for GNU Emacs.
+;;
+;; Currently used `gnus-topic-topology':
+;;
+;; Gnus
+;;   Personal
+;;   Phalcon
+;;   Work
+;;   News
+;;   Misc
 
 ;;; Code:
 
 (require 'core-news)
-(require 'smtpmail)
-(require 'nnir)
+(require 'gnus-msg)
 
 (setq gnus-secondary-select-methods
-      '((nnimap "Personal"
-                (nnimap-inbox "INBOX")
-                (nnimap-user "sadhooklay@gmail.com")
-                (nnimap-address "imap.gmail.com")
-                (nnimap-server-port 993)
-                (nnimap-stream ssl)
-                (nnimap-expunge t)
-                (nnimap-split-methods default)
-                (nnir-search-engine imap)
-                (nnmail-expiry-wait 30)
-                (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash"))
+      (mapcar #'my-gmail-user-to-nnimap
+              '("personal")))
 
-        (nntp "gmane"
-              (nntp-address "news.gmane.org"))
-
-        (nnml "")))
-
-(setq nnmail-split-methods
-      '(("mail.emacs" "^\\(To\\|From\\|Cc\\):.*emacs-devel@gnu\\.org.*")
-        ("mail.forums" "^From:.*phosphorum@phalconphp\\.com.*")
-        ("mail.misc" "")))
-
-;; This tells Gnus to use the Gmail SMTP server. This
-;; automatically leaves a copy in the Gmail Sent folder.
-;; Also tell message mode to use SMTP.
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587)
-
-;; Gmail system labels have the prefix [Gmail], which matches
-;; the default value of `gnus-ignored-newsgroups'.  That's why we
-;; redefine it.
-(setq gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+;; TODO: unbreak (assumes that my personal email is set up)
+(setq gnus-cloud-method "personal")
 
 (setq mml-secure-openpgp-signers '("1E0B5331219BEA88")
       ;; I want to be able to read the emails I wrote.
       mml-secure-openpgp-encrypt-to-self t)
 
-;; Archive outgoing email in Sent folder on imap.gmail.com:
-(setq gnus-message-archive-method '(nnimap "imap.gmail.com")
-      gnus-message-archive-group "[Gmail]/Sent Mail")
+;; By default archive outgoing email in Sent Mail folder on imap.gmail.com
+;; using personal mailbox.  This might be redefined for a particular
+;; use case if needed arises
+(setq gnus-message-archive-group
+      '((".*" "nnimap+personal:[Gmail]/Sent Mail")))
 
-;;
-(defconst my-gmail-trash-newsgroup "nnimap+gmail:[Gmail]/Trash")
+(setq gnus-posting-styles
+      '(("nnimap\\+personal:.*"
+         (name (concat user-full-name))
+         (address user-mail-address)
+         (signature "Serghei")
+         ;; Gmail does not require any handling for sent messages.  The server
+         ;; will automatically save them to the Sent folder and that folder will
+         ;; get synced locally through my email setup.
+         (gcc nil)
+         ("X-Message-SMTP-Method"
+          (concat "smtp smtp.gmail.com 587 " user-mail-address)))))
 
 (defun my/gmail-move-to-trash ()
-  "Move mails to trash using Google Mail."
+  "Move mails to trash using Google Mail.
+The moving is definitely necessary for Gmail if you want to
+actually delete mail and not just remove it from a a label."
   (interactive)
-  (gnus-summary-move-article nil my-gmail-trash-newsgroup))
+  (cond ((string-match "nnimap\\+personal" gnus-newsgroup-name)
+         (gnus-summary-move-article nil "nnimap+personal:[Gmail]/Trash"))
+        ((string-match "\\(drafts\\|queue\\|delayed\\)" gnus-newsgroup-name)
+         (gnus-summary-move-article nil "mail.trash"))
+        ;; just do a normal delete instead of a move since items in these
+        ;; newsgroups aren't being tracked by Gmail, so we don't have to signal
+        ;; to Gmail to REALLY delete them from all labels.  If we normal deleted
+        ;; from Gmail labels, that would only "remove" the label, but keep it in
+        ;; the "All Mail" folder in Gmail, thus for Gmail folders, you need to
+        ;; "move" the message to the trash folder which signals to REALLY delete
+        ;; them email to Gmail.
+        (t (gnus-summary-delete-article nil))))
 
 (defun my/gmail-archive ()
-  "Archive the current or marked mails.
-This moves them into the All Mail folder."
+  "Archive the current or marked mails."
   (interactive)
-  (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/All Mail"))
+  (cond ((string-match "nnimap\\+personal" gnus-newsgroup-name)
+         (gnus-summary-move-article nil "nnimap+personal:[Gmail]/All Mail"))
+        (t (gnus-summary-move-article nil "mail.archive"))))
 
 (defun my/gmail-report-spam ()
-  "Report the current or marked mails as spam.
-This moves them into the Spam folder."
+  "Report the current or marked mails as spam."
   (interactive)
-  (gnus-summary-move-article nil "nnimap+imap.gmail.com:[Gmail]/Spam"))
+    (cond ((string-match "nnimap\\+personal" gnus-newsgroup-name)
+           (gnus-summary-move-article nil "nnimap+personal:[Gmail]/Spam"))
+          (t (gnus-summary-move-article nil "mail.spam"))))
 
 (defun my|gnus-summary-keys ()
   "Create two key bindings for my Gmail experience."
