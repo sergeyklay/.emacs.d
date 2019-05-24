@@ -18,6 +18,7 @@
 (require 'core-dirs)
 (require 'message)
 (require 'gnus-start)
+(require 'gnus-group)
 
 (defconst my--gmail-group-name-map
   '(("\\(?:nnimap\\+\\w+:\\)INBOX" . "Inbox")
@@ -29,6 +30,11 @@
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Spam" . "Spam")
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Trash" . "Trash")
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Important" . "Important")))
+
+(defun my/gnus-group-list-subscribed-groups ()
+  "List all subscribed groups with or without un-read messages."
+  (interactive)
+  (gnus-group-list-all-groups 5))
 
 (use-package gnus
   :ensure nil
@@ -66,7 +72,20 @@
   (gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
   :config
   (setq-default
-   gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M")))
+   gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M"))
+   gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
+   gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B (%c) %s%)\n"
+
+   gnus-article-browse-delete-temp t
+   gnus-treat-strip-trailing-blank-lines 'last
+   gnus-keep-backlog 'nil
+
+   ;; Show more MIME-stuff
+   gnus-mime-display-multipart-related-as-mixed t
+   ;; Don't get the first article automatically
+   gnus-auto-select-first nil
+   smiley-style 'medium
+   gnus-keep-backlog '0)
 
   (when window-system
     (setq-default
@@ -78,7 +97,7 @@
      gnus-sum-thread-tree-leaf-with-other "├─► "
      gnus-sum-thread-tree-single-leaf "╰─► "))
 
-  (defun gnus-user-format-function-G (&optional arg)
+  (defun gnus-user-format-function-G (arg)
     (let ((mapped-name
            (assoc-default
             gnus-tmp-group
@@ -86,7 +105,10 @@
             'string-match)))
       (if (null mapped-name)
           gnus-tmp-group
-        mapped-name))))
+        mapped-name)))
+  :bind
+  (:map gnus-group-mode-map
+        ("o" . #'my/gnus-group-list-subscribed-groups)))
 
 (use-package smtpmail
   :ensure nil
@@ -120,11 +142,6 @@
      (nnir-search-engine imap)
      (nnimap-authinfo-file (concat user-local-dir "etc/.authinfo.gpg"))))
 
-;; (defun my/gnus-group-list-subscribed-groups ()
-;;   "List all subscribed groups with or without un-read messages."
-;;   (interactive)
-;;   (gnus-group-list-all-groups 5))
-
 ;; (defun my|common-message-hook ()
 ;;   "Common Gnus message hook."
 ;;   (unless (fboundp 'bbdb-com) (require 'bbdb-com))
@@ -152,42 +169,17 @@
 ;;   (article-emphasize))
 
 ;; (use-package gnus
-;;   :ensure nil
-;;   :config
-;;   (progn
-;;     ;; (setq-default
-;;     ;;  gnus-thread-sort-functions '(gnus-thread-sort-by-most-recent-date)
-
-;;     ;;  gnus-summary-line-format "%U%R%z %(%&user-date;  %-15,15f  %B (%c) %s%)\n"
-;;     ;;  ; Don't show that annoying arrow
-;;     ;;  gnus-summary-display-arrow nil
-;;     ;;  gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references
-
-;;     ;;  gnus-article-browse-delete-temp t
-;;     ;;  gnus-treat-strip-trailing-blank-lines 'last
-;;     ;;  gnus-keep-backlog 'nil
-
-;;     ;;  ; Show more MIME-stuff
-;;     ;;  gnus-mime-display-multipart-related-as-mixed t
-;;     ;;  ; Don't get the first article automatically
-;;     ;;  gnus-auto-select-first nil
-;;     ;;  smiley-style 'medium
-;;     ;;  gnus-keep-backlog '0)
-;;     )
 ;;   :hook
 ;;   ((message-mode . my|common-message-hook)
 ;;    (gnus-article-display . my|common-article-hook)
-;;    )
-;;   :bind
-;;   (:map gnus-group-mode-map
-;;         ("o" . #'my/gnus-group-list-subscribed-groups)))
+;;    ))
 
-;; ;; I'd like Gnus NOT to render HTML-mails
-;; ;; but show me the text part if it's available.
-;; (with-eval-after-load "mm-decode"
-;;   (add-to-list 'mm-discouraged-alternatives "text/html")
-;;   (add-to-list 'mm-discouraged-alternatives "text/richtext")
-;;   (setq mm-text-html-renderer 'gnus-w3m))
+;; I'd like Gnus NOT to render HTML-mails
+;; but show me the text part if it's available.
+(with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext")
+  (setq mm-text-html-renderer 'gnus-w3m))
 
 (use-package bbdb
   :after (gnus message)
