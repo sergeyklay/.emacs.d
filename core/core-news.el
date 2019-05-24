@@ -82,6 +82,9 @@
   ;; No primary server
   (gnus-select-method '(nnnil ""))
 
+  ;; Fetch old headers to build complete thread
+  (gnus-fetch-old-headers 'some)
+
   (gnus-gcc-mark-as-read t)
 
   ;; M-x `gnus-find-new-newsgroups' to check for new newsgroups
