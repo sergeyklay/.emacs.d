@@ -40,12 +40,12 @@
         ,(concat user-local-dir "etc/.authinfo.gpg")
         (:directory "~/News" :match ".*.SCORE\\'")))
 
+(setq mml-secure-openpgp-signers '("1E0B5331219BEA88")
+      ;; I want to be able to read the emails I wrote.
+      mml-secure-openpgp-encrypt-to-self t)
+
 ;; ;; (defconst my-gmail-spam-folder "nnimap+gmail:[Gmail]/Spam")
 ;; ;; (defconst my-gmail-all-mail-folder "nnimap+gmail:[Gmail]/All Mail")
-
-;; ;; (setq mml-secure-openpgp-signers '("1E0B5331219BEA88")
-;; ;;       ;; I want to be able to read the emails I wrote.
-;; ;;       mml-secure-openpgp-encrypt-to-self t)
 
 ;; ;; (defun my/gmail-move-to-trash ()
 ;; ;;   "Move mails to trash using Google Mail."
