@@ -20,6 +20,7 @@
 (require 'gnus-start)
 (require 'gnus-group)
 (require 'gnus-cloud)
+(require 'gnus-art)
 
 (defconst my--gmail-group-name-map
   '(("\\(?:nnimap\\+\\w+:\\)INBOX" . "Inbox")
@@ -49,14 +50,31 @@
   (flyspell-mode 1)
   (local-set-key [(tab)] #'bbdb-complete-mail))
 
+(defun my|common-article-hook ()
+  "Common Gnus article hook."
+  (setq gnus-visible-headers
+        (concat "^From:\\|^Reply-To\\|^Organization:\\|"
+                "^To:\\|^Cc:\\|^[BGF]?Cc:\\|"
+                "^Newsgroups:\\|^Subject:\\|^Date:\\|^Gnus"))
+
+  ;; Show the article headers in this order.
+  (setq gnus-sorted-header-list
+        '("^From:" "^Reply-To" "^Organization:"
+          "^To:" "^Cc:" "^[BGF]?Cc:"
+          "^Newsgroups:" "^Subject:" "^Date:" "^Gnus"))
+
+  (gnus-article-highlight)
+  (gnus-article-hide-headers-if-wanted)
+  (article-emphasize))
+
 (use-package gnus
   :ensure nil
   :defer t
   :commands gnus
   :hook
-  (;; Use topics per default
-   (gnus-group-mode . gnus-topic-mode)
-   (message-mode . my|common-message-hook))
+  ((gnus-group-mode . gnus-topic-mode) ; Use topics per default
+   (message-mode . my|common-message-hook)
+   (gnus-article-display . my|common-article-hook))
   :custom
   (gnus-init-file (concat user-etc-dir "gnus.el"))
   (gnus-startup-file (concat user-etc-dir "newsrc"))
@@ -64,19 +82,6 @@
   ;; No primary server
   (gnus-select-method '(nnnil ""))
 
-  ;; use gnus-cloud to sync private config, setup over IMAP
-  (gnus-cloud-synced-files
-      `(,gnus-init-file
-        ,gnus-startup-file
-        ,(concat user-local-dir "etc/.authinfo.gpg")
-        (:directory "~/News" :match ".*.SCORE\\'")))
-
-  ;; Archive outgoing email in Sent folder on imap.gmail.com
-  ;; TODO: Use per account sent mail dir
-  ;; --------------------------------------------------------
-  ;; (gnus-message-archive-method '(nnimap "imap.gmail.com"))
-  ;; (gnus-message-archive-group "[Gmail]/Sent Mail")
-  ;; --------------------------------------------------------
   (gnus-gcc-mark-as-read t)
 
   ;; M-x `gnus-find-new-newsgroups' to check for new newsgroups
@@ -153,40 +158,16 @@
 (defun my-gmail-user-to-nnimap (mailbox)
   "Return nnimap select method for specified MAILBOX."
   `(nnimap
-     ,mailbox
-     (nnimap-inbox "INBOX")
-     (nnimap-address "imap.gmail.com")
-     (nnimap-server-port 993)
-     (nnimap-stresm ssl)
-     (nnimap-expunge t)
-     (nnmail-expiry-target
-      (concat "nnimap+"
-              ,mailbox
-              ":[Gmail]/Trash"))
-     (nnmail-expiry-wait 30)
-     (nnir-search-engine imap)
-     (nnimap-authinfo-file (concat user-local-dir "etc/.authinfo.gpg"))))
-
-;; (defun my|common-article-hook ()
-;;   "Common Gnus article hook."
-;;   (setq gnus-visible-headers
-;;           (concat "^From:\\|^Reply-To\\|^Organization:\\|^To:\\|^Cc:"
-;;                   "\\|^Newsgroups:\\|^Subject:\\|^Date:\\|^Gnus"))
-
-;;   ;; Show the article headers in this order.
-;;   (setq gnus-sorted-header-list
-;;         '("^From:" "^Reply-To" "^Organization:" "^To:" "^Cc:" "^Newsgroups:"
-;;           "^Subject:" "^Date:" "^Gnus"))
-
-;;   (gnus-article-highlight)
-;;   (gnus-article-hide-headers-if-wanted)
-;;   (article-emphasize))
-
-;; (use-package gnus
-;;   :hook
-;;   (
-;;    (gnus-article-display . my|common-article-hook)
-;;    ))
+    ,mailbox
+    (nnimap-inbox "INBOX")
+    (nnimap-address "imap.gmail.com")
+    (nnimap-server-port 993)
+    (nnimap-stresm ssl)
+    (nnimap-expunge t)
+    (nnmail-expiry-target (concat "nnimap+" ,mailbox ":[Gmail]/Trash"))
+    (nnmail-expiry-wait 30)
+    (nnir-search-engine imap)
+    (nnimap-authinfo-file (concat user-local-dir "etc/.authinfo.gpg"))))
 
 ;; I'd like Gnus NOT to render HTML-mails
 ;; but show me the text part if it's available.
@@ -221,6 +202,15 @@
 
 (use-package counsel-bbdb
   :after (bbdb counsel))
+
+(with-eval-after-load "gnus"
+  ;; Use gnus-cloud to sync private config, setup over IMAP
+  (setq gnus-cloud-synced-files
+      `(,gnus-init-file
+        ,gnus-startup-file
+        ,(concat user-local-dir "etc/.authinfo.gpg")
+        ,(concat user-etc-dir "contacts.bbdb")
+        (:directory "~/News" :match ".*.SCORE\\'"))))
 
 (provide 'core-news)
 ;;; core-news.el ends here
