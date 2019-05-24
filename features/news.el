@@ -32,7 +32,14 @@
               '("personal")))
 
 ;; TODO: unbreak (assumes that my personal email is set up)
+;; Use gnus-cloud to sync private config, setup over IMAP
 (setq gnus-cloud-method "personal")
+(setq gnus-cloud-synced-files
+      `(,gnus-init-file
+        ,gnus-startup-file
+        ,(concat user-local-dir "etc/.authinfo.gpg")
+        ,(concat user-etc-dir "contacts.bbdb")
+        (:directory "~/News" :match ".*.SCORE\\'")))
 
 (setq mml-secure-openpgp-signers '("1E0B5331219BEA88")
       ;; I want to be able to read the emails I wrote.
