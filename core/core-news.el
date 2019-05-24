@@ -45,13 +45,20 @@
 
 (defun my|common-message-hook ()
   "Common Gnus message hook."
-  (unless (fboundp 'bbdb-com) (require 'bbdb-com))
   (setq fill-column 69)
 
   (auto-fill-mode t)
   (font-lock-mode t)
   (abbrev-mode t)
-  (flyspell-mode 1)
+  (flyspell-mode 1))
+
+(defun my|bbdb-message-hook ()
+  "Auto-complete Emacs address using bbdb UI."
+  (unless (fboundp 'bbdb-com) (require 'bbdb-com))
+
+  (bbdb-initialize 'message)
+  (bbdb-initialize 'gnus)
+
   (local-set-key [(tab)] #'bbdb-complete-mail))
 
 (defun my|common-article-hook ()
@@ -183,41 +190,36 @@
   (add-to-list 'mm-discouraged-alternatives "text/richtext")
   (setq mm-text-html-renderer 'gnus-w3m))
 
+;; BBDB: Address list
 (use-package bbdb
   :after (gnus message)
-  :pin melpa
   :init
-  (setq bbdb-file (concat user-etc-dir "contacts.bbdb")
-        bbdb-phone-style nil
-        bbdb-pop-up-window-size 0.3
-        bbdb-mua-pop-up-window-size 1.0
-        bbdb-mua-update-interactive-p '(query . create)
-        bbdb-message-all-addresses t
-        bbdb-mua-summary-mark nil
-        bbdb-completion-list t
-        bbdb-complete-mail-allow-cycling t
-        bbdb-layout 'multi-line
-        bbdb-pop-up-layout 'multi-line
-        bbdb-mua-pop-up nil
-        bbdb-default-country "Ukraine")
+  (setq
+   ;; File where things will be saved
+   bbdb-file (concat user-etc-dir "contacts.bbdb")
+   bbdb-phone-style nil
+   ;; Size of the bbdb popup
+   bbdb-pop-up-window-size 0.3
+   bbdb-mua-pop-up-window-size 1.0
+   ;; What do we do when invoking bbdb interactively
+   bbdb-mua-update-interactive-p '(query . create)
+   bbdb-message-all-addresses t
+   bbdb-mua-summary-mark nil
+   bbdb-completion-list t
+   bbdb-complete-mail-allow-cycling t
+   bbdb-layout 'multi-line
+   bbdb-pop-up-layout 'multi-line
+   bbdb-mua-pop-up nil)
   :config
   (bbdb-initialize 'gnus 'message)
-  (bbdb-mua-auto-update-init 'message)
+  (bbdb-mua-auto-update-init 'gnus 'message)
   :hook
   ((gnus-startup . bbdb-insinuate-gnus)
-   (mail-setup . bbdb-define-all-aliases)))
+   (mail-setup . bbdb-define-all-aliases)
+   (message-mode . my|bbdb-message-hook)))
 
 (use-package counsel-bbdb
   :after (bbdb counsel))
-
-(with-eval-after-load "gnus"
-  ;; Use gnus-cloud to sync private config, setup over IMAP
-  (setq gnus-cloud-synced-files
-      `(,gnus-init-file
-        ,gnus-startup-file
-        ,(concat user-local-dir "etc/.authinfo.gpg")
-        ,(concat user-etc-dir "contacts.bbdb")
-        (:directory "~/News" :match ".*.SCORE\\'"))))
 
 (provide 'core-news)
 ;;; core-news.el ends here
