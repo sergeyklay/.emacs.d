@@ -29,12 +29,24 @@
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Sent Mail" . "Sent")
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Spam" . "Spam")
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Trash" . "Trash")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Important" . "Important")))
+    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Important" . "Important")
+    ("nndraft:drafts" . "Drafts")))
 
 (defun my/gnus-group-list-subscribed-groups ()
   "List all subscribed groups with or without un-read messages."
   (interactive)
   (gnus-group-list-all-groups 5))
+
+(defun my|common-message-hook ()
+  "Common Gnus message hook."
+  (unless (fboundp 'bbdb-com) (require 'bbdb-com))
+  (setq fill-column 69)
+
+  (auto-fill-mode t)
+  (font-lock-mode t)
+  (abbrev-mode t)
+  (flyspell-mode 1)
+  (local-set-key [(tab)] #'bbdb-complete-mail))
 
 (use-package gnus
   :ensure nil
@@ -42,7 +54,8 @@
   :commands gnus
   :hook
   (;; Use topics per default
-   (gnus-group-mode . gnus-topic-mode))
+   (gnus-group-mode . gnus-topic-mode)
+   (message-mode . my|common-message-hook))
   :custom
   (gnus-init-file (concat user-etc-dir "gnus.el"))
   (gnus-startup-file (concat user-etc-dir "newsrc"))
@@ -120,7 +133,7 @@
   (setq send-mail-function #'smtpmail-send-it)
   (setq message-send-mail-function #'smtpmail-send-it)
   :custom
-  (smtpmail-starttls-credentials '(("smptmail.gmail.com" 587 nil nil)))
+  (smtpmail-starttls-credentials '(("smpt.gmail.com" 587 nil nil)))
   (smtpmail-default-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587))
@@ -142,17 +155,6 @@
      (nnir-search-engine imap)
      (nnimap-authinfo-file (concat user-local-dir "etc/.authinfo.gpg"))))
 
-;; (defun my|common-message-hook ()
-;;   "Common Gnus message hook."
-;;   (unless (fboundp 'bbdb-com) (require 'bbdb-com))
-;;   (setq fill-column 69)
-
-;;   (auto-fill-mode t)
-;;   (font-lock-mode t)
-;;   (abbrev-mode t)
-;;   (flyspell-mode 1)
-;;   (local-set-key [(tab)] #'bbdb-complete-mail))
-
 ;; (defun my|common-article-hook ()
 ;;   "Common Gnus article hook."
 ;;   (setq gnus-visible-headers
@@ -170,7 +172,7 @@
 
 ;; (use-package gnus
 ;;   :hook
-;;   ((message-mode . my|common-message-hook)
+;;   (
 ;;    (gnus-article-display . my|common-article-hook)
 ;;    ))
 
