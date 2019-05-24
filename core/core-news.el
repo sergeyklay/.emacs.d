@@ -19,6 +19,7 @@
 (require 'message)
 (require 'gnus-start)
 (require 'gnus-group)
+(require 'gnus-cloud)
 
 (defconst my--gmail-group-name-map
   '(("\\(?:nnimap\\+\\w+:\\)INBOX" . "Inbox")
@@ -59,13 +60,24 @@
   :custom
   (gnus-init-file (concat user-etc-dir "gnus.el"))
   (gnus-startup-file (concat user-etc-dir "newsrc"))
+
   ;; No primary server
   (gnus-select-method '(nnnil ""))
 
+  ;; use gnus-cloud to sync private config, setup over IMAP
+  (gnus-cloud-synced-files
+      `(,gnus-init-file
+        ,gnus-startup-file
+        ,(concat user-local-dir "etc/.authinfo.gpg")
+        (:directory "~/News" :match ".*.SCORE\\'")))
+
   ;; Archive outgoing email in Sent folder on imap.gmail.com
   ;; TODO: Use per account sent mail dir
-  (gnus-message-archive-method '(nnimap "imap.gmail.com"))
-  (gnus-message-archive-group "[Gmail]/Sent Mail")
+  ;; --------------------------------------------------------
+  ;; (gnus-message-archive-method '(nnimap "imap.gmail.com"))
+  ;; (gnus-message-archive-group "[Gmail]/Sent Mail")
+  ;; --------------------------------------------------------
+  (gnus-gcc-mark-as-read t)
 
   ;; M-x `gnus-find-new-newsgroups' to check for new newsgroups
   (gnus-check-new-newsgroups nil)

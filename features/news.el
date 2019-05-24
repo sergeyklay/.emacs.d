@@ -25,24 +25,38 @@
 ;;; Code:
 
 (require 'core-news)
-(require 'gnus-cloud)
+(require 'gnus-msg)
 
 (setq gnus-secondary-select-methods
       (mapcar #'my-gmail-user-to-nnimap
               '("personal")))
 
-;; use gnus-cloud to sync private config, setup over IMAP
 ;; TODO: unbreak (assumes that my personal email is set up)
 (setq gnus-cloud-method "personal")
-(setq gnus-cloud-synced-files
-      `(,gnus-init-file
-        ,gnus-startup-file
-        ,(concat user-local-dir "etc/.authinfo.gpg")
-        (:directory "~/News" :match ".*.SCORE\\'")))
 
 (setq mml-secure-openpgp-signers '("1E0B5331219BEA88")
       ;; I want to be able to read the emails I wrote.
       mml-secure-openpgp-encrypt-to-self t)
+
+;; TODO
+;; (setq gnus-parameters
+;;       '(
+;;         ("personal"
+;;          (posting-style
+;;           (address "me@workaddress.com")
+;;           (gcc "nnimap+work:INBOX.Sent")))))
+
+
+
+;; TODO
+(setq gnus-posting-styles
+      '(("personal"
+         (name (concat user-full-name "qweqwerqwerqwerqwerqwerqw"))
+         (address user-mail-address)
+         ;; (signature-file "~/.signature")
+         (signature "John Doe")
+         ("X-Message-SMTP-Method"
+          (concat "smtp smtp.gmail.com 587 " user-mail-address)))))
 
 ;; ;; (defconst my-gmail-spam-folder "nnimap+gmail:[Gmail]/Spam")
 ;; ;; (defconst my-gmail-all-mail-folder "nnimap+gmail:[Gmail]/All Mail")
