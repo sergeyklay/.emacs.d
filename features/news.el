@@ -38,23 +38,17 @@
       ;; I want to be able to read the emails I wrote.
       mml-secure-openpgp-encrypt-to-self t)
 
-;; TODO
-;; (setq gnus-parameters
-;;       '(
-;;         ("personal"
-;;          (posting-style
-;;           (address "me@workaddress.com")
-;;           (gcc "nnimap+work:INBOX.Sent")))))
+;; Fallback group.
+(setq gnus-message-archive-group
+      '((".*" "nnimap+personal:[Gmail]/Sent Mail")))
 
-
-
-;; TODO
 (setq gnus-posting-styles
-      '(("personal"
-         (name (concat user-full-name "qweqwerqwerqwerqwerqwerqw"))
+      '(("nnimap\\+personal:.*"
+         (name (concat user-full-name))
          (address user-mail-address)
-         ;; (signature-file "~/.signature")
-         (signature "John Doe")
+         (signature "Serghei")
+         ;; Archive outgoing email in Sent folder on imap.gmail.com
+         (gcc "nnimap+personal:[Gmail]/Sent Mail")
          ("X-Message-SMTP-Method"
           (concat "smtp smtp.gmail.com 587 " user-mail-address)))))
 
