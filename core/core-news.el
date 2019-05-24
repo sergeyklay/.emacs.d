@@ -32,6 +32,10 @@
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Spam" . "Spam")
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Trash" . "Trash")
     ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Important" . "Important")
+    ("\\(?:nnimap\\+\\w+:\\)Meetings" . "Forums")
+    ("\\(?:nnimap\\+\\w+:\\)Lists" . "Lists")
+    ("\\(?:nnimap\\+\\w+:\\)Invoices" . "Invoices")
+    ("\\(?:nnimap\\+\\w+:\\)CI & CD" . "CI/CD")
     ("nndraft:drafts" . "Drafts")))
 
 (defun my/gnus-group-list-subscribed-groups ()
