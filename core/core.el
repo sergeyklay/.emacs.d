@@ -62,7 +62,18 @@
  tramp-auto-save-directory    (concat user-cache-dir "tramp/")
  tramp-backup-directory-alist backup-directory-alist
  tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el")
- nsm-settings-file            (concat user-etc-dir "network-security.data"))
+ nsm-settings-file            (concat user-etc-dir "network-security.data")
+ url-cache-directory          (concat user-cache-dir "url")
+ url-configuration-directory  (concat user-etc-dir "url"))
+
+;; AOP in action
+(advice-add
+ 'tutorial--saved-dir
+ :override (lambda ()
+             (let ((tutorial-dir (concat user-cache-dir "tutorial")))
+               (unless (file-exists-p tutorial-dir)
+                 (make-directory tutorial-dir t))
+               tutorial-dir)))
 
 ;; Startup message customization
 (setq inhibit-startup-message t)
