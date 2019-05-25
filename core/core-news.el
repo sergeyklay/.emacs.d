@@ -21,6 +21,8 @@
 (require 'gnus-group)
 (require 'gnus-cloud)
 (require 'gnus-art)
+(require 'nnfolder)
+(require 'nndraft)
 
 (defconst my--gmail-group-name-map
   '(("\\(?:nnimap\\+\\w+:\\)INBOX" . "Inbox")
@@ -78,6 +80,14 @@
   (gnus-article-hide-headers-if-wanted)
   (article-emphasize))
 
+(defun my|exit-gnus-on-exit ()
+  "Exit Gnus on exit Emacs."
+  (if (and (fboundp 'gnus-group-exit)
+           (gnus-alive-p))
+      (with-current-buffer (get-buffer "*Group*")
+        (let (gnus-interactive-exit)
+          (gnus-group-exit)))))
+
 (use-package gnus
   :ensure nil
   :defer t
@@ -85,10 +95,19 @@
   :hook
   ((gnus-group-mode . gnus-topic-mode) ; Use topics per default
    (message-mode . my|common-message-hook)
-   (gnus-article-display . my|common-article-hook))
+   (gnus-article-display . my|common-article-hook)
+   (kill-emacs . my|exit-gnus-on-exit))
   :custom
   (gnus-init-file (concat user-etc-dir "gnus.el"))
   (gnus-startup-file (concat user-etc-dir "newsrc"))
+
+  ;; Directories
+  (gnus-home-directory user-local-dir)
+  (gnus-directory (concat user-local-dir "news/"))
+  (gnus-article-save-directory (concat user-local-dir "news/"))
+  (gnus-kill-files-directory (concat user-local-dir "news/"))
+  (gnus-cache-directory (concat user-cache-dir "gnus/"))
+  (gnus-dribble-directory (concat user-cache-dir "gnus/"))
 
   ;; Update any active summary buffers automatically
   ;; first before exiting
@@ -138,6 +157,9 @@
    smiley-style 'medium
    gnus-keep-backlog '0)
 
+  (setq nnfolder-directory (concat user-local-dir "mail/archive/"))
+  (setq nndraft-directory (concat user-local-dir "mail/drafts/"))
+
   (when window-system
     (setq-default
      gnus-sum-thread-tree-indent "  "
@@ -160,6 +182,21 @@
   :bind
   (:map gnus-group-mode-map
         ("o" . #'my/gnus-group-list-subscribed-groups)))
+
+;; Create all necessary directories
+(defconst my--gnus-directories
+  '(gnus-directory
+    gnus-article-save-directory
+    gnus-kill-files-directory
+    gnus-cache-directory
+    gnus-dribble-directory
+    nnfolder-directory
+    nndraft-directory))
+
+(dolist (directory my--gnus-directories)
+  (let ((dir-value (symbol-value directory)))
+    (unless (file-exists-p dir-value)
+      (make-directory dir-value t))))
 
 (use-package smtpmail
   :ensure nil
