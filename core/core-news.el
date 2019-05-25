@@ -90,6 +90,10 @@
   (gnus-init-file (concat user-etc-dir "gnus.el"))
   (gnus-startup-file (concat user-etc-dir "newsrc"))
 
+  ;; Update any active summary buffers automatically
+  ;; first before exiting
+  (gnus-interactive-exit 'quiet)
+
   ;; No primary server
   (gnus-select-method '(nnnil ""))
 
@@ -109,6 +113,9 @@
   (gnus-always-read-dribble-file t)
   (gnus-save-newsrc-file nil)
   (gnus-read-newsrc-file nil)
+
+  ;; Fetch articles while reading other articles
+  (gnus-asynchronous t)
 
   ;; Gmail system labels have the prefix [Gmail], which matches
   ;; the default value of `gnus-ignored-newsgroups'.  That's why we
@@ -186,9 +193,14 @@
 ;; I'd like Gnus NOT to render HTML-mails
 ;; but show me the text part if it's available.
 (with-eval-after-load "mm-decode"
-  (add-to-list 'mm-discouraged-alternatives "text/html")
-  (add-to-list 'mm-discouraged-alternatives "text/richtext")
+  (setq mm-discouraged-alternatives
+        '("application/msword"
+          "text/richtext"
+          "text/html"))
+
   (setq mm-text-html-renderer 'gnus-w3m))
+
+(add-hook 'gnus-summary-exit-hook #'gnus-summary-bubble-group)
 
 ;; BBDB: Address list
 (use-package bbdb
