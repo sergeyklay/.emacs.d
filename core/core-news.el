@@ -239,6 +239,31 @@
 
 (add-hook 'gnus-summary-exit-hook #'gnus-summary-bubble-group)
 
+;; Gnus, by default, will show one pane at a time. We can make gnus act like the
+;; average MUA, where we have a sidebar of mailboxes/folders to the left, the
+;; list of mail on the top, and the actual message in the bottom.
+;;
+;; This configuration sets that up for us.
+
+;; 3-pane layout for article
+(gnus-add-configuration
+ '(article
+   (horizontal 1.0
+               (vertical 54
+                         (group 1.0))
+               (vertical 1.0
+                         (summary 0.25 point)
+                         (article 1.0)))))
+
+;; 3-pane layout for summary
+(gnus-add-configuration
+ '(summary
+   (horizontal 1.0
+               (vertical 54
+                         (group 1.0))
+               (vertical 1.0
+                         (summary 1.0 point)))))
+
 ;; BBDB: Address list
 (use-package bbdb
   :after (gnus message)
