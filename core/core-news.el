@@ -24,21 +24,11 @@
 (require 'nnfolder)
 (require 'nndraft)
 
-(defconst my--gmail-group-name-map
-  '(("\\(?:nnimap\\+\\w+:\\)INBOX" . "Inbox")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/All Mail" . "Archive")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Important" . "Important")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Notes" . "Notes")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Starred" . "Starred")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Sent Mail" . "Sent")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Spam" . "Spam")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Trash" . "Trash")
-    ("\\(?:nnimap\\+\\w+:\\)\\[Gmail\\]/Important" . "Important")
-    ("\\(?:nnimap\\+\\w+:\\)Meetings" . "Forums")
-    ("\\(?:nnimap\\+\\w+:\\)Lists" . "Lists")
-    ("\\(?:nnimap\\+\\w+:\\)Invoices" . "Invoices")
-    ("\\(?:nnimap\\+\\w+:\\)CI & CD" . "CI/CD")
-    ("nndraft:drafts" . "Drafts")))
+(defun my/get-gmail-imap-user (host)
+  "Get IMAP login (email address) for Gmail account using the HOST."
+  (let ((account (car (auth-source-search :port 993 :host host :max 1))))
+    (when (not (null account))
+      (plist-get account :user))))
 
 (defun my/gnus-group-list-subscribed-groups ()
   "List all subscribed groups with or without un-read messages."
@@ -108,6 +98,7 @@
   (gnus-kill-files-directory (concat user-local-dir "news/"))
   (gnus-cache-directory (concat user-cache-dir "gnus/"))
   (gnus-dribble-directory (concat user-cache-dir "gnus/"))
+  (message-directory (concat user-local-dir "mail/"))
 
   ;; Update any active summary buffers automatically
   ;; first before exiting
@@ -123,15 +114,22 @@
 
   ;; M-x `gnus-find-new-newsgroups' to check for new newsgroups
   (gnus-check-new-newsgroups nil)
+  ;; Force display groups (mailboxes) even there is no unread messages
+  (gnus-permanently-visible-groups ".*")
+
   ;; Use the cache to the full extent of the law.
   (gnus-use-cache t)
 
-  ;; respect my--gmail-group-name-map
-  (gnus-group-line-format "%M\ %S\ %p\ %P\ %5y:%B%(%uG%)\n")
+  (gnus-group-line-format "%M\ %S\ %p\ %P\ %5y:%B %G\n")
 
+  ;; Read the dribble file on startup without querying
   (gnus-always-read-dribble-file t)
+
+  ;; Do not use ~/.newsrc (meant for other news readers)
+  ;; and just rely on native Gnus newsrc.eld
   (gnus-save-newsrc-file nil)
   (gnus-read-newsrc-file nil)
+  (gnus-save-killed-list nil)
 
   ;; Fetch articles while reading other articles
   (gnus-asynchronous t)
@@ -157,9 +155,6 @@
    smiley-style 'medium
    gnus-keep-backlog '0)
 
-  (setq nnfolder-directory (concat user-local-dir "mail/archive/"))
-  (setq nndraft-directory (concat user-local-dir "mail/drafts/"))
-
   (when window-system
     (setq-default
      gnus-sum-thread-tree-indent "  "
@@ -169,19 +164,12 @@
      gnus-sum-thread-tree-vertical "│"
      gnus-sum-thread-tree-leaf-with-other "├─► "
      gnus-sum-thread-tree-single-leaf "╰─► "))
-
-  (defun gnus-user-format-function-G (arg)
-    (let ((mapped-name
-           (assoc-default
-            gnus-tmp-group
-            my--gmail-group-name-map
-            'string-match)))
-      (if (null mapped-name)
-          gnus-tmp-group
-        mapped-name)))
   :bind
   (:map gnus-group-mode-map
         ("o" . #'my/gnus-group-list-subscribed-groups)))
+
+(setq nnfolder-directory (concat user-local-dir "mail/archive/"))
+(setq nndraft-directory (concat user-local-dir "mail/drafts/"))
 
 ;; Create all necessary directories
 (defconst my--gnus-directories
@@ -190,6 +178,7 @@
     gnus-kill-files-directory
     gnus-cache-directory
     gnus-dribble-directory
+    message-directory
     nnfolder-directory
     nndraft-directory))
 
@@ -213,20 +202,6 @@
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587))
 
-(defun my-gmail-user-to-nnimap (mailbox)
-  "Return nnimap select method for specified MAILBOX."
-  `(nnimap
-    ,mailbox
-    (nnimap-inbox "INBOX")
-    (nnimap-address "imap.gmail.com")
-    (nnimap-server-port 993)
-    (nnimap-stresm ssl)
-    (nnimap-expunge t)
-    (nnmail-expiry-target (concat "nnimap+" ,mailbox ":[Gmail]/Trash"))
-    (nnmail-expiry-wait 30)
-    (nnir-search-engine imap)
-    (nnimap-authinfo-file (concat user-local-dir "etc/.authinfo.gpg"))))
-
 ;; I'd like Gnus NOT to render HTML-mails
 ;; but show me the text part if it's available.
 (with-eval-after-load "mm-decode"
@@ -239,9 +214,9 @@
 
 (add-hook 'gnus-summary-exit-hook #'gnus-summary-bubble-group)
 
-;; Gnus, by default, will show one pane at a time. We can make gnus act like the
-;; average MUA, where we have a sidebar of mailboxes/folders to the left, the
-;; list of mail on the top, and the actual message in the bottom.
+;; Gnus, by default, will show one pane at a time.  We can make gnus act like
+;; the average MUA, where we have a sidebar of mailboxes/folders to the left,
+;; the list of mail on the top, and the actual message in the bottom.
 ;;
 ;; This configuration sets that up for us.
 
@@ -285,7 +260,7 @@
    bbdb-pop-up-layout 'multi-line
    bbdb-mua-pop-up nil)
   :config
-  (bbdb-initialize 'gnus 'message)
+  (bbdb-initialize 'gnus 'message 'sendmail)
   (bbdb-mua-auto-update-init 'gnus 'message)
   :hook
   ((gnus-startup . bbdb-insinuate-gnus)
