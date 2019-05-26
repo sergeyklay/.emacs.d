@@ -28,7 +28,7 @@
                 (nnimap-server-port 993)
                 (nnimap-stresm ssl)
                 (nnimap-expunge t)
-                (nnmail-expiry-target ,(concat "nnimap+personal:[Gmail]/Trash"))
+                (nnmail-expiry-target "nnimap+personal:[Gmail]/Trash")
                 (nnmail-expiry-wait 30)
                 (nnir-search-engine imap)
                 (nnimap-authinfo-file
@@ -39,7 +39,7 @@
                 (nnimap-server-port 993)
                 (nnimap-stresm ssl)
                 (nnimap-expunge t)
-                (nnmail-expiry-target ,(concat "nnimap+work:[Gmail]/Trash"))
+                (nnmail-expiry-target "nnimap+work:[Gmail]/Trash")
                 (nnmail-expiry-wait 30)
                 (nnir-search-engine imap)
                 (nnimap-authinfo-file
