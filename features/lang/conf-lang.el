@@ -25,6 +25,12 @@
 (use-package ini-mode
   :mode "\\.ini\\'")
 
+;;;; Dotenv
+
+(use-package dotenv-mode
+  :mode "\\.env\\'"
+  :mode "\\.env\\..*\\'")
+
 ;;;; Vim
 
 (use-package vimrc-mode
