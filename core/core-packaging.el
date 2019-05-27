@@ -74,6 +74,7 @@
 (require 'bind-key)
 
 (delight '((abbrev-mode " Ⓑ" abbrev)
+           (auto-revert-mode " Ⓡ" t)
            (smart-tab-mode " Ⓣ" smart-tab)
            (overwrite-mode " Ⓘ" t)
            (emacs-lisp-mode "Elisp" :major)))
@@ -82,24 +83,6 @@
   :delight
   (auto-fill-function " Ⓕ")
   (visual-line-mode))
-
-;;; Install quelpa
-(defvar quelpa-dir)
-
-(use-package quelpa
-  :init
-  (setq quelpa-dir
-        (concat
-         (substitute-in-file-name "$HOME/.local/lib/emacs/")
-         "packages/" emacs-version "/quelpa"))
-  (setq quelpa-checkout-melpa-p nil
-        quelpa-update-melpa-p nil))
-
-(use-package quelpa-use-package
-  :config
-  (quelpa-use-package-activate-advice))
-
-(require 'quelpa-use-package)
 
 ;;; Utilities for `list-packages' menu
 

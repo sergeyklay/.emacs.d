@@ -15,6 +15,9 @@
 
 ;;; Code:
 
+(require 'core-startup)
+(require 'core-dirs)
+
 ;;; Yasnippet
 
 ;; It takes a few seconds to load and I don't need them immediately when
@@ -25,7 +28,7 @@
 ;; behavior when typing a templated snippet.
 
 (use-package yasnippet
-  :diminish yas-minor-mode
+  :diminish yas-global-mode yas-minor-mode
   :config
   (setq yas-verbosity (if emacs-debug-mode 3 0)
         yas-snippet-dirs (list (concat user-emacs-dir "snippets"))
