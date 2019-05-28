@@ -75,5 +75,23 @@
   :config
   (auth-pass-enable))
 
+(defun my/counsel-pass (&optional initial-input)
+  "Counsel integration with `password-store'.
+
+If INITIAL-INPUT is non-nil, then insert that input in the
+minibuffer initially."
+  (interactive)
+  (ivy-read "pass: " 'password-store-list
+            :initial-input initial-input
+            :dynamic-collection t
+            :history 'counsel-pass-history
+            :action '(1
+                      ("c" password-store-copy "Copy password to clipboard")
+                      ("e" password-store-edit "Edit entry")
+                      ;; TODO
+                      ;; ("O" my--password-store-open-url "Browse url of entry")
+                      ;; ("o" ...              "Copy to clipboard & browse url")
+                      )))
+
 (provide 'core-gpg)
 ;;; core-gpg.el ends here
