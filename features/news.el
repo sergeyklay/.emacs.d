@@ -60,7 +60,7 @@
       mml-secure-openpgp-encrypt-to-self t)
 
 (setq gnus-posting-styles
-      `(("nnimap\\+personal:.*"
+      '(("nnimap\\+personal:.*"
          (name "Serghei Iakovlev")
          (address ,(my/get-gmail-imap-user "personal"))
          (signature-file ,(concat user-etc-dir "signature"))
@@ -69,14 +69,14 @@
          ;; get synced locally through my email setup.
          (gcc nil)
          ("X-Message-SMTP-Method"
-          ,(concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "personal"))))
+          (concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "personal"))))
         ("nnimap\\+work:.*"
          (name "Serghei Iakovlev")
          (address ,(my/get-gmail-imap-user "work"))
          (signature-file ,(concat user-etc-dir "signature"))
          (gcc nil)
          ("X-Message-SMTP-Method"
-          ,(concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "work"))))))
+          (concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "work"))))))
 
 (eval-after-load 'gnus-topic
   '(progn
