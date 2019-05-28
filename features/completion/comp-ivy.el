@@ -17,6 +17,9 @@
 
 ;;; Ivy
 
+(eval-when-compile
+  (require 'ivy))
+
 (use-package ivy
   :diminish (ivy-mode . "")
   :defer 0.1
@@ -65,17 +68,17 @@
         "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)"))
 
 ;; Replace standard keybindings
-(global-set-key (kbd "C-x r")  #'counsel-recentf)
-(global-set-key (kbd "C-c k")  #'counsel-ag)
-(global-set-key (kbd "C-h a")  #'counsel-apropos)
-(global-set-key (kbd "C-h v")  #'counsel-describe-variable)
-(global-set-key (kbd "C-h f")  #'counsel-describe-function)
-(global-set-key (kbd "C-h b")  #'counsel-descbinds)
+(global-set-key (kbd "C-x C-r") #'counsel-recentf)
+(global-set-key (kbd "C-c k")   #'counsel-ag)
+(global-set-key (kbd "C-h a")   #'counsel-apropos)
+(global-set-key (kbd "C-h v")   #'counsel-describe-variable)
+(global-set-key (kbd "C-h f")   #'counsel-describe-function)
+(global-set-key (kbd "C-h b")   #'counsel-descbinds)
 
 (global-set-key (kbd "C-x C-i") #'counsel-imenu)
-(global-set-key (kbd "M-x") #'counsel-M-x)
+(global-set-key (kbd "M-x")     #'counsel-M-x)
 
-(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+(define-key minibuffer-local-map (kbd "C-r") #'counsel-minibuffer-history)
 
 ;;; Swiper
 
