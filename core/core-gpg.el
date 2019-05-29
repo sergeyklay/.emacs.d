@@ -75,23 +75,27 @@
   :config
   (auth-pass-enable))
 
+;; TODO: Works weird
 (defun my/counsel-pass (&optional initial-input)
   "Counsel integration with `password-store'.
 
 If INITIAL-INPUT is non-nil, then insert that input in the
 minibuffer initially."
   (interactive)
-  (ivy-read "pass: " 'password-store-list
-            :initial-input initial-input
-            :dynamic-collection t
-            :history 'counsel-pass-history
-            :action '(1
-                      ("c" password-store-copy "Copy password to clipboard")
-                      ("e" password-store-edit "Edit entry")
-                      ;; TODO
-                      ;; ("O" my--password-store-open-url "Browse url of entry")
-                      ;; ("o" ...              "Copy to clipboard & browse url")
-                      )))
+  (let* ((action-copy (lambda (entry) (password-store-copy entry)))
+         (action-edit (lambda (entry) (password-store-edit entry)))
+         (action `(1
+                   ;; TODO
+                   ;; "Browse url of entry"
+                   ;; "Copy to clipboard & browse url"
+                   ("c" ,action-copy "Copy password to clipboard")
+                   ("e" ,action-edit "Edit entry"))))
+    (ivy-read "pass: "
+              'password-store-list
+              :initial-input initial-input
+              :dynamic-collection t
+              :history 'counsel-pass-history
+              :action action)))
 
 (provide 'core-gpg)
 ;;; core-gpg.el ends here
