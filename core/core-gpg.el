@@ -76,6 +76,7 @@
   (auth-pass-enable))
 
 (use-package ivy-pass
+  :if (executable-find "pass")
   :after password-store
   :requires ivy
   :commands (ivy-pass)

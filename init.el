@@ -54,5 +54,6 @@
 (require 'syntax-check) ; Syntax checkers
 (require 'snippets)     ; Add snippets support
 (require 'news)         ; News/Email related features
+(require 'http-tools)   ; Various http tools
 
 ;;; init.el ends here
