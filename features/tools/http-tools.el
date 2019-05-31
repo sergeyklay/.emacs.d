@@ -17,13 +17,26 @@
 (require 'org-lang)
 (require 'comp-any)
 
+(defvar oauth-access-token nil)
+
+;; From
+;; https://github.com/pashky/restclient.el/issues/149#issuecomment-330475676
+(defun my-oauth-hook ()
+  "Update request variables from a request."
+  (save-excursion
+    (save-match-data
+      (when (re-search-forward "\"access_token\":\"\\(.*?\\)\"" nil t)
+        (setq oauth-access-token (match-string 1))))))
+
 (use-package restclient
   :requires org-lang
   :after org
   :commands
   (restclient-mode)
   :config
-  (add-to-list 'org-babel-load-languages '(restclient . t)))
+  (add-to-list 'org-babel-load-languages '(restclient . t))
+  :hook
+  (restclient-response-received . my-oauth-hook))
 
 (use-package company-restclient
   :requires comp-any
