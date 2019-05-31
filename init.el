@@ -49,7 +49,7 @@
 (require 'grammars)     ; Support of language grammars
 
 (require 'editor)       ; Features related to the behavior of the editor
-(require 'irc)          ; IRC tools
+(require 'chats)        ; Chats support
 (require 'docker-io)    ; Docker related configuration
 (require 'syntax-check) ; Syntax checkers
 (require 'snippets)     ; Add snippets support

@@ -1,4 +1,4 @@
-;;; irc.el --- IRC tools. -*- lexical-binding: t; -*-
+;;; chats.el --- Chats support. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
 
@@ -11,14 +11,14 @@
 
 ;;; Commentary:
 
-;; IRC tool
-
 ;;; Code:
 
 (require 'core-dirs)
-(require 'erc)
-(require 'erc-log)
-(require 'erc-track)
+
+(eval-when-compile
+  (require 'erc)
+  (require 'erc-log)
+  (require 'erc-track))
 
 (defun my|erc-logging ()
   "Setting up channel logging for `erc'."
@@ -50,9 +50,8 @@
   (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                              "324" "329" "332" "333" "353" "477"))
   :config
-  (add-to-list 'erc-modules 'notifications)
-  (add-to-list 'erc-modules 'spelling)
-  (add-to-list 'erc-modules 'log)
+  (dolist (module '(notifications spelling log))
+    (add-to-list 'erc-modules module))
   (erc-services-mode 1)
   (erc-update-modules)
   :hook
@@ -70,7 +69,7 @@
   (if (get-buffer "irc.freenode.net:6667")
       (erc-track-switch-buffer 1)
     (when (y-or-n-p "Start ERC? ")
-      (erc :server "irc.freenode.net" :port 6667 :nick "klay"))))
+      (erc :server "irc.freenode.net" :port 6667))))
 
-(provide 'irc)
-;;; irc.el ends here
+(provide 'chats)
+;;; chats.el ends here
