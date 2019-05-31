@@ -15,13 +15,9 @@
 
 (require 'core-dirs)
 
-(eval-when-compile
-  (require 'erc)
-  (require 'erc-log)
-  (require 'erc-track))
-
 (defun my|erc-logging ()
   "Setting up channel logging for `erc'."
+  (eval-when-compile (require 'erc-log nil t))
   (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
     (setq erc-log-channels-directory log-channels-directory
           erc-log-insert-log-on-open t)
@@ -53,7 +49,8 @@
   (dolist (module '(notifications spelling log))
     (add-to-list 'erc-modules module))
   (erc-services-mode 1)
-  (erc-update-modules)
+  (when (fboundp 'erc-update-modules)
+    (erc-update-modules))
   :hook
   (erc-mode . my|erc-logging))
 
@@ -62,6 +59,9 @@
 
 (use-package erc-image
   :after erc)
+
+(declare-function erc (&key (server (erc-compute-server))))
+(declare-function erc-track-switch-buffer (arg))
 
 (defun my/erc-start-or-switch ()
   "Connects to ERC, or switch to last active buffer."
