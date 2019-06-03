@@ -85,6 +85,7 @@
               "nnimap+personal:CICD"
               "nnimap+personal:Invoices"
               "nnimap+personal:Lists"
+              "nnimap+personal:SocialSpam"
               "nnimap+personal:Meetings")
              ("Work"
               "nnimap+work:INBOX"
