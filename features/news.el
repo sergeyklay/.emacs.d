@@ -18,32 +18,9 @@
 (require 'core-news)
 (require 'gnus-msg)
 
-;; I don't use (nnimap-user "xxx@gmail.com") here.
-;; In a new enough Gnus version, this is solved by replacing "imap.gmail.com"
-;; in .authinfo.gpg with the account name "persoanl", "work", etc.
 (setq gnus-secondary-select-methods
-      `((nnimap "personal"
-                (nnimap-inbox "INBOX")
-                (nnimap-address "imap.gmail.com")
-                (nnimap-server-port 993)
-                (nnimap-stresm ssl)
-                (nnimap-expunge t)
-                (nnmail-expiry-target "nnimap+personal:[Gmail]/Trash")
-                (nnmail-expiry-wait 30)
-                (nnir-search-engine imap)
-                (nnimap-authinfo-file
-                 ,(concat user-local-dir "etc/.authinfo.gpg")))
-        (nnimap "work"
-                (nnimap-inbox "INBOX")
-                (nnimap-address "imap.gmail.com")
-                (nnimap-server-port 993)
-                (nnimap-stresm ssl)
-                (nnimap-expunge t)
-                (nnmail-expiry-target "nnimap+work:[Gmail]/Trash")
-                (nnmail-expiry-wait 30)
-                (nnir-search-engine imap)
-                (nnimap-authinfo-file
-                 ,(concat user-local-dir "etc/.authinfo.gpg")))))
+      (list (make-gmail-mailbox "personal")
+            (make-gmail-mailbox "work")))
 
 ;; TODO: unbreak (assumes that my personal email is set up)
 ;; Use gnus-cloud to sync private config, setup over IMAP
@@ -53,7 +30,9 @@
         ,gnus-startup-file
         ,(concat user-local-dir "etc/.authinfo.gpg")
         ,(concat user-etc-dir "contacts.bbdb")
-        (:directory "~/News" :match ".*.SCORE\\'")))
+        ;; TODO
+        ;; (:directory "~/News" :match ".*.SCORE\\'")
+        ))
 
 (setq mml-secure-openpgp-signers '("1E0B5331219BEA88")
       ;; I want to be able to read the emails I wrote.
@@ -62,7 +41,7 @@
 (setq gnus-posting-styles
       '(("nnimap\\+personal:.*"
          (name "Serghei Iakovlev")
-         (address ,(my/get-gmail-imap-user "personal"))
+         (address (my/get-gmail-imap-user "personal"))
          (signature-file ,(concat user-etc-dir "signature"))
          ;; Gmail does not require any handling for sent messages.  The server
          ;; will automatically save them to the Sent folder and that folder will
@@ -72,7 +51,7 @@
           (concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "personal"))))
         ("nnimap\\+work:.*"
          (name "Serghei Iakovlev")
-         (address ,(my/get-gmail-imap-user "work"))
+         (address (my/get-gmail-imap-user "work"))
          (signature-file ,(concat user-etc-dir "signature"))
          (gcc nil)
          ("X-Message-SMTP-Method"
@@ -117,6 +96,7 @@
               "nnimap+work:[Gmail]/Trash"
               "nnimap+work:CICD"
               "nnimap+work:Digests"
+              "nnimap+work:Invoices"
               "nnimap+work:Meetings"
               "nnimap+work:Notes")
              ("Misc"

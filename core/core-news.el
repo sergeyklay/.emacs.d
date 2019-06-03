@@ -78,6 +78,22 @@
         (let (gnus-interactive-exit)
           (gnus-group-exit)))))
 
+;; I don't use (nnimap-user "xxx@gmail.com") here.
+;; In a new enough Gnus version, this is solved by replacing "imap.gmail.com"
+;; in .authinfo.gpg with the account name "persoanl", "work", etc.
+(cl-defun make-gmail-mailbox (mailbox &key (expunge t) (expiry-wait 30))
+  `(nnimap ,mailbox
+           (nnimap-inbox "INBOX")
+           (nnimap-address "imap.gmail.com")
+           (nnimap-server-port 993)
+           (nnimap-stream ssl)
+           (nnimap-expunge ,expunge)
+           (nnmail-expiry-target ,(format "nnimap+%s:[Gmail]/Trash" mailbox))
+           (nnmail-expiry-wait ,expiry-wait)
+           (nnir-search-engine imap)
+           (nnimap-authinfo-file
+            ,(concat user-local-dir "etc/.authinfo.gpg"))))
+
 (use-package gnus
   :ensure nil
   :defer t
