@@ -107,20 +107,17 @@ or nil otherwise."
   :defer t
   :pin melpa
   :init
-  (progn
-    (setq ac-php-tags-path (concat user-cache-dir "ac-php/")
-          ;; My development version
-          ac-php-ctags-executable (expand-file-name "~/work/phpctags/phpctags"))
+  (setq ac-php-tags-path (concat user-cache-dir "ac-php/"))
 
-    (my/add-to-hook
-     #'php-mode-hook
-     '(company-mode
-       turn-on-eldoc-mode
-       ac-php-core-eldoc-setup))
+  (my/add-to-hook
+   #'php-mode-hook
+   '(company-mode
+     turn-on-eldoc-mode
+     ac-php-core-eldoc-setup))
 
-    (add-company-backends!!
-     :modes php-mode
-     :backends (company-ac-php-backend company-capf)))
+  (add-company-backends!!
+    :modes php-mode
+    :backends (company-ac-php-backend company-capf))
   :bind
   (:map php-mode-map
         ("C-<tab>" . #'company-complete)))
