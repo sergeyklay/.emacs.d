@@ -152,7 +152,9 @@ actually delete mail and not just remove it from a a label."
   "Create two key bindings for my Gmail experience."
   (local-set-key "y" #'my/gmail-archive)
   (local-set-key "$" #'my/gmail-report-spam)
-  (local-set-key "D" #'my/gmail-move-to-trash))
+  (local-set-key "D" #'my/gmail-move-to-trash)
+  (local-set-key "R" #'gnus-summary-catchup)
+  (local-set-key "e" #'gnus-summary-put-mark-as-expirable-next))
 
 (add-hook 'gnus-summary-mode-hook #'my|gnus-summary-keys)
 
