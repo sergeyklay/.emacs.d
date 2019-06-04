@@ -72,7 +72,8 @@ or nil otherwise."
     (setq
        ;; Setting up actual path to the executable
        php-executable php-path
-       ac-php-php-executable php-path)
+       ac-php-php-executable php-path
+       indent-tabs-mode nil)
 
       (flycheck-mode)
       (subword-mode)
