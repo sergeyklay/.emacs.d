@@ -69,26 +69,26 @@ or nil otherwise."
 (defun my|common-php-hook ()
   "The hook to configure `php-mode' as well as `company-php'."
   (let ((php-path (my--php-locate-executable)))
-    (setq
-       ;; Setting up actual path to the executable
-       php-executable php-path
-       ac-php-php-executable php-path)
+    ;; Enabling minor modes
+    (flycheck-mode)
+    (subword-mode)
+    (yas-minor-mode)
 
-      (flycheck-mode)
-      (subword-mode)
-      (yas-minor-mode)
+    ;; Setting up actual path to the executable
+    (setq php-executable php-path
+          ac-php-php-executable php-path
+          flycheck-php-executable php-path)
 
-      ;; Jump to definition (optional)
-      (define-key php-mode-map (kbd "M-]")
-        'ac-php-find-symbol-at-point)
+    (setq flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs")
 
-      ;; Return back (optional)
-      (define-key php-mode-map (kbd "M-[")
-        'ac-php-location-stack-back)
+    ;; Jump to definition (optional)
+    (define-key php-mode-map (kbd "M-]") 'ac-php-find-symbol-at-point)
 
-      ;; Toggle debug mode for `ac-php'
-      (define-key php-mode-map (kbd "C-a C-c d")
-        'ac-php-toggle-debug)))
+    ;; Return back (optional)
+    (define-key php-mode-map (kbd "M-[") 'ac-php-location-stack-back)
+
+    ;; Toggle debug mode for `ac-php'
+    (define-key php-mode-map (kbd "C-x t p") 'ac-php-toggle-debug)))
 
 (use-package php-mode
   :defer t
