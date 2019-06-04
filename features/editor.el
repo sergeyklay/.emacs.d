@@ -27,7 +27,7 @@
 ;; Set the default width of fill mode to 80
 (setq-default fill-column 80)
 
-;; Show column ruler
+;;; Show column ruler
 (use-package fill-column-indicator
   :init
   (my/add-to-hooks
@@ -48,7 +48,7 @@
 
 (electric-pair-mode t)
 
-;; Show Line Numbers
+;;; Show Line Numbers
 (use-package display-line-numbers
   :ensure nil
   :defer t
@@ -64,8 +64,17 @@
        text-mode-hook
        prog-mode-hook))))
 
-;; Undo Tree
+;;; Undo Tree
 (use-package undo-tree)
+
+;;; Multiple cursors
+(use-package multiple-cursors
+  :config
+  (setq mc/list-file (concat user-etc-dir "mc-lists.el"))
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C->"     . mc/mark-all-like-this)))
 
 ;; Editorconfig
 ;;
