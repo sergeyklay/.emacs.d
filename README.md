@@ -35,8 +35,8 @@ Prerequisite packages are
 - Password Store (`pass`)
 - Steel Bank Common Lisp (`sbcl`)
 - The Silver Searcher
-- `movemail.mailutils`
-- `w3m`
+- mailutils
+- w3m
 
 License
 -------
