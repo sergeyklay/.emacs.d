@@ -92,7 +92,6 @@ or nil otherwise."
 
 (use-package php-mode
   :defer t
-  :mode "\\.php[ts354]?\\'"
   :hook
   (php-mode . my|common-php-hook)
   :config
