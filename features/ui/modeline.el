@@ -22,6 +22,11 @@
 ;; Much simpler version of doom-modeline.
 ;; Absence of ‘atom-like’ features in the mode line much appreciated.
 (use-package mood-line
+  :preface
+  ;; Until this bug https://gitlab.com/jessieh/mood-line/issues/2
+  ;; is resolved
+  (advice-add 'mood-line-segment-multiple-cursors :override 'string)
+  (advice-add 'mood-line-segment-anzu :override 'string)
   :hook
   (after-init . mood-line-mode))
 
