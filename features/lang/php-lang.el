@@ -72,8 +72,7 @@ or nil otherwise."
     (setq
        ;; Setting up actual path to the executable
        php-executable php-path
-       ac-php-php-executable php-path
-       indent-tabs-mode nil)
+       ac-php-php-executable php-path)
 
       (flycheck-mode)
       (subword-mode)
@@ -98,7 +97,8 @@ or nil otherwise."
   (php-mode . my|common-php-hook)
   :config
   (setq php-mode-coding-style 'psr2
-        php-manual-path "/usr/local/share/php/doc/html")
+        php-manual-path "/usr/local/share/php/doc/html"
+        indent-tabs-mode nil)
   :bind
   (:map php-mode-map
         ("C-c C--" . #'php-current-class)
