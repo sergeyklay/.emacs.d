@@ -69,20 +69,16 @@
 (use-package elisp-mode
   :ensure nil
   :init
-  (require 'show-point-mode)
-
   (my/add-to-hook
    #'emacs-lisp-mode-hook
    '(turn-on-eldoc-mode
      my|ggtags-mode-enable
-     show-point-mode
      hs-minor-mode))
 
   (my/add-to-hook
    #'lisp-interaction-mode-hook
    '(turn-on-eldoc-mode
-     my|ggtags-mode-enable
-     show-point-mode))
+     my|ggtags-mode-enable))
 
   (add-company-backends!!
     :backends company-capf company-elisp
