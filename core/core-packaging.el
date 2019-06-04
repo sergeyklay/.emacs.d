@@ -59,30 +59,7 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose emacs-debug-mode)
 
-;; Install diminish
-(unless (package-installed-p 'diminish)
-  (package-refresh-contents)
-  (package-install 'diminish))
-
-;; Install delight
-(unless (package-installed-p 'delight)
-  (package-refresh-contents)
-  (package-install 'delight))
-
-(require 'delight)
-(require 'diminish)
 (require 'bind-key)
-
-(delight '((abbrev-mode " Ⓑ" abbrev)
-           (auto-revert-mode " Ⓡ" t)
-           (smart-tab-mode " Ⓣ" smart-tab)
-           (overwrite-mode " Ⓘ" t)
-           (emacs-lisp-mode "Elisp" :major)))
-
- (use-package emacs
-  :delight
-  (auto-fill-function " Ⓕ")
-  (visual-line-mode))
 
 ;;; Utilities for `list-packages' menu
 

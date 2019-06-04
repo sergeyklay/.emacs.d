@@ -18,7 +18,6 @@
 (use-package eldoc
   :ensure nil
   :defer t
-  :diminish (eldoc-mode . " Ⓔ")
   :hook
   ((eval-expression-minibuffer . eldoc-mode)
    (ielm-mode . eldoc-mode)))

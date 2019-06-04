@@ -25,7 +25,6 @@
   "The list of default company backends used by my Emacs.")
 
 (use-package company
-  :diminish (company-mode . " Ⓐ")
   :defer t
   :init
   (setq company-idle-delay 1
@@ -54,7 +53,6 @@
 (use-package company-box
   :if (display-graphic-p)
   :after all-the-icons
-  :diminish
   :hook (company-mode . company-box-mode)
   :config
   (setq company-box-show-single-candidate t

@@ -28,7 +28,6 @@
 
   (use-package flyspell
     :defer t
-    :delight
     ;; TODO: Use per feature configuration
     :hook ((org-mode        . flyspell-mode)
            (text-mode       . flyspell-mode)
@@ -57,8 +56,7 @@
           (setq
            flyspell-list-command "--list"))))))
 
-  (use-package auto-correct
-    :diminish auto-correct-mode)
+  (use-package auto-correct)
 
   (use-package flyspell-correct-ivy
     :after (flyspell ivy)

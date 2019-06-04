@@ -22,7 +22,6 @@
 ;; in flymake.
 
 (use-package flycheck
-  :delight
   :init
   (progn
     (global-flycheck-mode)

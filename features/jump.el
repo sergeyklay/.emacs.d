@@ -25,7 +25,6 @@
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (use-package ggtags
   :if (and global-executable-path gtags-enable-by-default)
-  :diminish (ggtags-mode . " Ⓖ")
   :bind
   (:map ggtags-mode-map
         ("C-c g s" . 'ggtags-find-other-symbol)

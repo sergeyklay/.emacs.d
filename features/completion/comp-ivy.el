@@ -21,7 +21,6 @@
   (require 'ivy))
 
 (use-package ivy
-  :diminish (ivy-mode . "")
   :defer 0.1
   :bind (("C-x b"   . ivy-switch-buffer)
          ("C-x B"   . ivy-switch-buffer-other-window)

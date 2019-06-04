@@ -74,7 +74,6 @@
 ;; control, especially when contributors develop on different platforms.
 ;; For more see URL `https://editorconfig.org'
 (use-package editorconfig
-  :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
@@ -84,7 +83,6 @@
 
 ;; Folding
 (use-package hideshow
-  :diminish hs-minor-mode
   :preface
   (defun my/toggle-fold ()
     "Toggle hiding/showing of a block."

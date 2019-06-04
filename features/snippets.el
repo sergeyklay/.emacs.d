@@ -28,7 +28,6 @@
 ;; behavior when typing a templated snippet.
 
 (use-package yasnippet
-  :diminish yas-global-mode yas-minor-mode
   :config
   (setq yas-verbosity (if emacs-debug-mode 3 0)
         yas-snippet-dirs (list (concat user-emacs-dir "snippets"))
