@@ -15,31 +15,43 @@
 
 ;;; Code:
 
+(require 'core-defuns)
+
+(defun my|common-web-hook ()
+  "Common hook to configure `web-mode'."
+  (setq indent-tabs-mode nil
+        fill-column 120))
+
 (use-package web-mode
-  :ensure t
-  :mode (("\\.html?\\'"      . web-mode)
-         ("\\.tpl\\'"        . web-mode)
-         ("\\.tpl\\.php\\'"  . web-mode)
-         ("\\.phtml\\'"      . web-mode)
-         ("\\.volt\\'"       . web-mode)
-         ("\\.twig\\'"       . web-mode)
+  :mode (("\\.eco\\'"        . web-mode)
+	 ("\\.eex\\'"        . web-mode)
+	 ("\\.ejs\\'"        .  web-mode)
+	 ("\\.html?\\'"      . web-mode)
          ("\\.[agj]sp\\'"    . web-mode)
          ("\\.as[cp]x\\'"    . web-mode)
+         ("\\.djhtml\\'"     . web-mode)
          ("\\.erb\\'"        . web-mode)
-         ("\\.mustache\\'"   . web-mode)
          ("\\.handlebars\\'" . web-mode)
          ("\\.hbs\\'"        . web-mode)
-         ("\\.djhtml\\'"     . web-mode))
+         ("\\.mustache\\'"   . web-mode)
+         ("\\.phtml\\'"      . web-mode)
+         ("\\.tpl\\'"        . web-mode)
+         ("\\.tpl\\.php\\'"  . web-mode)
+         ("\\.twig\\'"       . web-mode)
+         ("\\.volt\\'"       . web-mode))
   :init
-  ;; associate an engine
   (setq web-mode-engines-alist
         '(("php"   . "\\.phtml\\'")
           ("blade" . "\\.blade\\.")))
-
-  ;; indentation
-  (setq-default indent-tabs-mode nil)
+  :config
   (setq web-mode-markup-indent-offset 4
-        web-mode-code-indent-offset 4))
+        web-mode-css-indent-offset 4
+	web-mode-code-indent-offset 4)
+
+  ;; highlight enclosing tags of the element under cursor
+  (setq web-mode-enable-current-element-highlight t)
+  :hook
+  (web-mode . my|common-web-hook))
 
 (use-package emmet-mode
   :commands emmet-mode
