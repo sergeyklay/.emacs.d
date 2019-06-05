@@ -88,6 +88,7 @@ or nil otherwise."
     (setq flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs")
 
     (setq fill-column 120)
+    (setq indent-tabs-mode nil)
 
     ;; Jump to definition (optional)
     (define-key php-mode-map (kbd "M-]") 'ac-php-find-symbol-at-point)
@@ -104,8 +105,7 @@ or nil otherwise."
   (php-mode . my|common-php-hook)
   :config
   (setq php-mode-coding-style 'psr2
-        php-manual-path "/usr/local/share/php/doc/html"
-        indent-tabs-mode nil)
+        php-manual-path "/usr/local/share/php/doc/html")
   :bind
   (:map php-mode-map
         ("C-c C--" . #'php-current-class)
