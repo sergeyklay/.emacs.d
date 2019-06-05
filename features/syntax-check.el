@@ -22,19 +22,19 @@
 ;; in flymake.
 
 (use-package flycheck
-  :init
-  (progn
-    (global-flycheck-mode)
+  :preface
+  ;; See URL `https://github.com/flycheck/flycheck/issues/302'
+  (defun unless-error-buffer (errors)
+    (unless (get-buffer-window flycheck-error-list-buffer)
+      (when (fboundp 'flycheck-display-error-messages)
+	(flycheck-display-error-messages errors))))
 
-    ;; See URL `https://github.com/flycheck/flycheck/issues/302'
-    (defun unless-error-buffer (errors)
-      (unless (get-buffer-window flycheck-error-list-buffer)
-        (flycheck-display-error-messages errors)))
-
-    (setq flycheck-indication-mode 'right-fringe
-          flycheck-standard-error-navigation nil
-          flycheck-display-errors-function #'unless-error-buffer
-          flycheck-emacs-lisp-load-path load-path)))
+  (global-flycheck-mode 1)
+  :config
+  (setq flycheck-indication-mode 'right-fringe
+	flycheck-standard-error-navigation nil
+	flycheck-display-errors-function #'unless-error-buffer
+	flycheck-emacs-lisp-load-path 'inherit))
 
 (provide 'syntax-check)
 ;;; syntax-check.el ends here
