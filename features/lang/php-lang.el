@@ -17,6 +17,12 @@
 
 (require 'rx)
 
+(eval-when-compile
+  (require 'php)
+  (require 'php-mode)
+  (require 'ac-php-core)
+  (require 'flycheck))
+
 (defconst my--php-imports-start-regexp
   (rx (group (and bol "use"))))
 
@@ -124,7 +130,3 @@ or nil otherwise."
 
 (provide 'php-lang)
 ;;; php-lang.el ends here
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:
