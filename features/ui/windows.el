@@ -64,5 +64,12 @@
 (use-package transpose-frame
   :bind ("C-c t" . transpose-frame))
 
+(use-package ace-window
+  :defer t
+  :hook
+  ((after-init . winner-mode))
+  :bind
+  (("M-o" . ace-window)))
+
 (provide 'windows)
 ;;; windows.el ends here
