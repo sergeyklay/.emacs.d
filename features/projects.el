@@ -35,7 +35,8 @@
   :config
   (projectile-mode t)
   (setq projectile-completion-system 'ivy)
-  (add-to-list 'projectile-globally-ignored-directories "elpa"))
+  (dolist (dir '("elpa" ".cpcache"))
+    (add-to-list 'projectile-globally-ignored-directories dir)))
 
 (use-package counsel-projectile
   :after (ivy counsel projectile)
