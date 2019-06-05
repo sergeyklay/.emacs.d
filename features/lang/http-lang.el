@@ -1,4 +1,4 @@
-;;; http-tools.el --- Various http tools. -*- lexical-binding: t; -*-
+;;; http-lang.el --- Various http tools. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Serghei Iakovlev <sadhooklay@gmail.com>
 
@@ -57,5 +57,5 @@
     :backends company-restclient
     :modes restclient-mode))
 
-(provide 'http-tools)
-;;; http-tools.el ends here
+(provide 'http-lang)
+;;; http-lang.el ends here

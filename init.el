@@ -51,6 +51,7 @@
 (require 'conf-lang)    ; Add support for the configuration like languages
 (require 'go-lang)      ; Go related configuration
 (require 'clj-lang)     ; Closjure support
+(require 'http-lang)    ; Various http tools
 (require 'grammars)     ; Support of language grammars
 
 (require 'editor)       ; Features related to the behavior of the editor
@@ -59,6 +60,6 @@
 (require 'syntax-check) ; Syntax checkers
 (require 'snippets)     ; Add snippets support
 (require 'news)         ; News/Email related features
-(require 'http-tools)   ; Various http tools
+
 
 ;;; init.el ends here
