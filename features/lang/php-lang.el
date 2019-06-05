@@ -87,6 +87,8 @@ or nil otherwise."
 
     (setq flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs")
 
+    (setq fill-column 120)
+
     ;; Jump to definition (optional)
     (define-key php-mode-map (kbd "M-]") 'ac-php-find-symbol-at-point)
 
