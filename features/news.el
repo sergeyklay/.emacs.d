@@ -83,6 +83,7 @@
               "nnimap+personal:[Gmail]/Spam"
               "nnimap+personal:[Gmail]/Trash"
               "nnimap+personal:CICD"
+              "nnimap+personal:Digests"
               "nnimap+personal:Invoices"
               "nnimap+personal:Lists"
               "nnimap+personal:SocialSpam"
