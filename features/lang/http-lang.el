@@ -41,13 +41,6 @@
    'org-babel-load-languages
    '((restclient . t))))
 
-(eval-when-compile
-  (require 'restclient))
-
-(declare-function restclient-mode "restclient")
-
-(require' restclient)
-
 (use-package company-restclient
   :after (restclient company)
   :hook
