@@ -15,10 +15,14 @@
 
 ;;; Code:
 
+;; GC threshold to 1GB
+(setq gc-cons-threshold 1000000000
+      gc-cons-percentage 0.6)
+
 (require 'core (concat user-emacs-directory "core/core"))
 
-(setq custom-file (concat user-etc-dir "custom.el"))
-(load custom-file t)
+;; Don't save customizations at all, prefer to set things explicitly.
+(setq custom-file null-device)
 
 ;; One less file to load at startup
 (setq site-run-file nil)

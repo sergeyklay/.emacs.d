@@ -30,5 +30,12 @@
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
+(defun my|after-emacs-init()
+  "A common after init hook."
+  (setq gc-cons-threshold 800000
+        gc-cons-percentage 0.1))
+
+(add-hook 'after-init-hook #'my|after-emacs-init)
+
 (provide 'core-startup)
 ;;; core-startup.el ends here

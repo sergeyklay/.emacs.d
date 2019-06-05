@@ -46,7 +46,7 @@
   :defer t
   :hook
   (company-mode . company-statistics-mode)
-  :init
+  :config
   (setq company-statistics-file
         (concat user-cache-dir "company-statistics-cache.el")))
 
