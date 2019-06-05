@@ -13,10 +13,6 @@
 
 ;;; Code:
 
-(require 'core-defuns)
-(require 'org-lang)
-(require 'comp-any)
-
 (defvar oauth-access-token nil)
 
 ;; From
@@ -29,19 +25,33 @@
         (setq oauth-access-token (match-string 1))))))
 
 (use-package restclient
-  :requires org-lang
-  :after org
-  :commands
-  (restclient-mode)
-  :config
-  (add-to-list 'org-babel-load-languages '(restclient . t))
+  :mode
+  ("\\.http\\'" . restclient-mode)
   :hook
   (restclient-response-received . my-oauth-hook))
 
+(use-package restclient-test
+  :hook
+  (restclient-mode . restclient-test-mode))
+
+(use-package ob-restclient
+  :after (org restclient)
+  :init
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((restclient . t))))
+
+(eval-when-compile
+  (require 'restclient))
+
+(declare-function restclient-mode "restclient")
+
+(require' restclient)
+
 (use-package company-restclient
-  :requires comp-any
   :after (restclient company)
-  :defer t
+  :hook
+  ((restclient-mode . company-mode))
   :init
   (add-company-backends!!
     :backends company-restclient
