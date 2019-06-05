@@ -50,6 +50,7 @@
 (require 'web-lang)     ; Add support for the Web-based languages
 (require 'conf-lang)    ; Add support for the configuration like languages
 (require 'go-lang)      ; Go related configuration
+(require 'clj-lang)     ; Closjure support
 (require 'grammars)     ; Support of language grammars
 
 (require 'editor)       ; Features related to the behavior of the editor
