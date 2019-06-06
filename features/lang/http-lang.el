@@ -13,6 +13,8 @@
 
 ;;; Code:
 
+(require 'comp-any)
+
 (defvar oauth-access-token nil)
 
 ;; From

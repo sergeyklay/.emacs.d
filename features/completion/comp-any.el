@@ -16,6 +16,13 @@
 
 ;;; Code:
 
+(require 'core-dirs)
+(require 'core-defuns)
+
+(eval-when-compile
+  (require 'company-box)
+  (require 'company-dabbrev))
+
 (defconst my/default-company-backends
   '((company-dabbrev-code
      company-gtags
@@ -58,17 +65,7 @@
   (setq company-box-show-single-candidate t
         company-box-backends-colors nil
         company-box-max-candidates 50
-        company-box-icons-alist 'company-box-icons-all-the-icons
-
-        company-box-icons-elisp
-        (list
-         (concat (all-the-icons-material "functions") " ")
-         (concat (all-the-icons-material "check_circle") " ")
-         (concat (all-the-icons-material "stars") " ")
-         (concat (all-the-icons-material "format_paint") " "))
-
-        company-box-icons-unknown
-        (concat (all-the-icons-material "find_in_page") " ")))
+        company-box-icons-alist 'company-box-icons-all-the-icons))
 
 (defmacro add-company-backends!! (&rest props)
   "Add and enable company backends.
@@ -127,7 +124,7 @@ Available PROPS:
         ;; add backends
         (dolist (backend backends)
           (push `(add-to-list ',raw-backends-var-name ',backend) result))
-        ;; define initialization hook function
+        ;;  define initialization hook function
         (push `(defun ,init-func-name ()
                 ,(format "Initialize company for %S." mode)
                 (setq ,backends-var-name ,raw-backends-var-name)
@@ -162,7 +159,3 @@ Available PROPS:
 
 (provide 'comp-any)
 ;;; comp-any.el ends here
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:
