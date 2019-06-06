@@ -21,6 +21,8 @@
 
 (use-package doom-modeline
   :after all-the-icons
+  :init
+  (setq doom-modeline-major-mode-icon nil)
   :hook (after-init . doom-modeline-mode))
 
 (provide 'modeline)
