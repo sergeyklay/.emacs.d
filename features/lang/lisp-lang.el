@@ -66,6 +66,10 @@
   (:map lisp-mode-map
         ("C-<tab>" . #'company-complete)))
 
+(defun my|elisp-common-hook ()
+  "Common Emacs Lisp hook."
+  (setq-local mood-line-show-point t))
+
 (use-package elisp-mode
   :ensure nil
   :init
@@ -73,6 +77,7 @@
    #'emacs-lisp-mode-hook
    '(turn-on-eldoc-mode
      my|ggtags-mode-enable
+     my|elisp-common-hook
      hs-minor-mode))
 
   (my/add-to-hook

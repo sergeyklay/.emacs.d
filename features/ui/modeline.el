@@ -19,11 +19,11 @@
 (column-number-mode t)
 (line-number-mode t)
 
-(use-package doom-modeline
-  :after all-the-icons
-  :init
-  (setq doom-modeline-major-mode-icon nil)
-  :hook (after-init . doom-modeline-mode))
+;; Much simpler version of doom-modeline.
+;; Absence of ‘atom-like’ features in the mode line much appreciated.
+(use-package mood-line
+  :hook
+  (after-init . mood-line-mode))
 
 (provide 'modeline)
 ;;; modeline.el ends here
