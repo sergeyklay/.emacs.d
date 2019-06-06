@@ -99,9 +99,7 @@
 (use-package flycheck-cask
   :after flycheck-mode
   :hook
-  (flycheck-mode . flycheck-cask-setup)
-  :init
-  (setq-default flycheck-emacs-lisp-load-path 'inherit))
+  (flycheck-mode . flycheck-cask-setup))
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
