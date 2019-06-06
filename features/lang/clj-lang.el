@@ -16,6 +16,8 @@
 (require 'core-dirs)
 (require 'core-defuns)
 
+;; key bindings and code colorization for Clojure
+;; https://github.com/clojure-emacs/clojure-mode
 (use-package clojure-mode
   :defer t
   :preface
@@ -36,15 +38,19 @@
    #'clojure-mode-hook
    '(turn-on-eldoc-mode
      my|ggtags-mode-enable
-     hs-minor-mode)))
+     hs-minor-mode
+     subword-mode)))
 
 (use-package clojure-snippets
   :defer t
   :after clojure-mode)
 
+;; extra syntax highlighting for clojure
 (use-package clojure-mode-extra-font-locking
   :after clojure-mode)
 
+;; integration with a Clojure REPL
+;; https://github.com/clojure-emacs/cider
 (use-package cider
   :after clojure-mode
   :init
