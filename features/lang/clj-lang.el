@@ -13,10 +13,14 @@
 
 ;;; Code:
 
+(require 'core-dirs)
+(require 'core-defuns)
+
 (use-package clojure-mode
   :defer t
   :preface
   (declare-function put-clojure-indent "clojure-mode" (sym indent))
+  (declare-function clojure-mode-hook "clojure-mode")
   :config
   (define-clojure-indent
     (if-let-failed? 'defun)
@@ -27,17 +31,47 @@
     (alet 'defun)
     (alet 'defun)
     (mlet 'defun))
-  :hook (clojure-mode . eldoc-mode))
+  :init
+  (my/add-to-hook
+   #'clojure-mode-hook
+   '(turn-on-eldoc-mode
+     my|ggtags-mode-enable
+     hs-minor-mode)))
 
 (use-package clojure-snippets
-  :defer t)
+  :defer t
+  :after clojure-mode)
 
-(use-package clojure-mode-extra-font-locking)
+(use-package clojure-mode-extra-font-locking
+  :after clojure-mode)
 
 (use-package cider
+  :after clojure-mode
+  :init
+  (setq
+   ;; go right to the REPL buffer when it's finished connecting
+   cider-repl-pop-to-buffer-on-connect t
+   ;; when there's a cider error, show its buffer and switch to it
+   cider-show-error-buffer t
+   cider-auto-select-error-buffer t
+   cider-repl-history-file (concat user-cache-dir "cider-history")
+   cider-repl-wrap-history t)
+  :hook
+  ((cider-mode . eldoc-mode)
+   (clojure-mode . cider-mode))
   :custom
   (cider-repl-display-help-banner nil)
-  :commands (cider cider-connect cider-jack-in))
+  :commands
+  (cider cider-connect cider-jack-in)
+  :bind
+  (:map clojure-mode-map
+	([f7] . cider-jack-in)))
+
+(use-package clj-refactor
+  :hook (clojure-mode . clj-refactor-mode))
+
+(use-package flycheck-clojure
+  :after (flycheck clojure-mode))
 
 (provide 'clj-lang)
 ;;; clj-lang.el ends here
