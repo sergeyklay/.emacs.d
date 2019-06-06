@@ -24,7 +24,8 @@
   (require 'company-dabbrev))
 
 (defconst my/default-company-backends
-  '((company-dabbrev-code
+  '(company-semantic
+    (company-dabbrev-code
      company-gtags
      company-etags
      company-keywords)
@@ -128,7 +129,7 @@ Available PROPS:
         (push `(defun ,init-func-name ()
                 ,(format "Initialize company for %S." mode)
                 (setq ,backends-var-name ,raw-backends-var-name)
-                (set (make-variable-buffer-local 'company-backends)
+                (set (make-local-variable 'company-backends)
                      ,backends-var-name)) result)
         (when call-hooks
           (push `(,init-func-name) result))
@@ -144,7 +145,7 @@ Available PROPS:
               (let* ((var (pop variables-copy))
                      (forms
                       (when (consp variables-copy)
-                        `(set (make-variable-buffer-local ',var)
+                        `(set (make-local-variable ',var)
                               ,(eval (pop variables-copy))))))
                 (when forms (push forms vars))))
             (push (append vars-func vars) result))
