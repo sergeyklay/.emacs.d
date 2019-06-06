@@ -55,6 +55,8 @@
 
 ;;; Sane defaults
 
+(setq ad-redefinition-action 'accept)
+
 (setq-default
  debug-on-error (and (not noninteractive) emacs-debug-mode)
  vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
