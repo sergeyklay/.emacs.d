@@ -35,8 +35,8 @@
   (setq gofmt-command "goimports")
   ; set compile command default
   (if (not (string-match "go" compile-command))
-      (set (make-local-variable 'compile-command)
-           "go build -v && go test -v && go vet")))
+      (setq-local compile-command
+		  "go build -v && go test -v && go vet")))
 
 (use-package go-mode
   :defer t

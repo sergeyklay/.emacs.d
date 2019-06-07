@@ -63,8 +63,7 @@
    cider-repl-history-file (concat user-cache-dir "cider-history")
    cider-repl-wrap-history t)
   :hook
-  ((cider-mode . eldoc-mode)
-   (clojure-mode . cider-mode))
+  ((cider-mode . eldoc-mode))
   :custom
   (cider-repl-display-help-banner nil)
   :commands

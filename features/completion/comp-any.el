@@ -129,8 +129,8 @@ Available PROPS:
         (push `(defun ,init-func-name ()
                 ,(format "Initialize company for %S." mode)
                 (setq ,backends-var-name ,raw-backends-var-name)
-                (set (make-local-variable 'company-backends)
-                     ,backends-var-name)) result)
+		(setq-local 'company-backends ,backends-var-name))
+	      result)
         (when call-hooks
           (push `(,init-func-name) result))
         (when hooks
@@ -145,8 +145,8 @@ Available PROPS:
               (let* ((var (pop variables-copy))
                      (forms
                       (when (consp variables-copy)
-                        `(set (make-local-variable ',var)
-                              ,(eval (pop variables-copy))))))
+			`(setq-local ',var
+				     ,(eval (pop variables-copy))))))
                 (when forms (push forms vars))))
             (push (append vars-func vars) result))
           (when call-hooks
