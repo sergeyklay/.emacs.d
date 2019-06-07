@@ -39,7 +39,9 @@
    '(turn-on-eldoc-mode
      my|ggtags-mode-enable
      hs-minor-mode
-     subword-mode)))
+     subword-mode
+     company-mode
+     cider-mode)))
 
 (use-package clojure-snippets
   :defer t
@@ -63,7 +65,9 @@
    cider-repl-history-file (concat user-cache-dir "cider-history")
    cider-repl-wrap-history t)
   :hook
-  ((cider-mode . eldoc-mode))
+  ((cider-repl-mode . company-mode)
+   (cider-mode      . company-mode)
+   (cider-mode      . eldoc-mode))
   :custom
   (cider-repl-display-help-banner nil)
   :commands
