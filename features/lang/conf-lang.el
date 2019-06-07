@@ -18,7 +18,10 @@
 ;;;; JSON
 
 (use-package json-mode
- :mode "\\.js\\(on\\|[hl]int\\(rc\\)?\\)\\'")
+  :mode "\\.js\\(on\\|[hl]int\\(rc\\)?\\)\\'"
+  :config
+  (bind-keys :map json-mode-map
+	     ("C-c <tab>" . json-mode-beautify)))
 
 ;;;; Ini
 
