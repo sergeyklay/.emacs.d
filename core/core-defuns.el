@@ -37,26 +37,6 @@
     (add-hook hook func)))
 
 ;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el
-;;
-;; Usage:
-;;
-;;   (my/add-all-to-hook 'enable-paredit-mode
-;;    'emacs-lisp-mode-hook
-;;    'scheme-mode-hook
-;;    'lisp-mode-hook
-;;    'clojure-mode-hook
-;;    'eval-expression-minibuffer-setup-hook)
-;;
-;;   (my/add-all-to-hook (lambda () (setq show-trailing-whitespace t))
-;;    'prog-mode-hook
-;;    'org-mode-hook
-;;    'html-mode-hook)
-;;
-(defun my/add-all-to-hook (hook &rest funs)
-  "Add FUNS to HOOK."
-  (my/add-to-hook hook funs))
-
-;; from https://github.com/cofi/dotfiles/blob/master/emacs.d/config/cofi-util.el
 (defun my/add-to-hook (hook funs)
   "Add list of FUNS to HOOK."
   (dolist (fun funs)

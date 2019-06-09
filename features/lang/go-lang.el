@@ -30,7 +30,7 @@
 
 (defun my|go-common-hook ()
   "Common configuration for Go lang."
-  (add-hook 'before-save-hook 'gofmt-before-save t)
+  (add-hook 'before-save-hook #'gofmt-before-save t)
   ; gofmt uses invokes goimports
   (setq gofmt-command "goimports")
   ; set compile command default
