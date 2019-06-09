@@ -29,6 +29,7 @@
   :custom
   (slime-complete-symbol*-fancy t)
   (slime-completion-at-point-functions 'slime-fuzzy-complete-symbol)
+  (slime-net-coding-system 'utf-8-unix)
   :init
   (setq inferior-lisp-program sbcl-executable-path)
   (slime-setup '(slime-asdf
@@ -83,6 +84,14 @@
   :bind
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)))
+
+(use-package eros
+  :defer t
+  :hook
+  ((ielm-mode       . eros-mode)
+   (emacs-lisp-mode . eros-mode))
+  :custom
+  (eros-eval-result-prefix "∴ "))
 
 (use-package cask-mode
   :mode "Cask")
