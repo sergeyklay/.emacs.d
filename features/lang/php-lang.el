@@ -17,9 +17,6 @@
 
 (require 'rx)
 
-(eval-when-compile
-  (require 'flycheck))
-
 (defconst my--php-imports-start-regexp
   (rx (group (and bol "use"))))
 
@@ -113,7 +110,6 @@ or nil otherwise."
   (add-to-list 'company-backends '(company-ac-php-backend company-capf))
   :bind
   (:map php-mode-map
-        ("C-<tab>" . #'company-complete)
 	("M-["     . #'ac-php-location-stack-back)
 	("M-]"     . #'ac-php-find-symbol-at-point)))
 
