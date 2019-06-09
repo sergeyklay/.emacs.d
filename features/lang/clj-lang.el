@@ -71,9 +71,11 @@
   (cider-repl-display-help-banner nil)
   :commands
   (cider cider-connect cider-jack-in)
-  :bind
-  (:map clojure-mode-map
-	([f7] . cider-jack-in)))
+  :bind (:map clojure-mode-map
+	([f7] . cider-jack-in)
+	:map cider-repl-mode-map
+	("C-c M-o" . cider-repl-clear-buffer)
+	("C-c M-l" . cider-repl-switch-to-other)))
 
 (use-package clj-refactor
   :after clojure-mode
