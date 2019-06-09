@@ -50,12 +50,6 @@
 
 (use-package unicode-fonts)
 
-(use-package all-the-icons
-  :ensure t
-  :config
-  (unless (package-installed-p 'all-the-icons)
-    (all-the-icons:all-the-icons-install-fonts)))
-
 (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
 (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
 
@@ -67,7 +61,3 @@
 
 (provide 'appearance)
 ;;; appearance.el ends here
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:
