@@ -52,11 +52,10 @@
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4)
 
-  (hs-minor-mode t)
-  (my|ggtags-mode-enable)
-
   (local-set-key (kbd "C-c j") #'xref-find-definitions))
 
+(add-hook 'c-mode-common-hook #'hs-minor-mode)
+(add-hook 'c-mode-common-hook #'my|ggtags-mode-enable)
 (add-hook 'c-mode-common-hook #'my|cc-common-hook)
 
 (provide 'cc-lang)

@@ -68,6 +68,7 @@
    nrepl-hide-special-buffers t)
   :hook
   ((cider-repl-mode . company-mode)
+   (cider-repl-mode . subword-mode)
    (cider-repl-mode . rainbow-delimiters-mode)
    (cider-mode      . company-mode)
    (cider-mode      . eldoc-mode)
