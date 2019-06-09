@@ -15,13 +15,19 @@
 
 ;;; Code:
 
+(require 'jump)
+
+(eval-when-compile
+  (require 'company))
+
 (use-package cmake-mode
+  :after company
   :mode "CMakeLists\\.txt\\'"
   :mode "\\.cmake\\'"
+  :hook
+  ((cmake-mode . company-mode))
   :init
-  (add-company-backends!!
-    :modes cmake-mode
-    :backends company-cmake))
+  (add-to-list 'company-backends 'company-cmake))
 
 (use-package c-eldoc
   :hook
@@ -33,30 +39,24 @@
 (use-package company-c-headers
   :after company
   :defer t
+  :hook
+  ((c-mode-common . company-mode))
   :init
-  (add-company-backends!!
-    :modes c-mode-common
-    :backends company-c-headers))
+  (add-to-list 'company-backends 'company-c-headers))
 
 (defun my|cc-common-hook ()
   "Change the default way that Emacs handles indentation."
-  (setq tab-width 4
-        c-basic-offset 4
-        indent-tabs-mode t)
+  (setq-local c-basic-offset 4)
+  (setq-local indent-tabs-mode t)
+  (setq-local tab-width 4)
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4)
 
-  (hs-minor-mode t)
-  (my|ggtags-mode-enable)
+  (local-set-key (kbd "C-c j") #'xref-find-definitions))
 
-  (local-set-key (kbd "<C-tab>") #'company-complete)
-  (local-set-key (kbd "C-c j") #'find-tag))
-
+(add-hook 'c-mode-common-hook #'hs-minor-mode)
+(add-hook 'c-mode-common-hook #'my|ggtags-mode-enable)
 (add-hook 'c-mode-common-hook #'my|cc-common-hook)
 
 (provide 'cc-lang)
 ;;; cc-lang.el ends here
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:

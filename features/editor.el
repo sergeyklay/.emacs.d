@@ -19,7 +19,7 @@
 
 ;; Make sure that there is one newline at the end of the file while saving,
 ;; also removes all spaces at the end of lines.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; Increase the warning threshold for big files
 (setq large-file-warning-threshold (* 50 1024 1024))
@@ -30,15 +30,14 @@
 ;; Visually indicate empty lines after the buffer end
 (setq-default indicate-empty-lines t)
 
-;; Enable line highlight mode everywhere
-(global-hl-line-mode 1)
-
 ;; When Visual Line mode is enabled, ‘word-wrap’ is turned on in
 ;; this buffer, and simple editing commands are redefined to act on
 ;; visual lines, not logical lines.
 (global-visual-line-mode)
 
 (electric-pair-mode t)
+
+(use-package rainbow-delimiters)
 
 ;;; Show Line Numbers
 (use-package display-line-numbers

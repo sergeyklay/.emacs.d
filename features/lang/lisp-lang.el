@@ -18,53 +18,47 @@
 (defconst sbcl-executable-path (executable-find "sbcl")
   "The sbcl executable path on this system.")
 
+(defvar slime-complete-symbol*-fancy)
+
 ;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
   :if sbcl-executable-path
   :commands slime-mode
-  :hook (lisp-mode . slime-mode)
+  :hook
+  ((lisp-mode . slime-mode))
+  :custom
+  (slime-complete-symbol*-fancy t)
+  (slime-completion-at-point-functions 'slime-fuzzy-complete-symbol)
   :init
-  (progn
-    (setq inferior-lisp-program sbcl-executable-path
-          slime-complete-symbol*-fancy t
-          slime-completion-at-point-functions 'slime-fuzzy-complete-symbol)
-
-    (slime-setup '(slime-asdf
-                   slime-fancy
-                   slime-indentation
-                   slime-sbcl-exts
-                   slime-scratch))
-
-    (add-company-backends!!
-      :backends (company-capf company-files)
-      :modes slime-mode)))
+  (setq inferior-lisp-program sbcl-executable-path)
+  (slime-setup '(slime-asdf
+		 slime-fancy
+		 slime-indentation
+		 slime-sbcl-exts
+		 slime-scratch)))
 
 (use-package slime-company
   :after (slime company)
   :defer t
+  :hook
+  ((slime-mode . company-mode))
   :init
   (slime-setup '(slime-fancy slime-company)))
 
 (use-package ielm
   :ensure nil
-  :init
-  (my/add-to-hook
-   #'ielm-mode-hook
-   '(turn-on-eldoc-mode))
-  (add-company-backends!!
-    :backends (company-files company-capf) company-elisp
-    :modes ielm-mode))
+  :hook
+  ((ielm-mode . company-mode)
+   (ielm-mode . turn-on-eldoc-mode)
+   (ielm-mode . rainbow-delimiters-mode)))
 
 (use-package lisp-mode
   :ensure nil
-  :init
-  (my/add-to-hook
-   #'lisp-mode-hook
-   '(turn-on-eldoc-mode
-     my|ggtags-mode-enable))
-  :bind
-  (:map lisp-mode-map
-        ("C-<tab>" . #'company-complete)))
+  :hook
+  ((lisp-mode . company-mode)
+   (lisp-mode . turn-on-eldoc-mode)
+   (lisp-mode . rainbow-delimiters-mode)
+   (lisp-mode . my|ggtags-mode-enable)))
 
 (defun my|elisp-common-hook ()
   "Common Emacs Lisp hook."
@@ -72,26 +66,23 @@
 
 (use-package elisp-mode
   :ensure nil
+  :hook
+  ((emacs-lisp-mode . company-mode)
+   (emacs-lisp-mode . turn-on-eldoc-mode)
+   (emacs-lisp-mode . hs-minor-mode)
+   (emacs-lisp-mode . rainbow-delimiters-mode)
+   (emacs-lisp-mode . my|ggtags-mode-enable)
+   (emacs-lisp-mode . my|elisp-common-hook)
+
+   (lisp-interaction-mode . company-mode)
+   (lisp-interaction-mode . turn-on-eldoc-mode)
+   (lisp-interaction-mode . rainbow-delimiters-mode)
+   (lisp-interaction-mode . my|ggtags-mode-enable))
   :init
-  (my/add-to-hook
-   #'emacs-lisp-mode-hook
-   '(turn-on-eldoc-mode
-     my|ggtags-mode-enable
-     my|elisp-common-hook
-     hs-minor-mode))
-
-  (my/add-to-hook
-   #'lisp-interaction-mode-hook
-   '(turn-on-eldoc-mode
-     my|ggtags-mode-enable))
-
-  (add-company-backends!!
-    :backends company-capf company-elisp
-    :modes emacs-lisp-mode lisp-interaction-mode)
+  (add-to-list 'company-backends '(company-elisp company-capf))
   :bind
   (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer)
-        ("C-<tab>" . #'company-complete)))
+        ("C-c C-b" . #'eval-buffer)))
 
 (use-package cask-mode
   :mode "Cask")
@@ -103,7 +94,3 @@
 
 (provide 'lisp-lang)
 ;;; lisp-lang.el ends here
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:

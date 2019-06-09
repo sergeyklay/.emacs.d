@@ -30,7 +30,7 @@
 
 (defun my|go-common-hook ()
   "Common configuration for Go lang."
-  (add-hook 'before-save-hook 'gofmt-before-save t)
+  (add-hook 'before-save-hook #'gofmt-before-save t)
   ; gofmt uses invokes goimports
   (setq gofmt-command "goimports")
   ; set compile command default
@@ -66,13 +66,9 @@
   ((go-mode . company-mode)
    (go-mode . hs-minor-mode))
   :init
-  (add-company-backends!!
-    :modes go-mode
-    :backends company-go
-    :variables company-go-show-annotation t)
-  :bind
-  (:map go-mode-map
-        ("C-<tab>" . #'company-complete)))
+  (add-to-list 'company-backends 'company-go)
+  :config
+  (setq-local company-go-show-annotation t))
 
 (use-package go-eldoc
   :if gocode-executable-path
