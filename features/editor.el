@@ -42,21 +42,10 @@
 ;;; Show Line Numbers
 (use-package display-line-numbers
   :ensure nil
-  :defer t
-  :bind ("C-x t l" . #'display-line-numbers-mode)
+  :bind ("C-x t l" . display-line-numbers-mode)
   :init
-  (progn
-    (setq display-line-numbers-type t
-          display-line-numbers-width 4)
-
-    (my/add-to-hooks
-     #'display-line-numbers-mode
-     '(conf-mode-hook
-       text-mode-hook
-       prog-mode-hook))))
-
-;;; Undo Tree
-(use-package undo-tree)
+  (setq display-line-numbers-type t
+	display-line-numbers-width 4))
 
 ;; Editorconfig
 ;;
@@ -65,8 +54,7 @@
 ;; control, especially when contributors develop on different platforms.
 ;; For more see URL `https://editorconfig.org'
 (use-package editorconfig
-  :config
-  (editorconfig-mode 1))
+  :config (editorconfig-mode 1))
 
 ;; Whitespace mode
 (use-package whitespace
