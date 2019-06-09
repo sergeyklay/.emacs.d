@@ -19,20 +19,18 @@
 (require 'core-dirs)
 (require 'core-defuns)
 
-(eval-when-compile
-  (require 'company-dabbrev))
-
 (use-package company
   :defer t
   :init
   (setq company-idle-delay nil ; never start completions automatically
         company-echo-delay 0
-        company-dabbrev-ignore-case nil
-        company-dabbrev-downcase nil
         company-tooltip-align-annotations t
         company-tooltip-limit 10
         company-selection-wrap-around t
         company-show-numbers t)
+  :custom
+  (company-dabbrev-ignore-case nil)
+  (company-dabbrev-downcase nil)
   :bind
   (:map company-active-map
         ("SPC" . company-abort)))
