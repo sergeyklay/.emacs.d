@@ -20,7 +20,6 @@
 (require 'core-defuns)
 
 (eval-when-compile
-  (require 'company-box)
   (require 'company-dabbrev))
 
 (use-package company
