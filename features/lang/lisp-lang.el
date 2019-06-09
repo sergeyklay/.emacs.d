@@ -18,8 +18,6 @@
 (defconst sbcl-executable-path (executable-find "sbcl")
   "The sbcl executable path on this system.")
 
-(defvar slime-complete-symbol*-fancy)
-
 ;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
   :if sbcl-executable-path
