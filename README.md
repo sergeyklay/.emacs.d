@@ -31,6 +31,7 @@ Prerequisite packages are
 - Gocode
 - HLint
 - Hoogle
+- Leiningen (`lein`)
 - Pandoc
 - Password Store (`pass`)
 - Steel Bank Common Lisp (`sbcl`)

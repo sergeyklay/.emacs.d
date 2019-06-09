@@ -20,9 +20,10 @@
 (use-package clojure-mode
   :after company
   :mode
-  (("\\.clj\\'" . clojure-mode)
-   ("\\.edn\\'" . clojure-mode)
-   ("\\.boot\\'" . clojure-mode)
+  (("\\.clj\\'"    . clojure-mode)
+   ("\\.cljc\\'"   . clojurec-mode)
+   ("\\.edn\\'"    . clojure-mode)
+   ("\\.boot\\'"   . clojure-mode)
    ("\\.cljs.*\\'" . clojure-mode))
   :defer t
   :preface
