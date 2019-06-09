@@ -22,7 +22,8 @@
 (use-package slime
   :if sbcl-executable-path
   :commands slime-mode
-  :hook (lisp-mode . slime-mode)
+  :hook
+  ((lisp-mode . slime-mode))
   :init
   (progn
     (setq inferior-lisp-program sbcl-executable-path
@@ -33,38 +34,28 @@
                    slime-fancy
                    slime-indentation
                    slime-sbcl-exts
-                   slime-scratch))
-
-    (add-company-backends!!
-      :backends (company-capf company-files)
-      :modes slime-mode)))
+                   slime-scratch))))
 
 (use-package slime-company
   :after (slime company)
   :defer t
+  :hook
+  ((slime-mode . company-mode))
   :init
   (slime-setup '(slime-fancy slime-company)))
 
 (use-package ielm
   :ensure nil
-  :init
-  (my/add-to-hook
-   #'ielm-mode-hook
-   '(turn-on-eldoc-mode))
-  (add-company-backends!!
-    :backends (company-files company-capf) company-elisp
-    :modes ielm-mode))
+  :hook
+  ((ielm-mode . company-mode)
+   (ielm-mode . turn-on-eldoc-mode)))
 
 (use-package lisp-mode
   :ensure nil
-  :init
-  (my/add-to-hook
-   #'lisp-mode-hook
-   '(turn-on-eldoc-mode
-     my|ggtags-mode-enable))
-  :bind
-  (:map lisp-mode-map
-        ("C-<tab>" . #'company-complete)))
+  :hook
+  ((lisp-mode . company-mode)
+   (lisp-mode . turn-on-eldoc-mode)
+   (lisp-mode . my|ggtags-mode-enable)))
 
 (defun my|elisp-common-hook ()
   "Common Emacs Lisp hook."
@@ -75,19 +66,19 @@
   :init
   (my/add-to-hook
    #'emacs-lisp-mode-hook
-   '(turn-on-eldoc-mode
+   '(company-mode
+     turn-on-eldoc-mode
      my|ggtags-mode-enable
      my|elisp-common-hook
      hs-minor-mode))
 
   (my/add-to-hook
    #'lisp-interaction-mode-hook
-   '(turn-on-eldoc-mode
+   '(company-mode
+     turn-on-eldoc-mode
      my|ggtags-mode-enable))
 
-  (add-company-backends!!
-    :backends company-capf company-elisp
-    :modes emacs-lisp-mode lisp-interaction-mode)
+  (add-to-list 'company-backends '(company-elisp company-capf))
   :bind
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)

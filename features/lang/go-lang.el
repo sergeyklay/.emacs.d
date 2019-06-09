@@ -66,10 +66,9 @@
   ((go-mode . company-mode)
    (go-mode . hs-minor-mode))
   :init
-  (add-company-backends!!
-    :modes go-mode
-    :backends company-go
-    :variables company-go-show-annotation t)
+  (add-to-list 'company-backends 'company-go)
+  :config
+  (setq-local company-go-show-annotation t)
   :bind
   (:map go-mode-map
         ("C-<tab>" . #'company-complete)))

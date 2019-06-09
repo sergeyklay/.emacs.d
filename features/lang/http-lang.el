@@ -48,9 +48,7 @@
   :hook
   ((restclient-mode . company-mode))
   :init
-  (add-company-backends!!
-    :backends company-restclient
-    :modes restclient-mode))
+  (add-to-list 'company-backends 'company-restclient))
 
 (provide 'http-lang)
 ;;; http-lang.el ends here

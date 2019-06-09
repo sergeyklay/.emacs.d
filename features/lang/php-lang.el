@@ -119,13 +119,9 @@ or nil otherwise."
 
   (my/add-to-hook
    #'php-mode-hook
-   '(company-mode
-     turn-on-eldoc-mode
-     ac-php-core-eldoc-setup))
+   '(company-mode turn-on-eldoc-mode ac-php-core-eldoc-setup))
 
-  (add-company-backends!!
-    :modes php-mode
-    :backends (company-ac-php-backend company-capf))
+  (add-to-list 'company-backends '(company-ac-php-backend company-capf))
   :bind
   (:map php-mode-map
         ("C-<tab>" . #'company-complete)))
