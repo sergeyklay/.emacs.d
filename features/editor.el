@@ -40,6 +40,8 @@
 
 (electric-pair-mode t)
 
+(use-package rainbow-delimiters)
+
 ;;; Show Line Numbers
 (use-package display-line-numbers
   :ensure nil

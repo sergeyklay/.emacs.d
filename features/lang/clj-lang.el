@@ -39,7 +39,8 @@
     (mlet 'defun))
   :hook
   ((clojure-mode . hs-minor-mode)
-   (clojure-mode . subword-mode)))
+   (clojure-mode . subword-mode)
+   (clojure-mode . rainbow-delimiters-mode)))
 
 (use-package clojure-snippets
   :after clojure-mode
@@ -61,9 +62,13 @@
    cider-show-error-buffer t
    cider-auto-select-error-buffer t
    cider-repl-history-file (concat user-cache-dir "cider-history")
-   cider-repl-wrap-history t)
+   cider-repl-wrap-history t
+   ;; Do not prompt for a symbol when execute interactive commands
+   cider-prompt-for-symbol nil
+   nrepl-hide-special-buffers t)
   :hook
   ((cider-repl-mode . company-mode)
+   (cider-repl-mode . rainbow-delimiters-mode)
    (cider-mode      . company-mode)
    (cider-mode      . eldoc-mode)
    (clojure-mode    . cider-mode))

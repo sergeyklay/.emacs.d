@@ -49,13 +49,15 @@
   :ensure nil
   :hook
   ((ielm-mode . company-mode)
-   (ielm-mode . turn-on-eldoc-mode)))
+   (ielm-mode . turn-on-eldoc-mode)
+   (ielm-mode . rainbow-delimiters-mode)))
 
 (use-package lisp-mode
   :ensure nil
   :hook
   ((lisp-mode . company-mode)
    (lisp-mode . turn-on-eldoc-mode)
+   (lisp-mode . rainbow-delimiters-mode)
    (lisp-mode . my|ggtags-mode-enable)))
 
 (defun my|elisp-common-hook ()
@@ -68,11 +70,13 @@
   ((emacs-lisp-mode . company-mode)
    (emacs-lisp-mode . turn-on-eldoc-mode)
    (emacs-lisp-mode . hs-minor-mode)
+   (emacs-lisp-mode . rainbow-delimiters-mode)
    (emacs-lisp-mode . my|ggtags-mode-enable)
    (emacs-lisp-mode . my|elisp-common-hook)
 
    (lisp-interaction-mode . company-mode)
    (lisp-interaction-mode . turn-on-eldoc-mode)
+   (lisp-interaction-mode . rainbow-delimiters-mode)
    (lisp-interaction-mode . my|ggtags-mode-enable))
   :init
   (add-to-list 'company-backends '(company-elisp company-capf))
