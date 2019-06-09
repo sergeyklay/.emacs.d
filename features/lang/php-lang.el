@@ -18,7 +18,6 @@
 (require 'rx)
 
 (eval-when-compile
-  (require 'php)
   (require 'php-mode)
   (require 'ac-php-core)
   (require 'flycheck))
