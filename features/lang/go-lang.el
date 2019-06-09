@@ -68,10 +68,7 @@
   :init
   (add-to-list 'company-backends 'company-go)
   :config
-  (setq-local company-go-show-annotation t)
-  :bind
-  (:map go-mode-map
-        ("C-<tab>" . #'company-complete)))
+  (setq-local company-go-show-annotation t))
 
 (use-package go-eldoc
   :if gocode-executable-path
