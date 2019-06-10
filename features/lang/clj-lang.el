@@ -24,7 +24,7 @@
    ("\\.cljc\\'"   . clojurec-mode)
    ("\\.edn\\'"    . clojure-mode)
    ("\\.boot\\'"   . clojure-mode)
-   ("\\.cljs.*\\'" . clojure-mode))
+   ("\\.cljs.*\\'" . clojurescript-mode))
   :defer t
   :preface
   (declare-function put-clojure-indent "clojure-mode" (sym indent))
@@ -76,7 +76,7 @@
   :custom
   (cider-repl-display-help-banner nil)
   :commands
-  (cider cider-connect cider-jack-in)
+  (cider cider-connect cider-jack-in cider-jack-in-clojurescript)
   :bind (:map clojure-mode-map
 	([f7] . cider-jack-in)
 	:map cider-repl-mode-map
