@@ -80,6 +80,8 @@
   (quelpa-update-melpa-p nil "Don't update the MELPA git repo."))
 
 (use-package quelpa-use-package
+  :preface
+  (declare-function quelpa-use-package-activate-advice "quelpa-use-package")
   :config
   (quelpa-use-package-activate-advice))
 
