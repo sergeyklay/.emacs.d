@@ -79,7 +79,9 @@
   (quelpa-checkout-melpa-p nil)
   (quelpa-update-melpa-p nil "Don't update the MELPA git repo."))
 
-(use-package quelpa-use-package)
+(use-package quelpa-use-package
+  :config
+  (quelpa-use-package-activate-advice))
 
 ;;; Utilities for `list-packages' menu
 
