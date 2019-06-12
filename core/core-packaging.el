@@ -37,7 +37,7 @@
       '(("org"      . "http://orgmode.org/elpa/")
         ("melpa"    . "http://melpa.org/packages/")
         ("m-stable" . "http://stable.melpa.org/packages/")
-        ("gnu"      . "https://elpa.gnu.org/packages/")))
+        ("elpa"     . "https://elpa.gnu.org/packages/")))
 
 ;; Priorities. Default priority is 0.
 (setq package-archive-priorities
@@ -46,20 +46,40 @@
 
 ;; Initialize package manager.
 (package-initialize)
-(unless package-archive-contents (package-refresh-contents))
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-(eval-when-compile (require 'use-package))
+(eval-when-compile
+  (require 'use-package))
 
 ;; All packages should be installed.
 (setq use-package-always-ensure t)
 (setq use-package-verbose emacs-debug-mode)
 
 (require 'bind-key)
+
+;; Quelpa support
+(defvar quelpa-dir)
+
+(use-package quelpa
+  :defer t
+  :init
+  (setq quelpa-dir
+	(concat
+	 (substitute-in-file-name "$HOME/.local/lib/emacs/")
+	 "packages/" emacs-version "/quelpa"))
+  (unless (file-exists-p quelpa-dir)
+    (make-directory quelpa-dir t))
+  :custom
+  (quelpa-checkout-melpa-p nil)
+  (quelpa-update-melpa-p nil "Don't update the MELPA git repo."))
+
+(use-package quelpa-use-package)
 
 ;;; Utilities for `list-packages' menu
 

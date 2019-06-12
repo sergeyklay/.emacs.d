@@ -82,5 +82,13 @@
   :commands (ivy-pass)
   :bind ("C-c p" . ivy-pass))
 
+(use-package use-package-secrets
+  :custom
+  (use-package-secrets-default-directory user-etc-dir)
+  :quelpa
+  (use-package-secrets :repo "a13/use-package-secrets"
+		       :fetcher github
+		       :version original))
+
 (provide 'core-gpg)
 ;;; core-gpg.el ends here
