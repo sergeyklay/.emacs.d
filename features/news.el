@@ -16,6 +16,7 @@
 ;;; Code:
 
 (require 'core-news)
+(require 'core-gpg)
 (require 'gnus-msg)
 
 (setq gnus-secondary-select-methods
@@ -38,24 +39,12 @@
       ;; I want to be able to read the emails I wrote.
       mml-secure-openpgp-encrypt-to-self t)
 
-(setq gnus-posting-styles
-      '(("nnimap\\+personal:.*"
-         (name "Serghei Iakovlev")
-         (address (my/get-gmail-imap-user "personal"))
-         (signature-file ,(concat user-etc-dir "signature"))
-         ;; Gmail does not require any handling for sent messages.  The server
-         ;; will automatically save them to the Sent folder and that folder will
-         ;; get synced locally through my email setup.
-         (gcc nil)
-         ("X-Message-SMTP-Method"
-          (concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "personal"))))
-        ("nnimap\\+work:.*"
-         (name "Serghei Iakovlev")
-         (address (my/get-gmail-imap-user "work"))
-         (signature-file ,(concat user-etc-dir "signature"))
-         (gcc nil)
-         ("X-Message-SMTP-Method"
-          (concat "smtp smtp.gmail.com 587 " (my/get-gmail-imap-user "work"))))))
+;; Personal gnus cofiguration for `gnus-posting-styles', etc
+(use-package gnus-msg
+  :ensure nil
+  :if (file-exists-p
+       (concat use-package-secrets-default-directory "mail.el.gpg"))
+  :secret "mail.el.gpg")
 
 (eval-after-load 'gnus-topic
   '(progn
