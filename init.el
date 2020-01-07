@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; This file is used as a bootstrap for GNU Emacs.
+;; This file is used to initialize GNU Emacs for my daily needs.
 
 ;;; Code:
 
@@ -20,5 +20,9 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (tooltip-mode -1)
+
+;; Personal information
+(setq user-full-name "Serghei Iakovlev"
+      user-mail-address "egrep@protonmail.ch")
 
 ;;; init.el ends here
