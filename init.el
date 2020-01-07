@@ -123,8 +123,12 @@ are running on, as a string.")
 (eval-when-compile
   (require 'use-package))
 
+
 ;; All packages should be installed.
 (setq use-package-always-ensure t)
+(setq use-package-verbose emacs-debug-mode)
+
+(require 'bind-key)
 
 ;;; Personal information
 
@@ -154,7 +158,20 @@ are running on, as a string.")
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
 
-(global-set-key (kbd "M-<f12>") 'switch-theme)
-(global-set-key (kbd "M-<f11>") 'disable-active-themes)
+(bind-key "M-<f12>" 'switch-theme)
+(bind-key "M-<f11>" 'disable-active-themes)
+
+;; One Dark Theme
+
+(use-package one-themes
+  :if (window-system)
+  :config
+  (switch-theme 'one-dark))
+
+;; Steve Purcell's Tomorrow theme
+
+(use-package color-theme-sanityinc-tomorrow
+  :config
+  (switch-theme 'sanityinc-tomorrow-night))
 
 ;;; init.el ends here
