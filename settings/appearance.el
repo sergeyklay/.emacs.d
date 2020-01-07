@@ -65,16 +65,18 @@
   (cond ((eq line-spacing nil)
 	 (setq line-spacing 0.24))
 	((= line-spacing 0)
-	 (setq line-spacing 0.5))
+	 (setq line-spacing 0.24))
 	(t
 	 (setq line-spacing 0))))
 
 ;;; Theme
 
-;; I tend to switch themes more often than normal.
-;; Thus there are convenient theme functions to manipulate
-;; them intercatively.
-
+;; I tend to switch themes more often than normal.  For example,
+;; switching to a lighter theme (such as the default) or to a
+;; different theme depending on the time of day or my mood.  Normally,
+;; switching themes is a multi-step process with `disable-theme' and
+;; `load-theme'.  The `switch-theme' function will do that in one
+;; swoop.  I just choose which theme I want to go to.
 (defun klay/switch-theme (theme)
   "Disables any currently active themes and loads THEME."
   ;; This interactive call is taken from `load-theme'
@@ -92,24 +94,28 @@
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
 
-(bind-key "M-<f12>" 'klay/switch-theme)
-(bind-key "M-<f11>" 'klay/disable-active-themes)
+(bind-key "<f12>" 'klay/switch-theme)
+(bind-key "<f11>" 'klay/disable-active-themes)
 
 ;; Steve Purcell's Tomorrow theme
 
-(use-package color-theme-sanityinc-tomorrow
-  :if (not (window-system))
+(use-package nord-theme
   :ensure t
   :config
-  (klay/switch-theme 'sanityinc-tomorrow-night))
+  (klay/switch-theme 'nord))
 
 ;; One Dark Theme
 
 (use-package one-themes
-  :if (window-system)
   :ensure t
   :config
   (klay/switch-theme 'one-dark))
+
+;;; Modeline
+
+;; Activate column and line number in the modeline.
+(column-number-mode t)
+(line-number-mode t)
 
 (provide 'appearance)
 ;;; appearance.el ends here

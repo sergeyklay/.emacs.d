@@ -1,4 +1,3 @@
-
 ;;; init.el --- Initialization file. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
