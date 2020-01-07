@@ -33,11 +33,10 @@
 ;;; Begin initialization
 
 ;; Turn off mouse interface early in startup to avoid momentary display.
-(when window-system
-  (menu-bar-mode -1)   ; Disable the menu bar
-  (tool-bar-mode -1)   ; Disable the tool bar
-  (scroll-bar-mode -1) ; Disable the scroll bar
-  (tooltip-mode -1))   ; Disable the tooltips
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))     ; Disable the menu bar
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))     ; Disable the tool bar
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)) ; Disable the scroll bar
+(if (fboundp 'tooltip-mode) (tooltip-mode -1))       ; Disable the tooltips
 
 ;; Don't save customizations at all, prefer to set things explicitly.
 (setq custom-file null-device)
