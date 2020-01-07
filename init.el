@@ -64,6 +64,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (defconst user-site-lisp-dir (concat user-emacs-directory "site-lisp/")
   "Local site-lisp directory.")
 
+(defconst user-settings-dir (concat user-emacs-directory "settings/")
+  "All the configuration should located here.")
+
 (defconst user-local-dir (concat user-emacs-directory ".local/")
   "Root directory for local Emacs files.
 Use this as permanent storage for files that are safe to share across
@@ -150,53 +153,15 @@ are running on, as a string.")
 ;; Setting up the dependencies, features and packages
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
+(add-to-list 'load-path user-settings-dir)
 
 ;;; Personal information
 
 (setq user-full-name "Serghei Iakovlev"
       user-mail-address "egrep@protonmail.ch")
 
-;;; Theme
-
-;; I tend to switch themes more often than normal.
-;; Thus there are convenient theme functions to manipulate
-;; them intercatively.
-
-(defun klay/switch-theme (theme)
-  "Disables any currently active themes and loads THEME."
-  ;; This interactive call is taken from `load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-			     (mapc 'symbol-name
-				   (custom-available-themes))))))
-  (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme custom-enabled-themes)
-    (load-theme theme t)))
-
-(defun klay/disable-active-themes ()
-  "Disables any currently active themes listed in `custom-enabled-themes'."
-  (interactive)
-  (mapc #'disable-theme custom-enabled-themes))
-
-(bind-key "M-<f12>" 'klay/switch-theme)
-(bind-key "M-<f11>" 'klay/disable-active-themes)
-
-;; Steve Purcell's Tomorrow theme
-
-(use-package color-theme-sanityinc-tomorrow
-  :if (not (window-system))
-  :ensure t
-  :config
-  (klay/switch-theme 'sanityinc-tomorrow-night))
-
-;; One Dark Theme
-
-(use-package one-themes
-  :if (window-system)
-  :ensure t
-  :config
-  (klay/switch-theme 'one-dark))
+;; Set up appearance early
+(require 'appearance)
 
 ;;; Languages Support
 
