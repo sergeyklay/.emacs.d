@@ -43,8 +43,8 @@
 (cond
  ((string-equal system-type "gnu/linux")
   (when (member "Source Code Pro" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
-    (add-to-list 'default-frame-alist '(font . "Source Code Pro-13"))))
+    (add-to-list 'initial-frame-alist '(font . "Source Code Pro-10"))
+    (add-to-list 'default-frame-alist '(font . "Source Code Pro-10"))))
  ((string-equal system-type "darwin")
   (when (member "Source Code Pro" (font-family-list))
     (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
@@ -55,6 +55,19 @@
 
 (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
 (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
+
+;; Change default line spacing
+(setq-default line-spacing 0.24)
+
+(defun klay/toggle-line-spacing ()
+  "Toggles line-spacing value between 0 and 0.24"
+  (interactive)
+  (cond ((eq line-spacing nil)
+	 (setq line-spacing 0.24))
+	((= line-spacing 0)
+	 (setq line-spacing 0.5))
+	(t
+	 (setq line-spacing 0))))
 
 ;;; Theme
 
