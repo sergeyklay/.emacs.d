@@ -174,4 +174,13 @@ are running on, as a string.")
   :config
   (switch-theme 'sanityinc-tomorrow-night))
 
+;;; Languages Support
+
+;; Add support for the configuration like languages for GNU Emacs.
+
+;; `yaml-mode' gives me the possibility to easily manage .yml files
+(use-package yaml-mode
+  :mode "\\.ya?ml\\'"
+  :interpreter ("yml" . yml-mode))
+
 ;;; init.el ends here
