@@ -102,14 +102,16 @@
 (use-package nord-theme
   :ensure t
   :config
-  (klay/switch-theme 'nord))
+  (when (not (display-graphic-p))
+    (klay/switch-theme 'nord)))
 
 ;; One Dark Theme
 
 (use-package one-themes
   :ensure t
   :config
-  (klay/switch-theme 'one-dark))
+  (when (display-graphic-p)
+    (klay/switch-theme 'one-dark)))
 
 ;;; Modeline
 
