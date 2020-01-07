@@ -12,14 +12,23 @@
 ;;; Commentary:
 
 ;; This file is used to initialize GNU Emacs for my daily needs.
+;;
+;; I started this project on 4 March 2019 from this commit:
+;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
 ;;; Code:
 
-;; Turn off mouse interface early in startup to avoid momentary display
+;; Turn off mouse interface early in startup to avoid momentary display.
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (tooltip-mode -1)
+
+;; Don't save customizations at all, prefer to set things explicitly.
+(setq custom-file null-device)
+
+;; One less file to load at startup.
+(setq site-run-file nil)
 
 ;; Personal information
 (setq user-full-name "Serghei Iakovlev"
