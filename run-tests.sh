@@ -2,9 +2,10 @@
 
 set -eu
 
-${EMACS:=emacs} \
-    -nw \
-    -u $(pwd)/init.el \
+EMACS="${EMACS:=emacs}"
+
+${EMACS} \
+    --no-window-system \
     --batch \
     --eval '(let ((debug-on-error t)
                   (url-show-status nil)

@@ -30,5 +30,4 @@ jobs:
           fetch-depth: 5
 
       - name: Run tests
-        run:  ./run-tests.sh
-
+        run:  ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./run-tests.sh
