@@ -10,23 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
+
       matrix:
         emacs_version:
-	  - '26.1'
-	  - '26.2'
-	  - '26.3'
-	  - snapshot
+          - '26.1'
+          - '26.2'
+          - '26.3'
+          - snapshot
 
     steps:
       - uses: purcell/setup-emacs@master
         with:
-	  version: ${{ matrix.emacs_version }}
+          version: ${{ matrix.emacs_version }}
 
 
       - uses: actions/checkout@v2-beta
         with:
-	  fetch-depth: 5
+          fetch-depth: 5
 
       - name: Run tests
         run:  ./run-tests.sh
-        
+
