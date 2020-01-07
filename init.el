@@ -128,6 +128,30 @@ are running on, as a string.")
 
 (require 'bind-key)
 
+;;; Utilities for `list-packages' menu
+
+;; Add functions to filter the list by status (s new), or filter to see only
+;; marked packages.
+
+(defun klay/package-menu-find-marks ()
+  "Find packages marked for action in *Packages*."
+  (interactive)
+  (occur "^[A-Z]"))
+
+(defun klay/package-menu-filter-by-status (status)
+  "Filter the *Packages* buffer by STATUS."
+  (interactive
+   (list (completing-read
+          "Status : " '("new" "installed" "dependency" "obsolete"))))
+  (package-menu-filter (concat "status:" status)))
+
+(define-key package-menu-mode-map "s" #'klay/package-menu-filter-by-status)
+(define-key package-menu-mode-map "a" #'klay/package-menu-find-marks)
+
+;; Setting up the dependencies, features and packages
+(add-to-list 'load-path user-host-dir)
+(add-to-list 'load-path user-site-lisp-dir)
+
 ;;; Personal information
 
 (setq user-full-name "Serghei Iakovlev"
@@ -139,7 +163,7 @@ are running on, as a string.")
 ;; Thus there are convenient theme functions to manipulate
 ;; them intercatively.
 
-(defun switch-theme (theme)
+(defun klay/switch-theme (theme)
   "Disables any currently active themes and loads THEME."
   ;; This interactive call is taken from `load-theme'
   (interactive
@@ -151,13 +175,21 @@ are running on, as a string.")
     (mapc #'disable-theme custom-enabled-themes)
     (load-theme theme t)))
 
-(defun disable-active-themes ()
+(defun klay/disable-active-themes ()
   "Disables any currently active themes listed in `custom-enabled-themes'."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
 
-(bind-key "M-<f12>" 'switch-theme)
-(bind-key "M-<f11>" 'disable-active-themes)
+(bind-key "M-<f12>" 'klay/switch-theme)
+(bind-key "M-<f11>" 'klay/disable-active-themes)
+
+;; Steve Purcell's Tomorrow theme
+
+(use-package color-theme-sanityinc-tomorrow
+  :if (not (window-system))
+  :ensure t
+  :config
+  (klay/switch-theme 'sanityinc-tomorrow-night))
 
 ;; One Dark Theme
 
@@ -165,14 +197,7 @@ are running on, as a string.")
   :if (window-system)
   :ensure t
   :config
-  (switch-theme 'one-dark))
-
-;; Steve Purcell's Tomorrow theme
-
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :config
-  (switch-theme 'sanityinc-tomorrow-night))
+  (klay/switch-theme 'one-dark))
 
 ;;; Languages Support
 
