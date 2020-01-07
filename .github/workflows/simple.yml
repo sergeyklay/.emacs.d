@@ -20,13 +20,13 @@ jobs:
           - snapshot
 
     steps:
-    - uses: actions/cache@v1
-      name: Setup ELPA packages cache
-      with:
-        path: ~/.local/lib/emacs/packages
-        key: ${{ runner.os }}-elpa-${{ matrix.emacs_version }}-${{ hashFiles('**/init.el') }}
-        restore-keys: |
-          ${{ runner.os }}-elpa-${{ matrix.emacs_version }}-
+      - uses: actions/cache@v1
+        name: Setup ELPA packages cache
+        with:
+          path: ~/.local/lib/emacs/packages
+          key: ${{ runner.os }}-elpa-${{ matrix.emacs_version }}-${{ hashFiles('**/init.el') }}
+          restore-keys: |
+            ${{ runner.os }}-elpa-${{ matrix.emacs_version }}-
 
       - uses: purcell/setup-emacs@master
         with:
