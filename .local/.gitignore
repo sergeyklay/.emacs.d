@@ -5,8 +5,10 @@
 #
 # https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
 
-# Directories to ignore (do not add trailing '/'s, they skip symlinks).
-/.cask
+# Ignore all files
+*
 
-# Use this as your own wish list or a temporary buffer
-LATER
+# Except these ones
+!/etc
+!/cache
+!.gitignore
