@@ -124,9 +124,6 @@ are running on, as a string.")
 (eval-when-compile
   (require 'use-package))
 
-
-;; All packages should be installed.
-(setq use-package-always-ensure t)
 (setq use-package-verbose emacs-debug-mode)
 
 (require 'bind-key)
@@ -166,12 +163,14 @@ are running on, as a string.")
 
 (use-package one-themes
   :if (window-system)
+  :ensure t
   :config
   (switch-theme 'one-dark))
 
 ;; Steve Purcell's Tomorrow theme
 
 (use-package color-theme-sanityinc-tomorrow
+  :ensure t
   :config
   (switch-theme 'sanityinc-tomorrow-night))
 
