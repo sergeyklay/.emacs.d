@@ -13,5 +13,4 @@ This project is open source software licensed under the GNU General
 Public Licence version 3.
 
 [actions link]: https://github.com/sergeyklay/.emacs.d/actions
-[actions-badge]:
-https://github.com/sergeyklay/.emacs.d/workflows/simple/badge.svg
+[actions-badge]: https://github.com/sergeyklay/.emacs.d/workflows/simple/badge.svg
