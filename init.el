@@ -14,18 +14,6 @@
 ;;   This file is used to initialize GNU Emacs for my daily needs.
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
-;;
-;; This configuration is partially based on the following user
-;; configurations:
-;;
-;; - Sacha Chua (sachac)
-;;   (see URL `https://github.com/sachac')
-;; - Daniel Mai (danielmai)
-;;   (see URL `https://github.com/danielmai')
-;; - Terencio Agozzino (rememberYou)
-;;   (see URL `https://github.com/rememberYou')
-;;
-;; Thanks to them for their incredible work!
 
 ;;; Code:
 
