@@ -10,3 +10,8 @@
 
 # Use this as your own wish list or a temporary buffer
 LATER
+
+# I'm use file locking feature.
+# The utility would be reduced to preventing you from simultaneously
+# using multiple separate emacs instances to edit/write a given file.
+.\#*
