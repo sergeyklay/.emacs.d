@@ -76,6 +76,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (require 'packaging)  ; Package management stuff and various related settings
 (require 'appearance) ; Set up appearance as soon as we can
 (require 'backup)
+(require 'vcs)        ; VCS (mostly git) related features
 
 ;;; Languages Support
 
