@@ -63,70 +63,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (require 'directories (concat user-emacs-directory "settings/directories"))
 
-;;; Bootstrap packaging system
-
-(require 'package)
-
-(setq package--init-file-ensured t)
-(setq package-user-dir
-      (concat
-       (substitute-in-file-name "$HOME/.local/lib/emacs/")
-       "packages/" emacs-version "/elpa"))
-
-(unless (file-exists-p package-user-dir)
-  (make-directory package-user-dir t))
-
-(setq package-gnupghome-dir
-      (expand-file-name "gnupg" user-local-dir))
-
-(setq package-archives
-      '(("org"      . "http://orgmode.org/elpa/")
-        ("melpa"    . "http://melpa.org/packages/")
-        ("m-stable" . "http://stable.melpa.org/packages/")
-        ("elpa"     . "https://elpa.gnu.org/packages/")))
-
-;; Priorities. Default priority is 0.
-(setq package-archive-priorities
-      '(("m-stable" . 10)
-        ("melpa" . 20)))
-
-;; Initialize package manager.
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
-;; Install use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-
-(setq use-package-verbose emacs-debug-mode)
-
-(require 'bind-key)
-
-;;; Utilities for `list-packages' menu
-
-;; Add functions to filter the list by status (s new), or filter to see only
-;; marked packages.
-
-(defun klay/package-menu-find-marks ()
-  "Find packages marked for action in *Packages*."
-  (interactive)
-  (occur "^[A-Z]"))
-
-(defun klay/package-menu-filter-by-status (status)
-  "Filter the *Packages* buffer by STATUS."
-  (interactive
-   (list (completing-read
-          "Status : " '("new" "installed" "dependency" "obsolete"))))
-  (package-menu-filter (concat "status:" status)))
-
-(define-key package-menu-mode-map "s" #'klay/package-menu-filter-by-status)
-(define-key package-menu-mode-map "a" #'klay/package-menu-find-marks)
-
 ;; Setting up the dependencies, features and packages
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
@@ -137,8 +73,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq user-full-name "Serghei Iakovlev"
       user-mail-address "egrep@protonmail.ch")
 
-;; Set up appearance early
-(require 'appearance)
+(require 'packaging)  ; Package management stuff and various related settings
+(require 'appearance) ; Set up appearance as soon as we can
 (require 'backup)
 
 ;;; Languages Support
