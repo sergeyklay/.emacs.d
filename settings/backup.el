@@ -56,7 +56,7 @@
 ;;; History
 
 (setq-default
- history-length 500
+ history-length 1000
  history-delete-duplicates t
  savehist-file (concat user-cache-dir "minibuffer-history.el"))
 
