@@ -84,7 +84,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; `yaml-mode' gives me the possibility to easily manage .yml files
 (use-package yaml-mode
-  :ensure t
   :mode "\\.ya?ml\\'"
   :interpreter ("yml" . yml-mode))
 

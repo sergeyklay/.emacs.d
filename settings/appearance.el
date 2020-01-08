@@ -37,7 +37,6 @@
 
 ;; Pretify page breaks.
 (use-package page-break-lines
-  :ensure t
   :config
   (global-page-break-lines-mode))
 
@@ -55,8 +54,7 @@
     (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
     (add-to-list 'default-frame-alist '(font . "Source Code Pro-13")))))
 
-(use-package unicode-fonts
-  :ensure t)
+(use-package unicode-fonts)
 
 (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
 (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
@@ -105,7 +103,6 @@
 ;; Steve Purcell's Tomorrow theme
 
 (use-package nord-theme
-  :ensure t
   :config
   (when (not (display-graphic-p))
     (klay/switch-theme 'nord)))
@@ -113,7 +110,6 @@
 ;; One Dark Theme
 
 (use-package one-themes
-  :ensure t
   :config
   (when (display-graphic-p)
     (klay/switch-theme 'one-dark)))

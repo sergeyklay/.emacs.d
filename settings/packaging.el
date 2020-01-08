@@ -52,6 +52,11 @@
 (eval-when-compile
   (require 'use-package))
 
+;; All packages should be installed.
+;; TODO: Do I really need ALL packages on fisrt run
+;; on a new PC?
+(setq use-package-always-ensure t)
+
 (when (boundp 'emacs-debug-mode)
   (setq use-package-verbose emacs-debug-mode))
 
