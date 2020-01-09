@@ -47,6 +47,14 @@
   (setq display-line-numbers-type t
 	display-line-numbers-width 4))
 
+;; Save point position between sessions
+(use-package saveplace
+  :ensure nil
+  :config
+  (setq save-place-file (concat user-cache-dir "places"))
+  ;; Automatically save place in each file.
+  (save-place-mode t))
+
 ;; Editorconfig
 ;;
 ;; Editorconfig is a configuration format for controlling the
