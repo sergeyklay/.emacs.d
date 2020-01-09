@@ -16,7 +16,10 @@
 ;;; Code:
 
 (use-package cmake-mode
-  :commands cmake-mode
+  :mode "CMakeLists\\.txt\\'"
+  :mode "\\.cmake\\'"
+  :hook
+  ((cmake-mode . company-mode))
   :config
   (setq cmake-tab-width tab-width))
 
