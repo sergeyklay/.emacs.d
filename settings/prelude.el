@@ -47,10 +47,15 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (require 'directories (concat user-emacs-directory "settings/directories"))
 
-;; Setting up the dependencies, features and packages
+;; Set up load path.
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
 (add-to-list 'load-path user-settings-dir)
+
+;; Add external projects to load path.
+(dolist (pkg (directory-files user-site-lisp-dir t "\\w+"))
+  (when (file-directory-p pkg)
+    (add-to-list 'load-path pkg)))
 
 ;; Maximize GNU Emacs frame on startup.
 ;; It also applies to new clients that connect to GNU Emacs server
