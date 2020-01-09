@@ -27,6 +27,7 @@
 (require 'editor)     ; Features related to the behavior of the editor
 (require 'p13n)       ; Personalization related stuff
 (require 'vcs)        ; VCS (mostly git) related features
+(require 'completion) ; Set up completion system
 
 (require 'langs-conf) ; Add support for the configuration like languages
 
