@@ -51,6 +51,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
 (add-to-list 'load-path user-settings-dir)
+(add-to-list 'load-path user-defuns-dir)
 
 ;; Add external projects to load path.
 (dolist (pkg (directory-files user-site-lisp-dir t "\\w+"))

@@ -21,6 +21,9 @@
 (defconst user-settings-dir (concat user-emacs-directory "settings/")
   "All the configuration should located here.")
 
+(defconst user-defuns-dir (concat user-emacs-directory "defuns/")
+  "A common place to store user's defuns.")
+
 (defconst user-local-dir (concat user-emacs-directory ".local/")
   "Root directory for local Emacs files.
 Use this as permanent storage for files that are safe to share across
