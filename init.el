@@ -28,13 +28,6 @@
 (require 'p13n)       ; Personalization related stuff
 (require 'vcs)        ; VCS (mostly git) related features
 
-;;; Languages Support
-
-;; Add support for the configuration like languages for GNU Emacs.
-
-;; `yaml-mode' gives me the possibility to easily manage .yml files
-(use-package yaml-mode
-  :mode "\\.ya?ml\\'"
-  :interpreter ("yml" . yml-mode))
+(require 'langs-conf) ; Add support for the configuration like languages
 
 ;;; init.el ends here
