@@ -59,7 +59,7 @@
 (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
 (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
 
-;; Change default line spacing
+;; Change default line spacing.
 (setq-default line-spacing 0.24)
 
 (defun klay/toggle-line-spacing ()
@@ -72,7 +72,7 @@
 	(t
 	 (setq line-spacing 0))))
 
-;;; Theme
+;;;; Theme
 
 ;; I tend to switch themes more often than normal.  For example,
 ;; switching to a lighter theme (such as the default) or to a
@@ -101,20 +101,18 @@
 (bind-key "<C-f11>" 'klay/disable-active-themes)
 
 ;; Steve Purcell's Tomorrow theme
-
 (use-package nord-theme
   :config
   (when (not (display-graphic-p))
     (klay/switch-theme 'nord)))
 
 ;; One Dark Theme
-
 (use-package one-themes
   :config
   (when (display-graphic-p)
     (klay/switch-theme 'one-dark)))
 
-;;; Modeline
+;;;; Modeline
 
 ;; Activate column and line number in the modeline.
 (column-number-mode t)

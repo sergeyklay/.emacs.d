@@ -15,10 +15,7 @@
 
 ;;; Code:
 
-;;(eval-when-compile
-;; (require 'ivy))
-
-;;; Ivy
+;;;; Ivy
 
 (use-package ivy
   :defer 0.1
@@ -58,7 +55,7 @@
   (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
   (add-to-list 'ivy-ignore-buffers "TAGS"))
 
-;;; Counsel
+;;;; Counsel
 
 (use-package counsel
   :requires ivy
@@ -79,7 +76,7 @@
 
 (define-key minibuffer-local-map (kbd "C-r") #'counsel-minibuffer-history)
 
-;;; Swiper
+;;;; Swiper
 
 (use-package swiper
   :after ivy

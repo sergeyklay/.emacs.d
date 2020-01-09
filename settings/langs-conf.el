@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-;; JSON
+;;;; JSON
 
 (use-package json-mode
   :mode "\\.js\\(on\\|[hl]int\\(rc\\)?\\)\\'"
@@ -23,18 +23,18 @@
   (bind-keys :map json-mode-map
 	     ("C-c <tab>" . json-mode-beautify)))
 
-;; Ini
+;;;; Ini
 
 (use-package ini-mode
   :mode "\\.ini\\'")
 
-;; Dotenv
+;;;; Dotenv
 
 (use-package dotenv-mode
   :mode "\\.env\\'"
   :mode "\\.env\\..*\\'")
 
-;; Vim
+;;;; Vim
 
 (use-package vimrc-mode
   :mode "/\\.?g?vimrc\\'"
@@ -42,17 +42,18 @@
   :mode "\\.?vimperatorrc\\'"
   :mode "\\.vimp\\'")
 
-;; `yaml-mode' gives me the possibility to easily manage .yml files
+;;;; Yaml
+
 (use-package yaml-mode
   :mode "\\.ya?ml\\'"
   :interpreter ("yml" . yml-mode))
 
-;; Autoconf
+;;;; Autoconf
 
 (add-to-list 'auto-mode-alist
              '("/config\\.\\(ac\\|in\\|m4\\)\\'" . autoconf-mode))
 
-;; Nginx
+;;;; Nginx
 
 (use-package nginx-mode
   :mode (("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode)

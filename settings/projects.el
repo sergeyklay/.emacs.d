@@ -17,6 +17,8 @@
 
 (require 'directories)
 
+;;;; Ivy
+
 (use-package projectile
   :after ivy
   :init
@@ -39,6 +41,8 @@
   (setq projectile-completion-system 'ivy)
   (dolist (dir '("elpa" ".cpcache"))
     (add-to-list 'projectile-globally-ignored-directories dir)))
+
+;;;; Counsel Projectile
 
 (use-package counsel-projectile
   :after (ivy counsel projectile)

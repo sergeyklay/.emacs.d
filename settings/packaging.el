@@ -64,10 +64,7 @@
 
 (require 'bind-key)
 
-;;; Utilities for `list-packages' menu
-
-;; Add functions to filter the list by status (s new), or filter to see only
-;; marked packages.
+;;;; Utilities for `list-packages' menu
 
 (defun klay/package-menu-find-marks ()
   "Find packages marked for action in *Packages*."

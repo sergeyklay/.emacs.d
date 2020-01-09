@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-;;; Markdown mode
+;;;; Markdown mode
 
 (use-package markdown-mode
   :mode ("/README\\(?:\\.\\(?:markdown\\|md\\)\\)?\\'" . gfm-mode)

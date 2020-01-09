@@ -17,7 +17,7 @@
 
 (require 'directories)
 
-;;; Backup
+;;;; Backup
 
 ;; Delete excess backup versions silently.
 (setq delete-old-versions t)
@@ -35,7 +35,7 @@
   (unless (file-exists-p my-backup-dir)
     (make-directory my-backup-dir t)))
 
-;;; Auto-Saving
+;;;; Auto-Saving
 
 (let ((my-auto-save-dir (concat user-cache-dir "autosave/")))
   (setq
@@ -53,7 +53,7 @@
       auto-save-timeout 10
       auto-save-interval 200)
 
-;;; History
+;;;; History
 
 (setq-default
  history-length 1000
