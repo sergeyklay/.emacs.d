@@ -4,7 +4,7 @@ echo "Attempting startup..."
 
 EMACS=${EMACS:-emacs}
 
-command -v $EMACS >/dev/null || {
+command -v "$EMACS" >/dev/null || {
   >&2 echo "Can't find GNU Emacs in your PATH"
   exit 1
 }
@@ -29,10 +29,16 @@ ${EMACS} \
     --batch \
     --eval "$tpl"
 
-for f in $(find settings -type f -name '*.el' -print)
+t="$(mktemp elisp-files.XXX)"
+
+find settings -type f -name '*.el' > "$t"
+echo init.el >> "$t"
+
+while IFS= read -r file
 do
   ${EMACS} \
-    -Q --batch --eval "(checkdoc-file \"$f\")"
-done
+    -Q --batch --eval "(checkdoc-file \"$file\")"
+done < "$t"
+rm "$t"
 
 echo "Startup successful"
