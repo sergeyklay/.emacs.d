@@ -64,15 +64,5 @@
   ((nginx-mode . company-mode)
    (nginx-mode . company-nginx-keywords)))
 
-;; SSH
-
-(use-package ssh-config-mode
-  :mode (("/\\.ssh/config\\'" . ssh-config-mode)
-         ("/sshd?_config\\'" . ssh-config-mode)
-         ("/known_hosts\\'" . ssh-known-hosts-mode)
-         ("/authorized_keys\\'" . ssh-authorized-keys-mode))
-  :hook
-  (ssh-config-mode . turn-on-font-lock))
-
 (provide 'langs-conf)
 ;;; langs-conf.el ends here
