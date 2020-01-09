@@ -22,22 +22,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2-beta
         with:
-          fetch-depth: 5
-
-      - uses: actions/cache@v1
-        name: Setup ELPA packages cache
-        with:
-          path: ~/.local/lib/emacs/packages
-          key: ${{ runner.os }}-elpa-${{ matrix.emacs_version }}-${{ hashFiles('**/init.el') }}
-          restore-keys: |
-            ${{ runner.os }}-elpa-${{ matrix.emacs_version }}-
+          fetch-depth: 1
 
       - uses: purcell/setup-emacs@master
         with:
           version: ${{ matrix.emacs_version }}
 
       - name: Run tests
-        run:  ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./run-tests.sh --debug
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./run-tests.sh --debug
 
       - name: Run Shell Check
         if: always()
