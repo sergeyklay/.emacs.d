@@ -9,20 +9,30 @@ command -v $EMACS >/dev/null || {
   exit 1
 }
 
-[ "$1" = -d ] || [ "$1" = --debug ] && {
+[ -n "${1-}" ] && {
+  [ "$1" = -d ] || [ "$1" = --debug ] && {
     shift
     export DEBUG=1
+  }
 }
+
+tpl='(let ((debug-on-error t)
+          (url-show-status nil)
+          (user-emacs-directory default-directory)
+          (user-init-file (expand-file-name "init.el"))
+          (load-path (delq default-directory load-path)))
+      (load-file user-init-file)
+      (run-hooks (quote after-init-hook)))'
 
 ${EMACS} \
     --no-window-system \
     --batch \
-    --eval '(let ((debug-on-error t)
-                  (url-show-status nil)
-                  (user-emacs-directory default-directory)
-                  (user-init-file (expand-file-name "init.el"))
-                  (load-path (delq default-directory load-path)))
-               (load-file user-init-file)
-               (run-hooks (quote after-init-hook)))'
+    --eval "$tpl"
+
+for f in $(find settings -type f -name '*.el' -print)
+do
+  ${EMACS} \
+    -Q --batch --eval "(checkdoc-file \"$f\")"
+done
 
 echo "Startup successful"
