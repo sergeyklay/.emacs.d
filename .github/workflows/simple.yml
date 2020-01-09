@@ -34,6 +34,3 @@ jobs:
       - name: Run Shell Check
         if: always()
         run: shellcheck ./run-tests.sh
-
-      - name: Debug local folder
-        run: tree -a .local | grep -E -v ".*~$"
