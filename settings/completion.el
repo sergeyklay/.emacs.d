@@ -85,5 +85,42 @@
         :map swiper-map
         ("M-%" . swiper-query-replace)))
 
+;;;; Company
+
+(use-package company
+  :defer t
+  :init
+  (setq company-idle-delay nil ; never start completions automatically
+        company-echo-delay 0
+        company-tooltip-align-annotations t
+        company-tooltip-limit 10
+        company-selection-wrap-around t
+        company-show-numbers t)
+  :custom
+  (company-dabbrev-ignore-case nil)
+  (company-dabbrev-downcase nil)
+  :bind
+  (:map company-active-map
+        ("SPC" . company-abort)))
+
+(eval-after-load 'company
+  '(progn
+     ;; Map tab to cycle through the completion options
+     (when (fboundp 'company-complete-common-or-cycle)
+       (global-set-key (kbd "M-TAB") #'company-complete-common-or-cycle))
+
+     ;; make TAB complete, without losing the ability to manually indent
+     (when (fboundp 'company-indent-or-complete-common)
+       (global-set-key (kbd "TAB") #'company-indent-or-complete-common))))
+
+(use-package company-statistics
+  :after company
+  :defer t
+  :hook
+  (company-mode . company-statistics-mode)
+  :config
+  (setq company-statistics-file
+        (concat user-cache-dir "company-statistics-cache.el")))
+
 (provide 'completion)
 ;;; completion.el ends here
