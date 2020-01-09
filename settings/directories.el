@@ -36,9 +36,7 @@ external dependencies or long-term shared data.")
 Use this for files that change often, like cache files.")
 
 (defconst user-host-dir (concat user-etc-dir "hosts/" (system-name))
-  "The directory with user-specific Emacs settings.
-Function `system-name' returns the host name of the machine you
-are running on, as a string.")
+  "The directory with user-specific Emacs settings.")
 
 (provide 'directories)
 ;;; directories.el ends here
