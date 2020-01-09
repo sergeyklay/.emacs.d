@@ -63,7 +63,7 @@
 (setq-default line-spacing 0.24)
 
 (defun klay/toggle-line-spacing ()
-  "Toggles line-spacing value between 0 and 0.24"
+  "Toggle `line-spacing' value between 0 and 0.24."
   (interactive)
   (cond ((eq line-spacing nil)
 	 (setq line-spacing 0.24))
@@ -81,7 +81,7 @@
 ;; `load-theme'.  The `switch-theme' function will do that in one
 ;; swoop.  I just choose which theme I want to go to.
 (defun klay/switch-theme (theme)
-  "Disables any currently active themes and loads THEME."
+  "Disable any currently active themes and load the THEME."
   ;; This interactive call is taken from `load-theme'
   (interactive
    (list
@@ -93,7 +93,7 @@
     (load-theme theme t)))
 
 (defun klay/disable-active-themes ()
-  "Disables any currently active themes listed in `custom-enabled-themes'."
+  "Disable any currently active themes listed in `custom-enabled-themes'."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
 

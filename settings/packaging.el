@@ -13,6 +13,8 @@
 
 ;; Bootstrap packaging system.
 
+;;; Code:
+
 (require 'package)
 (require 'directories)
 

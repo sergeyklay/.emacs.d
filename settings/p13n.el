@@ -13,6 +13,8 @@
 
 ;; This file should contain all personalization related stuff.
 
+;;; Code:
+
 (setq user-full-name "Serghei Iakovlev"
       user-mail-address "egrep@protonmail.ch")
 

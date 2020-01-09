@@ -1,4 +1,4 @@
-;;; directories.el --- Directories configuration . -*- lexical-binding: t; -*-
+;;; directories.el --- Global directories configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
