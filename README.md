@@ -7,6 +7,12 @@ I use on the daily and port around from system to system with me.
 
 Known to work with GNU Emacs 26.1 and later.
 
+## Prerequisites
+
+This project rely on the following list of applications:
+
+* [Pandoc](https://pandoc.org)
+
 ## License
 
 This project is open source software licensed under the GNU General

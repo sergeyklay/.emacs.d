@@ -38,3 +38,6 @@ jobs:
 
       - name: Run tests
         run:  ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./run-tests.sh --debug
+
+      - name: Debug local folder
+        run: tree -a .local | grep -E -v ".*~$"

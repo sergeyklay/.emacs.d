@@ -31,5 +31,6 @@
 (require 'projects)   ; Project navigation and management
 
 (require 'langs-conf) ; Add support for the configuration like languages
+(require 'langs-md)   ; Add markdown support
 
 ;;; init.el ends here

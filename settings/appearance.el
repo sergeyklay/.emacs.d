@@ -97,8 +97,8 @@
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
 
-(bind-key "<f12>" 'klay/switch-theme)
-(bind-key "<f11>" 'klay/disable-active-themes)
+(bind-key "<C-f12>" 'klay/switch-theme)
+(bind-key "<C-f11>" 'klay/disable-active-themes)
 
 ;; Steve Purcell's Tomorrow theme
 
