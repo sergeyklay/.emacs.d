@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'directories)
+
 ;;;; Ivy
 
 (use-package ivy
@@ -44,12 +46,14 @@
    ivy-use-virtual-buffers t
    ;; Don't use ^ as initial input
    ivy-initial-inputs-alist nil
-   ;; Highlight til EOL
-   ivy-format-function #'ivy-format-function-line
    ;; Allow minibuffer commands while in the minibuffer
    enable-recursive-minibuffers t
    ;; Disable magic slash on non-match
-   ivy-magic-slash-non-match-action nil))
+   ivy-magic-slash-non-match-action nil)
+  (when (and (boundp 'ivy-format-function)
+	     (fboundp 'ivy-format-function-line))
+    ;; Highlight til EOL
+    (setq ivy-format-function #'ivy-format-function-line)))
 
 (with-eval-after-load 'ivy
   (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
@@ -59,9 +63,24 @@
 
 (use-package counsel
   :requires ivy
+  :hook (ivy-mode . counsel-mode)
   :config
   (setq counsel-find-file-ignore-regexp
-        "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)"))
+        "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)")
+  ;; Use faster search tools: ripgrep
+  (let ((command
+	 (cond
+	  ((executable-find "rg")
+	   "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+	  ((executable-find "pt")
+	   "pt -zS --nocolor --nogroup -e %s")
+	  (t counsel-grep-base-command))))
+    (setq counsel-grep-base-command command))
+
+  (when (executable-find "rg")
+    (setq counsel-git-cmd "rg --files")
+    (setq counsel-rg-base-command
+	  "rg -i -M 120 --no-heading --line-number --color never %s .")))
 
 ;; Replace standard keybindings
 (global-set-key (kbd "C-x C-r") #'counsel-recentf)
