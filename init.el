@@ -22,6 +22,7 @@
 
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
+(require 'windows)      ; Windows management features
 (require 'defaults)     ; Sane defaults
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'p13n)         ; Personalization related stuff
