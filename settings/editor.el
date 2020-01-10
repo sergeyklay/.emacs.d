@@ -55,15 +55,6 @@
   ;; Automatically save place in each file.
   (save-place-mode t))
 
-;; Editorconfig
-;;
-;; Editorconfig is a configuration format for controlling the
-;; text attributes for text files.  It is good to use with version
-;; control, especially when contributors develop on different platforms.
-;; For more see URL `https://editorconfig.org'
-(use-package editorconfig
-  :config (editorconfig-mode 1))
-
 ;; Whitespace mode
 (use-package whitespace
   :bind ("C-x t w" . #'whitespace-mode))
