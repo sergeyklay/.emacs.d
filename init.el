@@ -22,8 +22,9 @@
 
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
-(require 'windows)      ; Windows management features
+(require 'modeline)     ; Modeline related configuration
 (require 'defaults)     ; Sane defaults
+(require 'windows)      ; Windows management features
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'p13n)         ; Personalization related stuff
 (require 'vcs)          ; VCS (mostly git) related features

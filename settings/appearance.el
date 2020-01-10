@@ -94,11 +94,5 @@
   (when (not (display-graphic-p))
     (klay/switch-theme 'modus-vivendi)))
 
-;;;; Modeline
-
-;; Activate column and line number in the modeline.
-(column-number-mode t)
-(line-number-mode t)
-
 (provide 'appearance)
 ;;; appearance.el ends here
