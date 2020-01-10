@@ -76,7 +76,7 @@
 			     (mapc 'symbol-name
 				   (custom-available-themes))))))
   (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme custom-enabled-themes)
+    (mapc #'disable-theme enabled-themes)
     (load-theme theme t)))
 
 (defun klay/disable-active-themes ()
@@ -87,17 +87,12 @@
 (bind-key "<C-f12>" 'klay/switch-theme)
 (bind-key "<C-f11>" 'klay/disable-active-themes)
 
-;; Steve Purcell's Tomorrow theme
-(use-package nord-theme
+(use-package modus-operandi-theme)
+
+(use-package modus-vivendi-theme
   :config
   (when (not (display-graphic-p))
-    (klay/switch-theme 'nord)))
-
-;; One Dark Theme
-(use-package one-themes
-  :config
-  (when (display-graphic-p)
-    (klay/switch-theme 'one-dark)))
+    (klay/switch-theme 'modus-vivendi)))
 
 ;;;; Modeline
 
