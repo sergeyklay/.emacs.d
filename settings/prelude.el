@@ -58,11 +58,5 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (when (file-directory-p pkg)
     (add-to-list 'load-path pkg)))
 
-;; Maximize GNU Emacs frame on startup.
-;; It also applies to new clients that connect to GNU Emacs server
-;; (with e.g. emacsclient -c).
-(when (display-graphic-p)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized)))
-
 (provide 'prelude)
 ;;; prelude.el ends here
