@@ -22,6 +22,7 @@
 
 (require 'packaging)   ; Package management stuff and various related settings
 (require 'appearance)  ; Set up appearance as soon as we can
+(require 'defaults)    ; Sane defaults
 (require 'backup)      ; Backup, auto-saving and history configuration
 (require 'bookmarks)   ; Setting for bookmarks, recentf, etc
 (require 'editor)      ; Features related to the behavior of the editor

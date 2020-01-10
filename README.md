@@ -12,6 +12,7 @@ Known to work with GNU Emacs 26.1 and later.
 
 This project rely on the following list of applications:
 
+* [Git](https://git-scm.com)
 * [Pandoc](https://pandoc.org)
 
 ## License
