@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'prelude)
+(require 'backup) ; Backup, auto-saving and history configuration
 (require 'directories)
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
@@ -35,6 +37,38 @@
 
 (add-to-list 'auto-coding-alist '("/#[^/]+#\\'" . utf-8))
 
+;;;; Sane defaults
+
+(setq-default
+ debug-on-error (and (not noninteractive) emacs-debug-mode)
+ vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
+
+ ;; tramp
+ tramp-auto-save-directory    (concat user-cache-dir "tramp/")
+ tramp-backup-directory-alist backup-directory-alist
+ tramp-persistency-file-name  (concat user-cache-dir "tramp-persistency.el")
+
+ ;; nsm
+ nsm-settings-file            (concat user-etc-dir "network-security.data")
+
+ ;; url
+ url-cache-directory          (concat user-cache-dir "url/")
+ url-configuration-directory  (concat user-etc-dir "url/"))
+
+;; Enable disabled by default commands permanently
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+;; Open URLs with xdg-open
+(setq browse-url-browser-function 'browse-url-xdg-open)
+
+;; I use C source to understand and debug built-in functions
+(let ((src "$HOME/src/emacs"))
+  (when (or (file-directory-p src)
+	    (file-symlink-p src))
+  (setq source-directory
+	(expand-file-name (substitute-in-file-name src)))))
+
 ;;;; Tutorial
 
 (advice-add
@@ -44,6 +78,11 @@
                (unless (file-exists-p tutorial-dir)
                  (make-directory tutorial-dir t))
                tutorial-dir)))
+
+;; Server
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 (provide 'defaults)
 ;;; defaults.el ends here
