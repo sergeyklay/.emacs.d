@@ -91,8 +91,7 @@
 
 (use-package modus-vivendi-theme
   :config
-  (when (not (display-graphic-p))
-    (klay/switch-theme 'modus-vivendi)))
+  (klay/switch-theme 'modus-vivendi))
 
 (provide 'appearance)
 ;;; appearance.el ends here

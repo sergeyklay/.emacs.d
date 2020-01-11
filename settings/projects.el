@@ -21,7 +21,7 @@
 
 (use-package projectile
   :after ivy
-  :delight
+  :delight '(:eval (concat " " (projectile-project-name)))
   :init
   (setq projectile-cache-file (concat user-cache-dir "projectile.cache")
         projectile-known-projects-file (concat user-cache-dir "projectile-bookmarks.eld")
