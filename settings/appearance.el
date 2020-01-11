@@ -31,6 +31,7 @@
 
 ;; Pretify page breaks.
 (use-package page-break-lines
+  :delight
   :config
   (global-page-break-lines-mode))
 
