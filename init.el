@@ -36,6 +36,7 @@
 (require 'langs-md)     ; Add markdown support
 (require 'langs-cmake)  ; Add cmake support
 (require 'langs-cc)     ; Support for the C-family of languages
+(require 'langs-lisp)   ; Configure the Lisp-family of languages
 
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'syntax-check) ; Syntax checkers

@@ -14,6 +14,7 @@ This project rely on the following list of applications:
 
 * [Git](https://git-scm.com)
 * [Pandoc](https://pandoc.org)
+* [Steel Bank Common Lisp (sbcl)](http://www.sbcl.org)
 * [The Silver Searcher (ag)](https://geoff.greer.fm/ag)
 * [ripgrep (rg)](https://github.com/BurntSushi/ripgrep)
 
