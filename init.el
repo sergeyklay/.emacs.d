@@ -31,6 +31,7 @@
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
 (require 'projects)     ; Project navigation and management
+(require 'jump)         ; Setting up tags and code navigation
 
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support

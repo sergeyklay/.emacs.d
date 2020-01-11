@@ -55,6 +55,7 @@
 
 (add-hook 'c-mode-common-hook #'klay|cc-common-hook)
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
+(add-hook 'c-mode-common-hook #'ggtags-mode)
 
 (provide 'langs-cc)
 ;;; langs-cc.el ends here

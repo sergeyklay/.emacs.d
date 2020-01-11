@@ -10,10 +10,14 @@ Known to work with GNU Emacs 26.1 and later.
 
 ## Prerequisites
 
-This project rely on the following list of applications:
+This project relies on the following list of applications:
 
+* [Exuberant Ctags](http://ctags.sourceforge.net)
 * [Git](https://git-scm.com)
+* [GNU GLOBAL](https://www.gnu.org/software/global)
 * [Pandoc](https://pandoc.org)
+* [Pygments](https://pygments.org/)
+* [Pygments Plug-in Parser for GNU](https://github.com/yoshizow/global-pygments-plugin)
 * [Steel Bank Common Lisp (sbcl)](http://www.sbcl.org)
 * [The Silver Searcher (ag)](https://geoff.greer.fm/ag)
 * [ripgrep (rg)](https://github.com/BurntSushi/ripgrep)
