@@ -34,6 +34,7 @@
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
 (require 'langs-cmake)  ; Add cmake support
+(require 'langs-cc)     ; Support for the C-family of languages
 
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'syntax-check) ; Syntax checkers

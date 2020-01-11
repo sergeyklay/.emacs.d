@@ -42,7 +42,7 @@
 do nothing. And suppress the output from `message' and
 `write-file' to minibuffer."
     (unless (equal recentf-list recentf-list-prev)
-      (flet ((message (format-string &rest args)
+      (cl-flet ((message (format-string &rest args)
                       (eval `(format ,format-string ,@args)))
              (write-file (file &optional confirm)
                          (let ((str (buffer-string)))
@@ -54,7 +54,7 @@ do nothing. And suppress the output from `message' and
   (defadvice recentf-cleanup
       (around no-message activate)
     "Suppress the output from `message' to minibuffer."
-    (flet ((message (format-string &rest args)
+    (cl-flet ((message (format-string &rest args)
                     (eval `(format ,format-string ,@args))))
       ad-do-it))
   (setq recentf-auto-cleanup 10)
