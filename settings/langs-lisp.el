@@ -69,13 +69,13 @@
   ((emacs-lisp-mode . company-mode)
    (emacs-lisp-mode . turn-on-eldoc-mode)
    ;; TODO
-   ;; (emacs-lisp-mode . hs-minor-mode)
-   ;; (emacs-lisp-mode . rainbow-delimiters-mode)
+   (emacs-lisp-mode . hs-minor-mode)
+   (emacs-lisp-mode . rainbow-delimiters-mode)
    ;;(emacs-lisp-mode . my|ggtags-mode-enable)
 
    (lisp-interaction-mode . company-mode)
    (lisp-interaction-mode . turn-on-eldoc-mode)
-   ;; (lisp-interaction-mode . rainbow-delimiters-mode)
+   (lisp-interaction-mode . rainbow-delimiters-mode)
    ;; (lisp-interaction-mode . my|ggtags-mode-enable)
    )
   :init

@@ -54,6 +54,7 @@
   (c-set-offset 'case-label 4))
 
 (add-hook 'c-mode-common-hook #'klay|cc-common-hook)
+(add-hook 'c-mode-common-hook #'hs-minor-mode)
 
 (provide 'langs-cc)
 ;;; langs-cc.el ends here
