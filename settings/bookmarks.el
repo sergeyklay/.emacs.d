@@ -21,7 +21,8 @@
   "Common hook for function `recentf-mode'."
   (unless recentf-mode
     (recentf-mode)
-    (recentf-track-opened-file)))
+    (when (fboundp 'recentf-track-opened-file)
+      (recentf-track-opened-file))))
 
 (use-package recentf
   :ensure nil
@@ -60,11 +61,12 @@ do nothing. And suppress the output from `message' and
   (run-with-idle-timer 30 t 'recentf-save-list)
 
   (setq recentf-exclude
-        '("COMMIT_MSG\\'" "COMMIT_EDITMSG\\'" "github.*txt$"
-          ".*png$" "\\*message\\*" "auto-save-list\\*"
-	  ".cache" "[/\\]elpa/" ".cask" "bookmarks" "/dev/.*"))
-
-  (add-to-list 'recentf-exclude (expand-file-name package-user-dir)))
+        `(,(concat "/\\(\\(\\"
+		  "(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)"
+		  "_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'")
+	  ,(expand-file-name package-user-dir)
+	  "github.*txt$" "auto-save-list\\*" ".cache" "[/\\]elpa/" ".cask" "bookmarks"
+	  "/dev/.*")))
 
 (provide 'bookmarks)
 ;;; bookmarks.el ends here
