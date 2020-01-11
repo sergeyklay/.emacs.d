@@ -48,5 +48,12 @@
   :init
   (add-to-list 'company-backends 'company-c-headers))
 
+(defun klay|cc-common-hook ()
+  "Common CC hook."
+  (c-set-offset 'substatement-open 0)
+  (c-set-offset 'case-label 4))
+
+(add-hook 'c-mode-common-hook #'klay|cc-common-hook)
+
 (provide 'langs-cc)
 ;;; langs-cc.el ends here
