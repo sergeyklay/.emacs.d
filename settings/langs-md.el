@@ -18,7 +18,7 @@
 ;;;; Markdown mode
 
 (use-package markdown-mode
-  :mode ("/README\\(?:\\.\\(?:markdown\\|md\\)\\)?\\'" . gfm-mode)
+  :mode ("/README\\(?:\\.\\(?:markdown\\|md\\)\\)\\'" . gfm-mode)
   :config
   (setq markdown-command "pandoc"
         markdown-enable-wiki-links t
