@@ -46,10 +46,19 @@
 ;;;; Counsel Projectile
 
 (use-package counsel-projectile
-  :after (ivy counsel projectile)
+  :after ivy
+  :defer nil
+  :commands (counsel-projectile
+	     counsel-projectile-switch-to-buffer
+             counsel-projectile-find-file
+             counsel-projectile-find-dir)
   :config
-  (counsel-projectile-mode 1)
-  (ivy-set-display-transformer #'counsel-projectile-find-file nil))
+  (add-to-list 'ivy-initial-inputs-alist
+	       '(counsel-projectile-switch-project . ""))
+  (counsel-projectile-mode t)
+  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
+	 ("M-s d" . counsel-projectile-find-dir)
+	 ("M-s f" . counsel-projectile-find-file)))
 
 (provide 'projects)
 ;;; projects.el ends here
