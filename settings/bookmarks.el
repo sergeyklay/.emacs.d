@@ -31,12 +31,40 @@
   (setq recentf-save-file (concat user-cache-dir "recentf")
         recentf-max-saved-items 200)
   :config
-  (add-to-list 'recentf-exclude (expand-file-name package-user-dir))
-  (add-to-list 'recentf-exclude ".cache")
-  (add-to-list 'recentf-exclude "[/\\]elpa/")
-  (add-to-list 'recentf-exclude ".cask")
-  (add-to-list 'recentf-exclude "bookmarks")
-  (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'"))
+  (require 'cl)
+
+  (defvar recentf-list-prev nil)
+
+  (defadvice recentf-save-list
+      (around no-message activate)
+    "If `recentf-list' and previous recentf-list are equal,
+do nothing. And suppress the output from `message' and
+`write-file' to minibuffer."
+    (unless (equal recentf-list recentf-list-prev)
+      (flet ((message (format-string &rest args)
+                      (eval `(format ,format-string ,@args)))
+             (write-file (file &optional confirm)
+                         (let ((str (buffer-string)))
+                           (with-temp-file file
+                             (insert str)))))
+        ad-do-it
+        (setq recentf-list-prev recentf-list))))
+
+  (defadvice recentf-cleanup
+      (around no-message activate)
+    "Suppress the output from `message' to minibuffer."
+    (flet ((message (format-string &rest args)
+                    (eval `(format ,format-string ,@args))))
+      ad-do-it))
+  (setq recentf-auto-cleanup 10)
+  (run-with-idle-timer 30 t 'recentf-save-list)
+
+  (setq recentf-exclude
+        '("COMMIT_MSG\\'" "COMMIT_EDITMSG\\'" "github.*txt$"
+          ".*png$" "\\*message\\*" "auto-save-list\\*"
+	  ".cache" "[/\\]elpa/" ".cask" "bookmarks" "/dev/.*"))
+
+  (add-to-list 'recentf-exclude (expand-file-name package-user-dir)))
 
 (provide 'bookmarks)
 ;;; bookmarks.el ends here
