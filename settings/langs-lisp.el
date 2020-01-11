@@ -71,7 +71,7 @@
    (emacs-lisp-mode . turn-on-eldoc-mode)
    (emacs-lisp-mode . rainbow-delimiters-mode)
 
-   (lisp-interaction-mode . gtags-mode)
+   (lisp-interaction-mode . ggtags-mode)
    (lisp-interaction-mode . company-mode)
    (lisp-interaction-mode . turn-on-eldoc-mode)
    (lisp-interaction-mode . rainbow-delimiters-mode))
