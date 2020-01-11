@@ -29,12 +29,6 @@
         (invert-face 'mode-line)
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
-;; The variable `redisplay-dont-pause', when set to non-nil,
-;; will cause Emacs to fully redraw the display before it
-;; processes queued input events.  For more see
-;; URL: https://lists.gnu.org/archive/html/emacs-devel/2011-09/msg00350.html
-(setq redisplay-dont-pause t)
-
 ;; Pretify page breaks.
 (use-package page-break-lines
   :config
