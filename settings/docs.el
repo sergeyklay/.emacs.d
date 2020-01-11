@@ -26,9 +26,8 @@
    (ielm-mode . eldoc-mode))
   :config
   (setq
-   ;; Show ElDoc messages in the echo area immediately,
-   ;; instead of after 1/2 a second.
-   eldoc-idle-delay 0
+   ;; Show ElDoc messages in the echo area in 1/3 of a scend.
+   eldoc-idle-delay 0.3
    ;; Always truncate ElDoc messages to one line.
    ;; This prevents the echo area from resizing itself unexpectedly
    ;; when point is on a variable with a multiline docstring.
