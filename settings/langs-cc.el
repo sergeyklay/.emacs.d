@@ -36,7 +36,6 @@
   :hook
   ((c-mode c++-mode) . c-turn-on-eldoc-mode)
   :config
-  ;; TODO: Decrease `eldoc-idle-delay' using global `eldoc-mode' configuration
   (setq c-eldoc-buffer-regenerate-time 60
 	c-eldoc-includes (append '("-I./" "-I../")
 				 (cc-get-standard-include-dirs))))

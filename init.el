@@ -26,6 +26,7 @@
 (require 'defaults)     ; Sane defaults
 (require 'windows)      ; Windows management features
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
+(require 'docs)         ; Setting up documentation features
 (require 'p13n)         ; Personalization related stuff
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
