@@ -17,7 +17,8 @@ This project relies on the following list of applications:
 * [GNU GLOBAL](https://www.gnu.org/software/global)
 * [Pandoc](https://pandoc.org)
 * [Pygments](https://pygments.org/)
-* [Pygments Plug-in Parser for GNU](https://github.com/yoshizow/global-pygments-plugin)
+* [Pygments Plug-in Parser](https://github.com/yoshizow/global-pygments-plugin)
+  for GNU GLOBAL
 * [Steel Bank Common Lisp (sbcl)](http://www.sbcl.org)
 * [The Silver Searcher (ag)](https://geoff.greer.fm/ag)
 * [ripgrep (rg)](https://github.com/BurntSushi/ripgrep)

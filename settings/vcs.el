@@ -59,6 +59,7 @@
 ;;;; `git-gutter'
 
 (use-package git-gutter
+  :delight
   :custom
   (git-gutter:update-interval 2)
   (git-gutter:modified-sign   "┃")
