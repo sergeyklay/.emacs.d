@@ -68,5 +68,24 @@ do nothing. And suppress the output from `message' and
 	  "github.*txt$" "auto-save-list\\*" ".cache" "[/\\]elpa/" ".cask" "bookmarks"
 	  "/dev/.*")))
 
+(defun klay/undo-kill-buffer (arg)
+  "Re-open the last buffer killed.
+With ARG, re-open the nth buffer."
+  (interactive "p")
+  (let ((recently-killed-list (copy-sequence recentf-list))
+	 (buffer-files-list
+	  (delq nil (mapcar (lambda (buf)
+			      (when (buffer-file-name buf)
+				(expand-file-name (buffer-file-name buf))))
+			    (buffer-list)))))
+    (mapc
+     (lambda (buf-file)
+       (setq recently-killed-list
+	     (delq buf-file recently-killed-list)))
+     buffer-files-list)
+    (find-file
+     (if arg (nth arg recently-killed-list)
+       (car recently-killed-list)))))
+
 (provide 'bookmarks)
 ;;; bookmarks.el ends here
