@@ -56,7 +56,7 @@ jobs:
       - name: Set RTags Cache key
         id: rtags-cache
         run: |
-          echo "::set-output name=cache::${{ runner.os }}-rtags-v$RTAGS_VERSION"
+          echo "::set-output name=key::${{ runner.os }}-rtags-v$RTAGS_VERSION"
 
       - name: Get RTags cache
         uses: actions/cache@v1
