@@ -22,11 +22,12 @@ jobs:
     steps:
       - name: Setup Prerequisites
         run: |
-          sudo apt-get install --no-install-recommends -q -y \
+          sudo apt install snapd
+          sudo snap install ripgrep --classic
+          sudo apt install --no-install-recommends -q -y \
             global \
             pandoc \
             exuberant-ctags \
-            ripgrep \
             rtags \
             sbcl
 
