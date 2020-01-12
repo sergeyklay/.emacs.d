@@ -20,6 +20,16 @@ jobs:
           - snapshot
 
     steps:
+      - name: Setup Prerequisites
+        run: |
+          sudo apt-get install --no-install-recommends -q -y \
+            global \
+            pandoc \
+            exuberant-ctags \
+            ripgrep \
+            rtags \
+            sbcl
+
       - uses: actions/checkout@v2-beta
         with:
           fetch-depth: 1
