@@ -16,7 +16,9 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'company))
+  (require 'company)
+  (require 'jump)
+  (require 'util))
 
 (defconst cc-standard-include-dirs-cmd
   (concat
@@ -53,9 +55,44 @@
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4))
 
-(add-hook 'c-mode-common-hook #'my|cc-common-hook)
-(add-hook 'c-mode-common-hook #'hs-minor-mode)
-(add-hook 'c-mode-common-hook #'ggtags-mode)
+(my/add-to-hooks
+ #'my|cc-common-hook
+ '(c-mode-common-hook
+   c++-mode-common-hook))
+
+(my/add-to-hooks
+ #'hs-minor-mode
+ '(c-mode-common-hook
+   c++-mode-common-hook))
+
+(when rdm-executable-path
+  (my/add-to-hooks
+   #'rtags-start-process-unless-running
+   '(c-mode-common-hook
+     c++-mode-common-hook)))
+
+(use-package cmake-ide
+  :config
+  (progn
+    (cmake-ide-setup)
+    (setq cmake-ide-header-search-other-file nil
+          cmake-ide-header-search-first-including nil
+          cmake-ide-try-unique-compiler-flags-for-headers nil)))
+
+(defun cmake-ide/c-c++-hook ()
+  (with-eval-after-load 'projectile
+    (setq cmake-ide-project-dir (projectile-project-root))
+    (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
+  (cmake-ide-load-db))
+
+(add-hook 'c++-mode-hook #'cmake-ide/c-c++-hook)
+
+;; If `cmake-ide' cannot find correct build dir, provide function to solve issue.
+(defun set-cmake-ide-build-dir()
+  "Set build dir with compile_commands.jso file."
+  (interactive)
+  (let ((dir (read-directory-name "Build dir:")))
+    (setq cmake-ide-build-dir dir)))
 
 (provide 'langs-cc)
 ;;; langs-cc.el ends here
