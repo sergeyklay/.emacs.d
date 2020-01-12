@@ -19,6 +19,7 @@ This project relies on the following list of applications:
 * [Pygments](https://pygments.org/)
 * [Pygments Plug-in Parser](https://github.com/yoshizow/global-pygments-plugin)
   for GNU GLOBAL
+* [RTags(rtags)](https://github.com/Andersbakken/rtags)
 * [Steel Bank Common Lisp (sbcl)](http://www.sbcl.org)
 * [The Silver Searcher (ag)](https://geoff.greer.fm/ag)
 * [ripgrep (rg)](https://github.com/BurntSushi/ripgrep)
