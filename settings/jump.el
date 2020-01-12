@@ -16,10 +16,14 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'etags))
+  (require 'etags)
+  (require 'company))
 
 (defconst global-executable-path (executable-find "global")
   "The global executable path on this system.")
+
+(defconst rdm-executable-path (executable-find "rdm")
+  "The rdm executable path on this system.")
 
 ;; A front-end for accessing the gtags-generated tags.
 ;; For more see URL `https://github.com/leoliu/ggtags'
@@ -50,6 +54,23 @@
 
 ;; Never “Keep current list of tags tables also”
 (setq tags-add-tables nil)
+
+(use-package rtags
+  :if rdm-executable-path
+  :after company
+  :config
+  ;; TODO: A hardcoded path to the rc. Make it better.
+  (setq rtags-completions-enabled t
+	rtags-path "/usr/local/bin")
+  (eval-after-load 'company
+    '(add-to-list
+      'company-backends 'company-rtags))
+  (setq rtags-autostart-diagnostics t)
+  (rtags-enable-standard-keybindings))
+
+(use-package company-rtags
+  :if rdm-executable-path
+  :after (company))
 
 (provide 'jump)
 ;;; jump.el ends here
