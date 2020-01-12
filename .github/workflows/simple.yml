@@ -44,27 +44,27 @@ jobs:
             pandoc \
             exuberant-ctags \
             sbcl \
-            "clang-$LLVM_VERSION" \
-            "llvm-$LLVM_VERSION" \
-            "libclang-$LLVM__VERSION-dev" \
+            "clang-${LLVM_VERSION}" \
+            "llvm-${LLVM_VERSION}" \
+            "libclang-${LLVM_VERSION}-dev" \
             cmake \
             pkg-config
 
-          echo "::set-env name=CC::clang-6.0"
-          echo "::set-env name=CXX::clang++-6.0"
+          echo "::set-env name=CC::clang-${LLVM_VERSION}"
+          echo "::set-env name=CXX::clang++-${LLVM_VERSION}"
 
-    - name: Set RTags Cache key
-      id: rtags-cache
-      run: |
-        echo "::set-output name=cache::${{ runner.os }}-rtags-v$RTAGS_VERSION"
+      - name: Set RTags Cache key
+        id: rtags-cache
+        run: |
+          echo "::set-output name=cache::${{ runner.os }}-rtags-v$RTAGS_VERSION"
 
-    - name: Get RTags cache
-      uses: actions/cache@v1
-      with:
-        path: ~/rtags
-        key: ${{ steps.rtags-cache.outputs.key }}
-        restore-keys: |
-          ${{ runner.os }}-rtags-
+      - name: Get RTags cache
+        uses: actions/cache@v1
+        with:
+          path: ~/rtags
+          key: ${{ steps.rtags-cache.outputs.key }}
+          restore-keys: |
+            ${{ runner.os }}-rtags-
 
       - name: Download, build and install RTags
         run:  |
