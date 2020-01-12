@@ -48,7 +48,7 @@ jobs:
 
       - name: Download, build and install RTags
         run:  |
-          git clone --recursive git@github.com:Andersbakken/rtags.git
+          git clone --recursive https://github.com/Andersbakken/rtags.git
           cd rtags
           mkdir build && cd build
           cmake ..
