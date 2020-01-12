@@ -21,9 +21,6 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)) ; Disable the scroll bar
 (if (fboundp 'tooltip-mode) (tooltip-mode -1))       ; Disable the tooltips
 
-;; Don't save customizations at all, prefer to set things explicitly.
-(setq custom-file null-device)
-
 ;; One less file to load at startup.
 (setq site-run-file nil)
 
@@ -57,6 +54,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (dolist (pkg (directory-files user-site-lisp-dir t "\\w+"))
   (when (file-directory-p pkg)
     (add-to-list 'load-path pkg)))
+
+(setq custom-file (concat user-cache-dir "custom.el"))
 
 (provide 'prelude)
 ;;; prelude.el ends here
