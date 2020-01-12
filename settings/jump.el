@@ -59,9 +59,9 @@
   :if rdm-executable-path
   :after company
   :config
-  ;; TODO: A hardcoded path to the rc. Make it better.
   (setq rtags-completions-enabled t
-	rtags-path "/usr/local/bin")
+	rtags-path (directory-file-name
+		    (file-name-directory rdm-executable-path)))
   (eval-after-load 'company
     '(add-to-list
       'company-backends 'company-rtags))
