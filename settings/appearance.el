@@ -62,7 +62,7 @@
 ;; switching themes is a multi-step process with `disable-theme' and
 ;; `load-theme'.  The `switch-theme' function will do that in one
 ;; swoop.  I just choose which theme I want to go to.
-(defun klay/switch-theme (theme)
+(defun my/switch-theme (theme)
   "Disable any currently active themes and load the THEME."
   ;; This interactive call is taken from `load-theme'
   (interactive
@@ -74,19 +74,19 @@
     (mapc #'disable-theme enabled-themes)
     (load-theme theme t)))
 
-(defun klay/disable-active-themes ()
+(defun my/disable-active-themes ()
   "Disable any currently active themes listed in `custom-enabled-themes'."
   (interactive)
   (mapc #'disable-theme custom-enabled-themes))
 
-(bind-key "<C-f12>" 'klay/switch-theme)
-(bind-key "<C-f11>" 'klay/disable-active-themes)
+(bind-key "<C-f12>" 'my/switch-theme)
+(bind-key "<C-f11>" 'my/disable-active-themes)
 
 (use-package modus-operandi-theme)
 
 (use-package modus-vivendi-theme
   :config
-  (klay/switch-theme 'modus-vivendi))
+  (my/switch-theme 'modus-vivendi))
 
 (provide 'appearance)
 ;;; appearance.el ends here

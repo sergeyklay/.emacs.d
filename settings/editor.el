@@ -62,15 +62,15 @@
 ;; Folding
 (use-package hideshow
   :preface
-  (defun klay/toggle-fold ()
+  (defun my/toggle-fold ()
     "Toggle hiding/showing of a block."
     (interactive)
     (save-excursion
       (end-of-line)
       (hs-toggle-hiding)))
-  :bind ("C-x t f" . klay/toggle-fold))
+  :bind ("C-x t f" . my/toggle-fold))
 
-(defun klay--move-text-internal (arg)
+(defun my--move-text-internal (arg)
   "Move text ARG lines up or down."
   (cond
    ((and mark-active transient-mark-mode)
@@ -96,17 +96,17 @@
         (forward-line -1))
       (move-to-column column t)))))
 
-(defun klay/move-text-down (arg)
+(defun my/move-text-down (arg)
   "Move region (transient-mark-mode active) or current line ARG lines down."
   (interactive "*p")
-  (klay--move-text-internal arg))
+  (my--move-text-internal arg))
 
-(defun klay/move-text-up (arg)
+(defun my/move-text-up (arg)
   "Move region (transient-mark-mode active) or current line ARG lines up."
   (interactive "*p")
-  (klay--move-text-internal (- arg)))
+  (my--move-text-internal (- arg)))
 
-(defun klay/duplicate-line (arg)
+(defun my/duplicate-line (arg)
   "Duplicate current line, ARG times leaving point in lower line.
 This function is for interactive use only;"
   (interactive "*p")
@@ -142,9 +142,9 @@ This function is for interactive use only;"
   ;; put the point in the lowest line and return
   (forward-line arg))
 
-(global-set-key [M-S-up] #'klay/move-text-up)
-(global-set-key [M-S-down] #'klay/move-text-down)
-(global-set-key (kbd "C-c d") #'klay/duplicate-line)
+(global-set-key [M-S-up] #'my/move-text-up)
+(global-set-key [M-S-down] #'my/move-text-down)
+(global-set-key (kbd "C-c d") #'my/duplicate-line)
 
 (provide 'editor)
 ;;; editor.el ends here

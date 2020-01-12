@@ -17,7 +17,7 @@
 
 (require 'directories)
 
-(defun klay|common-recentf-hook ()
+(defun my|common-recentf-hook ()
   "Common hook for function `recentf-mode'."
   (unless recentf-mode
     (recentf-mode)
@@ -27,7 +27,7 @@
 (use-package recentf
   :ensure nil
   ;; lazy load recentf
-  :hook (find-file . klay|common-recentf-hook)
+  :hook (find-file . my|common-recentf-hook)
   :init
   (setq recentf-save-file (concat user-cache-dir "recentf")
         recentf-max-saved-items 200)
@@ -68,7 +68,7 @@ do nothing. And suppress the output from `message' and
 	  "github.*txt$" "auto-save-list\\*" ".cache" "[/\\]elpa/" ".cask" "bookmarks"
 	  "/dev/.*")))
 
-(defun klay/undo-kill-buffer (arg)
+(defun my/undo-kill-buffer (arg)
   "Re-open the last buffer killed.
 With ARG, re-open the nth buffer."
   (interactive "p")

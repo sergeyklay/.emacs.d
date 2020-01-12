@@ -66,20 +66,20 @@
 
 ;;;; Utilities for `list-packages' menu
 
-(defun klay/package-menu-find-marks ()
+(defun my/package-menu-find-marks ()
   "Find packages marked for action in *Packages*."
   (interactive)
   (occur "^[A-Z]"))
 
-(defun klay/package-menu-filter-by-status (status)
+(defun my/package-menu-filter-by-status (status)
   "Filter the *Packages* buffer by STATUS."
   (interactive
    (list (completing-read
           "Status : " '("new" "installed" "dependency" "obsolete"))))
   (package-menu-filter (concat "status:" status)))
 
-(define-key package-menu-mode-map "s" #'klay/package-menu-filter-by-status)
-(define-key package-menu-mode-map "a" #'klay/package-menu-find-marks)
+(define-key package-menu-mode-map "s" #'my/package-menu-filter-by-status)
+(define-key package-menu-mode-map "a" #'my/package-menu-find-marks)
 
 (provide 'packaging)
 ;;; packaging.el ends here

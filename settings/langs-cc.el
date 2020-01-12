@@ -48,12 +48,12 @@
   :init
   (add-to-list 'company-backends 'company-c-headers))
 
-(defun klay|cc-common-hook ()
+(defun my|cc-common-hook ()
   "Common CC hook."
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label 4))
 
-(add-hook 'c-mode-common-hook #'klay|cc-common-hook)
+(add-hook 'c-mode-common-hook #'my|cc-common-hook)
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
 (add-hook 'c-mode-common-hook #'ggtags-mode)
 
