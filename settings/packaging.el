@@ -21,8 +21,8 @@
 (setq package--init-file-ensured t)
 (setq package-user-dir
       (concat
-       (substitute-in-file-name "$HOME/.local/lib/emacs/")
-       "packages/" emacs-version "/elpa"))
+       (substitute-in-file-name "$HOME/.local/share/emacs/elpa/")
+       emacs-version))
 
 (unless (file-exists-p package-user-dir)
   (make-directory package-user-dir t))
