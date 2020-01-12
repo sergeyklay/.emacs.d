@@ -20,11 +20,18 @@ jobs:
           - snapshot
 
     steps:
+      - name: set environment variables
+        uses: allenevans/set-env@v1.0.0
+        with:
+          LLVM_VERSION: '6.0'
+          RTAGS_VERSION: '2.37'
+
       - name: Add LLVM repository
         run: |
           wget -q -O llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
           sudo apt-key add llvm-snapshot.gpg.key
-          sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main"
+          sudo apt-add-repository \
+            "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-$LLVM_VERSION main"
           sudo apt-get update --quiet --yes
 
       - name: Setup Prerequisites
@@ -37,26 +44,53 @@ jobs:
             pandoc \
             exuberant-ctags \
             sbcl \
-            clang-6.0 \
-            llvm-6.0 \
-            libclang-6.0-dev \
+            "clang-$LLVM_VERSION" \
+            "llvm-$LLVM_VERSION" \
+            "libclang-$LLVM__VERSION-dev" \
             cmake \
             pkg-config
 
           echo "::set-env name=CC::clang-6.0"
           echo "::set-env name=CXX::clang++-6.0"
 
+    - name: Set RTags Cache key
+      id: rtags-cache
+      run: |
+        echo "::set-output name=cache::${{ runner.os }}-rtags-v$RTAGS_VERSION"
+
+    - name: Get RTags cache
+      uses: actions/cache@v1
+      with:
+        path: ~/rtags
+        key: ${{ steps.rtags-cache.outputs.key }}
+        restore-keys: |
+          ${{ runner.os }}-rtags-
+
       - name: Download, build and install RTags
         run:  |
-          git clone --recursive https://github.com/Andersbakken/rtags.git
-          cd rtags
-          mkdir build && cd build
-          cmake ..
-          make -j2
-          sudo make install
+          if [ ! -f ~/rtags/LICENSE.txt ]; then
+            rm -rf ~/rtgas
+            git clone \
+              -b "v$RTAGS_VERSION" \
+              --recursive https://github.com/Andersbakken/rtags.git \
+              ~/rtags
+          fi
+
+          $CXX --version
+          cmake --version
+
+          cd ~/rtags
+
+          cmake \
+            -S . \
+            -Bbuild \
+            -DCMAKE_BUILD_TYPE=Release
+
+          cmake --build build -j 2
+          cmake --build build --target install
 
       - name: Start the RTags daemon
-        run: ./rtags/build/bin/rdm &
+        run: rdm &
 
       - uses: actions/checkout@v2-beta
         with:
