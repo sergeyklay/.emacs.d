@@ -20,13 +20,15 @@ jobs:
           - snapshot
 
     steps:
-      - name: Setup Prerequisites
+      - name: Add LLVM repository
         run: |
-          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          wget --quiet -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main"
           sudo apt-get update --quiet --yes 1>/dev/nul
 
-          sudo apt install snapd
+      - name: Setup Prerequisites
+        run: |
+          sudo apt-get install snapd
           sudo snap install ripgrep --classic
 
           sudo apt install --no-install-recommends -q -y \
