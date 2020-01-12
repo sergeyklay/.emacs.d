@@ -28,8 +28,23 @@ jobs:
             global \
             pandoc \
             exuberant-ctags \
-            rtags \
-            sbcl
+            sbcl \
+            clang \
+            libclang-dev \
+            cmake \
+            pkg-config
+
+      - name: Download, build and install RTags
+        run:  |
+          git clone --recursive git@github.com:Andersbakken/rtags.git
+          cd rtags
+          mkdir build && cd build
+          cmake ..
+          make -j2
+          sudo make install
+
+      - name: Start the RTags daemon
+        run: ./rtags/build/bin/rdm &
 
       - uses: actions/checkout@v2-beta
         with:
