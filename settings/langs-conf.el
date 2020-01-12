@@ -65,5 +65,29 @@
   ((nginx-mode . company-mode)
    (nginx-mode . company-nginx-keywords)))
 
+
+;;;; conf-mode
+
+;; https://github.com/jrockway/emacs/blob/master/lisp/textmodes/conf-mode.el
+(use-package conf-mode
+  :ensure nil
+  :mode (("\\.conf\\'"    . conf-space-mode)
+         ("\\.setup.*\\'" . conf-space-mode)
+         ("/\\(Cargo.lock\\|\\.cargo/config\\)\\'" . conf-toml-mode)))
+
+;;;; Dotenv
+
+
+;; https://github.com/preetpalS/emacs-dotenv-mode/tree/master
+(use-package dotenv-mode
+  :mode (("\\.env\\..*\\'" . dotenv-mode)))
+
+;;;; Systemd
+
+;; Major mode for editing systemd units
+;; https://github.com/holomorph/systemd-mode
+(use-package systemd
+  :defer t)
+
 (provide 'langs-conf)
 ;;; langs-conf.el ends here
