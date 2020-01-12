@@ -76,7 +76,12 @@
    (lisp-interaction-mode . turn-on-eldoc-mode)
    (lisp-interaction-mode . rainbow-delimiters-mode))
   :init
-  (add-to-list 'company-backends '(company-elisp company-capf))
+  (add-to-list 'company-backends
+	       '(company-elisp
+		 company-capf
+		 company-dabbrev-code
+		 company-yasnippet
+		 company-files))
   :bind
   (:map emacs-lisp-mode-map
         ("C-c C-b" . #'eval-buffer)))
