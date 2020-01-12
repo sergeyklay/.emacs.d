@@ -26,13 +26,13 @@ jobs:
           LLVM_VERSION: '6.0'
           RTAGS_VERSION: '2.37'
 
-      #- name: Add LLVM repository
-      #  run: |
-      #    wget -q -O llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
-      #    sudo apt-key add llvm-snapshot.gpg.key
-      #    sudo apt-add-repository \
-      #      "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-$LLVM_VERSION main"
-      #    sudo apt-get update --quiet --yes
+      - name: Add LLVM repository
+        run: |
+          wget -q -O llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
+          sudo apt-key add llvm-snapshot.gpg.key
+          sudo apt-add-repository \
+            "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-$LLVM_VERSION main"
+          sudo apt-get update --quiet --yes
 
       - name: Setup Prerequisites
         run: |
