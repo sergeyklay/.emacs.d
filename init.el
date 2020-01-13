@@ -29,17 +29,18 @@
 (require 'docs)         ; Setting up documentation features
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
+(require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management
 (require 'jump)         ; Setting up tags and code navigation
 (require 'snippets)     ; Add snippets support
+
+(require 'editor)       ; Features related to the behavior of the editor
+(require 'syntax-check) ; Syntax checkers
 
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
 (require 'langs-cmake)  ; Add cmake support
 (require 'langs-cc)     ; Support for the C-family of languages
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
-
-(require 'editor)       ; Features related to the behavior of the editor
-(require 'syntax-check) ; Syntax checkers
 
 ;;; init.el ends here

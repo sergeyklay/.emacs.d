@@ -12,17 +12,19 @@ Known to work with GNU Emacs 26.1 and later.
 
 This project relies on the following list of applications:
 
-* [Exuberant Ctags](http://ctags.sourceforge.net)
-* [Git](https://git-scm.com)
-* [GNU GLOBAL](https://www.gnu.org/software/global)
-* [Pandoc](https://pandoc.org)
+* [Exuberant Ctags (`ctags`)](http://ctags.sourceforge.net)
+* [Git (`git`)](https://git-scm.com)
+* [GNU GLOBAL (`global`)](https://www.gnu.org/software/global)
+* [GnuPG (`gpg`)](https://www.gnupg.org)
+* [Pandoc (`pandoc`)](https://pandoc.org)
+* [Password Store (`pass`)](https://www.passwordstore.org)
 * [Pygments](https://pygments.org/)
 * [Pygments Plug-in Parser](https://github.com/yoshizow/global-pygments-plugin)
   for GNU GLOBAL
-* [RTags(rtags)](https://github.com/Andersbakken/rtags)
-* [Steel Bank Common Lisp (sbcl)](http://www.sbcl.org)
-* [The Silver Searcher (ag)](https://geoff.greer.fm/ag)
-* [ripgrep (rg)](https://github.com/BurntSushi/ripgrep)
+* [RTags(`rtags`)](https://github.com/Andersbakken/rtags)
+* [Steel Bank Common Lisp (`sbcl`)](http://www.sbcl.org)
+* [The Silver Searcher (`ag`)](https://geoff.greer.fm/ag)
+* [ripgrep (`rg`)](https://github.com/BurntSushi/ripgrep)
 
 ## License
 
