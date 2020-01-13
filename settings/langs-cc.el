@@ -80,6 +80,7 @@
           cmake-ide-try-unique-compiler-flags-for-headers nil)))
 
 (defun cmake-ide/c-c++-hook ()
+  "A common hook for the `cmake-ide' mode."
   (with-eval-after-load 'projectile
     (setq cmake-ide-project-dir (projectile-project-root))
     (setq cmake-ide-build-dir (concat cmake-ide-project-dir "build")))
