@@ -20,6 +20,9 @@
 (defconst gpg-executable-path (executable-find "gpg")
   "The gpg executable path on this system.")
 
+(defconst pass-executable-path (executable-find "pass")
+  "The pass executable path on this system.")
+
 ;;;; EasyPG
 
 (use-package epg
@@ -40,7 +43,8 @@
     (setq epa-pinentry-mode 'loopback))
   :config
   ;; Enable automatic encryption/decryption of *.gpg files
-  (epa-file-enable))
+  (unless (memq epa-file-handler file-name-handler-alist)
+    (epa-file-enable)))
 
 ;;;; Pin Entry
 
@@ -54,17 +58,17 @@
 ;;;; Auth Source
 
 (use-package auth-source
+  :if gpg-executable-path
   :init
   (add-to-list 'auth-sources (concat user-local-dir "etc/.authinfo.gpg")))
 
 ;;;; Password store
 
 (use-package password-store
-  :if (executable-find "pass"))
+  :if (and gpg-executable-path pass-executable-path))
 
 ;; See https://www.passwordstore.org/
 (use-package pass
-  :if (executable-find "pass")
   :after password-store
   :init
   (let ((passwd-dir (substitute-in-file-name "$HOME/.password-store")))
@@ -72,14 +76,12 @@
       (make-directory passwd-dir t))))
 
 (use-package auth-password-store
-  :if (executable-find "pass")
+  :after pass
   :disabled t
-  :after (pass)
   :config
   (auth-pass-enable))
 
 (use-package ivy-pass
-  :if (executable-find "pass")
   :after password-store
   :requires ivy
   :commands (ivy-pass)
