@@ -69,6 +69,17 @@
   (setq source-directory
 	(expand-file-name (substitute-in-file-name src)))))
 
+;;;; Session direcory
+
+(eval-after-load 'x-win
+  (let ((session-dir(concat user-cache-dir "session/")))
+    `(progn
+       (make-directory ,session-dir t)
+       (defun emacs-session-filename (session-id)
+	 "Construct a filename to save the session in based on SESSION-ID.
+This function overrides the one on `x-win' to use my personal directory."
+	 (expand-file-name session-id ,session-dir)))))
+
 ;;;; Tutorial
 
 (advice-add
