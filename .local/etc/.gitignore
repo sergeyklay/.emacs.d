@@ -8,6 +8,9 @@
 # Ignore all files
 *
 
-# Except these ones
+# Extept alternate hunspell dictionary
+!alt.dic
+
+# and these ones
 !/hosts
 !.gitignore

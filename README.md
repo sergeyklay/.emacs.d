@@ -13,14 +13,15 @@ Known to work with GNU Emacs 26.1 and later.
 This project relies on the following list of applications:
 
 * [Exuberant Ctags (`ctags`)](http://ctags.sourceforge.net)
-* [Git (`git`)](https://git-scm.com)
 * [GNU GLOBAL (`global`)](https://www.gnu.org/software/global)
+* [Git (`git`)](https://git-scm.com)
 * [GnuPG (`gpg`)](https://www.gnupg.org)
+* [Hunspell](https://hunspell.github.io)
 * [Pandoc (`pandoc`)](https://pandoc.org)
 * [Password Store (`pass`)](https://www.passwordstore.org)
-* [Pygments](https://pygments.org/)
 * [Pygments Plug-in Parser](https://github.com/yoshizow/global-pygments-plugin)
   for GNU GLOBAL
+* [Pygments](https://pygments.org)
 * [RTags(`rtags`)](https://github.com/Andersbakken/rtags)
 * [Steel Bank Common Lisp (`sbcl`)](http://www.sbcl.org)
 * [The Silver Searcher (`ag`)](https://geoff.greer.fm/ag)
