@@ -16,7 +16,7 @@ This project relies on the following list of applications:
 * [GNU GLOBAL (`global`)](https://www.gnu.org/software/global)
 * [Git (`git`)](https://git-scm.com)
 * [GnuPG (`gpg`)](https://www.gnupg.org)
-* [Hunspell](https://hunspell.github.io)
+* [Hunspell `hunspell`](https://hunspell.github.io)
 * [Pandoc (`pandoc`)](https://pandoc.org)
 * [Password Store (`pass`)](https://www.passwordstore.org)
 * [Pygments Plug-in Parser](https://github.com/yoshizow/global-pygments-plugin)

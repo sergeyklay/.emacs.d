@@ -23,7 +23,7 @@
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
 (require 'modeline)     ; Modeline related configuration
-(require 'defaults)     ; Sane defaults
+(require 'defaults)     ; Sane defaults + settings for which there is no group
 (require 'windows)      ; Windows management features
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'docs)         ; Setting up documentation features
@@ -33,7 +33,7 @@
 (require 'projects)     ; Project navigation and management
 (require 'jump)         ; Setting up tags and code navigation
 (require 'snippets)     ; Add snippets support
-(require 'editor)       ; Features related to the behavior of the editor
+(require 'editor)       ; Features related to editor behavior
 (require 'syntax-check) ; Syntax checkers
 (require 'spelling)     ; Spell configuration
 
