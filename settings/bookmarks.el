@@ -17,15 +17,15 @@
 
 (require 'directories)
 
-(defun my|common-recentf-hook ()
+(use-package recentf
+  :ensure nil
+  :preface
+  (defun my|common-recentf-hook ()
   "Common hook for function `recentf-mode'."
   (unless recentf-mode
     (recentf-mode)
     (when (fboundp 'recentf-track-opened-file)
       (recentf-track-opened-file))))
-
-(use-package recentf
-  :ensure nil
   ;; lazy load recentf
   :hook (find-file . my|common-recentf-hook)
   :init

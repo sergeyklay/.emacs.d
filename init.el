@@ -33,9 +33,9 @@
 (require 'projects)     ; Project navigation and management
 (require 'jump)         ; Setting up tags and code navigation
 (require 'snippets)     ; Add snippets support
-
 (require 'editor)       ; Features related to the behavior of the editor
 (require 'syntax-check) ; Syntax checkers
+(require 'spelling)     ; Spell configuration
 
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
