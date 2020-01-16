@@ -89,5 +89,18 @@
 (use-package systemd
   :defer t)
 
+;;;; Powershell
+
+(defconst my/pwsh-executable-path (executable-find "pwsh")
+  "The PowerShell executable path on this system.")
+
+(use-package powershell
+  :mode (("\\.ps1\\'"  . powershell-mode)
+         ("\\.psm1\\'" . powershell-mode))
+  :interpreter "pwsh"
+  :config
+  (when my/pwsh-executable-path
+    (setq powershell-location-of-exe my/pwsh-executable-path)))
+
 (provide 'langs-conf)
 ;;; langs-conf.el ends here
