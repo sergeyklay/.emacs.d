@@ -31,7 +31,7 @@ ${EMACS} \
 
 t="$(mktemp elisp-files.XXX)"
 
-find settings -type f -name '*.el' > "$t"
+find site-lisp -type f -name '*.el' > "$t"
 echo init.el >> "$t"
 
 while IFS= read -r file
