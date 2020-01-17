@@ -18,9 +18,6 @@
 (defconst user-site-lisp-dir (concat user-emacs-directory "site-lisp/")
   "Local site-lisp directory.")
 
-(defconst user-settings-dir (concat user-emacs-directory "settings/")
-  "All the configuration should located here.")
-
 (defconst user-defuns-dir (concat user-emacs-directory "defuns/")
   "A common place to store user's defuns.")
 

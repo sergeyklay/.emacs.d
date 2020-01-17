@@ -42,12 +42,11 @@
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
-(require 'directories (concat user-emacs-directory "settings/directories"))
+(require 'directories (concat user-emacs-directory "site-lisp/directories"))
 
 ;; Set up load path.
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
-(add-to-list 'load-path user-settings-dir)
 (add-to-list 'load-path user-defuns-dir)
 
 ;; Add external projects to load path.

@@ -18,7 +18,7 @@
 ;;; Code:
 
 ;; Begin initialization
-(require 'directories (concat user-emacs-directory "settings/prelude"))
+(require 'directories (concat user-emacs-directory "site-lisp/prelude"))
 
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
