@@ -64,7 +64,7 @@
 
   (use-package eshell-git-prompt
     :init
-    (eshell-git-prompt-use-theme 'powerline)))
+    (eshell-git-prompt-use-theme 'radar)))
 
 (with-eval-after-load 'eshell-mode
   (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))
