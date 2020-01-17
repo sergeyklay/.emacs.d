@@ -19,6 +19,10 @@
 (require 'backup) ; Backup, auto-saving and history configuration
 (require 'directories)
 
+;; C-h h runs the command `view-hello-file'.
+;; I never used this feature and actually don't need it.
+(global-unset-key (kbd "C-h h"))
+
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 
 ;;;; Encoding
