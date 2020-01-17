@@ -94,7 +94,8 @@ This function overrides the one on `x-win' to use my personal directory."
                  (make-directory tutorial-dir t))
                tutorial-dir)))
 
-;; Server
+;;;; Emacs Server
+
 (require 'server)
 (unless (server-running-p)
   (server-start))

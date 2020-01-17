@@ -17,11 +17,11 @@
 
 (require 'directories)
 
-(defconst hunspell-executable-path (executable-find "hunspell")
+(defconst my-hunspell-executable-path (executable-find "hunspell")
   "The hunspell executable path on this system.")
 
 (use-package ispell
-  :if hunspell-executable-path
+  :if my-hunspell-executable-path
   :ensure nil
   :custom
   ;; Save personal dictionary without asking for confirmation.
@@ -34,7 +34,7 @@
   (setq ispell-really-hunspell t))
 
 (use-package flyspell
-  :if hunspell-executable-path
+  :if my-hunspell-executable-path
   :defer t
   ;; TODO: Use per feature configuration
   :hook ((org-mode        . flyspell-mode)

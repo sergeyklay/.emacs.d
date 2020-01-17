@@ -15,3 +15,6 @@ LATER
 # The utility would be reduced to preventing you from simultaneously
 # using multiple separate emacs instances to edit/write a given file.
 .\#*
+
+# Autosaves.
+*.*~

@@ -13,6 +13,7 @@ Known to work with GNU Emacs 26.1 and later.
 This project relies on the following list of applications:
 
 * [Exuberant Ctags (`ctags`)](http://ctags.sourceforge.net)
+* [`fd`](https://github.com/sharkdp/fd)
 * [GNU GLOBAL (`global`)](https://www.gnu.org/software/global)
 * [Git (`git`)](https://git-scm.com)
 * [GnuPG (`gpg`)](https://www.gnupg.org)
