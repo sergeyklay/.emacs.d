@@ -65,9 +65,10 @@
 (use-package counsel
   :requires ivy
   :hook (ivy-mode . counsel-mode)
-  :config
-  (setq counsel-find-file-ignore-regexp
+  :custom
+  (counsel-find-file-ignore-regexp
         "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)")
+  :config
   ;; Use faster search tools: ripgrep
   (let ((command
 	 (cond
