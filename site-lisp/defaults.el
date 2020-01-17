@@ -94,10 +94,25 @@ This function overrides the one on `x-win' to use my personal directory."
                  (make-directory tutorial-dir t))
                tutorial-dir)))
 
-;; Server
+;;;; Emacs Server
+
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
+;;;; Exec Paths
+
+(message "[DEBUG] PATH: %s" (getenv "PATH"))
+(message "[DEBUG] exec-path: %s" exec-path)
+
+;; Emacs does set `exec-path' from the value of PATH on startup, but will not
+;; look at it again later.  But if you run a command, it will inherit PATH,
+;; not `exec-path', so subprocesses can find different commands than Emacs
+;; does.  This can be especially confusing for `shell-command', as that does
+;; not run a process directly, but calls a shell to run it, which will use
+;; PATH, not `exec-path'.
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
 
 (provide 'defaults)
 ;;; defaults.el ends here
