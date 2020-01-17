@@ -21,7 +21,7 @@
 
 (use-package ivy
   :defer 0.1
-  :delight
+  :diminish ivy-mode
   :bind (("C-x b"   . ivy-switch-buffer)
          ("C-x B"   . ivy-switch-buffer-other-window)
          ("C-c C-r" . ivy-resume)
@@ -110,7 +110,7 @@
 
 (use-package company
   :defer t
-  :delight
+  :diminish company-mode
   :init
   (setq company-idle-delay nil ; never start completions automatically
         company-echo-delay 0

@@ -21,7 +21,7 @@
 ;;; YASnippet
 
 (use-package yasnippet
-  :delight yas-minor-mode " υ"
+  :diminish yas-minor-mode
   :defer 1.2
   :init
   (use-package yasnippet-snippets)
