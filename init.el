@@ -43,4 +43,6 @@
 (require 'langs-cc)     ; Support for the C-family of languages
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
 
+(require 'grammars)     ; Various language grammars
+
 ;;; init.el ends here
