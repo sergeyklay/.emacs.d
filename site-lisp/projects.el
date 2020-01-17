@@ -21,7 +21,7 @@
 
 (use-package projectile
   :after ivy
-  :delight '(:eval (concat " " (projectile-project-name)))
+  :diminish projectile-mode
   :custom
   ;; The command-line option ‘-batch’ causes Emacs to run `noninteractively'.
   (projectile-enable-caching (not noninteractive))
@@ -39,11 +39,24 @@
   (projectile-known-projects-file
    (concat user-cache-dir "projectile-bookmarks.eld")))
 
+;; See URL `https://github.com/bbatsov/projectile/issues/1148'
+(eval-after-load 'projectile
+  '(progn
+     (let ((fd-binary (executable-find "fd")))
+       (when fd-binary
+	 (setq projectile-git-command
+	       (concat fd-binary " . --color=never --type f -0 -H -E .git")
+	       projectile-generic-command projectile-git-command)))))
+
 ;;;; Counsel Projectile
 
 (use-package counsel-projectile
   :after ivy
   :defer nil
+  :custom
+  ;; Removing the current project or buffer from the list of candidates
+  (counsel-projectile-remove-current-project t)
+  (counsel-projectile-remove-current-buffer t)
   :config
   (add-to-list 'ivy-initial-inputs-alist
 	       '(counsel-projectile-switch-project . ""))
