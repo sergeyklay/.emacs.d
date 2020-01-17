@@ -1,4 +1,4 @@
-;;; windows.el --- Windows management features. -*- lexical-binding: t; -*-
+;;; windows.el --- Windows and frames related stuff. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -11,9 +11,14 @@
 
 ;;; Commentary:
 
-;; Windows management features for GNU Emacs.
+;; Windows and frames related features for GNU Emacs.
 
 ;;; Code:
+
+;; I prefer not to have any of the GUI elements.
+;; This keeps the window clean. And a bit speed up loading.
+(setq use-file-dialog nil)
+(setq use-dialog-box nil)
 
 ;; Convenient keybindings to resize windows.
 ;; For more see URL `https://www.emacswiki.org/emacs/WindowResize'
