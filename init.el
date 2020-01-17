@@ -23,6 +23,7 @@
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
 (require 'modeline)     ; Modeline related configuration
+(require 'shells)       ; Shells configuration
 (require 'defaults)     ; Sane defaults + settings for which there is no group
 (require 'windows)      ; Windows management features
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
