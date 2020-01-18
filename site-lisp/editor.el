@@ -37,7 +37,13 @@
 
 (electric-pair-mode t)
 
+;; Highlight the characters past the 80th column.
+;;
+;; TODO: `fci-mode' had been reimplemented natively in the Emacs
+;; display engine.  That code is in master, and will be in Emacs 27
+;; when it's released. That probably won't be until 2020, though...
 (use-package column-enforce-mode
+  :diminish column-enforce-mode
   :hook
   ((prog-mode markdown-mode) . 80-column-rule))
 
