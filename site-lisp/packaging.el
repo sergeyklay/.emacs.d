@@ -27,6 +27,8 @@
 (unless (file-exists-p package-user-dir)
   (make-directory package-user-dir t))
 
+;; Directory containing GnuPG keyring.
+;; At my PC it is `~/.emacs.d/.local/gnupg'.
 (setq package-gnupghome-dir
       (expand-file-name "gnupg" user-local-dir))
 

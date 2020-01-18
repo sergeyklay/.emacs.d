@@ -46,4 +46,6 @@
 
 (require 'grammars)     ; Various language grammars
 
+(require 'chats)        ; Chats support
+
 ;;; init.el ends here
