@@ -37,6 +37,10 @@
 
 (electric-pair-mode t)
 
+(use-package column-enforce-mode
+  :hook
+  ((prog-mode markdown-mode) . 80-column-rule))
+
 (use-package rainbow-delimiters)
 
 ;; Show Line Numbers
