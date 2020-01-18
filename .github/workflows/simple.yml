@@ -87,11 +87,13 @@ jobs:
       - name: Start the RTags daemon
         run: rdm &
 
-      - uses: actions/checkout@v2-beta
+      - name: Checkout Code
+        uses: actions/checkout@v2-beta
         with:
           fetch-depth: 1
 
-      - uses: purcell/setup-emacs@master
+      - name: Setup GNU Emacs
+        uses: purcell/setup-emacs@master
         with:
           version: ${{ matrix.emacs_version }}
 
