@@ -54,7 +54,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (when (file-directory-p pkg)
     (add-to-list 'load-path pkg)))
 
-(setq custom-file (concat user-cache-dir "custom.el"))
+(setq custom-file (concat user-etc-dir "custom.el"))
 
 (provide 'prelude)
 ;;; prelude.el ends here
