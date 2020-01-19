@@ -17,20 +17,23 @@
 
 ;;;; Flycheck
 
+(declare-function
+ flycheck-display-error-messages-unless-error-list
+ "flycheck" (errors))
+
 ;; Flycheck is a general syntax highlighting framework which
 ;; other packages hook into.  It's an improvment on the built
 ;; in flymake.
 (use-package flycheck
   :if (not (equal system-type 'windows-nt))
-  :diminish flycheck-mode
   :preface
-  (defun my/adjust-flycheck-automatic-syntax-eagerness ()
+  (defun my/adjust-flycheck-eagerness ()
     "Adjust how often we check for errors based on if there are any.
 
 This lets us fix any errors as quickly as possible, but in a clean
 buffer we're an order of magnitude laxer about checking."
     (setq flycheck-idle-change-delay
-	  (if flycheck-current-errors 0.5 30.0)))
+	  (if flycheck-current-errors 0.5 3.0)))
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-standard-error-navigation nil)
@@ -40,31 +43,17 @@ buffer we're an order of magnitude laxer about checking."
   ;; editing.
   (flycheck-check-syntax-automatically
    '(save idle-change mode-enabled))
+  ;; See URL https://github.com/flycheck/flycheck/issues/302
+  (flycheck-display-errors-function
+   #'flycheck-display-error-messages-unless-error-list)
   :hook
   ((after-init . global-flycheck-mode)
-   (flycheck-after-sytax-check . my/flycheck-adjust-syntax-eagerness))
+   (flycheck-after-syntax-check . my/adjust-flycheck-eagerness))
+  ;;
   :config
-  (progn
-    ;; Each buffer gets its own idle-change-delay because of the
-    ;; buffer-sensitive adjustment above.
-    (make-variable-buffer-local 'flycheck-idle-change-delay)
-    (global-flycheck-mode)))
-
-;;;; flycheck-tip
-
-(use-package flycheck-tip
-  :after flycheck
-  :custom (flycheck-tip-avoid-show-func nil))
-
-;;;; flycheck-pos-tip
-
-(use-package flycheck-pos-tip
-  :defer t
-  ;; Display Flycheck errors in GUI tooltips
-  :if (display-graphic-p)
-  :after flycheck
-  :commands flycheck-pos-tip-mode
-  :hook (flycheck-mode . flycheck-pos-tip-mode))
+  ;; Each buffer gets its own idle-change-delay because of the
+  ;; buffer-sensitive adjustment above.
+  (make-variable-buffer-local 'flycheck-idle-change-delay))
 
 (provide 'syntax-check)
 ;;; syntax-check.el ends here
