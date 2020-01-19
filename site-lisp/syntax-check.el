@@ -41,7 +41,8 @@ buffer we're an order of magnitude laxer about checking."
   (flycheck-check-syntax-automatically
    '(save idle-change mode-enabled))
   :hook
-  ((flycheck-after-sytax-check . my/flycheck-adjust-syntax-eagerness))
+  ((after-init . global-flycheck-mode)
+   (flycheck-after-sytax-check . my/flycheck-adjust-syntax-eagerness))
   :config
   (progn
     ;; Each buffer gets its own idle-change-delay because of the
@@ -59,6 +60,7 @@ buffer we're an order of magnitude laxer about checking."
 
 (use-package flycheck-pos-tip
   :defer t
+  ;; Display Flycheck errors in GUI tooltips
   :if (display-graphic-p)
   :after flycheck
   :commands flycheck-pos-tip-mode
