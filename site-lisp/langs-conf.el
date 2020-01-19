@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'util)
+
 ;;;; JSON
 
 (use-package json-mode
@@ -45,6 +47,14 @@
 ;;;; Yaml
 
 (use-package yaml-mode
+  :preface
+  (defun my|common-yaml-hook()
+    "The common hook to configure `yaml-mode'."
+    (let ((ruby-path (my/ruby-locate-executable)))
+      (when (boundp 'flycheck-yaml-ruby-executable)
+	(setq-local flycheck-yaml-ruby-executable ruby-path))))
+  :hook
+  ((yaml-mode . my|common-yaml-hook))
   :mode "\\.ya?ml\\'"
   :interpreter ("yml" . yml-mode))
 
