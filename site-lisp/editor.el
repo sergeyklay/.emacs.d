@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'directories)
+
 (setq indent-tabs-mode nil)
 
 ;; Make sure that there is one newline at the end of the file while saving,
@@ -38,18 +40,23 @@
 (electric-pair-mode t)
 
 ;; Highlight the characters past the 80th column.
-;;
-;; TODO: `fci-mode' had been reimplemented natively in the Emacs
-;; display engine.  That code is in master, and will be in Emacs 27
-;; when it's released. That probably won't be until 2020, though...
 (use-package column-enforce-mode
+  :if (version< emacs-version "27") ; On old Emacs versions
   :diminish column-enforce-mode
   :hook
-  ((prog-mode markdown-mode) . 80-column-rule))
+  (prog-mode . 80-column-rule))
+
+;; Right margin bar.
+(use-package display-fill-column-indicator-mode
+  :unless (version< emacs-version "27")
+  :ensure nil
+  :hook
+  (prog-mode . display-fill-column-indicator-mode))
 
 (use-package rainbow-delimiters)
 
-;; Show Line Numbers
+;;;; Show Line Numbers
+
 (use-package display-line-numbers
   :ensure nil
   :bind ("C-x t l" . display-line-numbers-mode)
@@ -57,7 +64,8 @@
   (setq display-line-numbers-type t
 	display-line-numbers-width 4))
 
-;; Save point position between sessions
+;;;; Save point position between sessions
+
 (use-package saveplace
   :ensure nil
   :config
@@ -65,11 +73,14 @@
   ;; Automatically save place in each file.
   (save-place-mode t))
 
-;; Whitespace mode
+;;;; Whitespace mode
+
 (use-package whitespace
   :bind ("C-x t w" . #'whitespace-mode))
 
-;; Folding
+;;;; Folding
+
+(declare-function hs-toggle-hiding "hideshow")
 (use-package hideshow
   :preface
   (defun my/toggle-fold ()
