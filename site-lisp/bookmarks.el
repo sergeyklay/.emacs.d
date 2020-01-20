@@ -32,7 +32,7 @@
   (setq recentf-save-file (concat user-cache-dir "recentf")
         recentf-max-saved-items 200)
   :config
-  (require 'cl)
+  (require 'cl-macs) ; cl-flet
 
   (defvar recentf-list-prev nil)
 
@@ -63,9 +63,11 @@ do nothing. And suppress the output from `message' and
   (setq recentf-exclude
         `(,(concat "/\\(\\(\\"
 		  "(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)"
-		  "_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)_DESCRIPTION\\)\\'")
+		  "_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)"
+		  "_DESCRIPTION\\)\\'")
 	  ,(expand-file-name package-user-dir)
-	  "github.*txt$" "auto-save-list\\*" ".cache" "[/\\]elpa/" ".cask" "bookmarks"
+	  "github.*txt$" "auto-save-list\\*"
+	  ".cache" "[/\\]elpa/" ".cask" "bookmarks"
 	  "/dev/.*")))
 
 (defun my/undo-kill-buffer (arg)
