@@ -18,6 +18,9 @@ jobs:
           - '26.2'
           - '26.3'
           - snapshot
+        include:
+          - emacs_version: snapshot
+            allow_failure: true
 
     steps:
       - name: Set environment variables
@@ -32,12 +35,12 @@ jobs:
           sudo apt-key add llvm-snapshot.gpg.key
           sudo apt-add-repository \
             "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-$LLVM_VERSION main"
-          sudo apt-get update --quiet --yes
+          sudo apt update -qq
 
       - name: Setup Prerequisites
         run: |
           sudo snap install ripgrep --classic
-          sudo apt install --no-install-recommends -q -y \
+          DEBIAN_FRONTEND=noninteractive sudo apt install --no-install-recommends -qq -y \
             global \
             pandoc \
             exuberant-ctags \
@@ -98,7 +101,12 @@ jobs:
           version: ${{ matrix.emacs_version }}
 
       - name: Run tests
+        if: matrix.allow_failure != true
         run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./run-tests.sh --debug
+
+      - name: Run tests
+        if: matrix.allow_failure == true
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (./run-tests.sh --debug || true)
 
       - name: Run Shell Check
         if: always()
