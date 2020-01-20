@@ -29,7 +29,7 @@
   :ensure nil
   :if gpg-executable-path
   :custom
-  (setq epg-gpg-program gpg-executable-path))
+  (epg-gpg-program gpg-executable-path))
 
 ;;;; EasyPG Assistant
 
