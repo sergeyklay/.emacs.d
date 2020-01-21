@@ -23,6 +23,8 @@
 ;; I never used this feature and actually don't need it.
 (global-unset-key (kbd "C-h h"))
 
+(setq default-directory "~/")
+
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 
 ;;;; Encoding
