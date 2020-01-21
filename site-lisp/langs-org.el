@@ -30,8 +30,8 @@
 
 ;; I use the following directory structure for Org:
 ;;
-;;   $ tree ~/Dropbox/Org/
-;;   ~/Dropbox/Org/
+;;   $ tree ~/org/
+;;   ~/org/
 ;;   ├── Agenda
 ;;   │    └── Default.org
 ;;   │    ...
@@ -41,17 +41,6 @@
 ;;   └── Notes.org
 ;;   ...
 ;;   ...
-(defvar my--org-directory nil
-  "The base path for the Org directory.")
-
-;; Set proper path to the Org base directory.
-(unless my--org-directory
-  (let ((dropbox-dir "$HOME/Dropbox"))
-    (unless (file-exists-p dropbox-dir)
-      (setq dropbox-dir "$HOME/Dropbox (Personal)"))
-    (setq my--org-directory
-	  (substitute-in-file-name (concat dropbox-dir "/Org")))))
-
 (use-package org
   :ensure org-plus-contrib
   :defines
@@ -64,11 +53,9 @@
   org-agenda-todo-ignore-scheduled
   org-agenda-sorting-strategy
   org-agenda-skip-deadline-prewarning-if-scheduled
-  org-src-strip-leading-and-trailing-blank-lines
-  :custom
-  (org-directory my--org-directory))
+  org-src-strip-leading-and-trailing-blank-lines)
 
-;;; Org activation bindings
+;;;; Org activation bindings
 
 ;; Set up some global key bindings that integrate with Org Mode features.
 
@@ -79,19 +66,20 @@
 (setq org-todo-keywords
       '((sequence "TODO" "FEEDBACK" "VERIFY" "|" "DONE" "DELEGATED" "INVALID")))
 
-;;; Org agenda
+;;;; Org agenda
 
-(setq org-agenda-files
-      (list org-directory (expand-file-name "Agenda" my--org-directory)))
+;; The `org-agenda-files' was set in the host file.
+;; See bottom of init.el
 
-;;; Org capture
+;;;; Org capture
 
 (bind-key "C-c c" 'org-capture)
 
-(setq org-default-notes-file (expand-file-name "Inbox.org" my--org-directory))
+;; The `org-default-notes-file' was set in the host file.
+;; See bottom of init.el
 (setq org-capture-bookmark nil)
 
-;;; Org setup
+;;;; Org setup
 
 ;; Speed commands are a nice and quick way to perform certain actions
 ;; while at the beginning of a heading.  It's not activated by default.
@@ -103,7 +91,7 @@
 (setq org-image-actual-width 550)
 (setq org-highlight-latex-and-related '(latex script entities))
 
-;;; Org tags
+;;;; Org tags
 
 ;; The default value is -77, which is weird for smaller width windows.
 ;; I'd rather have the tags align horizontally with the header.
@@ -111,7 +99,7 @@
 
 (setq org-tags-column 45)
 
-;;; Org babel languages
+;;;; Org babel languages
 
 (org-babel-do-load-languages
  'org-babel-load-languages

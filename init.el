@@ -18,7 +18,7 @@
 ;;; Code:
 
 ;; Begin initialization
-(require 'directories (concat user-emacs-directory "site-lisp/prelude"))
+(require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
 
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
@@ -48,5 +48,9 @@
 (require 'grammars)     ; Various language grammars
 
 (require 'chats)        ; Chats support
+
+;; Load settings specific for the current site
+(when (file-exists-p user-host-dir)
+  (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
 
 ;;; init.el ends here
