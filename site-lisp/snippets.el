@@ -18,24 +18,24 @@
 (eval-when-compile
   (require 'prelude))
 
-;;; YASnippet
+;;;; YASnippet
+
+(declare-function yas-reload-all "yasnippet")
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :defer 1.2
-  :init
-  (use-package yasnippet-snippets)
+  :defer 20
+  :custom
+  (yas-indent-line 'fixed)
   :config
-  (setq yas-verbosity (if emacs-debug-mode 3 0)
-        yas-indent-line 'fixed)
-
-  (add-to-list 'yas-snippet-dirs
-	       (concat user-emacs-directory "snippets"))
+  (setq yas-verbosity (if emacs-debug-mode 3 0))
+  (add-to-list
+   'yas-snippet-dirs (concat user-emacs-directory "snippets"))
   (yas-reload-all)
   (yas-global-mode t))
 
 (use-package ivy-yasnippet
-  :defer t
+  :defer 20
   :after (yasnippet ivy))
 
 (provide 'snippets)

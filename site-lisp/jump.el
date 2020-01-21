@@ -58,6 +58,7 @@
 (use-package rtags
   :if rdm-executable-path
   :after company
+  :defer 10
   :config
   (setq rtags-completions-enabled t
 	rtags-path (directory-file-name
@@ -70,7 +71,7 @@
 
 (use-package company-rtags
   :if rdm-executable-path
-  :after (company))
+  :after (rtags))
 
 (provide 'jump)
 ;;; jump.el ends here

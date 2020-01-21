@@ -43,6 +43,26 @@
 ;;   ...
 (use-package org
   :ensure org-plus-contrib
+  :preface
+  (defun my|common-org-hook ()
+  "A common hook for `org-mode'."
+  ;; Org babel languages.
+  ;; TODO(klay): Please test me.
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (C . t)
+     (calc . t)
+     (latex . t)
+     (java . t)
+     (ruby . t)
+     (lisp . t)
+     (scheme . t)
+     (shell . t)
+     (sqlite . t)
+     (js . t)
+     (haskell . t)
+     (php . t))))
   :defines
   org-capture-bookmark
   org-capture-templates
@@ -53,7 +73,9 @@
   org-agenda-todo-ignore-scheduled
   org-agenda-sorting-strategy
   org-agenda-skip-deadline-prewarning-if-scheduled
-  org-src-strip-leading-and-trailing-blank-lines)
+  org-src-strip-leading-and-trailing-blank-lines
+  :hook
+  ((org-mode . my|common-org-hook)))
 
 ;;;; Org activation bindings
 
@@ -98,24 +120,6 @@
 ;; 45 is a good column number to do that.
 
 (setq org-tags-column 45)
-
-;;;; Org babel languages
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (C . t)
-   (calc . t)
-   (latex . t)
-   (java . t)
-   (ruby . t)
-   (lisp . t)
-   (scheme . t)
-   (shell . t)
-   (sqlite . t)
-   (js . t)
-   (haskell . t)
-   (php . t)))
 
 ;; I like to have source blocks properly syntax highlighted and with the
 ;; editing popup window staying within the same window so all the windows
