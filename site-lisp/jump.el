@@ -16,8 +16,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'etags)
-  (require 'company))
+  (require 'etags))
+
 
 (defconst rdm-executable-path (executable-find "rdm")
   "The rdm executable path on this system.")
@@ -47,7 +47,7 @@
 
 (use-package company-rtags
   :if rdm-executable-path
-  :after (rtags))
+  :after rtags)
 
 (provide 'jump)
 ;;; jump.el ends here
