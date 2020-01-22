@@ -144,6 +144,7 @@
 
 (use-package org-tempo
   :ensure org-plus-contrib
+  :after org
   :defer t
   :init
   (add-to-list 'org-structure-template-alist '("el"  . "src emacs-lisp"))
