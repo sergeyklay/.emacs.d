@@ -15,6 +15,15 @@
 
 ;;; Code:
 
+;; GC threshold to 1GB.
+(setq gc-cons-threshold 1000000000
+      gc-cons-percentage 0.6)
+
+(add-hook 'after-init-hook
+	  (lambda ()
+	    (setq gc-cons-threshold 800000
+		  gc-cons-percentage 0.1)))
+
 ;; Turn off mouse interface early in startup to avoid momentary display.
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))     ; Disable the menu bar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))     ; Disable the tool bar

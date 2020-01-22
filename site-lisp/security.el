@@ -17,25 +17,18 @@
 
 (require 'directories)
 
-(defconst gpg-executable-path (executable-find "gpg")
-  "The gpg executable path on this system.")
-
-(defconst pass-executable-path (executable-find "pass")
-  "The pass executable path on this system.")
-
 ;;;; EasyPG
 
 (use-package epg
   :ensure nil
-  :if gpg-executable-path
   :custom
-  (epg-gpg-program gpg-executable-path))
+  ;; GPG 2 actually
+  (epg-gpg-program "gpg"))
 
 ;;;; EasyPG Assistant
 
 (use-package epa
   :ensure nil
-  :if gpg-executable-path
   :after epg
   :init
   ;; For more see "man 1 gpg" for the option "--pinentry-mode"
@@ -58,20 +51,20 @@
 ;;;; Auth Source
 
 (use-package auth-source
-  :if gpg-executable-path
   :init
   (add-to-list 'auth-sources (concat user-local-dir "etc/.authinfo.gpg")))
 
 ;;;; Password store
 
-(use-package password-store
-  :if (and gpg-executable-path pass-executable-path))
+;; I use 'pass' on all my machines, thus I prefer avoid here
+;; any check for speed Emacs load reasons.
+(use-package password-store)
 
 ;; See https://www.passwordstore.org/
 (use-package pass
   :after password-store
   :init
-  (let ((passwd-dir (substitute-in-file-name "$HOME/.password-store")))
+  (let ((passwd-dir "~/.password-store"))
     (unless (file-exists-p passwd-dir)
       (make-directory passwd-dir t))))
 
