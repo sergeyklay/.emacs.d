@@ -57,22 +57,19 @@
 (use-package lisp-mode
   :ensure nil
   :hook
-  ((lisp-mode . ggtags-mode)
-   (lisp-mode . company-mode)
+  ((lisp-mode . company-mode) ;; TODO: setup TAGS
    (lisp-mode . turn-on-eldoc-mode)
    (lisp-mode . rainbow-delimiters-mode)))
 
 (use-package elisp-mode
   :ensure nil
   :hook
-  ((emacs-lisp-mode . ggtags-mode)
-   (emacs-lisp-mode . company-mode)
+  ((emacs-lisp-mode . company-mode) ; TODO: Setup tags
    (emacs-lisp-mode . hs-minor-mode)
    (emacs-lisp-mode . turn-on-eldoc-mode)
    (emacs-lisp-mode . rainbow-delimiters-mode)
 
-   (lisp-interaction-mode . ggtags-mode)
-   (lisp-interaction-mode . company-mode)
+   (lisp-interaction-mode . company-mode) ; TODO: Setup tags
    (lisp-interaction-mode . turn-on-eldoc-mode)
    (lisp-interaction-mode . rainbow-delimiters-mode))
   :init

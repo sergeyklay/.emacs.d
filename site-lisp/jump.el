@@ -19,32 +19,8 @@
   (require 'etags)
   (require 'company))
 
-(defconst global-executable-path (executable-find "global")
-  "The global executable path on this system.")
-
 (defconst rdm-executable-path (executable-find "rdm")
   "The rdm executable path on this system.")
-
-;; A front-end for accessing the gtags-generated tags.
-;; For more see URL `https://github.com/leoliu/ggtags'
-(use-package ggtags
-  :if global-executable-path
-  :config
-  (unbind-key "M-]" ggtags-mode-map)
-  (unbind-key "M-o" ggtags-navigation-map)
-  :bind (:map ggtags-mode-map
-	 ("C-c g s" . 'ggtags-find-other-symbol)
-	 ("C-c g h" . 'ggtags-view-tag-history)
-	 ("C-c g r" . 'ggtags-find-reference)
-	 ("C-c g f" . 'ggtags-find-file)
-	 ("C-c g c" . 'ggtags-create-tags)
-	 ("C-c g u" . 'ggtags-update-tags)
-	 ("M-."     . 'ggtags-find-tag-dwim)
-	 ("M-,"     . 'pop-tag-mark)
-	 ("C-c <"   . 'ggtags-prev-mark)
-	 ("C-c >"   . 'ggtags-next-mark)
-	 :map ggtags-navigation-map
-	 ("M-l"     . 'ggtags-navigation-visible-mode)))
 
 ;; Make Emacs reload the TAGS file automatically
 (setq tags-revert-without-query 1)
