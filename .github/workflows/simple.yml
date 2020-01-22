@@ -41,9 +41,7 @@ jobs:
         run: |
           sudo snap install ripgrep --classic
           DEBIAN_FRONTEND=noninteractive sudo apt install --no-install-recommends -qq -y \
-            global \
             pandoc \
-            exuberant-ctags \
             sbcl \
             "libclang-${LLVM_VERSION}-dev" \
             cmake
