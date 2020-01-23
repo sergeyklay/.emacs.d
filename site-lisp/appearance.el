@@ -82,11 +82,14 @@
 (bind-key "<C-f12>" 'my/switch-theme)
 (bind-key "<C-f11>" 'my/disable-active-themes)
 
-(use-package modus-operandi-theme)
+(use-package modus-operandi-theme
+  :defer 10)
 
 (use-package modus-vivendi-theme
-  :config
-  (my/switch-theme 'modus-vivendi))
+  :defer 10)
+
+;; I like light themes. Use `leuven' by default.
+(my/switch-theme 'leuven)
 
 (provide 'appearance)
 ;;; appearance.el ends here
