@@ -33,8 +33,5 @@
   :hook
   (markdown-mode . auto-fill-mode))
 
-(use-package markdown-toc
-  :commands markdown-toc-generate-toc)
-
 (provide 'langs-md)
 ;;; langs-md.el ends here
