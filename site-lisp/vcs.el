@@ -33,14 +33,9 @@
   :after (ivy transient)
   :bind (("C-x g" . magit-status))
   :config
-  (setq
-   ;; DWIM prompting when creating new branches.
-   magit-branch-read-upstream-first 'fallback
-   magit-completing-read-function #'ivy-completing-read))
+  (setq magit-completing-read-function #'ivy-completing-read))
 
 ;;;; Git
-
-(use-package git-link)
 
 (use-package gitconfig-mode
   :mode "\\.gitconfig\\'"
@@ -59,20 +54,19 @@
 ;;;; `git-gutter'
 
 (use-package git-gutter
+  :defer 2
   :diminish git-gutter-mode
   :custom
   (git-gutter:update-interval 2)
-  (git-gutter:modified-sign   "┃")
-  (git-gutter:added-sign      "┃")
-  (git-gutter:deleted-sign    "┃")
-  (git-gutter:hide-gutter     nil)
-
+  (git-gutter:modified-sign "┃")
+  (git-gutter:added-sign "┃")
+  (git-gutter:deleted-sign "┃")
+  (git-gutter:hide-gutter nil)
   :config
-  (global-git-gutter-mode +1))
-
-(set-face-foreground 'git-gutter:modified "DeepSkyBlue3")
-(set-face-foreground 'git-gutter:added "SeaGreen4")
-(set-face-foreground 'git-gutter:deleted "IndianRed3")
+  (global-git-gutter-mode +1)
+  (set-face-foreground 'git-gutter:modified "DeepSkyBlue3")
+  (set-face-foreground 'git-gutter:added "SeaGreen4")
+  (set-face-foreground 'git-gutter:deleted "IndianRed3"))
 
 (provide 'vcs)
 ;;; vcs.el ends here
