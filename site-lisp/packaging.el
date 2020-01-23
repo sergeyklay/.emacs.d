@@ -78,7 +78,9 @@
   (interactive
    (list (completing-read
           "Status : " '("new" "installed" "dependency" "obsolete"))))
-  (package-menu-filter (concat "status:" status)))
+  (if (version< emacs-version "27")
+      (package-menu-filter (concat "status:" status))
+    (package-menu-filter-by-keyword (concat "status:" status))))
 
 (define-key package-menu-mode-map "s" #'my/package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'my/package-menu-find-marks)
