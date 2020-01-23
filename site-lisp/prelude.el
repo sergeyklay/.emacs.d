@@ -65,5 +65,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (setq custom-file (concat user-etc-dir "custom.el"))
 
+;; Prevent annoying "Active processes exist" query when you quit Emacs.
+(setq confirm-kill-processes nil)
+
 (provide 'prelude)
 ;;; prelude.el ends here
