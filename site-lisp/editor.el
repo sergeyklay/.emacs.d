@@ -167,5 +167,11 @@ This function is for interactive use only;"
 (global-set-key [M-S-down] #'my/move-text-down)
 (global-set-key (kbd "C-c d") #'my/duplicate-line)
 
+;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
+(defun my/revert-buffer-no-confirm ()
+  "Revert buffer without confirmation."
+  (interactive)
+  (revert-buffer :ignore-auto :noconfirm))
+
 (provide 'editor)
 ;;; editor.el ends here
