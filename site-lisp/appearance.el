@@ -42,8 +42,9 @@
 (cond
  ((string-equal system-type "gnu/linux")
   (when (member "Source Code Pro" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Source Code Pro-11"))
-    (add-to-list 'default-frame-alist '(font . "Source Code Pro-11"))))
+    (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono"))
+    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono"))
+    (set-face-attribute 'default nil :height 105)))
  ((string-equal system-type "darwin")
   (when (member "Source Code Pro" (font-family-list))
     (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
@@ -54,42 +55,8 @@
 (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
 (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
 
-;;;; Theme
-
-;; I tend to switch themes more often than normal.  For example,
-;; switching to a lighter theme (such as the default) or to a
-;; different theme depending on the time of day or my mood.  Normally,
-;; switching themes is a multi-step process with `disable-theme' and
-;; `load-theme'.  The `switch-theme' function will do that in one
-;; swoop.  I just choose which theme I want to go to.
-(defun my/switch-theme (theme)
-  "Disable any currently active themes and load the THEME."
-  ;; This interactive call is taken from `load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-			     (mapc 'symbol-name
-				   (custom-available-themes))))))
-  (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme enabled-themes)
-    (load-theme theme t)))
-
-(defun my/disable-active-themes ()
-  "Disable any currently active themes listed in `custom-enabled-themes'."
-  (interactive)
-  (mapc #'disable-theme custom-enabled-themes))
-
-(bind-key "<C-f12>" 'my/switch-theme)
-(bind-key "<C-f11>" 'my/disable-active-themes)
-
-(use-package modus-operandi-theme
-  :defer 10)
-
-(use-package modus-vivendi-theme
-  :defer 10)
-
 ;; I like light themes. Use `leuven' by default.
-(my/switch-theme 'leuven)
+(load-theme 'leuven t)
 
 (provide 'appearance)
 ;;; appearance.el ends here
