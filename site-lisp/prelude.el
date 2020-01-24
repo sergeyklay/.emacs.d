@@ -44,12 +44,10 @@
 (defun compile-init-file ()
   "Bytecompile init file."
   (interactive)
-  (let ((a-file (file-truename user-init-file)))
-    (when a-file
-      (byte-compile-file a-file))))
+  (when user-init-file
+    (byte-compile-file (file-truename user-init-file))))
 
 (add-hook 'after-init-hook #'reset-performance)
-;; FIXME: Does not work with `esup'.
 (add-hook 'kill-emacs-hook #'compile-init-file)
 
 ;; Turn off mouse interface early in startup to avoid momentary display.
