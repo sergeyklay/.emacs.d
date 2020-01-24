@@ -15,14 +15,29 @@
 
 ;;; Code:
 
-;; GC threshold to 1GB.
-(setq gc-cons-threshold 1000000000
+;; Increasing GC is a common way to speed up Emacs.
+;; `gc-cons-threshold' sets at what point Emacs should
+;; invoke its garbage collector.  When set it temporarily
+;; to a large number, we only garbage collect once on startup.
+(setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
+
+(defvar file-name-handler-alist-backup
+  file-name-handler-alist
+  "The backup of `file-name-handler-alist' we'll restore on `after-init-hook'.")
 
 (add-hook 'after-init-hook
 	  (lambda ()
+	    (garbage-collect)
+	    ;; Reset `gc-cons-threshold' to the standard value
+	    ;; after initializing the Emacs session.
+	    ;; Also we restore `file-name-handler-alist' here.
 	    (setq gc-cons-threshold 800000
-		  gc-cons-percentage 0.1)))
+		  gc-cons-percentage 0.1
+		  file-name-handler-alist
+		  (append
+		   file-name-handler-alist-backup
+		   file-name-handler-alist))))
 
 ;; Turn off mouse interface early in startup to avoid momentary display.
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))     ; Disable the menu bar
