@@ -26,20 +26,31 @@
   file-name-handler-alist
   "The backup of `file-name-handler-alist' we'll restore on `after-init-hook'.")
 
-(add-hook 'after-init-hook
-	  (lambda ()
-	    (garbage-collect)
-	    ;; Reset `gc-cons-threshold' to the standard value
-	    ;; after initializing the Emacs session.
-	    ;; Also we restore `file-name-handler-alist' here.
-	    (setq gc-cons-threshold
-		  (car (get 'gc-cons-threshold 'standard-value))
-		  gc-cons-percentage
-		  (car (get 'gc-cons-percentage 'standard-value))
-		  file-name-handler-alist
-		  (append
-		   file-name-handler-alist-backup
-		   file-name-handler-alist))))
+;; Reset `gc-cons-threshold' to the standard value
+;; after initializing the Emacs session.
+;; Also we restore `file-name-handler-alist' here.
+(defun reset-performance ()
+  "Reset Emacs performace settings to the standard ones."
+  (garbage-collect)
+  (setq gc-cons-threshold
+	(car (get 'gc-cons-threshold 'standard-value))
+        gc-cons-percentage
+	(car (get 'gc-cons-percentage 'standard-value))
+        file-name-handler-alist
+	(append
+	 file-name-handler-alist-backup
+	 file-name-handler-alist)))
+
+(defun compile-init-file ()
+  "Bytecompile init file."
+  (interactive)
+  (let ((a-file (file-truename user-init-file)))
+    (when a-file
+      (byte-compile-file a-file))))
+
+(add-hook 'after-init-hook #'reset-performance)
+;; FIXME: Does not work with `esup'.
+(add-hook 'kill-emacs-hook #'compile-init-file)
 
 ;; Turn off mouse interface early in startup to avoid momentary display.
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))     ; Disable the menu bar
