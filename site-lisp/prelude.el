@@ -32,8 +32,10 @@
 	    ;; Reset `gc-cons-threshold' to the standard value
 	    ;; after initializing the Emacs session.
 	    ;; Also we restore `file-name-handler-alist' here.
-	    (setq gc-cons-threshold 800000
-		  gc-cons-percentage 0.1
+	    (setq gc-cons-threshold
+		  (car (get 'gc-cons-threshold 'standard-value))
+		  gc-cons-percentage
+		  (car (get 'gc-cons-percentage 'standard-value))
 		  file-name-handler-alist
 		  (append
 		   file-name-handler-alist-backup
