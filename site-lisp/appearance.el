@@ -50,8 +50,6 @@
     (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
     (add-to-list 'default-frame-alist '(font . "Source Code Pro-13")))))
 
-(use-package unicode-fonts)
-
 (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
 (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
 
