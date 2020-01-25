@@ -41,9 +41,9 @@
 ;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
 (cond
  ((string-equal system-type "gnu/linux")
-  (when (member "Source Code Pro" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono"))
-    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono"))
+  (when (member "DejaVu Sans Mono" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-10"))
+    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
     (set-face-attribute 'default nil :height 105)))
  ((string-equal system-type "darwin")
   (when (member "Source Code Pro" (font-family-list))

@@ -48,7 +48,7 @@
   :mode "\\..elpaignore\\'"
   :preface
   (defun gitignore-common-hook()
-    "The common hook for the `gitognore-mode'."
+    "The common hook for the `gitignore-mode'."
     (set (make-local-variable 'require-final-newline) t))
   :hook
   ((gitignore-mode . gitignore-common-hook)))
