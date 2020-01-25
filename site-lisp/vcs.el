@@ -37,25 +37,29 @@
 
 ;;;; Git
 
+(defun my|git-common-hook()
+  "The common hook for git-related modes."
+  (set (make-local-variable 'require-final-newline) t))
+
 (use-package gitconfig-mode
   :mode "\\.gitconfig\\'"
   :mode "\\.git/config\\'"
-  :mode "\\.gitmodules\\'")
+  :mode "\\.gitmodules\\'"
+  :hook
+  ((gitignore-mode . my|git-common-hook)))
 
 (use-package gitignore-mode
   :mode "\\.gitignore\\'"
   :mode "\\.dockerignore\\'"
   :mode "\\..elpaignore\\'"
-  :preface
-  (defun gitignore-common-hook()
-    "The common hook for the `gitignore-mode'."
-    (set (make-local-variable 'require-final-newline) t))
   :hook
-  ((gitignore-mode . gitignore-common-hook)))
+  ((gitignore-mode . my|git-common-hook)))
 
 (use-package gitattributes-mode
   :mode "\\.gitattributes\\'"
-  :mode "\\.git/info/attributes\\'")
+  :mode "\\.git/info/attributes\\'"
+  :hook
+  ((gitignore-mode . my|git-common-hook)))
 
 ;;;; `git-gutter'
 
@@ -64,15 +68,15 @@
   :diminish git-gutter-mode
   :custom
   (git-gutter:update-interval 2)
-  (git-gutter:modified-sign "┃")
-  (git-gutter:added-sign "┃")
-  (git-gutter:deleted-sign "┃")
   (git-gutter:hide-gutter nil)
   :config
   (global-git-gutter-mode +1)
-  (set-face-foreground 'git-gutter:modified "DeepSkyBlue3")
-  (set-face-foreground 'git-gutter:added "SeaGreen4")
-  (set-face-foreground 'git-gutter:deleted "IndianRed3"))
+  (set-face-background 'git-gutter:modified "#95B2CE")
+  (set-face-foreground 'git-gutter:modified "#95B2CE")
+  (set-face-background 'git-gutter:added "#A0C495")
+  (set-face-foreground 'git-gutter:added "#A0C495")
+  (set-face-background 'git-gutter:deleted "#9F9F9F")
+  (set-face-foreground 'git-gutter:deleted "#9F9F9F"))
 
 (provide 'vcs)
 ;;; vcs.el ends here
