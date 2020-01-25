@@ -8,5 +8,5 @@
 # Ignore all files
 *
 
-# Except these ones
+# except this one
 !.gitignore

@@ -45,7 +45,13 @@
 (use-package gitignore-mode
   :mode "\\.gitignore\\'"
   :mode "\\.dockerignore\\'"
-  :mode "\\..elpaignore\\'")
+  :mode "\\..elpaignore\\'"
+  :preface
+  (defun gitignore-common-hook()
+    "The common hook for the `gitognore-mode'."
+    (set (make-local-variable 'require-final-newline) t))
+  :hook
+  ((gitignore-mode . gitignore-common-hook)))
 
 (use-package gitattributes-mode
   :mode "\\.gitattributes\\'"

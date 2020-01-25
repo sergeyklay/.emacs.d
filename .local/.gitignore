@@ -8,7 +8,7 @@
 # Ignore all files
 *
 
-# Except these ones
+# except these ones
 !/etc
 !/cache
 !.gitignore
