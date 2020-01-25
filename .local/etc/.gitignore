@@ -11,6 +11,9 @@
 # Extept alternate hunspell dictionary
 !alt.dic
 
+# Abbrev definition file
+!abbrev-defs.el
+
 # and these ones
 !/hosts
 !.gitignore

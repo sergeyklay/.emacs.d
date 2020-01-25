@@ -34,7 +34,7 @@
 (require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management
 (require 'jump)         ; Setting up tags and code navigation
-(require 'snippets)     ; Add snippets support
+(require 'expansion)    ; Configuration of expansions
 (require 'editor)       ; Features related to editor behavior
 (require 'syntax-check) ; Syntax checkers
 (require 'spelling)     ; Spell configuration

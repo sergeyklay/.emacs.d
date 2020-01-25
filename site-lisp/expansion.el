@@ -1,4 +1,4 @@
-;;; snippets.el --- Adds snippets support. -*- lexical-binding: t; -*-
+;;; expansion.el --- Expansions configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -11,16 +11,20 @@
 
 ;;; Commentary:
 
-;; Add snippets support for GNU Emacs.
+;; Configuration of the expansions like abbrev, snippets and so on.
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'prelude))
+(require 'prelude)
+(require 'directories)
 
-;;;; YASnippet
-
-(declare-function yas-reload-all "yasnippet")
+(use-package abbrev
+  :ensure nil
+  :custom
+  (save-abbrev 'silently)
+  (abbrev-file-name (concat user-etc-dir "abbrev-defs.el"))
+  :hook
+  ((text-mode prog-mode) . abbrev-mode))
 
 (use-package yasnippet
   :diminish yas-minor-mode
@@ -31,12 +35,13 @@
   (setq yas-verbosity (if emacs-debug-mode 3 0))
   (add-to-list
    'yas-snippet-dirs (concat user-emacs-directory "snippets"))
-  (yas-reload-all)
+  (when (fboundp 'yas-reload-all)
+    (yas-reload-all))
   (yas-global-mode t))
 
 (use-package ivy-yasnippet
   :defer 20
   :after (yasnippet ivy))
 
-(provide 'snippets)
-;;; snippets.el ends here
+(provide 'expansion)
+;;; expansion.el ends here
