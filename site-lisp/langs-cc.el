@@ -60,11 +60,6 @@
  '(c-mode-common-hook
    c++-mode-common-hook))
 
-(my/add-to-hooks
- #'hs-minor-mode
- '(c-mode-common-hook
-   c++-mode-common-hook))
-
 (when rdm-executable-path
   (my/add-to-hooks
    #'rtags-start-process-unless-running

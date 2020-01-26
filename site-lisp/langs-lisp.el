@@ -65,7 +65,6 @@
   :ensure nil
   :hook
   ((emacs-lisp-mode . company-mode) ; TODO: Setup tags
-   (emacs-lisp-mode . hs-minor-mode)
    (emacs-lisp-mode . turn-on-eldoc-mode)
    (emacs-lisp-mode . rainbow-delimiters-mode)
 

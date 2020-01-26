@@ -81,17 +81,6 @@
 
 ;;;; Folding
 
-(declare-function hs-toggle-hiding "hideshow")
-(use-package hideshow
-  :config
-  (defun my/toggle-fold ()
-    "Toggle hiding/showing of a block."
-    (interactive)
-    (save-excursion
-      (end-of-line)
-      (hs-toggle-hiding)))
-  :bind ("C-x t f" . my/toggle-fold))
-
 (defun my--move-text-internal (arg)
   "Move text ARG lines up or down."
   (cond
