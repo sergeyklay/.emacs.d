@@ -39,6 +39,7 @@
 (require 'syntax-check) ; Syntax checkers
 (require 'spelling)     ; Spell configuration
 
+(require 'langs-human)  ; Settings for Human Languages
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
 (require 'langs-cmake)  ; Add cmake support
