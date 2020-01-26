@@ -97,10 +97,12 @@ All it does is check if `leuven' (light version) is active and if so switch to
   (underline-minimum-offset 1)
   ;; Don't beep at me.
   (visible-bell t)
-  :bind ([C-f11] . #'my/select-theme)
-  :bind ([C-f12] . #'my/toggle-theme)
-  :hook ((after-init . my/fonts-setup )
-	 (after-init . my/default-theme)))
+  :bind (([C-f11] . #'my/select-theme)
+	 ([C-f12] . #'my/toggle-theme))
+  :config
+  ;; Call these defuns here to make UI changes transparently.
+  (my/default-theme)
+  (my/fonts-setup))
 
 ;; Throw away the mouse when typing.
 ;; Move the mouse to the corner only if the cursor gets too close,
