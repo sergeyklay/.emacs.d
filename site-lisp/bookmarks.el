@@ -19,20 +19,19 @@
 
 (use-package recentf
   :ensure nil
-  :preface
+  :custom
+  (recentf-max-saved-items 200)
+  (recentf-save-file (concat user-cache-dir "recentf"))
+  :hook (find-file . my|common-recentf-hook)
+  :config
+  (require 'cl-macs) ; cl-flet
+
   (defun my|common-recentf-hook ()
   "Common hook for function `recentf-mode'."
   (unless recentf-mode
     (recentf-mode)
     (when (fboundp 'recentf-track-opened-file)
       (recentf-track-opened-file))))
-  ;; lazy load recentf
-  :hook (find-file . my|common-recentf-hook)
-  :init
-  (setq recentf-save-file (concat user-cache-dir "recentf")
-        recentf-max-saved-items 200)
-  :config
-  (require 'cl-macs) ; cl-flet
 
   (defvar recentf-list-prev nil)
 

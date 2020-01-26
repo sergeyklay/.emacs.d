@@ -43,7 +43,18 @@
 ;;   ...
 (use-package org
   :ensure org-plus-contrib
-  :preface
+  :defines
+  org-capture-bookmark
+  org-capture-templates
+  org-agenda-window-setup
+  org-agenda-span
+  org-agenda-skip-scheduled-if-deadline-is-shown
+  org-agenda-todo-ignore-deadlines
+  org-agenda-todo-ignore-scheduled
+  org-agenda-sorting-strategy
+  org-agenda-skip-deadline-prewarning-if-scheduled
+  org-src-strip-leading-and-trailing-blank-lines
+  :config
   (defun my|common-org-hook ()
   "A common hook for `org-mode'."
   ;; Org babel languages.
@@ -63,17 +74,6 @@
      (js . t)
      (haskell . t)
      (php . t))))
-  :defines
-  org-capture-bookmark
-  org-capture-templates
-  org-agenda-window-setup
-  org-agenda-span
-  org-agenda-skip-scheduled-if-deadline-is-shown
-  org-agenda-todo-ignore-deadlines
-  org-agenda-todo-ignore-scheduled
-  org-agenda-sorting-strategy
-  org-agenda-skip-deadline-prewarning-if-scheduled
-  org-src-strip-leading-and-trailing-blank-lines
   :hook
   ((org-mode . my|common-org-hook)))
 

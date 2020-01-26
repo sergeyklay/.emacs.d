@@ -21,15 +21,6 @@
 (use-package erc
   :after (auth-source password-store)
   :defer
-  :preface
-  (defun my|erc-logging ()
-    "Setting up channel logging for `erc'."
-    (eval-when-compile (require 'erc-log nil t))
-    (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
-      (setq erc-log-channels-directory log-channels-directory
-	    erc-log-insert-log-on-open t)
-      (unless (file-exists-p log-channels-directory)
-	(make-directory log-channels-directory t))))
   :custom
   (erc-autojoin-channels-alist
    '(("freenode.net"
@@ -52,9 +43,20 @@
   :config
   (dolist (module '(notifications spelling log))
     (add-to-list 'erc-modules module))
+
   (erc-services-mode 1)
+
   (when (fboundp 'erc-update-modules)
     (erc-update-modules))
+
+  (defun my|erc-logging ()
+    "Setting up channel logging for `erc'."
+    (eval-when-compile (require 'erc-log nil t))
+    (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
+      (setq erc-log-channels-directory log-channels-directory
+	    erc-log-insert-log-on-open t)
+      (unless (file-exists-p log-channels-directory)
+	(make-directory log-channels-directory t))))
   :hook
   (erc-mode . my|erc-logging))
 

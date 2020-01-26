@@ -47,7 +47,7 @@
 ;;;; Yaml
 
 (use-package yaml-mode
-  :preface
+  :config
   (defun my|common-yaml-hook()
     "The common hook to configure `yaml-mode'."
     (let ((ruby-path (my/ruby-locate-executable)))

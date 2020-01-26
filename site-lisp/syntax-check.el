@@ -26,14 +26,6 @@
 ;; in flymake.
 (use-package flycheck
   :if (not (equal system-type 'windows-nt))
-  :preface
-  (defun my/adjust-flycheck-eagerness ()
-    "Adjust how often we check for errors based on if there are any.
-
-This lets us fix any errors as quickly as possible, but in a clean
-buffer we're an order of magnitude laxer about checking."
-    (setq flycheck-idle-change-delay
-	  (if flycheck-current-errors 0.5 3.0)))
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-standard-error-navigation nil)
@@ -48,9 +40,16 @@ buffer we're an order of magnitude laxer about checking."
    #'flycheck-display-error-messages-unless-error-list)
   :hook
   ((after-init . global-flycheck-mode)
-   (flycheck-after-syntax-check . my/adjust-flycheck-eagerness))
+   (flycheck-after-syntax-check . my|adjust-flycheck-eagerness))
   ;;
   :config
+  (defun my|adjust-flycheck-eagerness ()
+    "Adjust how often we check for errors based on if there are any.
+
+This lets us fix any errors as quickly as possible, but in a clean
+buffer we're an order of magnitude laxer about checking."
+    (setq flycheck-idle-change-delay
+	  (if flycheck-current-errors 0.5 3.0)))
   ;; Each buffer gets its own idle-change-delay because of the
   ;; buffer-sensitive adjustment above.
   (make-variable-buffer-local 'flycheck-idle-change-delay))

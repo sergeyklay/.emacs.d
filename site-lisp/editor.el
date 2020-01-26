@@ -68,8 +68,9 @@
 
 (use-package saveplace
   :ensure nil
+  :custom
+  (save-place-file (concat user-cache-dir "places"))
   :config
-  (setq save-place-file (concat user-cache-dir "places"))
   ;; Automatically save place in each file.
   (save-place-mode t))
 
@@ -82,7 +83,7 @@
 
 (declare-function hs-toggle-hiding "hideshow")
 (use-package hideshow
-  :preface
+  :config
   (defun my/toggle-fold ()
     "Toggle hiding/showing of a block."
     (interactive)
