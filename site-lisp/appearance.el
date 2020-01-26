@@ -15,13 +15,59 @@
 
 ;;; Code:
 
+(use-package emacs
+  :ensure nil
+  :preface
+  (defconst my/font-mono-linux "DejaVu Sans Mono"
+    "The default monospace typeface to use in Linux.")
+
+  (defconst my/font-mono-darwin "Source Code Pro"
+    "The default monospace typeface to use in macOS.")
+
+  (defconst my/font-mono-params ":hintstyle=hintfull"
+    "Fontconfig parameters for the monospaced  typeface.")
+
+  (defun my/font-family-size (family size)
+    "Set frame font to FAMILY at SIZE."
+    (when (member family (font-family-list))
+      (set-frame-font
+       (concat family "-" (number-to-string size) my/font-mono-params) t t)))
+
+  (defun my/fonts-linux ()
+    "Pass desired argument to `my/font-family-size' for use on Linux."
+    (interactive)
+    (when window-system
+      (my/font-family-size my/font-mono-linux 10)))
+
+  (defun my/fonts-darwin ()
+    "Pass desired argument to `my/font-family-size' for use on macOS."
+    (interactive)
+    (when window-system
+      (my/font-family-size my/font-mono-darwin 13)))
+
+  (defun my/fonts-setup ()
+    "Choose between `my/fonts-linux' and `my/fonts-darwin' based on the OS."
+    (interactive)
+    (when window-system
+      (cond
+       ((string-equal system-type "gnu/linux")
+	(my/fonts-linux))
+       ((string-equal system-type "darwin")
+	(my/fonts-darwin)))
+      (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
+      (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))))
+  :custom
+  (x-underline-at-descent-line t)
+  (underline-minimum-offset 1)
+  ;; Don't beep at me.
+  (visible-bell t)
+  :hook (after-init . my/fonts-setup))
+
+
 ;; Throw away the mouse when typing.
 ;; Move the mouse to the corner only if the cursor gets too close,
 ;; and allow it to return once the cursor is out of the way.
 (mouse-avoidance-mode 'exile)
-
-;; Don't beep at me.
-(setq visible-bell t)
 
 ;; Just blink the modeline on errors.
 (setq ring-bell-function
@@ -37,21 +83,6 @@
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
-
-;; For more see URL `http://ergoemacs.org/emacs/emacs_list_and_set_font.html'
-(cond
- ((string-equal system-type "gnu/linux")
-  (when (member "DejaVu Sans Mono" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "DejaVu Sans Mono-10"))
-    (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-10"))
-    (set-face-attribute 'default nil :height 105)))
- ((string-equal system-type "darwin")
-  (when (member "Source Code Pro" (font-family-list))
-    (add-to-list 'initial-frame-alist '(font . "Source Code Pro-13"))
-    (add-to-list 'default-frame-alist '(font . "Source Code Pro-13")))))
-
-(add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
-(add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))
 
 ;; I like light themes. Use `leuven' by default.
 (load-theme 'leuven t)
