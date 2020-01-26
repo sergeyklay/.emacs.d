@@ -18,7 +18,7 @@
 (eval-when-compile
   (require 'company)
   (require 'jump)
-  (require 'util))
+  (require 'utils))
 
 (defconst cc-standard-include-dirs-cmd
   (concat

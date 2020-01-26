@@ -18,6 +18,7 @@
 (require 'prelude)
 (require 'backup) ; Backup, auto-saving and history configuration
 (require 'directories)
+(require 'utils)
 
 ;; C-h h runs the command `view-hello-file'.
 ;; I never used this feature and actually don't need it.

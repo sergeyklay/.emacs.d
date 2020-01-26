@@ -1,4 +1,4 @@
-;;; util.el --- Various utulity functions. -*- lexical-binding: t; -*-
+;;; utils.el --- Various utulity functions. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -46,5 +46,5 @@ Ruby if found or nil otherwise."
 	(executable-find "ruby")
       ruby-path)))
 
-(provide 'util)
-;;; util.el ends here
+(provide 'utils)
+;;; utils.el ends here

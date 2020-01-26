@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-(require 'util)
+(require 'utils)
 
 ;;;; JSON
 
