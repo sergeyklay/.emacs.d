@@ -15,83 +15,84 @@
 
 ;;; Code:
 
-(use-package emacs
-  :ensure nil
-  :preface
-  (defconst my/font-mono-linux "DejaVu Sans Mono"
-    "The default monospace typeface to use in Linux.")
+(defconst my/font-mono-linux "DejaVu Sans Mono"
+  "The default monospace typeface to use in Linux.")
 
-  (defconst my/font-mono-darwin "Source Code Pro"
-    "The default monospace typeface to use in macOS.")
+(defconst my/font-mono-darwin "Source Code Pro"
+  "The default monospace typeface to use in macOS.")
 
-  (defconst my/font-mono-params ":hintstyle=hintfull"
-    "Fontconfig parameters for the monospaced  typeface.")
+(defconst my/font-mono-params ":hintstyle=hintfull"
+  "Fontconfig parameters for the monospaced  typeface.")
 
-  (defun my/font-family-size (family size)
-    "Set frame font to FAMILY at SIZE."
-    (when (member family (font-family-list))
-      (set-frame-font
-       (concat family "-" (number-to-string size) my/font-mono-params) t t)))
+(defun my/font-family-size (family size)
+  "Set frame font to FAMILY at SIZE."
+  (when (member family (font-family-list))
+    (set-frame-font
+     (concat family "-" (number-to-string size) my/font-mono-params) t t)))
 
-  (defun my/fonts-linux ()
-    "Pass desired argument to `my/font-family-size' for use on Linux."
-    (interactive)
-    (when window-system
-      (my/font-family-size my/font-mono-linux 10)))
+(defun my/fonts-linux ()
+  "Pass desired argument to `my/font-family-size' for use on Linux."
+  (interactive)
+  (when window-system
+    (my/font-family-size my/font-mono-linux 10)))
 
-  (defun my/fonts-darwin ()
-    "Pass desired argument to `my/font-family-size' for use on macOS."
-    (interactive)
-    (when window-system
-      (my/font-family-size my/font-mono-darwin 13)))
+(defun my/fonts-darwin ()
+  "Pass desired argument to `my/font-family-size' for use on macOS."
+  (interactive)
+  (when window-system
+    (my/font-family-size my/font-mono-darwin 13)))
 
-  (defun my/fonts-setup ()
-    "Choose between `my/fonts-linux' and `my/fonts-darwin' based on the OS."
-    (interactive)
-    (when window-system
-      (cond
-       ((string-equal system-type "gnu/linux")
-	(my/fonts-linux))
-       ((string-equal system-type "darwin")
-	(my/fonts-darwin)))
-      (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
-      (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))))
+(defun my/fonts-setup ()
+  "Choose between `my/fonts-linux' and `my/fonts-darwin' based on the OS."
+  (interactive)
+  (when window-system
+    (cond
+     ((string-equal system-type "gnu/linux")
+      (my/fonts-linux))
+     ((string-equal system-type "darwin")
+      (my/fonts-darwin)))
+    (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
+    (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))))
 
-  ;; I tend to switch themes more often than normal.  For example,
-  ;; switching to a lighter theme (such as the default) or to a
-  ;; different theme depending on the time of day or my mood.  Normally,
-  ;; switching themes is a multi-step process with `disable-theme' and
-  ;; `load-theme'.  The `my/select-theme' function will do that in one
-  ;; swoop.  I just choose which theme I want to go to.
+;; I tend to switch themes more often than normal.  For example,
+;; switching to a lighter theme (such as the default) or to a
+;; different theme depending on the time of day or my mood.  Normally,
+;; switching themes is a multi-step process with `disable-theme' and
+;; `load-theme'.  The `my/select-theme' function will do that in one
+;; swoop.  I just choose which theme I want to go to.
 
-  (defun my/enable-theme (theme)
-    "Disable any currently active themes and load the THEME."
-    (let ((enabled-themes custom-enabled-themes))
-      (mapc #'disable-theme enabled-themes)
-      (load-theme theme t)))
+(defun my/enable-theme (theme)
+  "Disable any currently active themes and load the THEME."
+  (let ((enabled-themes custom-enabled-themes))
+    (mapc #'disable-theme enabled-themes)
+    (load-theme theme t)))
 
-  (defun my/default-theme ()
-    "Load the default theme."
-    (my/enable-theme 'leuven))
+(defun my/default-theme ()
+  "Load the default theme."
+  (my/enable-theme 'leuven))
 
-  (defun my/toggle-theme ()
-    "Simplistic toggle for my used themes.
+(defun my/toggle-theme ()
+  "Simplistic toggle for my used themes.
 All it does is check if `leuven' (light version) is active and if so switch to
 `wombat' (dark version).  Else it switches to the light theme."
-    (interactive)
-    (if (eq (car custom-enabled-themes) 'leuven)
-	(my/enable-theme 'wombat)
-      (my/enable-theme 'leuven)))
+  (interactive)
+  (if (eq (car custom-enabled-themes) 'leuven)
+      (my/enable-theme 'wombat)
+    (my/enable-theme 'leuven)))
 
-  (defun my/select-theme (theme)
-    "Provide a way to select and enable custom THEME."
-    ;; This interactive call is taken from `load-theme'
-    (interactive
-     (list
-      (intern (completing-read "Load custom theme: "
-			       (mapc 'symbol-name
-				     (custom-available-themes))))))
-    (my/enable-theme theme))
+(defun my/select-theme (theme)
+  "Provide a way to select and enable custom THEME."
+  ;; This interactive call is taken from `load-theme'
+  (interactive
+   (list
+    (intern (completing-read "Load custom theme: "
+			     (mapc 'symbol-name
+				   (custom-available-themes))))))
+  (my/enable-theme theme))
+
+
+(use-package emacs
+  :ensure nil
   :custom
   (x-underline-at-descent-line t)
   (underline-minimum-offset 1)
