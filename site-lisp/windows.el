@@ -20,6 +20,11 @@
 (setq use-file-dialog nil)
 (setq use-dialog-box nil)
 
+;; Set frame title.
+(setq frame-title-format
+          '(buffer-file-name "%f"
+			     (dired-directory dired-directory "%b")))
+
 ;; Convenient keybindings to resize windows.
 ;; For more see URL `https://www.emacswiki.org/emacs/WindowResize'
 
