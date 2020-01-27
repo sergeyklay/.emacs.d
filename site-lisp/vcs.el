@@ -16,6 +16,7 @@
 ;;; Code:
 
 (require 'directories)
+(require 'hooks)
 
 ;;;; Magit
 
@@ -37,29 +38,25 @@
 
 ;;;; Git
 
-(defun my|git-common-hook()
-  "The common hook for git-related modes."
-  (set (make-local-variable 'require-final-newline) t))
-
 (use-package gitconfig-mode
   :mode "\\.gitconfig\\'"
   :mode "\\.git/config\\'"
   :mode "\\.gitmodules\\'"
   :hook
-  ((gitignore-mode . my|git-common-hook)))
+  ((gitignore-mode . my|final-newline-hook)))
 
 (use-package gitignore-mode
   :mode "\\.gitignore\\'"
   :mode "\\.dockerignore\\'"
   :mode "\\..elpaignore\\'"
   :hook
-  ((gitignore-mode . my|git-common-hook)))
+  ((gitignore-mode . my|final-newline-hook)))
 
 (use-package gitattributes-mode
   :mode "\\.gitattributes\\'"
   :mode "\\.git/info/attributes\\'"
   :hook
-  ((gitignore-mode . my|git-common-hook)))
+  ((gitignore-mode . my|final-newline-hook)))
 
 ;;;; `git-gutter'
 
