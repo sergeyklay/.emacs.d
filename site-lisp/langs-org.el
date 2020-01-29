@@ -54,6 +54,11 @@
   org-agenda-sorting-strategy
   org-agenda-skip-deadline-prewarning-if-scheduled
   org-src-strip-leading-and-trailing-blank-lines
+  :custom
+  (org-directory "~/Dropbox/Org")
+  (org-agenda-files '("~/Dropbox/Org"
+		      "~/Dropbox/Org/Agenda"))
+  (org-default-notes-file "~/Dropbox/Org/Index.org")
   :config
   (defun my|common-org-hook ()
   "A common hook for `org-mode'."
