@@ -32,5 +32,11 @@
   :config
   (push 'company-cmake company-backends))
 
+(use-package make-mode
+  :ensure nil
+  :defer t
+  :after (company)
+  :hook (makefile-mode . company-mode))
+
 (provide 'build-tools)
 ;;; build-tools.el ends here

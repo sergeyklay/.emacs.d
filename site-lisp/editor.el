@@ -19,8 +19,7 @@
 
 (setq indent-tabs-mode nil)
 
-;; Make sure that there is one newline at the end of the file while saving,
-;; also removes all spaces at the end of lines.
+;; Remove all spaces at the end of lines.
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; Increase the warning threshold for big files
