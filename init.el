@@ -38,11 +38,11 @@
 (require 'editor)       ; Features related to editor behavior
 (require 'syntax-check) ; Syntax checkers
 (require 'spelling)     ; Spell configuration
+(require 'build-tools)  ; Add build tools support
 
 (require 'langs-human)  ; Settings for Human Languages
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
-(require 'langs-cmake)  ; Add cmake support
 (require 'langs-cc)     ; Support for the C-family of languages
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
 (require 'langs-org)    ; Org related configuration

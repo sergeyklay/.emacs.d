@@ -1,4 +1,4 @@
-;;; langs-cmake.el --- Add support for CMake syntax. -*- lexical-binding: t; -*-
+;;; build-tools.el --- Build tools support. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Add support for CMake syntax.
+;; Support of various build tools.
 
 ;;; Code:
 
@@ -32,5 +32,5 @@
   :config
   (push 'company-cmake company-backends))
 
-(provide 'langs-cmake)
-;;; langs-cmake.el ends here
+(provide 'build-tools)
+;;; build-tools.el ends here
