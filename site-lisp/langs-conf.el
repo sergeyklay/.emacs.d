@@ -99,6 +99,8 @@
 (use-package systemd
   :defer t)
 
+;; TODO: Move below code to the separated file
+
 ;;;; Powershell
 
 (defconst my/pwsh-executable-path (executable-find "pwsh")
@@ -111,6 +113,27 @@
   :config
   (when my/pwsh-executable-path
     (setq powershell-location-of-exe my/pwsh-executable-path)))
+
+;;;; Shell Script
+
+(use-package sh-script
+  :ensure nil
+  :mode (("\\.zsh\\'" . sh-mode)
+	 ("zlogin\\'" . sh-mode)
+	 ("zlogout\\'" . sh-mode)
+	 ("zpreztorc\\'" . sh-mode)
+	 ("zprofile\\'" . sh-mode)
+	 ("zshenv\\'" . sh-mode)
+         ("zshrc\\'" . sh-mode))
+  :custom
+  (sh-basic-offset 2))
+
+(use-package company-shell
+  :after (company sh-script)
+  :init
+  (push 'company-shell company-backends)
+  (push 'company-shell-env company-backends)
+  :hook (sh-mode . company-mode))
 
 (provide 'langs-conf)
 ;;; langs-conf.el ends here
