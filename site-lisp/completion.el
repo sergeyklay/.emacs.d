@@ -67,26 +67,34 @@
   :hook (ivy-mode . counsel-mode)
   :custom
   (counsel-find-file-ignore-regexp
-        "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)")
+   "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)")
+  :init
+  (defconst my|rg-prefix-cmd
+    "rg -i -M 120 --no-heading --line-number --hidden --color never")
   :config
   ;; Use faster search tools: ripgrep
   (let ((command
 	 (cond
 	  ((executable-find "rg")
-	   "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+	   (concat my|rg-prefix-cmd " '%s' %s"))
 	  ((executable-find "pt")
 	   "pt -zS --nocolor --nogroup -e %s")
 	  (t counsel-grep-base-command))))
+    (message "counsel-grep-base-command: %s" command)
     (setq counsel-grep-base-command command))
 
-  (when (executable-find "rg")
-    (setq counsel-git-cmd "rg --files")
-    (setq counsel-rg-base-command
-	  "rg -i -M 120 --no-heading --line-number --color never %s .")))
+  (cond
+   ((executable-find "rg")
+    (progn
+      (setq counsel-git-cmd "rg --files")
+      (setq counsel-rg-base-command (concat my|rg-prefix-cmd " %s ."))
+      (global-set-key (kbd "C-c k") #'counsel-rg)))
+   ((executable-find "ag")
+    (global-set-key (kbd "C-c k") #'counsel-ag))
+   (t (global-set-key (kbd "C-c k") #'counsel-grep))))
 
 ;; Replace standard keybindings
 (global-set-key (kbd "C-x C-r") #'counsel-recentf)
-(global-set-key (kbd "C-c k")   #'counsel-ag)
 (global-set-key (kbd "C-h a")   #'counsel-apropos)
 (global-set-key (kbd "C-h v")   #'counsel-describe-variable)
 (global-set-key (kbd "C-h f")   #'counsel-describe-function)
