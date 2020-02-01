@@ -62,36 +62,31 @@
 
 ;;;; Counsel
 
+(defconst my/rg-prefix-cmd
+  "rg -i -M 120 --no-heading --line-number --hidden --color never"
+  "Base part of the 'rg' command used by `counsel'.")
+
 (use-package counsel
   :requires ivy
   :hook (ivy-mode . counsel-mode)
   :custom
   (counsel-find-file-ignore-regexp
-   "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)")
-  :init
-  (defconst my|rg-prefix-cmd
-    "rg -i -M 120 --no-heading --line-number --hidden --color never")
+   (concat
+    ;; file names beginning with # or .
+    "\\(?:^[#.]\\)"
+    ;; file names ending with # or ~
+    "\\|\\(?:[#~]$\\)"
+    ;; file names beginning with Icon
+    "\\|\\(?:^Icon?\\)"))
+  ;; Let counsel-find-file-at-point choose the file under cursor
+  (counsel-find-file-at-point t)
   :config
   ;; Use faster search tools: ripgrep
-  (let ((command
-	 (cond
-	  ((executable-find "rg")
-	   (concat my|rg-prefix-cmd " '%s' %s"))
-	  ((executable-find "pt")
-	   "pt -zS --nocolor --nogroup -e %s")
-	  (t counsel-grep-base-command))))
-    (message "counsel-grep-base-command: %s" command)
-    (setq counsel-grep-base-command command))
-
-  (cond
-   ((executable-find "rg")
-    (progn
-      (setq counsel-git-cmd "rg --files")
-      (setq counsel-rg-base-command (concat my|rg-prefix-cmd " %s ."))
-      (global-set-key (kbd "C-c k") #'counsel-rg)))
-   ((executable-find "ag")
-    (global-set-key (kbd "C-c k") #'counsel-ag))
-   (t (global-set-key (kbd "C-c k") #'counsel-grep))))
+  (when (executable-find "rg")
+    (setq counsel-grep-base-command
+	  (concat my/rg-prefix-cmd " '%s' %s")
+	  counsel-git-cmd "rg --files"
+	  counsel-rg-base-command (concat my/rg-prefix-cmd " %s ."))))
 
 ;; Replace standard keybindings
 (global-set-key (kbd "C-x C-r") #'counsel-recentf)
@@ -99,9 +94,15 @@
 (global-set-key (kbd "C-h v")   #'counsel-describe-variable)
 (global-set-key (kbd "C-h f")   #'counsel-describe-function)
 (global-set-key (kbd "C-h b")   #'counsel-descbinds)
-
 (global-set-key (kbd "C-x C-i") #'counsel-imenu)
 (global-set-key (kbd "M-x")     #'counsel-M-x)
+
+(cond
+ ((executable-find "rg")
+  (global-set-key (kbd "C-c k") #'counsel-rg))
+ ((executable-find "ag")
+  (global-set-key (kbd "C-c k") #'counsel-ag))
+ (t (global-set-key (kbd "C-c k") #'counsel-grep)))
 
 (define-key minibuffer-local-map (kbd "C-r") #'counsel-minibuffer-history)
 
