@@ -77,7 +77,9 @@
     ;; file names ending with # or ~
     "\\|\\(?:[#~]$\\)"
     ;; file names beginning with Icon
-    "\\|\\(?:^Icon?\\)"))
+    "\\|\\(?:^Icon?\\)"
+    ;; zsh compiled functions
+    "\\|\\(?:.zwc$\\)"))
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
   :config

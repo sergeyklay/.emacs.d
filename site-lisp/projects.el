@@ -34,7 +34,7 @@
   ;; Ignores
   (projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS"))
   (projectile-globally-ignored-file-suffixes
-   '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock"))
+   '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock" ".zwc"))
   (projectile-completion-system 'ivy)
   (projectile-known-projects-file
    (concat user-cache-dir "projectile-bookmarks.eld")))
