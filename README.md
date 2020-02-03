@@ -15,7 +15,7 @@ This project relies on the following list of applications:
 * [`fd`](https://github.com/sharkdp/fd)
 * [Git (`git`)](https://git-scm.com)
 * [GnuPG (`gpg`)](https://www.gnupg.org)
-* [Hunspell (`hunspell`)](https://hunspell.github.io)
+* [Hunspell (`hunspell`)](https://hunspell.github.io) with [dictionaries][hdicst]
 * [Pandoc (`pandoc`)](https://pandoc.org)
 * [Password Store (`pass`)](https://www.passwordstore.org)
 * [RTags (`rtags`)](https://github.com/Andersbakken/rtags)
@@ -32,3 +32,4 @@ Public Licence version 3.
 [actions-badge]: https://github.com/sergeyklay/.emacs.d/workflows/build/badge.svg
 [codacy link]: https://www.codacy.com/manual/klay/.emacs.d
 [codacy badge]: https://api.codacy.com/project/badge/Grade/d3da65f182b24596afc588c73fe87806
+[hdicst]: https://stackoverflow.com/a/9436234/1661465
