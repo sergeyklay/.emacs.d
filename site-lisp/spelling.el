@@ -33,7 +33,7 @@
   (ispell-program-name hunspell-executable-path)
   ;; The default dictionary I use.  To see available dictionaries
   ;; use 'hunspell -D'.
-  (ispell-dictionary "british")
+  (ispell-local-dictionary "british")
   ;; Setting up dictionary definitions
   (ispell-local-dictionary-alist
    '(("british" "[[:alpha:]]" "[^[:alpha]]" "[’']" t
@@ -60,7 +60,9 @@
   :defer t
   ;; TODO: Use per feature configuration
   :hook ((org-mode        . flyspell-mode)
+	 (message-mode    . flyspell-mode)
 	 (text-mode       . flyspell-mode)
+	 (texinfo-mode    . flyspell-mode)
 	 (change-log-mode . flyspell-mode)
 	 (log-edit-mode   . flyspell-mode)
 	 (markdown-mode   . flyspell-mode)
