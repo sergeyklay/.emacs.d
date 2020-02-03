@@ -17,24 +17,43 @@
 
 (require 'directories)
 
-(defconst my-hunspell-executable-path (executable-find "hunspell")
+(defconst hunspell-executable-path (executable-find "hunspell")
   "The hunspell executable path on this system.")
 
 (use-package ispell
-  :if my-hunspell-executable-path
+  :if hunspell-executable-path
   :ensure nil
   :custom
   ;; Save personal dictionary without asking for confirmation.
   (ispell-silently-savep t)
   (ispell-program-name "hunspell")
-  (ispell-extra-args '("-a" "-i" "utf-8"))
-  (ispell-dictionary "en_US")
-  (ispell-alternate-dictionary (concat user-etc-dir "alt.dic"))
+  ;; The default dictionary I use.  To see available dictionaries
+  ;; use 'hunspell -D'.
+  (ispell-dictionary "british")
   :config
-  (setq ispell-really-hunspell t))
+  (setq ispell-really-hunspell t)
+  (add-to-list
+   'ispell-local-dictionary-alist
+   '(("english" "[[:alpha:]]" "[^[:alpha]]" "[0-9']" t
+      ("-d" "en_US") nil utf-8)
+     ("british" "[[:alpha:]]" "[^[:alpha]]" "[0-9']" t
+      ("-d" "en_GB") nil utf-8)
+     ("russian-aot" "[[:alpha:]]" "[^[:alpha]]" "[0-9']" t
+      ("-d" "russian-aot") nil utf-8)))
+  ;; On macOs brew doesn't provide dictionaries.  So you have to install them.
+  ;; For more info on installing dictionaries see
+  ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
+  (when (string-equal system-type "darwin")
+    ;; Set dictionary file name.  Without this variable you'll see on macOs:
+    ;; 'Can't open affix or dictionary files for dictionary named "XXX"'
+    (setenv "DICTIONARY" "en_GB")))
+
 
 (use-package flyspell
-  :if my-hunspell-executable-path
+  :if hunspell-executable-path
+  :custom
+  ;; Be silent when checking words.
+  (flyspell-issue-message-flag nil)
   :defer t
   ;; TODO: Use per feature configuration
   :hook ((org-mode        . flyspell-mode)
@@ -42,10 +61,7 @@
 	 (change-log-mode . flyspell-mode)
 	 (log-edit-mode   . flyspell-mode)
 	 (markdown-mode   . flyspell-mode)
-	 (latex-mode      . flyspell-mode))
-  :config
-  ;; Be silent when checking words.
-  (setq flyspell-issue-message-flag nil))
+	 (latex-mode      . flyspell-mode)))
 
 (use-package auto-correct
   :after flyspell
