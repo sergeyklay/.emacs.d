@@ -26,19 +26,23 @@
   :custom
   ;; Save personal dictionary without asking for confirmation.
   (ispell-silently-savep t)
-  (ispell-program-name "hunspell")
+  ;; Full path to the hunspell executable
+  (ispell-program-name hunspell-executable-path)
   ;; The default dictionary I use.  To see available dictionaries
   ;; use 'hunspell -D'.
   (ispell-dictionary "british")
   :config
+  (setq ispell-really-aspell nil)
   (setq ispell-really-hunspell t)
   (add-to-list
    'ispell-local-dictionary-alist
-   '(("english" "[[:alpha:]]" "[^[:alpha]]" "[0-9']" t
-      ("-d" "en_US") nil utf-8)
-     ("british" "[[:alpha:]]" "[^[:alpha]]" "[0-9']" t
+   '(("british" "[[:alpha:]]" "[^[:alpha]]" "[’']" t
       ("-d" "en_GB") nil utf-8)
-     ("russian-aot" "[[:alpha:]]" "[^[:alpha]]" "[0-9']" t
+     ("english" "[[:alpha:]]" "[^[:alpha]]" "[’']" t
+      ("-d" "en_US") nil utf-8)
+     ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-]" t
+      ("-d" "russian-aot") nil utf-8)
+     ("russian-aot" "[А-Яа-я]" "[^А-Яа-я]" "[-]" t
       ("-d" "russian-aot") nil utf-8)))
   ;; On macOs brew doesn't provide dictionaries.  So you have to install them.
   ;; For more info on installing dictionaries see
@@ -62,11 +66,6 @@
 	 (log-edit-mode   . flyspell-mode)
 	 (markdown-mode   . flyspell-mode)
 	 (latex-mode      . flyspell-mode)))
-
-(use-package auto-correct
-  :after flyspell
-  :config
-  (auto-correct-mode t))
 
 (use-package flyspell-correct-ivy
   :after flyspell
