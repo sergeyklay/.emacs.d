@@ -60,6 +60,18 @@
   (add-to-list 'ivy-ignore-buffers "\\*Messages\\*")
   (add-to-list 'ivy-ignore-buffers "TAGS"))
 
+;;;; Smex
+
+;; With smex installed, `counsel-M-x' lists all available commands but places
+;; the most recently used ones on top of the list ordered by frequency.
+(use-package smex
+  :commands smex
+  :custom
+  (smex-history-length 20)
+  (smex-save-file (concat user-cache-dir "smex-items.el"))
+  :config
+  (smex-initialize))
+
 ;;;; Counsel
 
 (defconst my/rg-prefix-cmd
@@ -67,7 +79,6 @@
   "Base part of the 'rg' command used by `counsel'.")
 
 (use-package counsel
-  :requires ivy
   :hook (ivy-mode . counsel-mode)
   :custom
   (counsel-find-file-ignore-regexp
