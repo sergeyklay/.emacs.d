@@ -61,7 +61,6 @@
   (eshell-kill-processes-on-exit t)
   (eshell-directory-name (concat user-etc-dir "eshell/"))
   :config
-
   (use-package eshell-git-prompt
     :init
     (eshell-git-prompt-use-theme 'default)))

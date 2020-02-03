@@ -76,7 +76,7 @@
   (setq source-directory
 	(expand-file-name (substitute-in-file-name src)))))
 
-;;;; Session direcory
+;;;; Session directory
 
 (eval-after-load 'x-win
   (let ((session-dir(concat user-cache-dir "session/")))
