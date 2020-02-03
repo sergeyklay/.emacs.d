@@ -20,6 +20,9 @@
 (defconst hunspell-executable-path (executable-find "hunspell")
   "The hunspell executable path on this system.")
 
+;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
+;; them.  For more info on installing dictionaries see
+;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
 (use-package ispell
   :if hunspell-executable-path
   :ensure nil
@@ -31,27 +34,23 @@
   ;; The default dictionary I use.  To see available dictionaries
   ;; use 'hunspell -D'.
   (ispell-dictionary "british")
-  :config
-  (setq ispell-really-aspell nil)
-  (setq ispell-really-hunspell t)
-  (add-to-list
-   'ispell-local-dictionary-alist
+  ;; Setting up dictionary definitions
+  (ispell-local-dictionary-alist
    '(("british" "[[:alpha:]]" "[^[:alpha]]" "[’']" t
       ("-d" "en_GB") nil utf-8)
      ("english" "[[:alpha:]]" "[^[:alpha]]" "[’']" t
       ("-d" "en_US") nil utf-8)
-     ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-]" t
+     ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
       ("-d" "russian-aot") nil utf-8)
-     ("russian-aot" "[А-Яа-я]" "[^А-Яа-я]" "[-]" t
+     ("russian-aot" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
       ("-d" "russian-aot") nil utf-8)))
-  ;; On macOs brew doesn't provide dictionaries.  So you have to install them.
-  ;; For more info on installing dictionaries see
-  ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
+  :config
+  (setq ispell-really-aspell nil)
+  (setq ispell-really-hunspell t)
   (when (string-equal system-type "darwin")
     ;; Set dictionary file name.  Without this variable you'll see on macOs:
     ;; 'Can't open affix or dictionary files for dictionary named "XXX"'
     (setenv "DICTIONARY" "en_GB")))
-
 
 (use-package flyspell
   :if hunspell-executable-path
