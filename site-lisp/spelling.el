@@ -41,9 +41,7 @@
      ("english" "[[:alpha:]]" "[^[:alpha]]" "[’']" t
       ("-d" "en_US") nil utf-8)
      ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
-      ("-d" "russian-aot") nil utf-8)
-     ("russian-aot" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
-      ("-d" "russian-aot") nil utf-8)))
+      ("-d" "ru_RU") nil utf-8)))
   :config
   (setq ispell-really-aspell nil)
   (setq ispell-really-hunspell t)
