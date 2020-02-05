@@ -10,3 +10,8 @@
     ("dk" "define-key" nil :count 0)
    ))
 
+(define-abbrev-table 'text-mode-abbrev-table
+  '(
+    ("doc" "documentation" nil :count 1)
+   ))
+
