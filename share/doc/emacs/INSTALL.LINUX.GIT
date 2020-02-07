@@ -35,6 +35,7 @@ CFLAGS='-O3 -pipe -march=native' \
 make -j $(getconf _NPROCESSORS_ONLN)
 make install
 
+mkdir -p ~/.config/systemd/user
 cp ./etc/emacs.service ~/.config/systemd/user/
 
 systemctl enable --user emacs
