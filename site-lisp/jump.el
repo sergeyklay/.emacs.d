@@ -24,10 +24,10 @@
 (defconst rdm-executable-path (executable-find "rdm")
   "The rdm executable path on this system.")
 
-;; Make Emacs reload the TAGS file automatically
+;; Make Emacs reload the TAGS file automatically.
 (setq tags-revert-without-query 1)
 
-;; t=case-insensitive, nil=case-sensitive
+;; t = case-insensitive, nil = case-sensitive
 (setq tags-case-fold-search nil)
 
 ;; Never “Keep current list of tags tables also”
@@ -37,8 +37,20 @@
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (use-package ggtags
   :if global-executable-path
+  :custom
+  ;; Don't try to update GTAGS on each save;
+  ;; makes the system sluggish for huge projects.
+  (ggtags-update-on-save nil)
+  ;; Don't auto-highlight tag at point;
+  ;; makes the system sluggish for huge projects.
+  (ggtags-highlight-tag nil)
+  ;; Enabling nearness requires global 6.5.+
+  (ggtags-sort-by-nearness nil)
+  (ggtags-oversize-limit (* 30 1024 1024)) ; 30MB
   :config
+  ;; Remove the default binding for M-] in `ggtags-mode-map'
   (unbind-key "M-]" ggtags-mode-map)
+  ;; Remove the default binding for M-o in `ggtags-navigation-map'
   (unbind-key "M-o" ggtags-navigation-map)
   :bind (:map ggtags-mode-map
 	 ("C-c g s" . 'ggtags-find-other-symbol)
