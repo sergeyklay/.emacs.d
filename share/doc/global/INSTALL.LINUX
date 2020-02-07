@@ -1,0 +1,10 @@
+tar -zxvf global-6.6.4.tar.gz
+cd global-6.6.4
+
+CFLAGS='-O3 -pipe -march=native' \
+  ./configure \
+    --with-sqlite3 \
+    --with-exuberant-ctags=/usr/local/bin/ctags
+
+make
+make install

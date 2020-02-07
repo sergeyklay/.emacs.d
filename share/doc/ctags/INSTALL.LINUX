@@ -1,0 +1,10 @@
+tar -zxvf ctags-5.8.tar.gz
+cd ctags-5.8
+
+CFLAGS='-O3 -pipe -march=native' \
+  ./configure                    \
+    --with-posix-regex           \
+    --with-readlib
+
+make
+make install

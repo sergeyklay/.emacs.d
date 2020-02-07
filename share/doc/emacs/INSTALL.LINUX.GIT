@@ -29,10 +29,11 @@ CFLAGS='-O3 -pipe -march=native' \
     --with-modules \
     --with-file-notification=inotify \
     --with-file-notification=gfile \
-    --enable-autodepend
+    --enable-autodepend \
+    --program-transform-name='s/^ctags$/ctags.emacs/'
 
 make -j $(getconf _NPROCESSORS_ONLN)
-sudo make install
+make install
 
 cp ./etc/emacs.service ~/.config/systemd/user/
 
