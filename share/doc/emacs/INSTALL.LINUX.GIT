@@ -12,8 +12,8 @@ CFLAGS='-O3 -pipe -march=native' \
     --with-png \
     --with-rsvg \
     --with-dbus \
-    --with-xft \
     --with-x-toolkit=gtk3 \
+    --without-toolkit-scroll-bars \
     --with-xwidgets \
     --with-libotf \
     --with-m17n-flt \
