@@ -1,42 +1,50 @@
-Read:
+	     Building and Installing Emacs from the Repository
+
+For deatiled info see:
 https://git.savannah.gnu.org/cgit/emacs.git/tree/INSTALL.REPO
 
-CFLAGS='-O3 -pipe -march=native' \
-  ./configure \
-    --with-x \
-    --with-sound \
-    --with-xpm \
-    --with-jpeg \
-    --with-tiff \
-    --with-gif \
-    --with-png \
-    --with-rsvg \
-    --with-dbus \
-    --with-x-toolkit=gtk3 \
-    --without-toolkit-scroll-bars \
-    --with-xwidgets \
-    --with-libotf \
-    --with-m17n-flt \
-    --with-imagemagick \
-    --with-cairo \
-    --with-mailutils \
-    --with-kerberos \
-    --with-kerberos5 \
-    --with-hesiod \
-    --with-wide-int \
-    --with-gpm \
-    --with-xim \
-    --with-modules \
-    --with-file-notification=inotify \
-    --with-file-notification=gfile \
-    --enable-autodepend \
-    --program-transform-name='s/^ctags$/ctags.emacs/'
+    git clone git://git.sv.gnu.org/emacs.git emacs.git
+    cd emacs.git
+    git checkout emacs-27
 
-make -j $(getconf _NPROCESSORS_ONLN)
-make install
+    ./autogen.sh
 
-mkdir -p ~/.config/systemd/user
-cp ./etc/emacs.service ~/.config/systemd/user/
+    CFLAGS='-O3 -pipe -march=native' \
+      ./configure \
+        --with-x \
+        --with-sound \
+        --with-xpm \
+        --with-jpeg \
+        --with-tiff \
+        --with-gif \
+        --with-png \
+        --with-rsvg \
+        --with-dbus \
+        --with-x-toolkit=gtk3 \
+        --without-toolkit-scroll-bars \
+        --with-xwidgets \
+        --with-libotf \
+        --with-m17n-flt \
+        --with-imagemagick \
+        --with-cairo \
+        --with-mailutils \
+        --with-kerberos \
+        --with-kerberos5 \
+        --with-hesiod \
+        --with-wide-int \
+        --with-gpm \
+        --with-xim \
+        --with-modules \
+        --with-file-notification=inotify \
+        --with-file-notification=gfile \
+        --enable-autodepend \
+        --program-transform-name='s/^ctags$/ctags.emacs/'
 
-systemctl enable --user emacs
-systemctl start --user emacs
+    make -j $(getconf _NPROCESSORS_ONLN)
+    make install
+
+    mkdir -p ~/.config/systemd/user
+    cp ./etc/emacs.service ~/.config/systemd/user/
+
+    systemctl enable --user emacs
+    systemctl start --user emacs
