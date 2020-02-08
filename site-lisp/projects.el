@@ -22,6 +22,19 @@
 (use-package projectile
   :after ivy
   :diminish projectile-mode
+  :init
+  ;; Ignore directories
+  (setq projectile-globally-ignored-directories
+	(append '("elpa" ".cache" "node_modules" "bower_components")
+		projectile-globally-ignored-directories))
+  ;; Ignore files
+  (setq projectile-globally-ignored-files
+	(append '(".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH")
+		projectile-globally-ignored-files))
+  ;; Ignore suffixes
+  (setq projectile-globally-ignored-file-suffixes
+	(append '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock" ".zwc")
+		projectile-globally-ignored-file-suffixes ))
   :custom
   ;; The command-line option ‘-batch’ causes Emacs to run `noninteractively'.
   (projectile-enable-caching (not noninteractive))
@@ -31,10 +44,6 @@
   (projectile-indexing-method 'alien)
   ;; Projectile will consider the current directory the project root.
   (projectile-require-project-root nil)
-  ;; Ignores
-  (projectile-globally-ignored-files '(".DS_Store" "Icon" "TAGS"))
-  (projectile-globally-ignored-file-suffixes
-   '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock" ".zwc"))
   (projectile-completion-system 'ivy)
   (projectile-known-projects-file
    (concat user-cache-dir "projectile-bookmarks.eld"))
