@@ -1,0 +1,29 @@
+#! /usr/bin/perl -w
+#
+# emacsclient.wrapper - Emacs terminal wrapper script
+#
+# Copyright (c) 2020 Serghei Iakovlev
+#
+#
+# 1. Copy this wrapper to a common path:
+#
+#   cp emacsclient.wrapper /usr/local/bin
+#
+# 2. Install it with ``update-alternatives --install'':
+#
+#   update-alternatives --install /usr/bin/editor editor /usr/local/bin/emacsclient.wrapper 20
+#
+# 3. Configure editor to be this wrapper:
+#
+#   update-alternatives --set editor /usr/local/bin/emacsclient.wrapper
+
+my @args;
+while ($opt = shift(@ARGV))
+{
+    unless (grep(/^-(nw|t)$|--tty$/, $opt))
+    {
+	push(@args, $opt);
+    }
+}
+
+exec('emacsclient', @args);
