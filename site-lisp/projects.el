@@ -37,16 +37,38 @@
    '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock" ".zwc"))
   (projectile-completion-system 'ivy)
   (projectile-known-projects-file
-   (concat user-cache-dir "projectile-bookmarks.eld")))
-
-;; See URL `https://github.com/bbatsov/projectile/issues/1148'
-(eval-after-load 'projectile
-  '(progn
-     (let ((fd-binary (executable-find "fd")))
-       (when fd-binary
-	 (setq projectile-git-command
-	       (concat fd-binary " . --color=never --type f -0 -H -E .git")
-	       projectile-generic-command projectile-git-command)))))
+   (concat user-cache-dir "projectile-bookmarks.eld"))
+  :config
+  ;; Use the faster searcher to handle project files:
+  ;; - user-friendly alternative of find `fd'
+  ;; - ripgrep `rg'
+  ;; - the platinum searcher `pt'
+  ;; - the silver searcher `ag'
+  (let ((command
+	 (cond
+	  ((executable-find "fd")
+	   (concat "fd . --color=never --type f -0 -H "
+		   (mapconcat #'identity
+			      (cons "" projectile-globally-ignored-directories)
+			      " -E ")))
+	  ((executable-find "rg")
+	   (let ((rg-cmd ""))
+	     (dolist (dir projectile-globally-ignored-directories)
+	       (setq rg-cmd (format "%s --glob '!%s'" rg-cmd dir)))
+	     (concat "rg -0 --files --color=never --hidden" rg-cmd)))
+	  ((executable-find "ag")
+	   (concat "ag -0 -l --nocolor --hidden"
+		   (mapconcat #'identity
+			      (cons "" projectile-globally-ignored-directories)
+			      " --ignore-dir=")))
+	  ((executable-find "pt")
+	   (concat "pt -0 -l --nocolor --hidden ."
+		   (mapconcat #'identity
+			      (cons "" projectile-globally-ignored-directories)
+			      " --ignore="))))))
+    (setq projectile-generic-command command)
+    ;; See URL `https://github.com/bbatsov/projectile/issues/1148'
+    (setq projectile-git-command command)))
 
 ;;;; Counsel Projectile
 
