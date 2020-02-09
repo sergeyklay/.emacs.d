@@ -21,11 +21,10 @@ https://git.savannah.gnu.org/cgit/emacs.git/tree/INSTALL.REPO
         --with-rsvg \
         --with-dbus \
         --with-x-toolkit=gtk3 \
-        --without-toolkit-scroll-bars \
+	--without-xaw3d \
         --with-xwidgets \
         --with-libotf \
         --with-m17n-flt \
-        --with-imagemagick \
         --with-cairo \
         --with-mailutils \
         --with-kerberos \

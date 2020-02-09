@@ -1,5 +1,6 @@
 autoconf
 automake
+gcc
 libacl1-dev
 libasound2-dev
 libgif-dev
@@ -9,11 +10,11 @@ libgtk-3-dev
 libjansson-dev
 libkrb5-dev
 libm17n-dev
-libmagickcore-dev
-libmagickwand-6.q16-dev
 libotf-dev
 libsystemd-dev
 libwebkit2gtk-4.0-dev
 libx11-xcb-dev
 libxpm-dev
+make
+pkg-config
 texinfo
