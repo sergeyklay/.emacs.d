@@ -106,5 +106,20 @@ This function overrides the one on `x-win' to use my personal directory."
 	      (unless (server-running-p)
 		(server-start))))
 
+;;;; Disable Arrow Keys In emacs
+
+(global-unset-key (kbd "<left>"))
+(global-unset-key (kbd "<right>"))
+(global-unset-key (kbd "<up>"))
+(global-unset-key (kbd "<down>"))
+(global-unset-key (kbd "<C-left>"))
+(global-unset-key (kbd "<C-right>"))
+(global-unset-key (kbd "<C-up>"))
+(global-unset-key (kbd "<C-down>"))
+(global-unset-key (kbd "<M-left>"))
+(global-unset-key (kbd "<M-right>"))
+(global-unset-key (kbd "<M-up>"))
+(global-unset-key (kbd "<M-down>"))
+
 (provide 'defaults)
 ;;; defaults.el ends here
