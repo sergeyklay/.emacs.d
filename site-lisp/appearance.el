@@ -15,7 +15,7 @@
 
 ;;; Code:
 
-(defconst my/font-mono-linux "DejaVu Sans Mono"
+(defconst my/font-mono-linux "Fira Code"
   "The default monospace typeface to use in Linux.")
 
 (defconst my/font-mono-darwin "Source Code Pro"
@@ -34,7 +34,7 @@
   "Pass desired argument to `my/font-family-size' for use on Linux."
   (interactive)
   (when window-system
-    (my/font-family-size my/font-mono-linux 10)))
+    (my/font-family-size my/font-mono-linux 11)))
 
 (defun my/fonts-darwin ()
   "Pass desired argument to `my/font-family-size' for use on macOS."
