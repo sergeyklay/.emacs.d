@@ -4,7 +4,11 @@
 #
 # Copyright (c) 2020 Serghei Iakovlev
 #
-# Usage:
+# Usage
+# =====
+#
+# Ubuntu/Debian
+# -------------
 #
 # 1. Copy this wrapper to a common path:
 #
