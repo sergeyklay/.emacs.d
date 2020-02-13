@@ -7,19 +7,32 @@
 # Usage
 # =====
 #
-# Ubuntu/Debian
-# -------------
-#
-# 1. Copy this wrapper to a common path:
+# Copy this wrapper to a common path:
 #
 #     cp emacsclient.wrapper /usr/local/bin
 #
-# 2. Install it with ``update-alternatives --install'':
+# Git config
+# ----------
+#
+# git config --global core.editor emacsclient.wrapper
+#
+#
+# .profile/.zshenv
+# ----------------
+#
+# export ALTERNATE_EDITOR=''
+# export EDITOR=emacsclient.wrapper
+# export VISUAL=$EDITOR
+#
+# Ubuntu/Debian
+# -------------
+#
+# 1. Install it with ``update-alternatives --install'':
 #
 #     update-alternatives --install /usr/bin/editor editor \
 #             /usr/local/bin/emacsclient.wrapper 20
 #
-# 3. Configure editor to be this wrapper:
+# 2. Configure editor to be this wrapper:
 #
 #     update-alternatives --set editor \
 #             /usr/local/bin/emacsclient.wrapper
@@ -32,7 +45,7 @@ use strict;
 # Emacs arguments.
 my @args;
 
-# Will be just `emacs' if there is a SSH session openned.
+# Will be just `emacs' if there is a SSH session opened.
 my $program = 'emacsclient';
 
 # Editor to fallback to if the server is not running.
@@ -44,7 +57,7 @@ if (defined $ENV{'SSH_CONNECTION'}) {
   $program = 'emacs';
 }
 
-# Parse argumens.
+# Parse arguments.
 while (my $opt = shift(@ARGV)) {
     # Remove possible duplicates for emacsclient.
     if (grep(/^-(?:nw|(?:t|-tty))$/, $opt) && $program ne 'emacs') {
