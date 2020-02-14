@@ -23,6 +23,7 @@
 
 ;; The Superior Lisp Interaction Mode for Emacs.
 (use-package slime
+  :defer t
   :if sbcl-executable-path
   :commands slime-mode
   :hook
@@ -31,7 +32,7 @@
   (slime-complete-symbol*-fancy t)
   (slime-completion-at-point-functions 'slime-fuzzy-complete-symbol)
   (slime-net-coding-system 'utf-8-unix)
-  :init
+  :config
   (setq inferior-lisp-program sbcl-executable-path)
   (slime-setup '(slime-asdf
 		 slime-fancy

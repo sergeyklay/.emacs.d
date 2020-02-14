@@ -58,7 +58,8 @@
 
 ;; I use 'pass' on all my machines, thus I prefer avoid here
 ;; any check for speed Emacs load reasons.
-(use-package password-store)
+(use-package password-store
+  :defer t)
 
 ;; See https://www.passwordstore.org/
 (use-package pass
