@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'directories)
+
 (eval-when-compile
   (require 'etags))
 
@@ -32,6 +34,16 @@
 
 ;; Never “Keep current list of tags tables also”
 (setq tags-add-tables nil)
+
+;;;; Bookmark
+
+(use-package bookmark
+  :ensure nil
+  :custom
+  (bookmark-default-file
+   (concat user-etc-dir "bookmark.el")))
+
+;;;; Ggtags
 
 ;; A front-end for accessing the gtags-generated tags.
 ;; For more see URL `https://github.com/leoliu/ggtags'
@@ -66,23 +78,54 @@
 	 :map ggtags-navigation-map
 	 ("M-l"     . 'ggtags-navigation-visible-mode)))
 
+;;;; RTags
+
+;; Do not install the followinng packages using MELPA.
+;; These packages should be installed by hand using `make install' from
+;; rtags source directory.
+;;
+;; For more see URL `https://github.com/Andersbakken/rtags/issues/1318'.
+
 (use-package rtags
+  :ensure nil
   :if rdm-executable-path
-  :after company
   :defer 10
+  :custom
+  (rtags-autostart-diagnostics t)
+  (rtags-completions-enabled t)
+  (rtags-path (directory-file-name
+	       (file-name-directory rdm-executable-path)))
+  :hook ((c-mode . rtags-start-process-unless-running)
+	 (c++-mode . rtags-start-process-unless-running))
   :config
-  (setq rtags-completions-enabled t
-	rtags-path (directory-file-name
-		    (file-name-directory rdm-executable-path)))
-  (eval-after-load 'company
-    '(add-to-list
-      'company-backends 'company-rtags))
-  (setq rtags-autostart-diagnostics t)
   (rtags-enable-standard-keybindings))
 
 (use-package company-rtags
+  :ensure nil
   :if rdm-executable-path
-  :after rtags)
+  :after company rtags
+  :config (push 'company-rtags company-backends))
+
+(use-package flycheck-rtags
+  :ensure nil
+  :if rdm-executable-path
+  :after flycheck rtags
+  :config
+  (defun flychack-rtags-common-hook ()
+    "Common hook to setup `rtags'."
+    (flycheck-select-checker 'rtags)
+    ;; RTags creates more accurate overlays.
+    (setq-local flycheck-highlighting-mode nil)
+    (setq-local flycheck-check-syntax-automatically nil))
+  :hook ((c-mode . flychack-rtags-common-hook)
+	 (c++-mode . flychack-rtags-common-hook)))
+
+(use-package ivy-rtags
+  :ensure nil
+  :if rdm-executable-path
+  :after ivy rtags
+  :custom
+  (rtags-display-result-backend 'ivy))
 
 (provide 'jump)
 ;;; jump.el ends here

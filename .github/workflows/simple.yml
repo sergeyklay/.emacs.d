@@ -87,9 +87,6 @@ jobs:
           rdm --version
           rc --version
 
-      - name: Start the RTags daemon
-        run: rdm &
-
       - name: Checkout Code
         uses: actions/checkout@v2-beta
         with:

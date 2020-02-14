@@ -56,7 +56,6 @@
   ;; Be silent when checking words.
   (flyspell-issue-message-flag nil)
   :defer t
-  ;; TODO: Use per feature configuration
   :hook ((org-mode        . flyspell-mode)
 	 (message-mode    . flyspell-mode)
 	 (text-mode       . flyspell-mode)

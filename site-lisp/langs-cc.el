@@ -67,12 +67,12 @@
      c++-mode-common-hook)))
 
 (use-package cmake-ide
+  :after (projectile rtags)
   :config
-  (progn
-    (cmake-ide-setup)
-    (setq cmake-ide-header-search-other-file nil
-          cmake-ide-header-search-first-including nil
-          cmake-ide-try-unique-compiler-flags-for-headers nil)))
+  (cmake-ide-setup)
+  (setq cmake-ide-header-search-other-file nil
+        cmake-ide-header-search-first-including nil
+        cmake-ide-try-unique-compiler-flags-for-headers nil))
 
 (defun cmake-ide/c-c++-hook ()
   "A common hook for the `cmake-ide' mode."
