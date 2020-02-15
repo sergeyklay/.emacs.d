@@ -68,22 +68,22 @@
   ;; Remove the default binding for M-o in `ggtags-navigation-map'
   (unbind-key "M-o" ggtags-navigation-map)
   :bind (:map ggtags-mode-map
-	 ("C-c g s" . 'ggtags-find-other-symbol)
-	 ("C-c g h" . 'ggtags-view-tag-history)
-	 ("C-c g r" . 'ggtags-find-reference)
-	 ("C-c g f" . 'ggtags-find-file)
-	 ("C-c g c" . 'ggtags-create-tags)
-	 ("C-c g u" . 'ggtags-update-tags)
-	 ("M-."     . 'ggtags-find-tag-dwim)
-	 ("M-,"     . 'pop-tag-mark)
-	 ("C-c <"   . 'ggtags-prev-mark)
-	 ("C-c >"   . 'ggtags-next-mark)
+	 ("C-c g s" . #'ggtags-find-other-symbol)
+	 ("C-c g h" . #'ggtags-view-tag-history)
+	 ("C-c g r" . #'ggtags-find-reference)
+	 ("C-c g f" . #'ggtags-find-file)
+	 ("C-c g c" . #'ggtags-create-tags)
+	 ("C-c g u" . #'ggtags-update-tags)
+	 ("M-."     . #'ggtags-find-tag-dwim)
+	 ("M-,"     . #'pop-tag-mark)
+	 ("C-c <"   . #'ggtags-prev-mark)
+	 ("C-c >"   . #'ggtags-next-mark)
 	 :map ggtags-navigation-map
-	 ("M-l"     . 'ggtags-navigation-visible-mode)))
+	 ("M-l"     . #'ggtags-navigation-visible-mode)))
 
 ;;;; RTags
 
-;; Do not install the followinng packages using MELPA.
+;; Do not install the following packages using MELPA.
 ;; These packages should be installed by hand using `make install' from
 ;; rtags source directory.
 ;;
@@ -136,6 +136,7 @@
   :config
   (defun my|flychack-rtags-common-hook ()
     "Common hook to setup `flycheck-rtags'."
+    ;; Do not enable `eldoc' here (it is enabled in separated configuration).
     (flycheck-select-checker 'rtags)
     ;; RTags creates more accurate overlays.
     (setq-local flycheck-highlighting-mode nil

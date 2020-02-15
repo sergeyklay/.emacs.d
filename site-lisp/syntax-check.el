@@ -25,7 +25,7 @@
 ;; other packages hook into.  It's an improvment on the built
 ;; in flymake.
 (use-package flycheck
-  :if (not (equal system-type 'windows-nt))
+  :unless (equal system-type 'windows-nt)
   :custom
   (flycheck-indication-mode 'right-fringe)
   (flycheck-standard-error-navigation nil)
