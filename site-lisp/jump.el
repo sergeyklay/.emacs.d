@@ -16,6 +16,7 @@
 ;;; Code:
 
 (require 'directories)
+(require 'utils)
 
 (eval-when-compile
   (require 'etags))
@@ -41,7 +42,7 @@
   :ensure nil
   :custom
   (bookmark-default-file
-   (concat user-etc-dir "bookmark.el")))
+   (concat user-etc-dir "bookmarks.el")))
 
 ;;;; Ggtags
 
@@ -86,19 +87,39 @@
 ;;
 ;; For more see URL `https://github.com/Andersbakken/rtags/issues/1318'.
 
+(defun rtags-eldoc-function ()
+  "Eldoc documentation function to use for `c-mode' as well as `c++-mode'."
+  (let ((summary (rtags-get-summary-text)))
+    (and summary
+         (fontify-string
+          (replace-regexp-in-string
+           "{[^}]*$" ""
+           (mapconcat
+            (lambda (str) (if (= 0 (length str)) "//" (string-trim str)))
+            (split-string summary "\r?\n")
+            " "))
+          major-mode))))
+
 (use-package rtags
   :ensure nil
   :if rdm-executable-path
-  :defer 10
+  :defer 3
   :custom
+  ;; Whether RTags automatically will restart diagnostics.
   (rtags-autostart-diagnostics t)
+  ;; Whether completions are enabled.
   (rtags-completions-enabled t)
+  ;; Path to RTags executables.
   (rtags-path (directory-file-name
 	       (file-name-directory rdm-executable-path)))
-  :hook ((c-mode . rtags-start-process-unless-running)
-	 (c++-mode . rtags-start-process-unless-running))
   :config
-  (rtags-enable-standard-keybindings))
+  (defun my|rtags-common-hook ()
+    "Common hook to setup `rtags'."
+    (setq-local eldoc-documentation-function #'rtags-eldoc-function)
+    (rtags-start-process-unless-running))
+
+  (rtags-enable-standard-keybindings)
+  :hook ((c-mode c++-mode) . my|rtags-common-hook))
 
 (use-package company-rtags
   :ensure nil
@@ -111,14 +132,13 @@
   :if rdm-executable-path
   :after flycheck rtags
   :config
-  (defun flychack-rtags-common-hook ()
-    "Common hook to setup `rtags'."
+  (defun my|flychack-rtags-common-hook ()
+    "Common hook to setup `flycheck-rtags'."
     (flycheck-select-checker 'rtags)
     ;; RTags creates more accurate overlays.
-    (setq-local flycheck-highlighting-mode nil)
-    (setq-local flycheck-check-syntax-automatically nil))
-  :hook ((c-mode . flychack-rtags-common-hook)
-	 (c++-mode . flychack-rtags-common-hook)))
+    (setq-local flycheck-highlighting-mode nil
+		flycheck-check-syntax-automatically nil))
+  :hook ((c-mode c++-mode) . my|flychack-rtags-common-hook))
 
 (use-package ivy-rtags
   :ensure nil
