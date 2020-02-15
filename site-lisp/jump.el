@@ -18,23 +18,11 @@
 (require 'directories)
 (require 'utils)
 
-(eval-when-compile
-  (require 'etags))
-
 (defconst global-executable-path (executable-find "global")
   "The global executable path on this system.")
 
 (defconst rdm-executable-path (executable-find "rdm")
   "The rdm executable path on this system.")
-
-;; Make Emacs reload the TAGS file automatically.
-(setq tags-revert-without-query 1)
-
-;; t = case-insensitive, nil = case-sensitive
-(setq tags-case-fold-search nil)
-
-;; Never “Keep current list of tags tables also”
-(setq tags-add-tables nil)
 
 ;;;; Bookmark
 
@@ -44,12 +32,26 @@
   (bookmark-default-file
    (concat user-etc-dir "bookmarks.el")))
 
+;;;; Etags
+
+(use-package etags
+  :ensure nil
+  :defer 4
+  :custom
+  ;; Make Emacs reload the TAGS file automatically.
+  (tags-revert-without-query 1)
+  ;; Whether tags operations should be case-sensitive.
+  (tags-case-fold-search nil)
+  ;; Never “Keep current list of tags tables also”.
+  (tags-add-tables nil))
+
 ;;;; Ggtags
 
 ;; A front-end for accessing the gtags-generated tags.
 ;; For more see URL `https://github.com/leoliu/ggtags'
 (use-package ggtags
   :if global-executable-path
+  :defer 2
   :custom
   ;; Don't try to update GTAGS on each save;
   ;; makes the system sluggish for huge projects.
