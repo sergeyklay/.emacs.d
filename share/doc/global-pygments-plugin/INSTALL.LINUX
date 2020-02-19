@@ -1,0 +1,10 @@
+pip install Pygments
+
+./reconf.sh
+
+CFLAGS='-O3 -pipe -march=native' \
+  ./configure \
+    --with-exuberant-ctags=/usr/local/bin/ctags
+
+make -j $(getconf _NPROCESSORS_ONLN)
+make install
