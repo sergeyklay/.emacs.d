@@ -1,6 +1,5 @@
 [Desktop Entry]
 Version=1.1
-Encoding=UTF-8
 Name=Emacs (Terminal)
 GenericName=Text Editor
 Comment=GNU Emacs is an extensible, customizable text editor - and more
@@ -11,5 +10,5 @@ Icon=emacs
 Type=Application
 Terminal=true
 Categories=Utility;Development;TextEditor;IDE;
-StartupWMClass=Emacs
+# StartupWMClass=Emacs
 Keywords=Text;Editor;IDE;
