@@ -114,6 +114,9 @@
   ;; Path to RTags executables.
   (rtags-path (directory-file-name
 	       (file-name-directory rdm-executable-path)))
+  :bind (:map c-mode-base-map
+	      ("M-."     . #'rtags-find-symbol-at-point)
+	      ("M-,"     . #'rtags-find-references-at-point))
   :config
   (defun my|rtags-common-hook ()
     "Common hook to setup `rtags'."
