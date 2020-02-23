@@ -41,7 +41,6 @@
   :hook
   ((after-init . global-flycheck-mode)
    (flycheck-after-syntax-check . my|adjust-flycheck-eagerness))
-  ;;
   :config
   (defun my|adjust-flycheck-eagerness ()
     "Adjust how often we check for errors based on if there are any.
@@ -53,6 +52,17 @@ buffer we're an order of magnitude laxer about checking."
   ;; Each buffer gets its own idle-change-delay because of the
   ;; buffer-sensitive adjustment above.
   (make-variable-buffer-local 'flycheck-idle-change-delay))
+
+(use-package flycheck-tip
+  :after flycheck
+  :custom (flycheck-tip-avoid-show-func nil))
+
+(use-package flycheck-pos-tip
+  :defer t
+  :if (display-graphic-p)
+  :after flycheck
+  :commands flycheck-pos-tip-mode
+  :hook (flycheck-mode . flycheck-pos-tip-mode))
 
 (provide 'syntax-check)
 ;;; syntax-check.el ends here
