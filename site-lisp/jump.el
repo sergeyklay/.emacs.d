@@ -116,15 +116,17 @@
 	       (file-name-directory rdm-executable-path)))
   :bind (:map c-mode-base-map
 	      ("M-."     . #'rtags-find-symbol-at-point)
-	      ("M-,"     . #'rtags-find-references-at-point))
+	      ("M-,"     . #'rtags-find-references-at-point)
+	      ("M-?"     . #'rtags-display-summary))
   :config
   (defun my|rtags-common-hook ()
     "Common hook to setup `rtags'."
     (setq-local eldoc-documentation-function #'rtags-eldoc-function)
     (rtags-start-process-unless-running))
-
   (rtags-enable-standard-keybindings)
-  :hook ((c-mode c++-mode) . my|rtags-common-hook))
+  :hook (((c-mode c++-mode) . my|rtags-common-hook)
+	 ;; Shutdown rdm when leaving emacs.
+	 (kill-emacs        . rtags-quit-rdm)))
 
 (use-package company-rtags
   :ensure nil
