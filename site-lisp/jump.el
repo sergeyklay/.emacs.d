@@ -124,9 +124,7 @@
     (setq-local eldoc-documentation-function #'rtags-eldoc-function)
     (rtags-start-process-unless-running))
   (rtags-enable-standard-keybindings)
-  :hook (((c-mode c++-mode) . my|rtags-common-hook)
-	 ;; Shutdown rdm when leaving emacs.
-	 (kill-emacs        . rtags-quit-rdm)))
+  :hook ((c-mode c++-mode) . my|rtags-common-hook))
 
 (use-package company-rtags
   :ensure nil
