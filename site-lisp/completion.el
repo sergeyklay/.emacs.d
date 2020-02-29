@@ -75,7 +75,7 @@
 ;;;; Counsel
 
 (defconst my/rg-prefix-cmd
-  "rg -i -M 120 --no-heading --line-number --hidden --color never"
+  "rg -i -M 120 --no-heading --line-number --color never"
   "Base part of the 'rg' command used by `counsel'.")
 
 (use-package counsel
