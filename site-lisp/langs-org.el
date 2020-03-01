@@ -55,6 +55,7 @@
   org-agenda-skip-deadline-prewarning-if-scheduled
   org-src-strip-leading-and-trailing-blank-lines
   :custom
+  (org-log-done 'time)
   (org-directory "~/Dropbox/Org")
   (org-agenda-files '("~/Dropbox/Org"
 		      "~/Dropbox/Org/Agenda"))
@@ -63,8 +64,7 @@
   (defun my|common-org-hook ()
   "A common hook for `org-mode'."
   ;; Org babel languages.
-  ;; TODO(klay): Please test me.
-  (org-babel-do-load-languages
+  (org-babel-do-load-languages ; TODO(klay): Please test me.
    'org-babel-load-languages
    '((python . t)
      (C . t)
