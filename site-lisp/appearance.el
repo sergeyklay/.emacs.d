@@ -69,7 +69,22 @@
 
 (defun my/default-theme ()
   "Load the default theme."
-  (my/enable-theme 'leuven))
+  (my/enable-theme 'leuven)
+  (custom-set-faces
+   ;; Do not scale font for `org-agenda-structure'
+   '(org-agenda-structure
+     ((t (:foreground "#1F8DD6" :weight bold :height 1.0))))
+   ;; Decrease font size for org-related faces
+   '(org-agenda-date
+     ((t (:foreground "#1662AF" :weight bold :height 1.1))))
+   '(org-agenda-date-today
+     ((t (:background "#FFFFCC" :foreground "#4F4A3D" :weight bold :height 1.1))))
+   '(org-agenda-date-weekend
+     ((t (:foreground "#4E4E4E" :weight bold :height 1.1))))
+   '(org-agenda-structure
+     ((t (:foreground "#1F8DD6" :weight bold :height 1.0))))
+   '(org-document-title
+     ((t (:foreground "black" :weight bold :height 1.1 :family "Sans Serif"))))))
 
 (defun my/toggle-theme ()
   "Simplistic toggle for my used themes.

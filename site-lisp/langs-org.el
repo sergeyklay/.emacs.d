@@ -32,15 +32,16 @@
 ;;
 ;;   $ tree ~/org/
 ;;   ~/org/
-;;   ├── Agenda
-;;   │    └── Default.org
+;;   ├── Personal
+;;   │   ├── Default.org
+;;   │   ├── ...
+;;   │   └── Awesome.org
+;;   ├── Work
+;;   │    └── General.org
 ;;   │    ...
 ;;   │    ...
-;;   ├── Inbox.org
-;;   ├── Later.org
-;;   └── Notes.org
-;;   ...
-;;   ...
+;;   ├── Archive.org
+;;   └── Inbox.org
 (use-package org
   :ensure org-plus-contrib
   :defines
@@ -57,10 +58,12 @@
   :custom
   (org-log-done 'time)
   (org-directory "~/Dropbox/Org")
-  (org-agenda-files '("~/Dropbox/Org"
-		      "~/Dropbox/Org/Agenda"
-		      "~/Dropbox/Org/Work"))
-  (org-default-notes-file "~/Dropbox/Org/Index.org")
+  (org-agenda-files
+   '("~/Dropbox/Org"
+     "~/Dropbox/Org/Personal"
+     "~/Dropbox/Org/Work"))
+  (org-default-notes-file "~/Dropbox/Org/Inbox.org")
+  (org-archive-location "~/Dropbox/Org/Archive.org::* From %s")
   :config
   (defun my|common-org-hook ()
   "A common hook for `org-mode'."
