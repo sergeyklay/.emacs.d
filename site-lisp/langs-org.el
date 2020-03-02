@@ -58,7 +58,8 @@
   (org-log-done 'time)
   (org-directory "~/Dropbox/Org")
   (org-agenda-files '("~/Dropbox/Org"
-		      "~/Dropbox/Org/Agenda"))
+		      "~/Dropbox/Org/Agenda"
+		      "~/Dropbox/Org/Work"))
   (org-default-notes-file "~/Dropbox/Org/Index.org")
   :config
   (defun my|common-org-hook ()
