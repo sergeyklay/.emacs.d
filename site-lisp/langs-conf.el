@@ -48,6 +48,21 @@
 
 (use-package yaml-mode
   :mode "\\.ya?ml\\'"
+  :config
+  (defun yaml-outline-level ()
+    "Return the outline level based on the indentation, hardcoded at 2 spaces."
+    (s-count-matches "[ ]\\{2\\}" (match-string 0)))
+
+  (defun yaml-mode-outline-hook ()
+    (outline-minor-mode)
+    (setq-local outline-regexp
+	  (concat "^\\([ ]\\{2\\}\\)*\\([-] \\)?\\([\"][^\"]*[\"]\\|"
+		  "[a-zA-Z0-9_-]*\\): *\\([>|]\\|&[a-zA-Z0-9_-]*\\)?$"))
+    (setq-local outline-level 'yaml-outline-level)
+    (message "Outline level is %s" outline-level))
+  :hook (yaml-mode . yaml-mode-outline-hook)
+  :bind (:map yaml-mode-map
+	      ("TAB" . outline-toggle-children))
   :interpreter ("yml" . yml-mode))
 
 ;;;; Autoconf
