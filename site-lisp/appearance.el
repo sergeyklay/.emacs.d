@@ -1,4 +1,4 @@
-;;; appearance.el --- All appearance related setting. -*- lexical-binding: t; -*-
+;;; appearance.el --- Appearance related settings. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -20,14 +20,14 @@
   (leuven-scale-outline-headlines nil)
   (leuven-scale-org-agenda-structure nil))
 
-(defconst my/font-mono-linux "Fira Code"
-  "The default monospace typeface to use in Linux.")
+(defconst my/font-mono-linux "Source Code Pro"
+  "The default monospaced typeface to use in Linux.")
 
 (defconst my/font-mono-darwin "Source Code Pro"
-  "The default monospace typeface to use in macOS.")
+  "The default monospaced typeface to use in macOS.")
 
 (defconst my/font-mono-params ":hintstyle=hintfull"
-  "Fontconfig parameters for the monospaced  typeface.")
+  "Fontconfig parameters for the monospaced typeface.")
 
 (defun my/font-family-size (family size)
   "Set frame font to FAMILY at SIZE."
