@@ -22,6 +22,7 @@
 
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
+(require 'im)           ; Key maps, IMs and relevant configurations
 (require 'devtools)     ; Various devtools
 (require 'modeline)     ; Modeline related configuration
 (require 'shells)       ; Shells configuration

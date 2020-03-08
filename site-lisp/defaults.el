@@ -20,29 +20,9 @@
 (require 'directories)
 (require 'utils)
 
-;; C-h h runs the command `view-hello-file'.
-;; I never used this feature and actually don't need it.
-(global-unset-key (kbd "C-h h"))
-
 (setq default-directory "~/")
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
-
-;;;; Encoding
-
-(when (fboundp 'set-charset-priority)
-  (set-charset-priority 'unicode))
-
-(prefer-coding-system 'utf-8)
-
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-
-(setq locale-coding-system 'utf-8)
-(setq-default buffer-file-coding-system 'utf-8)
-
-(add-to-list 'auto-coding-alist '("/#[^/]+#\\'" . utf-8))
 
 ;;;; Sane defaults
 
@@ -105,21 +85,6 @@ This function overrides the one on `x-win' to use my personal directory."
 	      (require 'server)
 	      (unless (server-running-p)
 		(server-start))))
-
-;;;; Disable Arrow Keys In emacs
-
-(global-unset-key (kbd "<left>"))
-(global-unset-key (kbd "<right>"))
-(global-unset-key (kbd "<up>"))
-(global-unset-key (kbd "<down>"))
-(global-unset-key (kbd "<C-left>"))
-(global-unset-key (kbd "<C-right>"))
-(global-unset-key (kbd "<C-up>"))
-(global-unset-key (kbd "<C-down>"))
-(global-unset-key (kbd "<M-left>"))
-(global-unset-key (kbd "<M-right>"))
-(global-unset-key (kbd "<M-up>"))
-(global-unset-key (kbd "<M-down>"))
 
 (provide 'defaults)
 ;;; defaults.el ends here
