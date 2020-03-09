@@ -88,25 +88,41 @@
   (delete 'company-irony company-backends)
   (push '(company-semantic :with company-yasnippet) company-backends))
 
-;; TODO:
-;;
+(use-package ede
+  :ensure nil
+  :defer t
+  :custom
+  (ede-project-placeholder-cache-file
+   (concat user-cache-dir "ede-projects.el")))
 
 (use-package semantic
   :ensure nil
-  :defer 2
-  :config
-  (global-ede-mode 1))
+  :custom
+  (semantic-default-submodes
+   '(global-semantic-idle-scheduler-mode
+     global-semanticdb-minor-mode
+     global-semantic-idle-summary-mode
+     global-semantic-mru-bookmark-mode)))
 
 (defun semantic-enable ()
   "Enable semantic."
+  (global-ede-mode 1)
   (global-semanticdb-minor-mode 1)
   (global-semantic-idle-scheduler-mode 1)
-  (semantic-mode 1))
+
+  (semantic-mode 1)
+
+  (when global-executable-path
+    (message "Enable the use of the GNU Global SemanticDB...")
+    (semanticdb-enable-gnu-global-databases 'c-mode)
+    (semanticdb-enable-gnu-global-databases 'c++-mode)))
 
 (defun semantic-disable ()
   "Disable semantic."
+  (global-ede-mode -1)
   (global-semanticdb-minor-mode nil)
   (global-semantic-idle-scheduler-mode nil)
+
   (semantic-mode -1))
 
 (defun cedet-enable ()
