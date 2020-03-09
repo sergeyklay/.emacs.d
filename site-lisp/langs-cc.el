@@ -43,8 +43,7 @@
 
 ;; Displays function signatures in the mode line.
 (use-package c-eldoc
-;;  :hook
-;;  ((c-mode c++-mode) . c-turn-on-eldoc-mode)
+  :defer 2
   :config
   (setq c-eldoc-buffer-regenerate-time 60
 	c-eldoc-includes (append '("-I./" "-I../")
@@ -95,6 +94,17 @@
   (ede-project-placeholder-cache-file
    (concat user-cache-dir "ede-projects.el")))
 
+(defun semantic-include-hook ()
+  "Modifies a mode-local version of `semantic-dependency-system-include-path'."
+  (let ((include-dirs (cc-get-standard-include-dirs)))
+    (mapc (lambda (dir)
+	    ;; Trim “-I” from beginning.
+	    (let ((ldir (substring dir 2)))
+	      (progn
+		(semantic-add-system-include ldir 'c++-mode)
+		(semantic-add-system-include ldir 'c-mode))))
+	  include-dirs)))
+
 (use-package semantic
   :ensure nil
   :custom
@@ -102,7 +112,14 @@
    '(global-semantic-idle-scheduler-mode
      global-semanticdb-minor-mode
      global-semantic-idle-summary-mode
-     global-semantic-mru-bookmark-mode)))
+     global-semantic-mru-bookmark-mode))
+  (semanticdb-default-save-directory (concat user-cache-dir "semanticdb/"))
+  :hook
+  ((semantic-init . semantic-include-hook))
+  :config
+  (when (boundp 'semanticdb-default-save-directory)
+    (unless (file-exists-p semanticdb-default-save-directory)
+      (make-directory semanticdb-default-save-directory t))))
 
 (defun semantic-enable ()
   "Enable semantic."
