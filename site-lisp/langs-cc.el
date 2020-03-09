@@ -87,12 +87,32 @@
   (delete 'company-irony company-backends)
   (push '(company-semantic :with company-yasnippet) company-backends))
 
+(defconst ede-custom-file (concat user-etc-dir "cc-mode-projects.el")
+  "The default EDE project configuration file.")
+
 (use-package ede
   :ensure nil
   :defer t
   :custom
   (ede-project-placeholder-cache-file
-   (concat user-cache-dir "ede-projects.el")))
+   (concat user-cache-dir "ede-projects.el"))
+  :config
+  ;; In EDE project configuration file, user can configure a project in this
+  ;; form:
+  ;;
+  ;; (ede-cpp-root-project "project_name"
+  ;;                       :file "dir/to/project/project_root/Makefile"
+  ;;                       :include-path '("user_include1"
+  ;;                                       "user_include2")
+  ;;                       :system-include-path '("sys_include1"
+  ;;                                              "sys_include2"))
+  ;;
+  ;; `:include-path' specifies local directories of the project relative to the
+  ;; project root specified by `:file' that EDE should search
+  ;; first. `:system-include-path' specifies system header files path that are
+  ;; not belong to the project.
+  (when (file-exists-p ede-custom-file)
+    (load ede-custom-file)))
 
 (defun semantic-include-hook ()
   "Modifies a mode-local version of `semantic-dependency-system-include-path'."
