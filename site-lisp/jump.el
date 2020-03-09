@@ -109,42 +109,40 @@
   :custom
   ;; Whether RTags automatically will restart diagnostics.
   (rtags-autostart-diagnostics t)
-  ;; Whether completions are enabled.
-  (rtags-completions-enabled t)
   ;; Path to RTags executables.
   (rtags-path (directory-file-name
-	       (file-name-directory rdm-executable-path)))
-  :bind (:map c-mode-base-map
-	      ("M-." . #'rtags-find-symbol-at-point)
-	      ("M-," . #'rtags-find-references-at-point)
-	      ("M-?" . #'rtags-display-summary))
-  :config
-  (defun my|rtags-common-hook ()
-    "Common hook to setup `rtags'."
-    (setq-local eldoc-documentation-function #'rtags-eldoc-function)
-    (rtags-start-process-unless-running))
+	       (file-name-directory rdm-executable-path))))
+
+(defun rtags-setup ()
+  "Common hook to setup `rtags'."
+  (setq-local eldoc-documentation-function #'rtags-eldoc-function)
   (rtags-enable-standard-keybindings)
-  :hook ((c-mode c++-mode) . my|rtags-common-hook))
+  (rtags-start-process-unless-running))
 
 (use-package company-rtags
   :ensure nil
   :if rdm-executable-path
-  :after company rtags
-  :config (push 'company-rtags company-backends))
+  :after company rtags)
+
+(defun company-rtags-setup ()
+  "Configure `company-backends' for `company-rtags'."
+  (delete 'company-semantic company-backends)
+  ;; Whether completions are enabled.
+  (setq rtags-completions-enabled t)
+  (push '(company-rtags :with company-yasnippet) company-backends))
 
 (use-package flycheck-rtags
   :ensure nil
   :if rdm-executable-path
-  :after flycheck rtags
-  :config
-  (defun my|flychack-rtags-common-hook ()
-    "Common hook to setup `flycheck-rtags'."
-    ;; Do not enable `eldoc' here (it is enabled in separated configuration).
-    (flycheck-select-checker 'rtags)
-    ;; RTags creates more accurate overlays.
-    (setq-local flycheck-highlighting-mode nil
-		flycheck-check-syntax-automatically nil))
-  :hook ((c-mode c++-mode) . my|flychack-rtags-common-hook))
+  :after flycheck rtags)
+
+(defun flycheck-rtags-setup ()
+  "Configure flycheck-rtags."
+  ;; Do not enable `eldoc' here (it is enabled in separated configuration).
+  (flycheck-select-checker 'rtags)
+  ;; RTags creates more accurate overlays.
+  (setq-local flycheck-highlighting-mode nil)
+  (setq-local flycheck-check-syntax-automatically nil))
 
 (use-package ivy-rtags
   :ensure nil
