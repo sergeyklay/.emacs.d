@@ -16,32 +16,20 @@
 
 ;;; Code:
 
-;; Truly the way to live life in plain text.  I mainly use it to take
-;; notes and save executable source blocks.  I'm also starting to make use
-;; of its agenda, timestamping, and capturing features.
-
-;; It goes without saying that I also use it to manage my Emacs configuration.
-
-;;; Installation
-
-;; Although Org mode ships with Emacs, the latest version can be installed
-;; externally.  The configuration here follows the Org mode ELPA installation
-;; instructions.
-
 ;; I use the following directory structure for Org:
 ;;
-;;   $ tree ~/org/
-;;   ~/org/
-;;   ├── Personal
-;;   │   ├── Default.org
-;;   │   ├── ...
-;;   │   └── Awesome.org
-;;   ├── Work
-;;   │    └── General.org
-;;   │    ...
-;;   │    ...
+;;   $ tree ~/Dropbox/Org
+;;   ~/Dropbox/Org
 ;;   ├── Archive.org
-;;   └── Inbox.org
+;;   ├── Inbox.org
+;;   ├── Personal
+;;   │   ├── Backlog.org
+;;   │   ├── ...
+;;   │   └── X.org
+;;   ├── Work
+;;   │   ├── Backlog.org
+;;   │   ├── ...
+;;   │   └── X.org
 (use-package org
   :ensure org-plus-contrib
   :defines
@@ -64,11 +52,11 @@
      "~/Dropbox/Org/Work"))
   (org-default-notes-file "~/Dropbox/Org/Inbox.org")
   (org-archive-location "~/Dropbox/Org/Archive.org::* From %s")
+  (org-refile-targets '((org-agenda-files :maxlevel . 3)))
   :config
   (defun my|common-org-hook ()
   "A common hook for `org-mode'."
-  ;; Org babel languages.
-  (org-babel-do-load-languages ; TODO(klay): Please test me.
+  (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
      (C . t)
