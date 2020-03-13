@@ -21,6 +21,9 @@
 (when (file-directory-p (concat user-private-dir "zephir-mode"))
   (require 'zephir-mode)
 
+  (add-hook 'zephir-mode-hook #'subword-mode)
+  (add-hook 'zephir-mode-hook #'yas-minor-mode)
+
   (defun zephir-common-hook ()
     "The common hook to configure `zephir-mode'."
     ;; These modes are not ready to use with `zephir-mode'.
@@ -31,10 +34,12 @@
     ;; These options are common.
     (setq-local fill-column 120)
     (setq-local indent-tabs-mode nil))
+  (add-hook 'zephir-mode-hook #'zephir-common-hook)
 
-  (add-hook 'zephir-mode-hook #'subword-mode)
-  (add-hook 'zephir-mode-hook #'yas-minor-mode)
-  (add-hook 'zephir-mode-hook #'zephir-common-hook))
+  (defun zephir-abbrev-hook ()
+    "Configure abbrevs to use with `zephir-mode'."
+    (define-abbrev zephir-mode-abbrev-table "ex" "extends"))
+  (add-hook 'zephir-mode-hook #'zephir-abbrev-hook))
 
 (provide 'langs-zephir)
 ;;; langs-zephir.el ends here

@@ -15,3 +15,8 @@
     ("doc" "documentation" nil :count 1)
    ))
 
+(define-abbrev-table 'zephir-mode-abbrev-table
+  '(
+    ("ex" "extends" nil :count 0)
+   ))
+
