@@ -15,8 +15,6 @@
 
 ;;; Code:
 
-;;(eval-)
-
 (defun my|common-php-hook ()
   "The hook to configure `php-mode' as well as `company-php'."
   (eval-when-compile (require 'flycheck nil t))
