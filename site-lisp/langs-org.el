@@ -31,7 +31,6 @@
 ;;   │   ├── ...
 ;;   │   └── X.org
 (use-package org
-  :ensure org-plus-contrib
   :defines
   org-capture-bookmark
   org-capture-templates
@@ -134,24 +133,6 @@
       org-src-strip-leading-and-trailing-blank-lines t
       org-src-preserve-indentation t
       org-src-tab-acts-natively t)
-
-;;;; Org templates
-
-;; Source block templates.
-
-(use-package org-tempo
-  :ensure org-plus-contrib
-  :after org
-  :defer t
-  :init
-  (add-to-list 'org-structure-template-alist '("el"  . "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("py"  . "src python"))
-  (add-to-list 'org-structure-template-alist '("sh"  . "src sh"))
-  (add-to-list 'org-structure-template-alist '("md"  . "src markdown"))
-  (add-to-list 'org-structure-template-alist '("php" . "src php"))
-  (add-to-list 'org-structure-template-alist '("bnf" . "src bnf"))
-  (add-to-list 'org-structure-template-alist '("hs"  . "src haskell"))
-  (add-to-list 'org-structure-template-alist '("zep" . "src zephir")))
 
 (provide 'langs-org)
 ;;; langs-org.el ends here
