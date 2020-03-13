@@ -89,6 +89,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (when (file-directory-p pkg)
     (add-to-list 'load-path pkg)))
 
+;; Add private packages to load path.
+(dolist (pkg (directory-files user-private-dir t "\\w+"))
+  (when (file-directory-p pkg)
+    (add-to-list 'load-path pkg)))
+
 (setq custom-file (concat user-etc-dir "custom.el"))
 
 ;; Prevent annoying "Active processes exist" query when you quit Emacs.

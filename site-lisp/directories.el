@@ -21,6 +21,10 @@
 (defconst user-defuns-dir (concat user-emacs-directory "defuns/")
   "A common place to store user's defuns.")
 
+(defconst user-private-dir (concat user-emacs-directory "private/")
+  "This is the default place where to store your private configuration layers.
+The content of this directory is ignored by Git.")
+
 (defconst user-local-dir (concat user-emacs-directory ".local/")
   "Root directory for local Emacs files.
 Use this as permanent storage for files that are safe to share across
@@ -35,7 +39,7 @@ external dependencies or long-term shared data.")
   "Directory for volatile storage.
 Use this for files that change often, like cache files.")
 
-(defconst user-host-dir (concat user-etc-dir "hosts/" (system-name))
+(defconst user-host-dir (concat user-etc-dir "hosts/" (system-name) "/")
   "The directory with user-specific Emacs settings.")
 
 (provide 'directories)
