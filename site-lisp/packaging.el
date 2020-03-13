@@ -21,25 +21,24 @@
 (custom-set-variables
  ;; Directory containing the user’s Emacs Lisp packages.
  '(package-user-dir
-   (concat
-    (substitute-in-file-name "$HOME/.local/share/emacs/elpa/")
-    emacs-version))
+   (let ((dir (concat
+	       (substitute-in-file-name "$HOME/.local/share/emacs/elpa/")
+	       emacs-version)))
+     (unless (file-exists-p dir)
+       (make-directory dir t))
+     dir))
  ;; Directory containing GnuPG keyring.
  ;; At my PC it is `~/.emacs.d/.local/gnupg'.
  '(package-gnupghome-dir (expand-file-name "gnupg" user-local-dir))
+ ;; Setting up package archives.
+ '(package-archives
+   '(("melpa"    . "https://melpa.org/packages/")
+     ("m-stable" . "https://stable.melpa.org/packages/")
+     ("gnu"      . "https://elpa.gnu.org/packages/")))
  ;; Priorities. Default priority is 0.
  '(package-archive-priorities
    '(("m-stable" . 10)
-     ("melpa" . 20))))
-
-(unless (file-exists-p package-user-dir)
-  (make-directory package-user-dir t))
-
-(setq package-archives
-      '(("org"      . "http://orgmode.org/elpa/")
-        ("melpa"    . "http://melpa.org/packages/")
-        ("m-stable" . "http://stable.melpa.org/packages/")
-        ("elpa"     . "https://elpa.gnu.org/packages/")))
+     ("melpa"    . 20))))
 
 ;; Initialize package manager.
 (package-initialize)
