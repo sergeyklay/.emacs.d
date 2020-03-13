@@ -53,16 +53,5 @@ buffer we're an order of magnitude laxer about checking."
   ;; buffer-sensitive adjustment above.
   (make-variable-buffer-local 'flycheck-idle-change-delay))
 
-(use-package flycheck-tip
-  :after flycheck
-  :custom (flycheck-tip-avoid-show-func nil))
-
-(use-package flycheck-pos-tip
-  :defer t
-  :if (display-graphic-p)
-  :after flycheck
-  :commands flycheck-pos-tip-mode
-  :hook (flycheck-mode . flycheck-pos-tip-mode))
-
 (provide 'syntax-check)
 ;;; syntax-check.el ends here
