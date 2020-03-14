@@ -32,19 +32,18 @@
 
 ;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use
 (use-package erc
+  :after auth-source
   :commands erc
   :custom
   (erc-autojoin-channels-alist
    '(("freenode.net"
       "#emacs"
-      ;; "#latex"
-      ;; "#org-mode"
       "#clojure"
       "#phalcon"
       "#zephir")))
+  (erc-nick "klay")
   (erc-try-new-nick-p t)
   (erc-nick-uniquifier "_")
-  (erc-user-full-name user-full-name)
   (erc-autojoin-timing 'ident)
   (erc-server-coding-system '(utf-8 . utf-8))
   (erc-fill-function 'erc-fill-static)
@@ -57,6 +56,7 @@
   ;; For more see
   ;; URL `https://www.gnu.org/software/emacs/manual/html_node/erc/Connecting.html'
   (erc-prompt-for-nickserv-password nil)
+  (erc-prompt-for-password nil)
   (erc-server-reconnect-attempts 6)
   (erc-server-reconnect-timeout 3)
   :config
