@@ -64,7 +64,10 @@
   :after erc)
 
 (use-package erc-image
-  :after erc)
+  :defer t
+  :init (with-eval-after-load 'erc
+	  (require 'erc-image)
+	  (add-to-list 'erc-modules 'image)))
 
 (declare-function erc (&key (server (erc-compute-server))))
 (declare-function erc-track-switch-buffer (arg))
