@@ -51,7 +51,15 @@
      "~/Dropbox/Org/Work"))
   (org-default-notes-file "~/Dropbox/Org/Inbox.org")
   (org-archive-location "~/Dropbox/Org/Archive.org::* From %s")
+  ;; Tell Org how to find the possible targets for refile.
   (org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  ;; Tell Org to include the destination file as an element in the path to a
+  ;; heading, and to use the full paths as completion targets rather than just
+  ;; the heading text itself.
+  (org-refile-use-outline-path 'file)
+  ;; Tell Org to generate all of the possible completions and present them at
+  ;; once.
+  (org-outline-path-complete-in-steps nil)
   :config
   (defun my|common-org-hook ()
   "A common hook for `org-mode'."
