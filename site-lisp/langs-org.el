@@ -68,8 +68,7 @@
      (shell . t)
      (sqlite . t)
      (js . t)
-     (haskell . t)
-     (php . t))))
+     (haskell . t))))
   :hook
   ((org-mode . my|common-org-hook)))
 
