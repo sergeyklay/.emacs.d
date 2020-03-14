@@ -15,7 +15,8 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'directories))
 
 ;;;; Ivy
 
@@ -133,38 +134,40 @@
 (use-package company
   :defer t
   :diminish company-mode
-  :init
-  (setq company-idle-delay nil ; never start completions automatically
-        company-echo-delay 0
-        company-tooltip-align-annotations t
-        company-tooltip-limit 10
-        company-selection-wrap-around t
-        company-show-numbers t)
   :custom
   (company-dabbrev-ignore-case nil)
   (company-dabbrev-downcase nil)
+  (company-idle-delay 0.4)
+  (company-tooltip-align-annotations t)
+  (company-tooltip-limit 10)
+  (company-selection-wrap-around t)
+  (company-show-numbers t)
+  (company-minimum-prefix-length 2)
+  (company-global-modes
+   '(not comint-mode
+	 erc-mode
+	 minibuffer-inactive-mode
+	 shell-mode))
   :bind
+  ("<C-tab>" . company-complete)
   (:map company-active-map
-        ("SPC" . company-abort)))
+        ("M-n" . nil)
+	("M-p" . nil)
+	("C-d" . company-show-doc-buffer)
+	("C-n" . company-select-next)
+	("C-p" . company-select-previous)
+	([tab] . company-complete-common-or-cycle)
+	("SPC" . company-abort)
+	("<backtab>" . company-select-previous)))
 
-(eval-after-load 'company
-  '(progn
-     ;; Map tab to cycle through the completion options
-     (when (fboundp 'company-complete-common-or-cycle)
-       (global-set-key (kbd "M-TAB") #'company-complete-common-or-cycle))
-
-     ;; make TAB complete, without losing the ability to manually indent
-     (when (fboundp 'company-indent-or-complete-common)
-       (global-set-key (kbd "TAB") #'company-indent-or-complete-common))))
-
+;; Sort company candidates by statistics.
 (use-package company-statistics
   :after company
-  :defer t
   :hook
   (company-mode . company-statistics-mode)
-  :config
-  (setq company-statistics-file
-        (concat user-cache-dir "company-statistics-cache.el")))
+  :custom
+  (company-statistics-file
+   (concat user-cache-dir "company-statistics-cache.el")))
 
 (provide 'completion)
 ;;; completion.el ends here
