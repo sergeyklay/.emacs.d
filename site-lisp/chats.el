@@ -17,16 +17,23 @@
 
 (require 'directories)
 
+(defun erc-logging-hook ()
+  "Setting up channel logging for `erc'."
+  (eval-when-compile (require 'erc-log nil t))
+  (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
+    (setq erc-log-channels-directory log-channels-directory
+	  erc-log-insert-log-on-open t)
+    (unless (file-exists-p log-channels-directory)
+      (make-directory log-channels-directory t))))
+
 ;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use
 (use-package erc
-  :after (auth-source password-store)
-  :defer
+  :commands erc
   :custom
   (erc-autojoin-channels-alist
    '(("freenode.net"
       "#emacs" "#latex" "#org-mode"
       "#clojure" "#phalcon" "#zephir")))
-
   (erc-autojoin-timing 'ident)
   (erc-fill-function 'erc-fill-static)
   (erc-fill-static-center 22)
@@ -43,23 +50,14 @@
   :config
   (dolist (module '(notifications spelling log))
     (add-to-list 'erc-modules module))
-
   (erc-services-mode 1)
-
   (when (fboundp 'erc-update-modules)
     (erc-update-modules))
-
-  (defun my|erc-logging ()
-    "Setting up channel logging for `erc'."
-    (eval-when-compile (require 'erc-log nil t))
-    (let ((log-channels-directory (concat user-local-dir "logs/erc/")))
-      (setq erc-log-channels-directory log-channels-directory
-	    erc-log-insert-log-on-open t)
-      (unless (file-exists-p log-channels-directory)
-	(make-directory log-channels-directory t))))
   :hook
-  (erc-mode . my|erc-logging))
+  (erc-mode . erc-logging-hook))
 
+;; erc-hl-nicks: Nickname Highlighting for ERC
+;; See URL `https://github.com/leathekd/erc-hl-nicks'
 (use-package erc-hl-nicks
   :after erc)
 
