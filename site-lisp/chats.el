@@ -24,11 +24,15 @@
 (defun erc-logging-hook ()
   "Setting up channel logging for `erc'."
   (eval-when-compile (require 'erc-log nil t))
-  (let ((log-channels-directory erc-logging-directory))
-    (setq erc-log-channels-directory log-channels-directory
-	  erc-log-insert-log-on-open t)
-    (unless (file-exists-p log-channels-directory)
-      (make-directory log-channels-directory t))))
+  (custom-set-variables
+   '(erc-log-channels-directory erc-logging-directory)
+   '(erc-log-insert-log-on-open t)
+   '(erc-save-buffer-on-part nil)
+   '(erc-save-queries-on-quit nil)
+   '(erc-log-write-after-insert t)
+   '(erc-log-write-after-send t))
+  (unless (file-exists-p erc-logging-directory)
+    (make-directory erc-logging-directory t)))
 
 ;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use
 (use-package erc
