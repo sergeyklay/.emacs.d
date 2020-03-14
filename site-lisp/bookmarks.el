@@ -15,13 +15,16 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'utils)
+  (require 'directories))
 
 (use-package recentf
   :ensure nil
   :custom
   (recentf-max-saved-items 200)
   (recentf-save-file (concat user-cache-dir "recentf"))
+  (recentf-auto-cleanup 10)
   :hook (find-file . my|common-recentf-hook)
   :config
   (require 'cl-macs) ; cl-flet
@@ -50,15 +53,6 @@ do nothing. And suppress the output from `message' and
         ad-do-it
         (setq recentf-list-prev recentf-list))))
 
-  (defadvice recentf-cleanup
-      (around no-message activate)
-    "Suppress the output from `message' to minibuffer."
-    (cl-flet ((message (format-string &rest args)
-                    (eval `(format ,format-string ,@args))))
-      ad-do-it))
-  (setq recentf-auto-cleanup 10)
-  (run-with-idle-timer 30 t 'recentf-save-list)
-
   (setq recentf-exclude
         `(,(concat "/\\(\\(\\"
 		  "(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)"
@@ -67,7 +61,11 @@ do nothing. And suppress the output from `message' and
 	  ,(expand-file-name package-user-dir)
 	  "github.*txt$" "auto-save-list\\*"
 	  ".cache" "[/\\]elpa/" ".cask" "bookmarks"
-	  "/dev/.*")))
+	  "/dev/.*"))
+
+  ;; Suppress "Cleaning up the recentf...done (0 removed)"
+  (advice-add 'recentf-cleanup :around #'suppress-messages)
+  (run-with-idle-timer 30 t 'recentf-save-list))
 
 (defun my/undo-kill-buffer (arg)
   "Re-open the last buffer killed.
