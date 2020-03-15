@@ -46,6 +46,7 @@
 (require 'langs-md)     ; Add markdown support
 (require 'langs-cc)     ; Support for the C-family of languages
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
+(require 'langs-lua)    ; Lua support
 (require 'langs-org)    ; Org related configuration
 (require 'langs-php)    ; PHP support
 (require 'langs-zephir) ; Zephir support
