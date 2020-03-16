@@ -95,7 +95,6 @@ All it does is check if `leuven' (light version) is active and if so switch to
 				   (custom-available-themes))))))
   (my/enable-theme theme))
 
-
 (use-package emacs
   :ensure nil
   :custom
@@ -120,12 +119,6 @@ All it does is check if `leuven' (light version) is active and if so switch to
       (lambda ()
         (invert-face 'mode-line)
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
-
-;; Pretify page breaks.
-(use-package page-break-lines
-  :diminish page-break-lines-mode
-  :config
-  (global-page-break-lines-mode))
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
