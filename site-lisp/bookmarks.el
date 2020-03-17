@@ -21,6 +21,7 @@
 
 (use-package recentf
   :ensure nil
+  :defer 1
   :custom
   (recentf-max-saved-items 200)
   (recentf-save-file (concat user-cache-dir "recentf"))
