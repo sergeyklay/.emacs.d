@@ -102,5 +102,11 @@
   :hook
   (flycheck-mode . flycheck-cask-setup))
 
+(use-package buttercup
+  :defer t)
+
+(use-package undercover
+  :defer t)
+
 (provide 'langs-lisp)
 ;;; langs-lisp.el ends here
