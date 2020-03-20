@@ -33,6 +33,7 @@
     (eldoc-mode -1)
 
     ;; These options are common.
+    (auto-fill-mode 1)
     (setq-local fill-column 120)
     (setq-local indent-tabs-mode nil))
   (add-hook 'zephir-mode-hook #'zephir-common-hook)
