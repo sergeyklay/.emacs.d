@@ -11,32 +11,32 @@
 
 ;;; Commentary:
 
-;; Zephir programming language support for GNU Emacs.
+;; This file provides my own Zephir configuration and relies on private mode
+;; symlinked in `user-private-dir'.
 
 ;;; Code:
 
-(defun zephir-common-hook ()
-  "The common hook to configure `zephir-mode'."
-  ;; These modes are not ready to use with `zephir-mode'.
-  (company-statistics-mode -1)
-  (company-mode -1)
-  (flycheck-mode -1)
-  (eldoc-mode -1)
+(require 'directories)
 
-  ;; These options are common.
-  (setq-local fill-column 120)
-  (setq-local indent-tabs-mode nil))
+(when (file-directory-p (concat user-private-dir "zephir-mode"))
+  (require 'zephir-mode)
 
-(use-package zephir-mode
-  :straight
-  (zephir-mode :type git
-	       :host github
-	       :repo "zephir-lang/zephir-mode")
-  :hook ((zephir-mode . subword-mode)
-	 (zephir-mode . yas-minor-mode)
-	 (zephir-mode . auto-fill-mode)
-	 (zephir-mode . zephir-common-hook)
-	 (zephir-mode . zephir-abbrev-hook)))
+  (defun zephir-common-hook ()
+    "The common hook to configure `zephir-mode'."
+    ;; These modes are not ready to use with `zephir-mode'.
+    (company-statistics-mode -1)
+    (company-mode -1)
+    (flycheck-mode -1)
+    (eldoc-mode -1)
+
+    ;; These options are common.
+    (setq-local fill-column 120)
+    (setq-local indent-tabs-mode nil))
+
+  (add-hook 'zephir-mode-hook #'subword-mode)
+  (add-hook 'zephir-mode-hook #'yas-minor-mode)
+  (add-hook 'zephir-mode-hook #'auto-fill-mode)
+  (add-hook 'zephir-mode-hook #'zephir-common-hook))
 
 (provide 'langs-zephir)
 ;;; langs-zephir.el ends here

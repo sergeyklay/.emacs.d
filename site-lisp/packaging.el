@@ -63,34 +63,6 @@
 
 (require 'bind-key)
 
-;;;; straight
-
-(defvar straight-base-dir
-  (let* ((base-dir (substitute-in-file-name "$HOME/.local/share/emacs/"))
-	 (repo-dir (concat base-dir "straight/repos/straight.el/")))
-    (unless (file-exists-p base-dir)
-      (make-directory base-dir t))
-    (unless (file-exists-p repo-dir)
-      (make-directory repo-dir t))
-    base-dir))
-
-(setq-default straight-repository-branch "develop"
-              straight-vc-git-default-clone-depth 1)
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el"
-			 straight-base-dir))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
 ;;;; Utilities for `list-packages' menu
 
 (defun my/package-menu-find-marks ()
