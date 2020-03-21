@@ -167,7 +167,9 @@
   (company-mode . company-statistics-mode)
   :custom
   (company-statistics-file
-   (concat user-cache-dir "company-statistics-cache.el")))
+   (concat user-cache-dir "company-statistics-cache.el"))
+  :config
+  (advice-add 'company-statistics--load :around #'suppress-messages))
 
 (provide 'completion)
 ;;; completion.el ends here
