@@ -36,7 +36,9 @@
   (prefer-coding-system 'utf-8)
   (add-to-list 'auto-coding-alist '("/#[^/]+#\\'" . utf-8)))
 
-;;;; Disable Arrow Keys In emacs
+;;;; Disable keys in Emacs
+
+;; Disable Arrow Keys.
 
 (global-unset-key (kbd "<left>"))
 (global-unset-key (kbd "<right>"))
@@ -50,6 +52,10 @@
 (global-unset-key (kbd "<M-right>"))
 (global-unset-key (kbd "<M-up>"))
 (global-unset-key (kbd "<M-down>"))
+
+;; Disable C-m.  I never used it.
+
+(global-unset-key (kbd "C-m"))
 
 ;; C-h h runs the command `view-hello-file'.
 ;; I never used this feature and actually don't need it.
