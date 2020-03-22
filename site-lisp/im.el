@@ -53,10 +53,6 @@
 (global-unset-key (kbd "<M-up>"))
 (global-unset-key (kbd "<M-down>"))
 
-;; Disable C-m.  I never used it.
-
-(global-unset-key (kbd "C-m"))
-
 ;; C-h h runs the command `view-hello-file'.
 ;; I never used this feature and actually don't need it.
 (global-unset-key (kbd "C-h h"))
