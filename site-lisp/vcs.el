@@ -58,22 +58,13 @@
   :hook
   ((gitignore-mode . my|final-newline-hook)))
 
-;;;; `git-gutter'
+;;;; `diff-hl'
 
-(use-package git-gutter
-  :defer 2
-  :diminish git-gutter-mode
-  :custom
-  (git-gutter:update-interval 2)
-  (git-gutter:hide-gutter nil)
-  :config
-  (global-git-gutter-mode +1)
-  (set-face-background 'git-gutter:modified "#95B2CE")
-  (set-face-foreground 'git-gutter:modified "#95B2CE")
-  (set-face-background 'git-gutter:added "#A0C495")
-  (set-face-foreground 'git-gutter:added "#A0C495")
-  (set-face-background 'git-gutter:deleted "#9F9F9F")
-  (set-face-foreground 'git-gutter:deleted "#9F9F9F"))
+(use-package diff-hl
+  :hook
+  ((prog-mode . diff-hl-mode)
+   (dired-mode . diff-hl-dired-mode-unless-remote)
+   (magit-post-refresh . diff-hl-magit-post-refresh)))
 
 (provide 'vcs)
 ;;; vcs.el ends here
