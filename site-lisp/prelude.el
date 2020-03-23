@@ -51,10 +51,12 @@
 (add-hook 'kill-emacs-hook #'compile-init-file)
 
 ;; Turn off mouse interface early in startup to avoid momentary display.
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))     ; Disable the menu bar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))     ; Disable the tool bar
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)) ; Disable the scroll bar
 (if (fboundp 'tooltip-mode) (tooltip-mode -1))       ; Disable the tooltips
+
+;; Do not disable menu bar for now (I'm working for an addition)
+; (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))    ; Disable the menu bar
 
 ;; One less file to load at startup.
 (setq site-run-file nil)
