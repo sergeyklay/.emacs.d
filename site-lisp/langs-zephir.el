@@ -21,6 +21,9 @@
 (when (file-directory-p (concat user-private-dir "zephir-mode"))
   (require 'zephir-mode)
 
+  (customize-set-variable
+   '(zephir-speedbar-config t))
+
   (defun zephir-common-hook ()
     "The common hook to configure `zephir-mode'."
     ;; These modes are not ready to use with `zephir-mode'.
