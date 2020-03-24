@@ -23,9 +23,25 @@
   :ensure nil
   :defer 1
   :custom
-  (recentf-max-saved-items 200)
+  (recentf-max-saved-items 500)
   (recentf-save-file (concat user-cache-dir "recentf"))
-  (recentf-auto-cleanup 10)
+  ;; I'll clean recent failes manually
+  (recentf-auto-cleanup 'never)
+  (recentf-keep '(recentf-keep-default-predicate
+		  file-remote-p file-readable-p))
+  (recentf-exclude
+   `(,(rx "/" (or "COMMIT_EDITMSG" "NOTES_EDITMSG"
+		  "PULLREQ_EDITMSG" "MERGEREQ_EDITMSG"
+		  "TAG_EDITMSG" "BRANCH_DESCRIPTION"
+		  "EDIT_DESCRIPTION"))
+     ,(expand-file-name package-user-dir)
+     ,(rx (or "TAGS" "GPATH" "GRTAGS" "GTAGS") eol)
+     ,(rx (or "." "/") "cache")
+     ,(rx bol (1+ (not (or "/" ":"))) ":")
+     ,(rx "." (or "gz" "gpg" "gif") eol)
+     ,(rx bol (? "/var") "/tmp")
+     ,(rx (? ".") "recentf" eol)
+     "auto-save-list/" "elpa/" ".cask" "/dev/.*"))
   :hook (find-file . my|common-recentf-hook)
   :config
   (require 'cl-macs) ; cl-flet
@@ -53,16 +69,6 @@ do nothing. And suppress the output from `message' and
                              (insert str)))))
         ad-do-it
         (setq recentf-list-prev recentf-list))))
-
-  (setq recentf-exclude
-        `(,(concat "/\\(\\(\\"
-		  "(COMMIT\\|NOTES\\|PULLREQ\\|MERGEREQ\\|TAG\\)"
-		  "_EDIT\\|MERGE_\\|\\)MSG\\|\\(BRANCH\\|EDIT\\)"
-		  "_DESCRIPTION\\)\\'")
-	  ,(expand-file-name package-user-dir)
-	  "github.*txt$" "auto-save-list\\*"
-	  ".cache" "[/\\]elpa/" ".cask" "bookmarks"
-	  "/dev/.*"))
 
   ;; Suppress "Cleaning up the recentf...done (0 removed)"
   (advice-add 'recentf-cleanup :around #'suppress-messages)
