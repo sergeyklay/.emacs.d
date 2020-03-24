@@ -68,11 +68,7 @@ do nothing. And suppress the output from `message' and
                            (with-temp-file file
                              (insert str)))))
         ad-do-it
-        (setq recentf-list-prev recentf-list))))
-
-  ;; Suppress "Cleaning up the recentf...done (0 removed)"
-  (advice-add 'recentf-cleanup :around #'suppress-messages)
-  (run-with-idle-timer 30 t 'recentf-save-list))
+        (setq recentf-list-prev recentf-list)))))
 
 (defun my/undo-kill-buffer (arg)
   "Re-open the last buffer killed.
