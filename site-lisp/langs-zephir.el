@@ -21,7 +21,7 @@
 (when (file-directory-p (concat user-private-dir "zephir-mode"))
   (require 'zephir-mode)
 
-  (customize-set-variable
+  (custom-set-variables
    '(zephir-speedbar-config t))
 
   (defun zephir-common-hook ()
