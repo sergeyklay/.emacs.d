@@ -58,7 +58,7 @@
 
 ;;;; Session directory
 
-(eval-after-load 'x-win
+(with-eval-after-load 'x-win
   (let ((session-dir(concat user-cache-dir "session/")))
     `(progn
        (make-directory ,session-dir t)
