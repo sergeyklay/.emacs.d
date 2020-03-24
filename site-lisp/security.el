@@ -33,7 +33,11 @@
   :init
   ;; For more see "man 1 gpg" for the option "--pinentry-mode"
   (unless (eq (window-system) 'w32)
-    (setq epa-pinentry-mode 'loopback))
+    (if (version< emacs-version "27")
+	(custom-set-variables
+	 '(epa-pinentry-mode 'loopback))
+      (custom-set-variables
+	 '(epg-pinentry-mode 'loopback))))
   :config
   ;; Enable automatic encryption/decryption of *.gpg files
   (unless (memq epa-file-handler file-name-handler-alist)
@@ -51,8 +55,11 @@
 ;;;; Auth Source
 
 (use-package auth-source
-  :init
-  (add-to-list 'auth-sources (concat user-local-dir "etc/.authinfo.gpg")))
+  :ensure nil
+  :custom
+  (auth-sources
+   `(,(concat user-local-dir "etc/.authinfo.gpg")
+     "~/.authinfo" "~/.authinfo.gpg")))
 
 ;;;; Password store
 
