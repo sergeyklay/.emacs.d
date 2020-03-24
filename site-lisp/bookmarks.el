@@ -35,12 +35,12 @@
 		  "TAG_EDITMSG" "BRANCH_DESCRIPTION"
 		  "EDIT_DESCRIPTION"))
      ,(expand-file-name package-user-dir)
+     ,(expand-file-name recentf-save-file)
      ,(rx (or "TAGS" "GPATH" "GRTAGS" "GTAGS") eol)
      ,(rx (or "." "/") "cache")
      ,(rx bol (1+ (not (or "/" ":"))) ":")
      ,(rx "." (or "gz" "gpg" "gif") eol)
      ,(rx bol (? "/var") "/tmp")
-     ,(rx (? ".") "recentf" eol)
      "auto-save-list/" "elpa/" ".cask" "/dev/.*"))
   :hook (find-file . my|common-recentf-hook)
   :config
