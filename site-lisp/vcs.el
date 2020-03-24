@@ -62,9 +62,14 @@
 
 (use-package diff-hl
   :hook
-  ((prog-mode . diff-hl-mode)
-   (dired-mode . diff-hl-dired-mode-unless-remote)
-   (magit-post-refresh . diff-hl-magit-post-refresh)))
+  ((dired-mode . diff-hl-dired-mode)
+   (after-init . global-diff-hl-mode)
+   (vc-dir-mode . turn-on-diff-hl-mode)
+   (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  (if (display-graphic-p)
+      (diff-hl-flydiff-mode t)
+    (diff-hl-margin-mode t)))
 
 (provide 'vcs)
 ;;; vcs.el ends here
