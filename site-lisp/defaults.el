@@ -59,7 +59,7 @@
 ;;;; Session directory
 
 (with-eval-after-load 'x-win
-  (let ((session-dir(concat user-cache-dir "session/")))
+  (let ((session-dir (concat user-cache-dir "session/")))
     `(progn
        (make-directory ,session-dir t)
        (defun emacs-session-filename (session-id)
@@ -76,15 +76,6 @@ This function overrides the one on `x-win' to use my personal directory."
                (unless (file-exists-p tutorial-dir)
                  (make-directory tutorial-dir t))
                tutorial-dir)))
-
-;;;; Emacs Server
-
-(declare-function server-running-p "server") ; Why!? :(
-(add-hook 'after-init-hook
-	  #'(lambda ()
-	      (require 'server)
-	      (unless (server-running-p)
-		(server-start))))
 
 (provide 'defaults)
 ;;; defaults.el ends here
