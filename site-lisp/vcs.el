@@ -25,10 +25,10 @@
 ;; to access magit.  For more see URL `https://magit.vc'
 
 (use-package transient
-  :config
-  (setq transient-history-file (concat user-cache-dir "transient/history.el")
-        transient-values-file (concat user-cache-dir "transient/values.el")
-        transient-levels-file (concat user-cache-dir "transient/levels.el")))
+  :custom
+  (transient-history-file (concat user-cache-dir "transient/history.el"))
+  (transient-values-file (concat user-cache-dir "transient/values.el"))
+  (transient-levels-file (concat user-cache-dir "transient/levels.el")))
 
 (use-package magit
   :after (ivy transient)
