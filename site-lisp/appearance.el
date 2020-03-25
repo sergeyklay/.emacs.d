@@ -18,7 +18,9 @@
 (use-package leuven-theme
   :custom
   (leuven-scale-outline-headlines nil)
-  (leuven-scale-org-agenda-structure nil))
+  (leuven-scale-org-agenda-structure nil)
+  :init
+  (load-theme 'leuven t))
 
 (defconst my/font-mono-linux "Source Code Pro"
   "The default monospaced typeface to use in Linux.")
@@ -59,42 +61,6 @@
     (add-to-list 'face-font-rescale-alist '(".*icons.*" . 0.9))
     (add-to-list 'face-font-rescale-alist '(".*FontAwesome.*" . 0.9))))
 
-;; I tend to switch themes more often than normal.  For example,
-;; switching to a lighter theme (such as the default) or to a
-;; different theme depending on the time of day or my mood.  Normally,
-;; switching themes is a multi-step process with `disable-theme' and
-;; `load-theme'.  The `my/select-theme' function will do that in one
-;; swoop.  I just choose which theme I want to go to.
-
-(defun my/enable-theme (theme)
-  "Disable any currently active themes and load the THEME."
-  (let ((enabled-themes custom-enabled-themes))
-    (mapc #'disable-theme enabled-themes)
-    (load-theme theme t)))
-
-(defun my/default-theme ()
-  "Load the default theme."
-  (my/enable-theme 'leuven))
-
-(defun my/toggle-theme ()
-  "Simplistic toggle for my used themes.
-All it does is check if `leuven' (light version) is active and if so switch to
-`wombat' (dark version).  Else it switches to the light theme."
-  (interactive)
-  (if (eq (car custom-enabled-themes) 'leuven)
-      (my/enable-theme 'wombat)
-    (my/enable-theme 'leuven)))
-
-(defun my/select-theme (theme)
-  "Provide a way to select and enable custom THEME."
-  ;; This interactive call is taken from `load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-			     (mapc 'symbol-name
-				   (custom-available-themes))))))
-  (my/enable-theme theme))
-
 (use-package emacs
   :ensure nil
   :custom
@@ -102,11 +68,8 @@ All it does is check if `leuven' (light version) is active and if so switch to
   (underline-minimum-offset 1)
   ;; Don't beep at me.
   (visible-bell t)
-  :bind (([C-f11] . #'my/select-theme)
-	 ([C-f12] . #'my/toggle-theme))
   :config
   ;; Call these defuns here to make UI changes transparently.
-  (my/default-theme)
   (my/fonts-setup))
 
 ;; Throw away the mouse when typing.
@@ -121,7 +84,7 @@ All it does is check if `leuven' (light version) is active and if so switch to
         (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
 ;; Highlight matching parentheses when the point is on them.
-(show-paren-mode 1)
+(add-hook 'after-init-hook 'show-paren-mode)
 
 (provide 'appearance)
 ;;; appearance.el ends here
