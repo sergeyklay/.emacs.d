@@ -77,5 +77,14 @@ This function overrides the one on `x-win' to use my personal directory."
                  (make-directory tutorial-dir t))
                tutorial-dir)))
 
+;;;; Emacs Server
+
+(declare-function server-running-p "server") ; Why!? :(
+(add-hook 'after-init-hook
+	  #'(lambda ()
+	      (require 'server)
+	      (unless (server-running-p)
+		(server-start))))
+
 (provide 'defaults)
 ;;; defaults.el ends here
