@@ -22,7 +22,7 @@
   (require 'zephir-mode)
 
   (custom-set-variables
-   '(zephir-speedbar-config t))
+   '(zephir-indent-tabs-mode nil))
 
   (defun zephir-common-hook ()
     "The common hook to configure `zephir-mode'."
@@ -33,8 +33,7 @@
     (eldoc-mode -1)
 
     ;; These options are common.
-    (setq-local fill-column 120)
-    (setq-local indent-tabs-mode nil))
+    (setq-local fill-column 120))
 
   (add-hook 'zephir-mode-hook #'subword-mode)
   (add-hook 'zephir-mode-hook #'yas-minor-mode)
