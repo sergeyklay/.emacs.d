@@ -128,15 +128,15 @@
 (use-package semantic
   :ensure nil
   :custom
-  (semantic-default-submodes
-   '(global-semantic-idle-scheduler-mode
-     global-semanticdb-minor-mode
-     global-semantic-idle-summary-mode
-     global-semantic-mru-bookmark-mode))
   (semanticdb-default-save-directory (concat user-cache-dir "semanticdb/"))
   :hook
   ((semantic-init . semantic-include-hook))
   :config
+  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-idle-summary-mode)
+  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+
   (when (boundp 'semanticdb-default-save-directory)
     (unless (file-exists-p semanticdb-default-save-directory)
       (make-directory semanticdb-default-save-directory t))))
