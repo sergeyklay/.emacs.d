@@ -16,7 +16,8 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'company))
+  (require 'company)
+  (require 'show-point-mode))
 
 (defconst sbcl-executable-path (executable-find "sbcl")
   "The sbcl executable path on this system.")
@@ -67,6 +68,7 @@
   :ensure nil
   :hook
   (;; (emacs-lisp-mode . ggtags-mode)
+   (emacs-lisp-mode . show-point-mode)
    (emacs-lisp-mode . company-mode)
    (emacs-lisp-mode . turn-on-eldoc-mode)
    (emacs-lisp-mode . rainbow-delimiters-mode)

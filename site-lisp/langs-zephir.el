@@ -20,6 +20,7 @@
 
 (when (file-directory-p (concat user-private-dir "zephir-mode"))
   (require 'zephir-mode)
+  (require 'show-point-mode)
 
   (defun zephir-common-hook ()
     "The common hook to configure `zephir-mode'."
