@@ -36,6 +36,23 @@
   (prefer-coding-system 'utf-8)
   (add-to-list 'auto-coding-alist '("/#[^/]+#\\'" . utf-8)))
 
+;;;; `which-key'
+
+(use-package which-key)
+
+;;;; `command-log-mode'
+
+(use-package command-log-mode
+  :commands (command-log-mode
+             global-command-log-mode)
+  :custom
+  ;; Does opening the command log turn on the mode?
+  (command-log-mode-open-log-turns-on-mode t)
+  ;; Global activation.
+  (command-log-mode-is-global t)
+  ;; Show the command-log window or frame automatically.
+  (command-log-mode-auto-show))
+
 ;;;; Disable keys in Emacs
 
 ;; Disable Arrow Keys.
