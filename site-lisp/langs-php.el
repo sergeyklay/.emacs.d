@@ -24,6 +24,9 @@
   (setq-local fill-column 120)
   (setq-local indent-tabs-mode nil))
 
+(use-package phpt-mode
+  :defer t)
+
 (use-package php-mode
   :defer t
   :hook
