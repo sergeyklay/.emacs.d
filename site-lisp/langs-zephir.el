@@ -21,9 +21,6 @@
 (when (file-directory-p (concat user-private-dir "zephir-mode"))
   (require 'zephir-mode)
 
-  (custom-set-variables
-   '(zephir-indent-tabs-mode nil))
-
   (defun zephir-common-hook ()
     "The common hook to configure `zephir-mode'."
     ;; These modes are not ready to use with `zephir-mode'.
@@ -33,7 +30,8 @@
     (eldoc-mode -1)
 
     ;; These options are common.
-    (setq-local fill-column 120))
+    (setq-local fill-column 120)
+    (show-point-mode 1))
 
   (add-hook 'zephir-mode-hook #'subword-mode)
   (add-hook 'zephir-mode-hook #'yas-minor-mode)
