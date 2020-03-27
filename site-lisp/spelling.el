@@ -55,15 +55,7 @@
   :custom
   ;; Be silent when checking words.
   (flyspell-issue-message-flag nil)
-  :defer t
-  :hook ((org-mode        . flyspell-mode)
-	 (message-mode    . flyspell-mode)
-	 (text-mode       . flyspell-mode)
-	 (texinfo-mode    . flyspell-mode)
-	 (change-log-mode . flyspell-mode)
-	 (log-edit-mode   . flyspell-mode)
-	 (markdown-mode   . flyspell-mode)
-	 (latex-mode      . flyspell-mode)))
+  :bind ("C-x t s" . flyspell-mode))
 
 (use-package flyspell-correct-ivy
   :after flyspell
