@@ -38,7 +38,14 @@
 
 ;;;; `which-key'
 
-(use-package which-key)
+(use-package which-key
+  :custom
+  (which-key-separator " ")
+  (which-key-sort-order 'which-key-key-order-alpha)
+  (which-key-idle-delay 0.4)
+  (which-key-max-description-length 32)
+  :config
+  (which-key-mode 1))
 
 ;;;; `command-log-mode'
 
