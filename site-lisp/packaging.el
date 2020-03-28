@@ -21,9 +21,7 @@
 (custom-set-variables
  ;; Directory containing the user’s Emacs Lisp packages.
  '(package-user-dir
-   (let ((dir (concat
-	       (substitute-in-file-name "$HOME/.local/share/emacs/elpa/")
-	       emacs-version)))
+   (let ((dir (concat user-emacs-directory "elpa/")))
      (unless (file-exists-p dir)
        (make-directory dir t))
      dir))
