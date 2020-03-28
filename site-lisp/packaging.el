@@ -17,6 +17,9 @@
 
 (require 'package)
 
+(eval-when-compile
+  (require 'prelude))
+
 (custom-set-variables
  ;; Setting up package archives.
  '(package-archives
@@ -41,13 +44,10 @@
 (eval-when-compile
   (require 'use-package))
 
-;; All packages should be installed.
-;; TODO: Do I really need ALL packages on fisrt run
-;; on a new PC?
-(setq use-package-always-ensure t)
-
-(when (boundp 'emacs-debug-mode)
-  (setq use-package-verbose emacs-debug-mode))
+(custom-set-variables
+ '(use-package-enable-imenu-support t) ; enable imenu support for `use-package'
+ '(use-package-always-ensure t)        ; all packages should be installed
+ '(use-package-verbose emacs-debug-mode))
 
 (require 'bind-key)
 
