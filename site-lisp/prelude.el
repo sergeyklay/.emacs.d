@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'directories (concat user-emacs-directory "site-lisp/directories"))
+
 (defvar my--file-name-handler-alist file-name-handler-alist
   "Backup `file-name-handler-alist' to restore in the future.")
 
@@ -57,16 +59,18 @@
 (add-hook 'after-init-hook #'reset-performance)
 (add-hook 'kill-emacs-hook #'compile-init-file)
 
-;; Turn off mouse interface early in startup to avoid momentary display.
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))     ; Disable the tool bar
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)) ; Disable the scroll bar
-(if (fboundp 'tooltip-mode) (tooltip-mode -1))       ; Disable the tooltips
-
-;; Do not disable menu bar for now (I'm working for an addition)
-; (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))    ; Disable the menu bar
-
-;; One less file to load at startup.
+;; One less file to load at startup
 (setq site-run-file nil)
+
+(custom-set-variables
+ ;; Turn off mouse interface early in startup to avoid momentary display.
+ '(menu-bar-mode 1)            ; I'm working in menu addition
+ '(tool-bar-mode nil)          ; Disable the tool bar
+ '(scroll-bar-mode nil)        ; Disable the scroll bar
+ '(tooltip-mode nil)           ; Disable the tooltips
+
+ '(confirm-kill-processes nil) ; Prevent annoying query when quit Emacs
+ `(custom-file ,(concat user-etc-dir "custom.el")))
 
 ;; Disable start-up screen.
 (setq inhibit-startup-screen t)
@@ -86,8 +90,6 @@
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
-(require 'directories (concat user-emacs-directory "site-lisp/directories"))
-
 ;; Set up load path.
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
@@ -102,11 +104,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (dolist (pkg (directory-files user-private-dir t "\\w+"))
   (when (file-directory-p pkg)
     (add-to-list 'load-path pkg)))
-
-(setq custom-file (concat user-etc-dir "custom.el"))
-
-;; Prevent annoying "Active processes exist" query when you quit Emacs.
-(setq confirm-kill-processes nil)
 
 (provide 'prelude)
 ;;; prelude.el ends here
