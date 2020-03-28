@@ -16,28 +16,30 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'directories)
+  (require 'show-point-mode))
 
-(when (file-directory-p (concat user-private-dir "zephir-mode"))
-  (require 'zephir-mode)
-  (require 'show-point-mode)
+(defun zephir-common-hook ()
+  "The common hook to configure `zephir-mode'."
 
-  (defun zephir-common-hook ()
-    "The common hook to configure `zephir-mode'."
-    ;; These modes are not ready to use with `zephir-mode'.
-    (company-statistics-mode -1)
-    (company-mode -1)
-    (flycheck-mode -1)
-    (eldoc-mode -1)
+  ;; These modes are not ready to use with `zephir-mode'.
+  (company-statistics-mode -1)
+  (company-mode -1)
+  (flycheck-mode -1)
+  (eldoc-mode -1)
 
-    ;; These options are common.
-    (setq-local fill-column 120)
-    (show-point-mode 1))
+  ;; These options are common.
+  (setq-local fill-column 120)
+  (show-point-mode 1))
 
-  (add-hook 'zephir-mode-hook #'subword-mode)
-  (add-hook 'zephir-mode-hook #'yas-minor-mode)
-  (add-hook 'zephir-mode-hook #'auto-fill-mode)
-  (add-hook 'zephir-mode-hook #'zephir-common-hook))
+(use-package zephir-mode
+  :mode "\\.zep\\'"
+  :hook ((zephir-mode . zephir-common-hook)
+	 (zephir-mode . subword-mode)
+	 (zephir-mode . yas-minor-mode)
+	 (zephir-mode . auto-fill-mode)
+	 (zephir-mode . zephir-common-hook)))
 
 (provide 'langs-zephir)
 ;;; langs-zephir.el ends here
