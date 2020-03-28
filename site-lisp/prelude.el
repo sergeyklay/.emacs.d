@@ -15,6 +15,13 @@
 
 ;;; Code:
 
+(defvar my--file-name-handler-alist file-name-handler-alist
+  "Backup `file-name-handler-alist' to restore in the future.")
+
+;; Every file opened and loaded by Emacs will run through this list to check for
+;; a proper handler for the file, but during startup, it won’t need any of them.
+(setq file-name-handler-alist nil)
+
 ;; Increasing GC is a common way to speed up Emacs.
 ;; `gc-cons-threshold' sets at what point Emacs should
 ;; invoke its garbage collector.  When set it temporarily

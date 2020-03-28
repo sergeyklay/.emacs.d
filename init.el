@@ -58,4 +58,7 @@
 (when (file-exists-p user-host-dir)
   (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
 
+;; Restore handlers
+(setq file-name-handler-alist my--file-name-handler-alist)
+
 ;;; init.el ends here
