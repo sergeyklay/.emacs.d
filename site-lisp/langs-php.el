@@ -21,6 +21,9 @@
   (when (file-exists-p "~/.composer/vendor/bin/phpcs")
     (setq-local flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs"))
 
+  (setq-local flycheck-phpcs-standard "PSR2")
+  (setq-local php-project-coding-style 'psr2)
+
   (setq-local fill-column 120)
   (setq-local indent-tabs-mode nil))
 
