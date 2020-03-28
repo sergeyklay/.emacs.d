@@ -16,18 +16,8 @@
 ;;; Code:
 
 (require 'package)
-(require 'directories)
 
 (custom-set-variables
- ;; Directory containing the user’s Emacs Lisp packages.
- '(package-user-dir
-   (let ((dir (concat user-emacs-directory "elpa/")))
-     (unless (file-exists-p dir)
-       (make-directory dir t))
-     dir))
- ;; Directory containing GnuPG keyring.
- ;; At my PC it is `~/.emacs.d/.local/gnupg'.
- '(package-gnupghome-dir (expand-file-name "gnupg" user-local-dir))
  ;; Setting up package archives.
  '(package-archives
    '(("melpa"    . "https://melpa.org/packages/")
