@@ -17,7 +17,7 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'directories)
+  (require 'company)
   (require 'show-point-mode))
 
 (defun zephir-common-hook ()
@@ -33,11 +33,18 @@
 
 (use-package zephir-mode
   :mode "\\.zep\\'"
+  :init
+  (add-to-list 'company-backends
+	       '(company-capf
+		 company-dabbrev-code
+		 company-yasnippet
+		 company-files))
   :hook ((zephir-mode . zephir-common-hook)
 	 (zephir-mode . subword-mode)
 	 (zephir-mode . yas-minor-mode)
 	 (zephir-mode . auto-fill-mode)
-	 (zephir-mode . zephir-common-hook)))
+	 (zephir-mode . company-mode)
+	 (zephir-mode . rainbow-delimiters-mode)))
 
 (provide 'langs-zephir)
 ;;; langs-zephir.el ends here
