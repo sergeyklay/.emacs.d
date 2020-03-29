@@ -20,21 +20,10 @@
 (eval-when-compile
   (require 'prelude))
 
-(custom-set-variables
- ;; Setting up package archives.
- '(package-archives
-   '(("melpa"    . "https://melpa.org/packages/")
-     ("m-stable" . "https://stable.melpa.org/packages/")
-     ("gnu"      . "https://elpa.gnu.org/packages/")))
- ;; Priorities. Default priority is 0.
- '(package-archive-priorities
-   '(("m-stable" . 10)
-     ("melpa"    . 20))))
-
-;; Initialize package manager.
-(when (version< emacs-version "27")
+(when (eval-when-compile (version< emacs-version "27"))
   ;; WARNING: This broke `esup' command usage.
   ;; TODO(sergei): Fix me
+  (load "~/.emacs.d/early-init.el")
   (package-initialize))
 
 ;; Install use-package
