@@ -41,13 +41,13 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(eval-when-compile
-  (require 'use-package))
-
 (custom-set-variables
  '(use-package-enable-imenu-support t) ; enable imenu support for `use-package'
  '(use-package-always-ensure t)        ; all packages should be installed
  '(use-package-verbose emacs-debug-mode))
+
+(eval-when-compile
+  (require 'use-package))
 
 (require 'bind-key)
 
