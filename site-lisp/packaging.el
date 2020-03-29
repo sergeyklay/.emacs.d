@@ -32,9 +32,10 @@
      ("melpa"    . 20))))
 
 ;; Initialize package manager.
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+(when (version< emacs-version "27")
+  ;; WARNING: This broke `esup' command usage.
+  ;; TODO(sergei): Fix me
+  (package-initialize))
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)
