@@ -24,8 +24,6 @@
   "The common hook to configure `zephir-mode'."
 
   ;; These modes are not ready to use with `zephir-mode'.
-  (company-statistics-mode -1)
-  (company-mode -1)
   (flycheck-mode -1)
   (eldoc-mode -1)
 
