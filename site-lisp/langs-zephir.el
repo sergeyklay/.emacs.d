@@ -22,14 +22,11 @@
 
 (defun zephir-common-hook ()
   "The common hook to configure `zephir-mode'."
-
   ;; These modes are not ready to use with `zephir-mode'.
   (flycheck-mode -1)
   (eldoc-mode -1)
-
   ;; These options are common.
-  (setq-local fill-column 120)
-  (show-point-mode 1))
+  (setq-local fill-column 120))
 
 (use-package zephir-mode
   :mode "\\.zep\\'"
@@ -44,6 +41,7 @@
 	 (zephir-mode . yas-minor-mode)
 	 (zephir-mode . auto-fill-mode)
 	 (zephir-mode . company-mode)
+	 (zephir-mode . show-point-mode)
 	 (zephir-mode . rainbow-delimiters-mode)))
 
 (provide 'langs-zephir)
