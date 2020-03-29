@@ -24,7 +24,7 @@
   ;; WARNING: This broke `esup' command usage.
   ;; TODO(sergei): Fix me
   (load "~/.emacs.d/early-init.el")
-  (package-initialize))
+  (require 'early-init))
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)

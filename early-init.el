@@ -1,4 +1,4 @@
-;; early-init.el -*- lexical-binding: t; -*-
+;; early-init.el --- Early init file to use for Emacs >= 27.x -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -15,8 +15,8 @@
 
 ;;; Code:
 
-;; Initialize package manager.
-(setq package-quickstart t)
+;; Defined in Emacs 27 and above.
+(defvar package-quickstart)
 
 ;; Increasing GC is a common way to speed up Emacs.
 ;; `gc-cons-threshold' sets at what point Emacs should
@@ -53,6 +53,14 @@
    '(("m-stable" . 10)
      ("melpa"    . 20))))
 
-;; Local Variables:
-;; flycheck-disabled-checkers: (emacs-lisp-checkdoc)
-;; End:
+;; Activate all packages (in particular autoloads).  Use `package-quickstart'
+;; feature in Emacs 27 so we only need to `package-initialize' if on Emacs 26
+;; and below.  Take a look at $EMACS_CODEBASE/lisp/startup.el to refresh your
+;; memory.  The gist is that `package-activate-all' is called in Emacs 27 which
+;; reads `package-quickstart'.
+(if (>= emacs-major-version 27)
+    (setq package-quickstart t)
+  (package-initialize))
+
+(provide 'early-init)
+;;; early-init.el ends here
