@@ -54,6 +54,7 @@
 
 ;; Emacs shell interactive mode.
 (use-package eshell
+  :ensure nil
   :commands eshell-mode
   :custom
   (eshell-scroll-to-bottom-on-input 'all)

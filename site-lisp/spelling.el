@@ -51,6 +51,7 @@
     (setenv "DICTIONARY" "en_GB")))
 
 (use-package flyspell
+  :ensure nil
   :if hunspell-executable-path
   :custom
   ;; Be silent when checking words.

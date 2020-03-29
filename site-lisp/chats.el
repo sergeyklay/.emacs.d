@@ -36,6 +36,7 @@
 
 ;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use
 (use-package erc
+  :ensure nil
   :after auth-source
   :commands erc
   :custom

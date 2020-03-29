@@ -76,6 +76,7 @@
 ;;;; Whitespace mode
 
 (use-package whitespace
+  :ensure nil
   :bind ("C-x t w" . #'whitespace-mode))
 
 ;;;; Folding
