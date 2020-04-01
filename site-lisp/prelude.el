@@ -17,13 +17,13 @@
 
 (require 'directories (concat user-emacs-directory "site-lisp/directories"))
 
-;; Every file opened and loaded by Emacs will run through this list to check for
-;; a proper handler for the file, but during startup, it won’t need any of them.
-(setq file-name-handler-alist nil)
-
 (defvar file-name-handler-alist-backup
   file-name-handler-alist
   "The backup of `file-name-handler-alist' we'll restore on `after-init-hook'.")
+
+;; Every file opened and loaded by Emacs will run through this list to check for
+;; a proper handler for the file, but during startup, it won’t need any of them.
+(setq file-name-handler-alist nil)
 
 ;; Reset `gc-cons-threshold' to the standard value after initializing the Emacs
 ;; session.  Also we restore `file-name-handler-alist' here.
