@@ -18,7 +18,35 @@
 
 (eval-when-compile
   (require 'company)
+  (require 'directories)
   (require 'show-point-mode))
+
+(defun zephir-unload-mode ()
+  "Unload all Zephir Mode modules."
+  (interactive)
+  (unload-feature 'zephir-face t)
+  (unload-feature 'zephir-mode t))
+
+(defun zephir-reload-mode (&optional arg)
+  "Reload `zephir-mode'.
+With prefix ARG, prompts for the directory from which Zephir Mode
+should be loaded again."
+  (interactive "P")
+  (let* ((old-dir (concat user-private-dir "zephir-mode"))
+	 (dir (or (and arg (read-directory-name "New Zephir Mode dir: "
+						old-dir old-dir t old-dir))
+		  old-dir)))
+    (unless (or (file-exists-p (expand-file-name "zephir-mode.el" dir))
+                (file-exists-p (expand-file-name "zephir-face.elc" dir)))
+      (error "%s does not contain Zephir Mode" dir))
+    (let ()
+      (zephir-unload-mode)
+      (setq load-path (remove old-dir load-path))
+      (add-to-list 'load-path dir)
+      (require 'zephir-face)
+      (require 'zephir-mode)
+      (zephir-mode)
+      (message "Zephir Mode has been reloaded"))))
 
 (defun zephir-common-hook ()
   "The common hook to configure `zephir-mode'."
