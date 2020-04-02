@@ -37,7 +37,7 @@ should be loaded again."
                                                 old-dir old-dir t old-dir))
                   old-dir)))
     (unless (or (file-exists-p (expand-file-name "zephir-mode.el" dir))
-                (file-exists-p (expand-file-name "zephir-face.elc" dir)))
+                (file-exists-p (expand-file-name "zephir-face.el" dir)))
       (error "%s does not contain Zephir Mode" dir))
     (let ()
       (zephir-unload-mode)
