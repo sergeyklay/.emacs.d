@@ -41,10 +41,8 @@ should be loaded again."
       (error "%s does not contain Zephir Mode" dir))
     (let ()
       (zephir-unload-mode)
-      (setq load-path (remove old-dir load-path))
-      (add-to-list 'load-path dir)
-      (require 'zephir-face)
-      (require 'zephir-mode)
+      (require 'zephir-face (expand-file-name "zephir-face.el" dir))
+      (require 'zephir-mode (expand-file-name "zephir-mode.el" dir))
       (zephir-mode)
       (message "Zephir Mode has been reloaded"))))
 
