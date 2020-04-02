@@ -33,9 +33,9 @@ With prefix ARG, prompts for the directory from which Zephir Mode
 should be loaded again."
   (interactive "P")
   (let* ((old-dir (concat user-private-dir "zephir-mode"))
-	 (dir (or (and arg (read-directory-name "New Zephir Mode dir: "
-						old-dir old-dir t old-dir))
-		  old-dir)))
+         (dir (or (and arg (read-directory-name "New Zephir Mode dir: "
+                                                old-dir old-dir t old-dir))
+                  old-dir)))
     (unless (or (file-exists-p (expand-file-name "zephir-mode.el" dir))
                 (file-exists-p (expand-file-name "zephir-face.elc" dir)))
       (error "%s does not contain Zephir Mode" dir))
@@ -60,17 +60,17 @@ should be loaded again."
   :mode "\\.zep\\'"
   :init
   (add-to-list 'company-backends
-	       '(company-capf
-		 company-dabbrev-code
-		 company-yasnippet
-		 company-files))
+               '(company-capf
+                 company-dabbrev-code
+                 company-yasnippet
+                 company-files))
   :hook ((zephir-mode . zephir-common-hook)
-	 (zephir-mode . subword-mode)
-	 (zephir-mode . yas-minor-mode)
-	 (zephir-mode . auto-fill-mode)
-	 (zephir-mode . company-mode)
-	 (zephir-mode . show-point-mode)
-	 (zephir-mode . rainbow-delimiters-mode)))
+         (zephir-mode . subword-mode)
+         (zephir-mode . yas-minor-mode)
+         (zephir-mode . auto-fill-mode)
+         (zephir-mode . company-mode)
+         (zephir-mode . show-point-mode)
+         (zephir-mode . rainbow-delimiters-mode)))
 
 (provide 'langs-zephir)
 ;;; langs-zephir.el ends here
