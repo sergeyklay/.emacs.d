@@ -30,6 +30,8 @@
 (use-package phpt-mode
   :defer t)
 
+(add-hook 'phpt-mode-hook #'(lambda () (flycheck-mode -1)))
+
 (use-package php-mode
   :defer t
   :hook
