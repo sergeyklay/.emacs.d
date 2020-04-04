@@ -61,8 +61,6 @@
     (setq-local outline-level 'yaml-outline-level)
     (message "Outline level is %s" outline-level))
   :hook (yaml-mode . yaml-mode-outline-hook)
-  :bind (:map yaml-mode-map
-	      ("TAB" . outline-toggle-children))
   :interpreter ("yml" . yml-mode))
 
 ;;;; Autoconf
