@@ -20,6 +20,9 @@
 (use-package esup
   :commands (esup))
 
+(use-package relint
+  :commands (relint-file relint-directory relint-current-buffer relint-batch))
+
 ;; Measure the current start up time.
 (add-hook 'emacs-startup-hook
           (lambda ()
