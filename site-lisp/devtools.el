@@ -23,6 +23,9 @@
 (use-package relint
   :commands (relint-file relint-directory relint-current-buffer relint-batch))
 
+(use-package highlight-refontification
+  :defer t)
+
 ;; Measure the current start up time.
 (add-hook 'emacs-startup-hook
           (lambda ()
