@@ -18,9 +18,6 @@
 (require 'directories)
 (require 'utils)
 
-(defconst global-executable-path (executable-find "global")
-  "The global executable path on this system.")
-
 ;;;; Bookmark
 
 (use-package bookmark
@@ -41,42 +38,6 @@
   (tags-case-fold-search nil)
   ;; Never “Keep current list of tags tables also”.
   (tags-add-tables nil))
-
-;;;; Ggtags
-
-;; A front-end for accessing the gtags-generated tags.
-;; For more see URL `https://github.com/leoliu/ggtags'
-(use-package ggtags
-  :if global-executable-path
-  :defer 2
-  :custom
-  ;; Don't try to update GTAGS on each save;
-  ;; makes the system sluggish for huge projects.
-  (ggtags-update-on-save nil)
-  ;; Don't auto-highlight tag at point;
-  ;; makes the system sluggish for huge projects.
-  (ggtags-highlight-tag nil)
-  ;; Enabling nearness requires global 6.5.+
-  (ggtags-sort-by-nearness nil)
-  (ggtags-oversize-limit (* 30 1024 1024)) ; 30MB
-  :config
-  ;; Remove the default binding for M-] in `ggtags-mode-map'
-  (unbind-key "M-]" ggtags-mode-map)
-  ;; Remove the default binding for M-o in `ggtags-navigation-map'
-  (unbind-key "M-o" ggtags-navigation-map)
-  :bind (:map ggtags-mode-map
-	 ("C-c g s" . #'ggtags-find-other-symbol)
-	 ("C-c g h" . #'ggtags-view-tag-history)
-	 ("C-c g r" . #'ggtags-find-reference)
-	 ("C-c g f" . #'ggtags-find-file)
-	 ("C-c g c" . #'ggtags-create-tags)
-	 ("C-c g u" . #'ggtags-update-tags)
-	 ("M-."     . #'ggtags-find-tag-dwim)
-	 ("M-,"     . #'pop-tag-mark)
-	 ("C-c <"   . #'ggtags-prev-mark)
-	 ("C-c >"   . #'ggtags-next-mark)
-	 :map ggtags-navigation-map
-	 ("M-l"     . #'ggtags-navigation-visible-mode)))
 
 ;;;; RTags
 

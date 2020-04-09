@@ -31,8 +31,12 @@
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'docs)         ; Setting up documentation features
 (require 'vcs)          ; VCS (mostly git) related features
-(require 'setup-helm)
 (require 'completion)   ; Set up completion system
+
+;; IDE related features
+(require 'setup-helm)
+(require 'setup-helm-gtags)
+
 (require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management
 (require 'jump)         ; Setting up tags and code navigation

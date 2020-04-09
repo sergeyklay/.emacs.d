@@ -16,8 +16,12 @@
 ;;; Code:
 
 (use-package helm
+  :init
+  (require 'helm-config)
+  (require 'helm-grep)
   :custom
   (helm-scroll-amount 4)
+  ;; Search for library in `require' and `declare-function' sexp.
   (helm-ff-search-library-in-sexp t)
   (helm-split-window-in-side-p t)
   (helm-ff-file-name-history-use-recentf t)
@@ -29,35 +33,38 @@
   (helm-lisp-fuzzy-completion t)
   (helm-locate-fuzzy-match t)
   (helm-display-header-line nil)
-  :bind
-  (([remap find-tag]     . helm-etags-select)
-   ([remap list-buffers] . helm-buffers-list)
+  :bind (([remap find-tag]     . helm-etags-select)
+         ([remap list-buffers] . helm-buffers-list)
 
-   ("M-x"     . helm-M-x)
-   ("C-c M-x" . execute-extended-command)
-   ("C-c h o" . helm-occur)
-   ("M-/"     . helm-dabbrev)
-   ("C-x b"   . helm-mini)
-   ("C-x r"   . helm-recentf)
-   ("C-x C-f" . helm-find-files)
-   ("C-h C-l" . helm-locate-library)
-   ("C-h SPC" . helm-all-mark-rings)
-   ([help ?a] . helm-apropos)
-   ([help ?r] . helm-register)
+         ("M-x"     . helm-M-x)
+         ("C-c M-x" . execute-extended-command)
+         ("C-c h o" . helm-occur)
+         ("M-/"     . helm-dabbrev)
+         ("C-x b"   . helm-mini)
+         ("C-x r"   . helm-recentf)
+         ("C-x C-f" . helm-find-files)
+         ("C-h C-l" . helm-locate-library)
+         ("C-h SPC" . helm-all-mark-rings)
+         ([help ?a] . helm-apropos)
+         ([help ?r] . helm-register)
 
-   (:map helm-map
-	 ("S-SPC" . helm-toggle-visible-mark)
-	 ("<tab>" . helm-execute-persistent-action)
-	 ("C-i"   . helm-execute-persistent-action)
-	 ("C-z"   . helm-select-action))
+         :map helm-map
+         ("S-SPC" . helm-toggle-visible-mark)
+         ("<tab>" . helm-execute-persistent-action)
+         ("C-i"   . helm-execute-persistent-action)
+         ("C-z"   . helm-select-action)
 
-   (:map minibuffer-local-map
-	 ("M-p"   . helm-minibuffer-history)
-	 ("M-n"   . helm-minibuffer-history)))
+         :map helm-grep-mode-map
+         ("<return>" . helm-grep-mode-jump-other-window)
+         ("n"        . helm-grep-mode-jump-other-window-forward)
+         ("p"        . helm-grep-mode-jump-other-window-backward)
+
+         :map minibuffer-local-map
+         ("M-p"   . helm-minibuffer-history)
+         ("M-n"   . helm-minibuffer-history))
   :hook
   ((helm-goto-line-before . helm-save-current-pos-to-mark-ring))
   :config
-  (use-package helm-config :ensure nil)
   (helm-mode 1))
 
 (define-key minibuffer-local-map (kbd "C-r") #'helm-minibuffer-history)
@@ -72,13 +79,14 @@
   (helm-swoop-split-direction 'split-window-vertically)
   ;; If nil, you can slightly boost invoke speed in exchange for text color
   (helm-swoop-speed-or-color t)
-  :bind
-  (("C-c h o"  . helm-swoop)
-   ("C-c s"    . helm-multi-swoop-all))
-  (:map isearch-mode-map
-	("M-i" . helm-swoop-from-isearch))
-  (:map helm-swoop-map
-	("M-i" . helm-multi-swoop-all-from-helm-swoop)))
+  :bind (("C-c h o"  . helm-swoop)
+         ("C-c s"    . helm-multi-swoop-all)
+
+         :map isearch-mode-map
+         ("M-i" . helm-swoop-from-isearch)
+
+         :map helm-swoop-map
+         ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 
 (use-package helm-eshell
   :ensure nil
@@ -105,9 +113,9 @@
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
   :bind (("M-s k" . helm-projectile-ag)
-	 ("M-s d" . helm-projectile-find-dir)
-	 ("M-s f" . helm-projectile-find-file)
-	 ([f12]   . helm-projectile))
+         ("M-s d" . helm-projectile-find-dir)
+         ("M-s f" . helm-projectile-find-file)
+         ([f12]   . helm-projectile))
   :config (helm-projectile-on))
 
 (use-package helm-descbinds
@@ -135,20 +143,20 @@
   :bind (:map flyspell-mode-map
               ("C-;" . helm-flyspell-correct)))
 
-(use-package helm-rtags
-  :ensure nil ; installed from source code
-  :if (executable-find "rdm")
-  :after rtags
-  :custom
-  (rtags-display-result-backend 'helm))
-
 (use-package helm-c-yasnippet
   :after yasnippet
   :defer t
   :bind
   (("C-c y" . helm-yas-complete)
-   (:map mode-specific-map
-	 ("y" . helm-yas-complete))))
+   :map mode-specific-map
+   ("y" . helm-yas-complete)))
+
+(use-package helm-rtags
+  :ensure nil ; installed from rtags source code
+  :if (executable-find "rdm")
+  :after rtags
+  :custom
+  (rtags-display-result-backend 'helm))
 
 (provide 'setup-helm)
 ;;; setup-helm.el ends here
