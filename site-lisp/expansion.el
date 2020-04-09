@@ -28,7 +28,6 @@
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :defer 20
   :custom
   (yas-indent-line 'fixed)
   :config

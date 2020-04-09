@@ -99,5 +99,12 @@
   :custom
   (rtags-display-result-backend 'helm))
 
+(use-package helm-c-yasnippet
+  :after yasnippet
+  :bind
+  (("C-c y" . helm-yas-complete)
+   (:map mode-specific-map
+	 ("y" . helm-yas-complete))))
+
 (provide 'setup-helm)
 ;;; setup-helm.el ends here
