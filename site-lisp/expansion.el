@@ -39,9 +39,5 @@
     (yas-reload-all))
   (yas-global-mode t))
 
-(use-package ivy-yasnippet
-  :defer 20
-  :after (yasnippet ivy))
-
 (provide 'expansion)
 ;;; expansion.el ends here

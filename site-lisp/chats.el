@@ -92,7 +92,7 @@
 (defun my/search-erc-logs (term)
   "Search the irc logs for a given TERM."
   (interactive "sTerm to search for in the logs: ")
-  (counsel-ag term erc-logging-directory))
+  (helm-ag erc-logging-directory term))
 
 (provide 'chats)
 ;;; chats.el ends here

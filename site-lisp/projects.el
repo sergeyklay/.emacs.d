@@ -17,10 +17,7 @@
 
 (require 'directories)
 
-;;;; Ivy
-
 (use-package projectile
-  :after ivy
   :diminish projectile-mode
   :custom
   ;; The command-line option ‘-batch’ causes Emacs to run `noninteractively'.
@@ -31,10 +28,10 @@
   (projectile-indexing-method 'alien)
   ;; Projectile will consider the current directory the project root.
   (projectile-require-project-root nil)
-  (projectile-completion-system 'ivy)
   (projectile-known-projects-file
    (concat user-cache-dir "projectile-bookmarks.eld"))
   :config
+  (projectile-mode 1)
   ;; Ignore directories
   (setq projectile-globally-ignored-directories
 	(append '("elpa" ".cache" "node_modules" "bower_components")
@@ -77,26 +74,6 @@
     (setq projectile-generic-command command)
     ;; See URL `https://github.com/bbatsov/projectile/issues/1148'
     (setq projectile-git-command command)))
-
-;;;; Counsel Projectile
-
-(use-package counsel-projectile
-  :after ivy
-  :defer nil
-  :custom
-  ;; Removing the current project or buffer from the list of candidates
-  (counsel-projectile-remove-current-project t)
-  (counsel-projectile-remove-current-buffer t)
-  :config
-  (add-to-list 'ivy-initial-inputs-alist
-	       '(counsel-projectile-switch-project . ""))
-  (counsel-projectile-mode t)
-  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
-	 ("M-s d" . counsel-projectile-find-dir)
-	 ("M-s f" . counsel-projectile-find-file)
-	 ([f12]   . (lambda ()
-		      (interactive)
-		      (counsel-projectile-switch-project 2)))))
 
 (provide 'projects)
 ;;; projects.el ends here

@@ -58,14 +58,5 @@
   (flyspell-issue-message-flag nil)
   :bind ("C-x t s" . flyspell-mode))
 
-(use-package flyspell-correct-ivy
-  :after flyspell
-  :commands (flyspell-correct-ivy)
-  :init
-  (require 'flyspell-correct)
-  (setq flyspell-correct-interface #'flyspell-correct-ivy)
-  :bind (:map flyspell-mode-map
-	      ("C-;" . flyspell-correct-wrapper)))
-
 (provide 'spelling)
 ;;; spelling.el ends here
