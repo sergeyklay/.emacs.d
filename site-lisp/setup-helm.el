@@ -20,7 +20,6 @@
   (helm-scroll-amount 4)
   (helm-ff-search-library-in-sexp t)
   (helm-split-window-in-side-p t)
-  (helm-echo-input-in-header-line t)
   (helm-ff-file-name-history-use-recentf t)
   (helm-buffer-skip-remote-checking t)
   (helm-mode-fuzzy-match t)
@@ -31,23 +30,30 @@
   (helm-locate-fuzzy-match t)
   (helm-display-header-line nil)
   :bind
-  (("M-x"     . helm-M-x)
+  (([remap find-tag]     . helm-etags-select)
+   ([remap list-buffers] . helm-buffers-list)
+
+   ("M-x"     . helm-M-x)
    ("C-c M-x" . execute-extended-command)
-   ("C-s"     . helm-occur)
+   ("C-c h o" . helm-occur)
    ("M-/"     . helm-dabbrev)
    ("C-x b"   . helm-mini)
    ("C-x r"   . helm-recentf)
-   ("C-x C-b" . helm-buffers-list)
    ("C-x C-f" . helm-find-files)
    ("C-h C-l" . helm-locate-library)
    ("C-h SPC" . helm-all-mark-rings)
    ([help ?a] . helm-apropos)
    ([help ?r] . helm-register)
+
    (:map helm-map
 	 ("S-SPC" . helm-toggle-visible-mark)
 	 ("<tab>" . helm-execute-persistent-action)
 	 ("C-i"   . helm-execute-persistent-action)
-	 ("C-z"   . helm-select-action)))
+	 ("C-z"   . helm-select-action))
+
+   (:map minibuffer-local-map
+	 ("M-p"   . helm-minibuffer-history)
+	 ("M-n"   . helm-minibuffer-history)))
   :hook
   ((helm-goto-line-before . helm-save-current-pos-to-mark-ring))
   :config
@@ -55,6 +61,24 @@
   (helm-mode 1))
 
 (define-key minibuffer-local-map (kbd "C-r") #'helm-minibuffer-history)
+
+(use-package helm-swoop
+  :custom
+  ;; Save buffer when helm-multi-swoop-edit complete
+  (helm-multi-swoop-edit-save t)
+  ;; If this value is t, split window inside the current window
+  (helm-swoop-split-with-multiple-windows t)
+  ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+  (helm-swoop-split-direction 'split-window-vertically)
+  ;; If nil, you can slightly boost invoke speed in exchange for text color
+  (helm-swoop-speed-or-color t)
+  :bind
+  (("C-c h o"  . helm-swoop)
+   ("C-c s"    . helm-multi-swoop-all))
+  (:map isearch-mode-map
+	("M-i" . helm-swoop-from-isearch))
+  (:map helm-swoop-map
+	("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 
 (use-package helm-eshell
   :ensure nil
