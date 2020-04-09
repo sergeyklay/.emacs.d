@@ -16,6 +16,8 @@
 ;;; Code:
 
 (use-package helm
+  :custom
+  (helm-always-two-windows t)
   :bind
   (("M-x"     . helm-M-x)
    ("C-s"     . helm-occur)
