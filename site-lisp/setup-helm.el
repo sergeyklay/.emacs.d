@@ -22,7 +22,6 @@
   (helm-split-window-in-side-p t)
   (helm-echo-input-in-header-line t)
   (helm-ff-file-name-history-use-recentf t)
-  (helm-move-to-line-cycle-in-source t)
   (helm-buffer-skip-remote-checking t)
   (helm-mode-fuzzy-match t)
   (helm-buffers-fuzzy-matching t)
@@ -33,11 +32,14 @@
   (helm-display-header-line nil)
   :bind
   (("M-x"     . helm-M-x)
+   ("C-c M-x" . execute-extended-command)
    ("C-s"     . helm-occur)
+   ("M-/"     . helm-dabbrev)
    ("C-x b"   . helm-mini)
    ("C-x r"   . helm-recentf)
    ("C-x C-b" . helm-buffers-list)
    ("C-x C-f" . helm-find-files)
+   ("C-h C-l" . helm-locate-library)
    ("C-h SPC" . helm-all-mark-rings)
    ([help ?a] . helm-apropos)
    ([help ?r] . helm-register)
@@ -46,10 +48,31 @@
 	 ("<tab>" . helm-execute-persistent-action)
 	 ("C-i"   . helm-execute-persistent-action)
 	 ("C-z"   . helm-select-action)))
+  :hook
+  ((helm-goto-line-before . helm-save-current-pos-to-mark-ring))
   :config
+  (use-package helm-config :ensure nil)
   (helm-mode 1))
 
 (define-key minibuffer-local-map (kbd "C-r") #'helm-minibuffer-history)
+
+(use-package helm-eshell
+  :ensure nil
+  :after eshell
+  :commands
+  (helm-eshell-history
+   helm-comint-input-ring
+   helm-minibuffer-history)
+  :config
+  (add-hook
+   'eshell-mode-hook
+   #'(lambda ()
+       (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history))))
+
+(use-package helm-info
+  :ensure nil
+  :commands (helm-info-emacs)
+  :bind ("C-h TAB" . helm-info-emacs))
 
 (use-package helm-projectile
   :after projectile
@@ -101,6 +124,7 @@
 
 (use-package helm-c-yasnippet
   :after yasnippet
+  :defer t
   :bind
   (("C-c y" . helm-yas-complete)
    (:map mode-specific-map
