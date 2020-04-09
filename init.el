@@ -33,6 +33,9 @@
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
 
+;; Languages setup
+(require 'setup-cc)
+
 ;; IDE related features
 (require 'setup-helm)
 (require 'setup-helm-gtags)
@@ -46,11 +49,9 @@
 (require 'syntax-check) ; Syntax checkers
 (require 'spelling)     ; Spell configuration
 (require 'build-tools)  ; Add build tools support
-
 (require 'langs-human)  ; Settings for human languages
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
-;;(require 'langs-cc)     ; Support for the C-family of languages
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
 (require 'langs-lua)    ; Lua support
 (require 'langs-org)    ; Org related configuration
