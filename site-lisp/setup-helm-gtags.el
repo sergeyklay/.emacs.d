@@ -17,6 +17,17 @@
 
 (defvar helm-gtags-prefix-key "\C-cg")
 
+(defun ph-find-symbol-at-point ()
+  "Find symbol at point.
+
+If the symbol matches a generic type in
+C++/C#/Kotlin/Java (e.g. List<TypeA<TypeB>>), then the function
+returns the word at point."
+  (let ((token (thing-at-point 'symbol 'no-text-props)))
+    (if (string-match "\\([^<>]+\\)<\\(.+\\)>" token)
+        (thing-at-point 'word 'no-text-props)
+      token)))
+
 (use-package helm-gtags
   :if (executable-find "global")
   :custom
@@ -27,6 +38,8 @@
   (helm-gtags-prefix-key "\C-cg")
   (helm-gtags-suggested-key-mapping t)
   (helm-gtags-cache-max-result-size 1073741824) ; 1024 MB
+  ;; See URL `https://github.com/emacsorphanage/helm-gtags/pull/187'.
+  (helm-gtags-symbol-at-point-function 'ph-find-symbol-at-point)
   :hook (;; Enable `helm-gtags-mode' in Dired to be able jump
          ;; to any tag when navigate project tree with Dired
          (dired-mode . helm-gtags-mode)
