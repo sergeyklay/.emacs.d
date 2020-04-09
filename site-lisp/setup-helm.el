@@ -87,11 +87,7 @@
   (helm-eshell-history
    helm-comint-input-ring
    helm-minibuffer-history)
-  :config
-  (add-hook
-   'eshell-mode-hook
-   #'(lambda ()
-       (define-key eshell-mode-map (kbd "M-l")  'helm-eshell-history))))
+  :bind (([remap eshell-list-history] . helm-eshell-history)))
 
 (use-package helm-info
   :ensure nil
