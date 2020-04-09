@@ -28,7 +28,6 @@
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :defer 20
   :custom
   (yas-indent-line 'fixed)
   :config
@@ -38,10 +37,6 @@
   (when (fboundp 'yas-reload-all)
     (yas-reload-all))
   (yas-global-mode t))
-
-(use-package ivy-yasnippet
-  :defer 20
-  :after (yasnippet ivy))
 
 (provide 'expansion)
 ;;; expansion.el ends here

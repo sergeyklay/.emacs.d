@@ -21,9 +21,6 @@
 (defconst global-executable-path (executable-find "global")
   "The global executable path on this system.")
 
-(defconst rdm-executable-path (executable-find "rdm")
-  "The rdm executable path on this system.")
-
 ;;;; Bookmark
 
 (use-package bookmark
@@ -104,14 +101,14 @@
 
 (use-package rtags
   :ensure nil
-  :if rdm-executable-path
+  :if (executable-find "rdm")
   :defer 3
   :custom
   ;; Whether RTags automatically will restart diagnostics.
   (rtags-autostart-diagnostics t)
   ;; Path to RTags executables.
   (rtags-path (directory-file-name
-	       (file-name-directory rdm-executable-path))))
+	       (file-name-directory (executable-find "rdm")))))
 
 (defun rtags-setup ()
   "Common hook to setup `rtags'."
@@ -121,7 +118,7 @@
 
 (use-package company-rtags
   :ensure nil
-  :if rdm-executable-path
+  :if (executable-find "rdm")
   :after company rtags)
 
 (defun company-rtags-setup ()
@@ -133,7 +130,7 @@
 
 (use-package flycheck-rtags
   :ensure nil
-  :if rdm-executable-path
+  :if (executable-find "rdm")
   :after flycheck rtags)
 
 (defun flycheck-rtags-setup ()
@@ -143,13 +140,6 @@
   ;; RTags creates more accurate overlays.
   (setq-local flycheck-highlighting-mode nil)
   (setq-local flycheck-check-syntax-automatically nil))
-
-(use-package ivy-rtags
-  :ensure nil
-  :if rdm-executable-path
-  :after ivy rtags
-  :custom
-  (rtags-display-result-backend 'ivy))
 
 (provide 'jump)
 ;;; jump.el ends here

@@ -66,11 +66,15 @@
 ;; I use 'pass' on all my machines, thus I prefer avoid here
 ;; any check for speed Emacs load reasons.
 (use-package password-store
-  :defer t)
+  :defer 5
+  :commands (password-store-insert
+             password-store-copy
+             password-store-get))
 
 ;; See https://www.passwordstore.org/
 (use-package pass
-  :after password-store
+  :commands (pass pass-view-mode)
+  :mode ("\\.passwords/.*\\.gpg\\'" . pass-view-mode)
   :init
   (let ((passwd-dir "~/.password-store"))
     (unless (file-exists-p passwd-dir)
@@ -81,12 +85,6 @@
   :disabled t
   :config
   (auth-pass-enable))
-
-(use-package ivy-pass
-  :after password-store
-  :requires ivy
-  :commands (ivy-pass)
-  :bind ("C-c p" . ivy-pass))
 
 (provide 'security)
 ;;; security.el ends here

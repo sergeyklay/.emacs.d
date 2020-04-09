@@ -31,6 +31,7 @@
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'docs)         ; Setting up documentation features
 (require 'vcs)          ; VCS (mostly git) related features
+(require 'setup-helm)
 (require 'completion)   ; Set up completion system
 (require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management

@@ -20,10 +20,6 @@
 
 ;;;; Magit
 
-;; A great interface for git projects.  It's much more pleasant to use
-;; than the git interface on the command line.  Use an easy keybinding
-;; to access magit.  For more see URL `https://magit.vc'
-
 (use-package transient
   :custom
   (transient-history-file (concat user-cache-dir "transient/history.el"))
@@ -31,10 +27,8 @@
   (transient-levels-file (concat user-cache-dir "transient/levels.el")))
 
 (use-package magit
-  :after (ivy transient)
-  :bind (("C-x g" . magit-status))
-  :config
-  (setq magit-completing-read-function #'ivy-completing-read))
+  :after transient
+  :bind (("C-x g" . magit-status)))
 
 ;;;; Git
 

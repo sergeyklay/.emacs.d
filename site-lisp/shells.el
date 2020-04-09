@@ -61,15 +61,12 @@
   (eshell-scroll-to-bottom-on-output 'all)
   (eshell-kill-processes-on-exit t)
   (eshell-directory-name (concat user-etc-dir "eshell/"))
+  :bind
+  (("M-s e" . eshell))
   :config
   (use-package eshell-git-prompt
     :init
     (eshell-git-prompt-use-theme 'default)))
-
-(with-eval-after-load 'eshell-mode
-  (define-key eshell-mode-map (kbd "C-a") 'eshell-bol))
-
-(bind-key (kbd "M-s e") 'eshell)
 
 (provide 'shells)
 ;;; shells.el ends here
