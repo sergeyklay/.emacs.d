@@ -46,8 +46,6 @@
 		projectile-globally-ignored-file-suffixes ))
   ;; Use the faster searcher to handle project files:
   ;; - user-friendly alternative of find `fd'
-  ;; - ripgrep `rg'
-  ;; - the platinum searcher `pt'
   ;; - the silver searcher `ag'
   (let ((command
 	 (cond
@@ -56,21 +54,11 @@
 		   (mapconcat #'identity
 			      (cons "" projectile-globally-ignored-directories)
 			      " -E ")))
-	  ((executable-find "rg")
-	   (let ((rg-cmd ""))
-	     (dolist (dir projectile-globally-ignored-directories)
-	       (setq rg-cmd (format "%s --glob '!%s'" rg-cmd dir)))
-	     (concat "rg -0 --files --color=never --hidden" rg-cmd)))
 	  ((executable-find "ag")
 	   (concat "ag -0 -l --nocolor --hidden"
 		   (mapconcat #'identity
 			      (cons "" projectile-globally-ignored-directories)
-			      " --ignore-dir=")))
-	  ((executable-find "pt")
-	   (concat "pt -0 -l --nocolor --hidden ."
-		   (mapconcat #'identity
-			      (cons "" projectile-globally-ignored-directories)
-			      " --ignore="))))))
+			      " --ignore-dir="))))))
     (setq projectile-generic-command command)
     ;; See URL `https://github.com/bbatsov/projectile/issues/1148'
     (setq projectile-git-command command)))
