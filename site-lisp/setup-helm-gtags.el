@@ -26,6 +26,7 @@
   (helm-gtags-pulse-at-cursor t)
   (helm-gtags-prefix-key "\C-cg")
   (helm-gtags-suggested-key-mapping t)
+  (helm-gtags-cache-max-result-size 1073741824) ; 1024 MB
   :hook (;; Enable `helm-gtags-mode' in Dired to be able jump
          ;; to any tag when navigate project tree with Dired
          (dired-mode . helm-gtags-mode)

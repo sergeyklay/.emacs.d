@@ -21,6 +21,7 @@
   (require 'helm-grep)
   :custom
   (helm-scroll-amount 4)
+  ;; Search for library in `require' and `declare-function' sexp.
   (helm-ff-search-library-in-sexp t)
   (helm-split-window-in-side-p t)
   (helm-ff-file-name-history-use-recentf t)
