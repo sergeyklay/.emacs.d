@@ -17,17 +17,35 @@
 
 (use-package helm
   :custom
-  (helm-always-two-windows t)
+  (helm-scroll-amount 4)
+  (helm-ff-search-library-in-sexp t)
+  (helm-split-window-in-side-p t)
+  (helm-echo-input-in-header-line t)
+  (helm-ff-file-name-history-use-recentf t)
+  (helm-move-to-line-cycle-in-source t)
+  (helm-buffer-skip-remote-checking t)
+  (helm-mode-fuzzy-match t)
+  (helm-buffers-fuzzy-matching t)
+  (helm-semantic-fuzzy-match t)
+  (helm-imenu-fuzzy-match t)
+  (helm-lisp-fuzzy-completion t)
+  (helm-locate-fuzzy-match t)
+  (helm-display-header-line nil)
   :bind
   (("M-x"     . helm-M-x)
    ("C-s"     . helm-occur)
    ("C-x b"   . helm-mini)
+   ("C-x r"   . helm-recentf)
    ("C-x C-b" . helm-buffers-list)
    ("C-x C-f" . helm-find-files)
-   ("C-x C-r" . helm-recentf)
+   ("C-h SPC" . helm-all-mark-rings)
    ([help ?a] . helm-apropos)
+   ([help ?r] . helm-register)
    (:map helm-map
-	 ("S-SPC" . helm-toggle-visible-mark)))
+	 ("S-SPC" . helm-toggle-visible-mark)
+	 ("<tab>" . helm-execute-persistent-action)
+	 ("C-i"   . helm-execute-persistent-action)
+	 ("C-z"   . helm-select-action)))
   :config
   (helm-mode 1))
 
