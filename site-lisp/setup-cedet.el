@@ -97,7 +97,7 @@
      	  include-dirs)))
 
 (defun semantic-cc-hook ()
-  "Setup `semantic' keybindings to use for C/C++ buggers."
+  "Setup `semantic' keybindings to use for C/C++ buffers."
 
   (local-set-key "\C-c\C-j" #'semantic-ia-fast-jump)
   (local-set-key "\C-c\C-s" #'semantic-ia-show-summary))
@@ -110,6 +110,7 @@
   (semantic--setup-default-submodules)
   (semantic--setup-directories)
   (semantic--enable)
+
   (advice-add 'semantic-ia-fast-jump :before
               #'(lambda (_)
                   "Push marker for jump back."

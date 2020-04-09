@@ -18,6 +18,7 @@
 (require 'cc-utils)
 
 (eval-when-compile
+  (require 'compile)
   (require 'company))
 
 (defun company-c-headers-setup-hook ()
@@ -40,6 +41,17 @@
 	c-eldoc-includes (append '("-I./" "-I../")
 				 (cc-get-standard-include-dirs))))
 
+(defun c-custom-compile-command ()
+  "Custom compile command to use for C buffers."
+  (interactive)
+  (setq-local compilation-read-command nil)
+  (call-interactively 'compile))
+
+(defun c-binds-hook ()
+  "Setup keybindings to use for C buffers."
+  (local-set-key (kbd "<f5>") #'c-custom-compile-command))
+
+(add-hook 'c-mode-hook #'c-binds-hook)
 (add-hook 'c-mode-common-hook
 	  #'(lambda () (c-turn-on-eldoc-mode)))
 
