@@ -43,16 +43,12 @@ returns the word at point."
   :hook (;; Enable `helm-gtags-mode' in Dired to be able jump
          ;; to any tag when navigate project tree with Dired
          (dired-mode . helm-gtags-mode)
-         ;; Enable `helm-gtags-mode' in Eshell for the same
-         ;; reason as above
+         ;; Enable `helm-gtags-mode' in Eshell for the same reason as above
          (eshell-mode . helm-gtags-mode)
-         ;; Enable helm-gtags-mode in languages that GNU Global
-         ;; supports
-         (emacs-lisp-mode . helm-gtags-mode)
-         (c-mode          . helm-gtags-mode)
-         (c++-mode        . helm-gtags-mode)
-         (java-mode       . helm-gtags-mode)
-         (asm-mode        . helm-gtags-mode))
+         ;; Enable helm-gtags-mode in languages that GNU GLOBAL supports
+	 ((c-mode c++-mode java-mode asm-mode) . helm-gtags-mode)
+	 ;; Some modes I'm working with
+	 (emacs-lisp-mode . helm-gtags-mode))
   :bind (:map helm-gtags-mode-map
               ("C-c g a" . helm-gtags-tags-in-this-function)
               ("C-c g c" . helm-gtags-create-tags)
