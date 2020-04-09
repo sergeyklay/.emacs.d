@@ -36,6 +36,7 @@
 ;; IDE related features
 (require 'setup-helm)
 (require 'setup-helm-gtags)
+(require 'setup-cedet)
 
 (require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management
@@ -49,7 +50,7 @@
 (require 'langs-human)  ; Settings for human languages
 (require 'langs-conf)   ; Add support for the configuration like languages
 (require 'langs-md)     ; Add markdown support
-(require 'langs-cc)     ; Support for the C-family of languages
+;;(require 'langs-cc)     ; Support for the C-family of languages
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
 (require 'langs-lua)    ; Lua support
 (require 'langs-org)    ; Org related configuration
