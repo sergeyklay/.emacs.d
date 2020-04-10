@@ -19,6 +19,16 @@
   (require 'utils)
   (require 'directories))
 
+;;;; Bookmark
+
+(use-package bookmark
+  :ensure nil
+  :custom
+  (bookmark-default-file
+   (concat user-etc-dir "bookmarks.el")))
+
+;;;; Recentf
+
 (use-package recentf
   :ensure nil
   :defer 1

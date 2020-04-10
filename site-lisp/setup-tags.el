@@ -15,6 +15,9 @@
 
 ;;; Code:
 
+(require 'utils)
+(require 'directories)
+
 ;;;; Constants
 
 (defconst global-executable-path (executable-find "global")
@@ -23,10 +26,14 @@
 (defconst gtags-executable-path (executable-find "gtags")
   "The gtags executable path on this system.")
 
-;; Warn if GNU GLOBAL is not installed, we'll still compile but
-;; these functions won't work.
+(defconst rdm-executable-path (executable-find "rdm")
+  "The rdm executable path on this system.")
+
 (unless (and global-executable-path gtags-executable-path)
   (warn "Cannot find necessary installation of GNU GLOBAL"))
+
+(unless rdm-executable-path
+  (warn "Cannot find necessary installation of RTags"))
 
 ;;;; Etags
 
@@ -48,7 +55,7 @@
 ;; For more see URL `https://github.com/leoliu/ggtags'
 
 (use-package ggtags
-  :if global-executable-path
+  :if (and global-executable-path gtags-executable-path)
   :commands (ggtags-mode
 	     ggtags-build-imenu-index
 	     ggtags-eldoc-function
@@ -80,6 +87,90 @@
 	 :map ggtags-navigation-map
 	 ("M-o"     . ggtags-navigation-next-file)
 	 ("M-l"     . ggtags-navigation-visible-mode)))
+
+(defun ggtags-common-hook ()
+  "Common hook to enable and configure `ggtags'."
+  (ggtags-mode 1)
+
+  (setq-local imenu-create-index-function
+              #'ggtags-build-imenu-index)
+
+  (setq-local eldoc-documentation-function
+              #'ggtags-eldoc-function))
+
+;;;; Rtags
+
+;; NOTE: Do not install the following packages using MELPA.
+;; These packages should be installed by hand using `make install' from
+;; rtags source directory.
+;;
+;; For more see URL `https://github.com/Andersbakken/rtags/issues/1318'.
+
+(use-package rtags
+  :ensure nil
+  :if rdm-executable-path
+  :commands (rtags-mode)
+  :custom
+  ;; Whether RTags automatically will restart diagnostics.
+  (rtags-autostart-diagnostics t)
+  ;; Path to RTags executables.
+  (rtags-path (directory-file-name
+	       (file-name-directory rdm-executable-path))))
+
+(use-package company-rtags
+  :ensure nil
+  :if rdm-executable-path
+  :after company rtags)
+
+(use-package flycheck-rtags
+  :ensure nil
+  :if rdm-executable-path
+  :after flycheck rtags)
+
+(use-package helm-rtags
+  :ensure nil
+  :if rdm-executable-path
+  :after rtags
+  :custom
+  (rtags-display-result-backend 'helm))
+
+(defun rtags--eldoc-function ()
+  "Eldoc documentation function to use for `c-mode' as well as `c++-mode'."
+  (let ((summary (rtags-get-summary-text)))
+    (and summary
+         (fontify-string
+          (replace-regexp-in-string
+           "{[^}]*$" ""
+           (mapconcat
+            (lambda (str) (if (= 0 (length str)) "//" (string-trim str)))
+            (split-string summary "\r?\n")
+            " "))
+          major-mode))))
+
+(defun rtags-common-hook ()
+  "Common hook to setup `rtags'."
+  (rtags-mode 1)
+
+  (setq-local eldoc-documentation-function
+	      #'rtags--eldoc-function)
+
+  (rtags-enable-standard-keybindings)
+  (rtags-start-process-unless-running))
+
+(defun company-rtags-setup ()
+  "Configure `company-backends' for `company-rtags'."
+  (delete 'company-semantic company-backends)
+  ;; Whether completions are enabled.
+  (setq rtags-completions-enabled t)
+  (push '(company-rtags :with company-yasnippet) company-backends))
+
+(defun flycheck-rtags-setup ()
+  "Configure `flycheck-rtags'."
+  ;; Do not enable `eldoc' here (it is enabled in separated configuration).
+  (flycheck-select-checker 'rtags)
+  ;; RTags creates more accurate overlays.
+  (setq-local flycheck-highlighting-mode nil)
+  (setq-local flycheck-check-syntax-automatically nil))
 
 (provide 'setup-tags)
 ;;; setup-tags.el ends here

@@ -151,12 +151,5 @@
    :map mode-specific-map
    ("y" . helm-yas-complete)))
 
-(use-package helm-rtags
-  :ensure nil ; installed from rtags source code
-  :if (executable-find "rdm")
-  :after rtags
-  :custom
-  (rtags-display-result-backend 'helm))
-
 (provide 'setup-helm)
 ;;; setup-helm.el ends here

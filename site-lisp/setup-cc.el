@@ -15,6 +15,8 @@
 
 ;;; Code:
 
+(require 'setup-tags)
+
 (eval-when-compile
   (require 'compile)
   (require 'company)
@@ -39,20 +41,10 @@
   "Setup keybindings to use for C buffers."
   (local-set-key (kbd "<f5>") #'my/custom-compile-command))
 
-(defun cc-common-hook ()
-  "Common hook to use for all CC Mode modes."
-  (ggtags-mode 1)
-
-  (setq-local imenu-create-index-function
-              #'ggtags-build-imenu-index)
-
-  (setq-local eldoc-documentation-function
-              #'ggtags-eldoc-function))
-
 (use-package cc-mode
   :ensure nil
   :hook ((c-mode . c-binds-hook)
-	 (c-mode-common . cc-common-hook)))
+	 (c-mode-common . ggatgs-common-hook)))
 
 (provide 'setup-cc)
 ;;; setup-cc.el ends here
