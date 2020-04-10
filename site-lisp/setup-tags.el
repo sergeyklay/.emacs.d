@@ -63,14 +63,17 @@
   :custom
   ;; Auto-pdate GTAGS on each save.
   (ggtags-update-on-save t)
-  ;; Auto-highlight tag at point
-  (ggtags-highlight-tag t)
+  ;; Do not auto-highlight tag at point
+  (ggtags-highlight-tag nil)
   ;; Enabling nearness requires global 6.5.+
   (ggtags-sort-by-nearness t)
   ;; The over size limit for the  GTAGS file.
   (ggtags-oversize-limit (* 100 1024 1024))
   ;; Generate the idutils DB.
   (ggtags-use-idutils t)
+  ;; The directory to search GNU GLOBAL executables.
+  (ggtags-executable-directory
+   (directory-file-name (file-name-directory global-executable-path)))
   :bind (("M-]"     . ggtags-idutils-query)
 
 	 :map ggtags-mode-map
@@ -173,4 +176,9 @@
   (setq-local flycheck-check-syntax-automatically nil))
 
 (provide 'setup-tags)
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars unresolved)
+;; End:
+
 ;;; setup-tags.el ends here

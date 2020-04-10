@@ -44,7 +44,7 @@
 (use-package cc-mode
   :ensure nil
   :hook ((c-mode . c-binds-hook)
-	 (c-mode-common . ggatgs-common-hook)))
+	 (c-mode-common . ggtags-common-hook)))
 
 (provide 'setup-cc)
 ;;; setup-cc.el ends here
