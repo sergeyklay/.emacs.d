@@ -27,6 +27,9 @@
 (defconst gtags-executable-path (executable-find "gtags")
   "The gtags executable path on this system.")
 
+(defconst lid-executable-path (executable-find "lid")
+  "The lid executable path on this system.")
+
 (defconst rdm-executable-path (executable-find "rdm")
   "The rdm executable path on this system.")
 
@@ -68,7 +71,7 @@
   ;; The over size limit for the  GTAGS file.
   (ggtags-oversize-limit (* 100 1024 1024))
   ;; Generate the idutils DB.
-  (ggtags-use-idutils t)
+  (ggtags-use-idutils (not (null lid-executable-path)))
   ;; The directory to search GNU GLOBAL executables.
   (ggtags-executable-directory
    (directory-file-name (file-name-directory global-executable-path)))
@@ -86,7 +89,10 @@
 
          :map ggtags-navigation-map
          ("M-o"     . ggtags-navigation-next-file)
-         ("M-l"     . ggtags-navigation-visible-mode)))
+         ("M-l"     . ggtags-navigation-visible-mode))
+  :config
+  (when lid-executable-path
+    (define-key ggtags-mode-map (kbd "M-]") #'ggtags-idutils-query)))
 
 ;;;; Rtags
 

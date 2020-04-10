@@ -23,6 +23,12 @@ LATER
 # Byte compiled elisp files.
 *.elc
 
+# GNU GLOBAL and ID database utilities.
+GPATH
+GRTAGS
+GTAGS
+ID
+
 # Quickstart file to activate all packages at startup.
 package-quickstart.el
 

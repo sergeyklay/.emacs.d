@@ -18,6 +18,7 @@ This project relies on the following list of applications:
 * [Git (`git`)](https://git-scm.com)
 * [GnuPG (`gpg`)](https://www.gnupg.org)
 * [Hunspell (`hunspell`)](https://hunspell.github.io) with [dictionaries][hdicst]
+  [ID Utils][idutils]
 * [Pandoc (`pandoc`)](https://pandoc.org)
 * [Password Store (`pass`)](https://www.passwordstore.org)
 * [Pygments Plug-in Parser](https://github.com/yoshizow/global-pygments-plugin)
@@ -37,3 +38,4 @@ Public Licence version 3.
 [codacy link]: https://www.codacy.com/manual/klay/.emacs.d
 [codacy badge]: https://api.codacy.com/project/badge/Grade/d3da65f182b24596afc588c73fe87806
 [hdicst]: https://stackoverflow.com/a/9436234/1661465
+[idutils]: https://www.gnu.org/software/idutils/
