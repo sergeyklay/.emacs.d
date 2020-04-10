@@ -33,13 +33,13 @@
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
 
-;; Languages setup
-(require 'setup-cc)
-
 ;; IDE related features
 (require 'setup-helm)
-(require 'setup-helm-gtags)
+(require 'setup-tags)
 (require 'setup-cedet)
+
+;; Languages setup
+(require 'setup-cc)
 
 (require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management

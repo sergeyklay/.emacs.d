@@ -15,15 +15,11 @@
 
 ;;; Code:
 
-(require 'cc-utils)
-
 (eval-when-compile
   (require 'compile)
-  (require 'company))
+  (require 'company)
 
-(defun company-c-headers-setup-hook ()
-  "Add `company-c-headers' to `company-mode'."
-  (add-to-list 'company-backends 'company-c-headers))
+  (declare-function ggtags-eldoc-function "ggtags.el" ()))
 
 (use-package company-c-headers
   :after company
@@ -33,15 +29,7 @@
   :hook
   ((c-mode-common . company-mode)))
 
-;; Displays function signatures in the mode line.
-(use-package c-eldoc
-  :defer 2
-  :config
-  (setq c-eldoc-buffer-regenerate-time 60
-	c-eldoc-includes (append '("-I./" "-I../")
-				 (cc-get-standard-include-dirs))))
-
-(defun c-custom-compile-command ()
+(defun my/custom-compile-command ()
   "Custom compile command to use for C buffers."
   (interactive)
   (setq-local compilation-read-command nil)
@@ -49,11 +37,22 @@
 
 (defun c-binds-hook ()
   "Setup keybindings to use for C buffers."
-  (local-set-key (kbd "<f5>") #'c-custom-compile-command))
+  (local-set-key (kbd "<f5>") #'my/custom-compile-command))
 
-(add-hook 'c-mode-hook #'c-binds-hook)
-(add-hook 'c-mode-common-hook
-	  #'(lambda () (c-turn-on-eldoc-mode)))
+(defun cc-common-hook ()
+  "Common hook to use for all CC Mode modes."
+  (ggtags-mode 1)
+
+  (setq-local imenu-create-index-function
+              #'ggtags-build-imenu-index)
+
+  (setq-local eldoc-documentation-function
+              #'ggtags-eldoc-function))
+
+(use-package cc-mode
+  :ensure nil
+  :hook ((c-mode . c-binds-hook)
+	 (c-mode-common . cc-common-hook)))
 
 (provide 'setup-cc)
 ;;; setup-cc.el ends here

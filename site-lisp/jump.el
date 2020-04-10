@@ -26,19 +26,6 @@
   (bookmark-default-file
    (concat user-etc-dir "bookmarks.el")))
 
-;;;; Etags
-
-(use-package etags
-  :ensure nil
-  :defer 4
-  :custom
-  ;; Make Emacs reload the TAGS file automatically.
-  (tags-revert-without-query 1)
-  ;; Whether tags operations should be case-sensitive.
-  (tags-case-fold-search nil)
-  ;; Never “Keep current list of tags tables also”.
-  (tags-add-tables nil))
-
 ;;;; RTags
 
 ;; Do not install the following packages using MELPA.
