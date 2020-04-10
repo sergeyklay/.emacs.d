@@ -25,3 +25,6 @@ LATER
 
 # Quickstart file to activate all packages at startup.
 package-quickstart.el
+
+# Project configuration.
+.emacscfg
