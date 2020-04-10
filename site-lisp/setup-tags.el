@@ -50,8 +50,7 @@
   ;; Whether tags operations should be case-sensitive.
   (tags-case-fold-search nil)
   ;; Never “Keep current list of tags tables also”.
-  (tags-add-tables nil)
-  :bind (("M-," . pop-tag-mark)))
+  (tags-add-tables nil))
 
 ;;;; Ggtags
 
@@ -76,14 +75,12 @@
   (ggtags-executable-directory
    (directory-file-name (file-name-directory global-executable-path)))
   :bind (:map ggtags-mode-map
-         ("M-]"     . ggtags-idutils-query)
          ("C-c g s" . ggtags-find-other-symbol)
          ("C-c g h" . ggtags-view-tag-history)
          ("C-c g r" . ggtags-find-reference)
          ("C-c g f" . ggtags-find-file)
          ("C-c g c" . ggtags-create-tags)
          ("C-c g u" . ggtags-update-tags)
-         ("M-."     . ggtags-find-tag-dwim)
          ("C-c <"   . ggtags-prev-mark)
          ("C-c >"   . ggtags-next-mark)
 
