@@ -34,7 +34,7 @@
   "Read project configuration."
   (let ((path (concat (projectile-project-root) ".emacscfg")))
     (if (file-exists-p path)
-	(ecfg--read-from-file path)
+        (ecfg--read-from-file path)
       (make-hash-table :test 'equal))))
 
 (defun ecfg-save-project-config (config)

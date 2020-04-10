@@ -58,9 +58,9 @@
 (use-package ggtags
   :if (and global-executable-path gtags-executable-path)
   :commands (ggtags-mode
-	     ggtags-build-imenu-index
-	     ggtags-eldoc-function
-	     pop-tag-mark)
+             ggtags-build-imenu-index
+             ggtags-eldoc-function
+             pop-tag-mark)
   :custom
   ;; Auto-pdate GTAGS on each save.
   (ggtags-update-on-save t)
@@ -77,20 +77,20 @@
    (directory-file-name (file-name-directory global-executable-path)))
   :bind (("M-]"     . ggtags-idutils-query)
 
-	 :map ggtags-mode-map
-	 ("C-c g s" . ggtags-find-other-symbol)
-	 ("C-c g h" . ggtags-view-tag-history)
-	 ("C-c g r" . ggtags-find-reference)
-	 ("C-c g f" . ggtags-find-file)
-	 ("C-c g c" . ggtags-create-tags)
-	 ("C-c g u" . ggtags-update-tags)
-	 ("M-."     . ggtags-find-tag-dwim)
-	 ("C-c <"   . ggtags-prev-mark)
-	 ("C-c >"   . ggtags-next-mark)
+         :map ggtags-mode-map
+         ("C-c g s" . ggtags-find-other-symbol)
+         ("C-c g h" . ggtags-view-tag-history)
+         ("C-c g r" . ggtags-find-reference)
+         ("C-c g f" . ggtags-find-file)
+         ("C-c g c" . ggtags-create-tags)
+         ("C-c g u" . ggtags-update-tags)
+         ("M-."     . ggtags-find-tag-dwim)
+         ("C-c <"   . ggtags-prev-mark)
+         ("C-c >"   . ggtags-next-mark)
 
-	 :map ggtags-navigation-map
-	 ("M-o"     . ggtags-navigation-next-file)
-	 ("M-l"     . ggtags-navigation-visible-mode)))
+         :map ggtags-navigation-map
+         ("M-o"     . ggtags-navigation-next-file)
+         ("M-l"     . ggtags-navigation-visible-mode)))
 
 ;;;; Rtags
 
@@ -109,7 +109,7 @@
   (rtags-autostart-diagnostics t)
   ;; Path to RTags executables.
   (rtags-path (directory-file-name
-	       (file-name-directory rdm-executable-path))))
+               (file-name-directory rdm-executable-path))))
 
 (use-package company-rtags
   :ensure nil
@@ -165,7 +165,7 @@
   (flycheck-rtags-setup)
 
   (setq-local eldoc-documentation-function
-	      #'rtags--eldoc-function)
+              #'rtags--eldoc-function)
 
   (rtags-enable-standard-keybindings)
   (rtags-start-process-unless-running))
@@ -198,14 +198,14 @@
    (list (completing-read
           "Tags frontend: " '("ggtags" "rtags" "disable"))))
   (let* ((cfg (ecfg-read-project-config))
-	 (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
-	 (project-root (projectile-project-root)))
+         (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
+         (project-root (projectile-project-root)))
     (progn
       (defun apply-to-project-buffers (buf)
-	(with-current-buffer buf
-	  (when (and tags-frontend
-		     (equal (projectile-project-root) project-root))
-	      (setup-tags-fronted))))
+        (with-current-buffer buf
+          (when (and tags-frontend
+                     (equal (projectile-project-root) project-root))
+            (setup-tags-fronted))))
 
       (puthash "tags-frontend" tags-frontend cfg)
       (ecfg-save-project-config cfg)
