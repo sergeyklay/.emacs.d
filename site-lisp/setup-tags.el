@@ -57,10 +57,7 @@
 
 (use-package ggtags
   :if (and global-executable-path gtags-executable-path)
-  :commands (ggtags-mode
-             ggtags-build-imenu-index
-             ggtags-eldoc-function
-             pop-tag-mark)
+  :commands (ggtags-mode)
   :custom
   ;; Auto-pdate GTAGS on each save.
   (ggtags-update-on-save t)
@@ -75,9 +72,8 @@
   ;; The directory to search GNU GLOBAL executables.
   (ggtags-executable-directory
    (directory-file-name (file-name-directory global-executable-path)))
-  :bind (("M-]"     . ggtags-idutils-query)
-
-         :map ggtags-mode-map
+  :bind (:map ggtags-mode-map
+         ("M-]"     . ggtags-idutils-query)
          ("C-c g s" . ggtags-find-other-symbol)
          ("C-c g h" . ggtags-view-tag-history)
          ("C-c g r" . ggtags-find-reference)
@@ -184,16 +180,19 @@
   "Common hook to enable tags fronted."
   (let ((cfg (ecfg-read-project-config)))
     (pcase (gethash "tags-frontend" cfg nil)
+      ;; string
+      ("ggtags"    (tags-enable-ggtags))
+      ("rtgas"     (tags-enable-rtags))
       ;; symbol
       ('ggtags     (tags-enable-ggtags))
       ('rtgas      (tags-enable-rtags))
       ;; nil
       ((pred null) nil)
       ;; unknown
-      (f           (message "Unknown tags fronted `%S'" f)))))
+      (f           (message "Unknown tags fronted type: %S" f)))))
 
 (defun tags-enable-project-wide (frontend)
-  "Setup project wide tags FRONTEND."
+  "Setup project wide FRONTEND to source code tagging system."
   (interactive
    (list (completing-read
           "Tags frontend: " '("ggtags" "rtags" "disable"))))
