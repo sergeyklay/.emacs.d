@@ -30,6 +30,7 @@
   (projectile-require-project-root nil)
   (projectile-known-projects-file
    (concat user-cache-dir "projectile-bookmarks.eld"))
+  :hook (projectile-after-switch-project . setup-tags-fronted)
   :config
   (projectile-mode 1)
   ;; Ignore directories

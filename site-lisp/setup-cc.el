@@ -15,8 +15,6 @@
 
 ;;; Code:
 
-(require 'setup-tags)
-
 (eval-when-compile
   (require 'compile)
   (require 'company)
@@ -43,8 +41,7 @@
 
 (use-package cc-mode
   :ensure nil
-  :hook ((c-mode . c-binds-hook)
-	 (c-mode-common . ggtags-common-hook)))
+  :hook ((c-mode . c-binds-hook)))
 
 (provide 'setup-cc)
 ;;; setup-cc.el ends here

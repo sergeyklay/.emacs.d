@@ -11,11 +11,12 @@
 
 ;;; Commentary:
 
-;; Setup tags.
+;; Setting up tags and code navigation
 
 ;;; Code:
 
 (require 'utils)
+(require 'emacscfg)
 (require 'directories)
 
 ;;;; Constants
@@ -91,16 +92,6 @@
 	 ("M-o"     . ggtags-navigation-next-file)
 	 ("M-l"     . ggtags-navigation-visible-mode)))
 
-(defun ggtags-common-hook ()
-  "Common hook to enable and configure `ggtags'."
-  (ggtags-mode 1)
-
-  (setq-local imenu-create-index-function
-              #'ggtags-build-imenu-index)
-
-  (setq-local eldoc-documentation-function
-              #'ggtags-eldoc-function))
-
 ;;;; Rtags
 
 ;; NOTE: Do not install the following packages using MELPA.
@@ -150,16 +141,6 @@
             " "))
           major-mode))))
 
-(defun rtags-common-hook ()
-  "Common hook to setup `rtags'."
-  (rtags-mode 1)
-
-  (setq-local eldoc-documentation-function
-	      #'rtags--eldoc-function)
-
-  (rtags-enable-standard-keybindings)
-  (rtags-start-process-unless-running))
-
 (defun company-rtags-setup ()
   "Configure `company-backends' for `company-rtags'."
   (delete 'company-semantic company-backends)
@@ -174,6 +155,61 @@
   ;; RTags creates more accurate overlays.
   (setq-local flycheck-highlighting-mode nil)
   (setq-local flycheck-check-syntax-automatically nil))
+
+(defun tags-enable-rtags ()
+  "Common function to enable and configure `rtags'."
+  (rtags-mode 1)
+
+  ;; TODO(serghei): Move outside
+  (company-rtags-setup)
+  (flycheck-rtags-setup)
+
+  (setq-local eldoc-documentation-function
+	      #'rtags--eldoc-function)
+
+  (rtags-enable-standard-keybindings)
+  (rtags-start-process-unless-running))
+
+(defun tags-enable-ggtags ()
+  "Common function to enable and configure `ggtags'."
+  (ggtags-mode 1)
+
+  (setq-local imenu-create-index-function
+              #'ggtags-build-imenu-index)
+
+  (setq-local eldoc-documentation-function
+              #'ggtags-eldoc-function))
+
+(defun setup-tags-fronted ()
+  "Common hook to enable tags fronted."
+  (let ((cfg (ecfg-read-project-config)))
+    (pcase (gethash "tags-frontend" cfg nil)
+      ;; symbol
+      ('ggtags     (tags-enable-ggtags))
+      ('rtgas      (tags-enable-rtags))
+      ;; nil
+      ((pred null) nil)
+      ;; unknown
+      (f           (message "Unknown tags fronted `%S'" f)))))
+
+(defun tags-enable-project-wide (frontend)
+  "Setup project wide tags FRONTEND."
+  (interactive
+   (list (completing-read
+          "Tags frontend: " '("ggtags" "rtags" "disable"))))
+  (let* ((cfg (ecfg-read-project-config))
+	 (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
+	 (project-root (projectile-project-root)))
+    (progn
+      (defun apply-to-project-buffers (buf)
+	(with-current-buffer buf
+	  (when (and tags-frontend
+		     (equal (projectile-project-root) project-root))
+	      (setup-tags-fronted))))
+
+      (puthash "tags-frontend" tags-frontend cfg)
+      (ecfg-save-project-config cfg)
+      (mapcar 'apply-to-project-buffers (buffer-list)))))
 
 (provide 'setup-tags)
 
