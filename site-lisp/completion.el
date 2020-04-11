@@ -24,7 +24,6 @@
   :custom
   (company-dabbrev-ignore-case nil)
   (company-dabbrev-downcase nil)
-  (company-idle-delay 0.4)
   (company-tooltip-align-annotations t)
   (company-tooltip-limit 10)
   (company-selection-wrap-around t)
