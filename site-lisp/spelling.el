@@ -58,5 +58,13 @@
   (flyspell-issue-message-flag nil)
   :bind ("C-x t s" . flyspell-mode))
 
+(use-package helm-flyspell
+  :ensure helm
+  :after flyspell
+  :commands helm-flyspell-correct
+  :init
+  :bind (:map flyspell-mode-map
+              ("C-;" . helm-flyspell-correct)))
+
 (provide 'spelling)
 ;;; spelling.el ends here

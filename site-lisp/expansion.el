@@ -38,5 +38,14 @@
     (yas-reload-all))
   (yas-global-mode t))
 
+(use-package helm-c-yasnippet
+  :ensure helm
+  :after yasnippet
+  :defer t
+  :bind
+  (("C-c y" . helm-yas-complete)
+   :map mode-specific-map
+   ("y" . helm-yas-complete)))
+
 (provide 'expansion)
 ;;; expansion.el ends here

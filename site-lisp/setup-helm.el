@@ -141,21 +141,5 @@
   :commands helm-pass
   :bind ("C-c p" . helm-pass))
 
-(use-package helm-flyspell
-  :after flyspell
-  :commands helm-flyspell-correct
-  :init
-  (require 'flyspell-correct)
-  :bind (:map flyspell-mode-map
-              ("C-;" . helm-flyspell-correct)))
-
-(use-package helm-c-yasnippet
-  :after yasnippet
-  :defer t
-  :bind
-  (("C-c y" . helm-yas-complete)
-   :map mode-specific-map
-   ("y" . helm-yas-complete)))
-
 (provide 'setup-helm)
 ;;; setup-helm.el ends here
