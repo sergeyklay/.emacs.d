@@ -115,7 +115,7 @@
   :bind (("M-s k" . helm-projectile-ag)
          ("M-s d" . helm-projectile-find-dir)
          ("M-s f" . helm-projectile-find-file)
-         ([f12]   . helm-projectile))
+         ("M-s p" . helm-projectile))
   :config (helm-projectile-on))
 
 (use-package helm-descbinds
