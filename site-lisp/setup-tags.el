@@ -82,7 +82,7 @@
   :custom
   ;; Auto-pdate GTAGS on each save.
   (ggtags-update-on-save t)
-  ;; Do not auto-highlight tag at point
+  ;; Do not auto-highlight tag at point.
   (ggtags-highlight-tag nil)
   ;; Enabling nearness requires global 6.5.+
   (ggtags-sort-by-nearness t)
@@ -104,7 +104,8 @@
          ("C-c >"   . ggtags-next-mark)
 
          :map ggtags-navigation-map
-         ("M-o"     . ggtags-navigation-next-file)
+         ("M-n"     . ggtags-navigation-next-file)
+         ("M-p"     . ggtags-navigation-previous-file)
          ("M-l"     . ggtags-navigation-visible-mode))
   :config
   (when lid-executable-path
@@ -112,7 +113,7 @@
 
 ;;;; Rtags
 
-;; NOTE: Do not install the following packages using MELPA.
+;; Note: Do not install the following packages using MELPA.
 ;; These packages should be installed by hand using `make install' from
 ;; rtags source directory.
 ;;
@@ -145,6 +146,8 @@
   :after rtags
   :custom
   (rtags-display-result-backend 'helm))
+
+;;;; Utils
 
 (defun rtags--eldoc-function ()
   "Eldoc documentation function to use for `c-mode' as well as `c++-mode'."
