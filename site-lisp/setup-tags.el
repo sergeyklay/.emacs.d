@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Setting up tags and code navigation
+;; Configuration for tags and code navigation.
 
 ;;; Code:
 
@@ -55,7 +55,26 @@
 ;;;; Ggtags
 
 ;; A front-end for accessing the gtags-generated tags.
-;; For more see URL `https://github.com/leoliu/ggtags'
+;; For more see URL `https://github.com/leoliu/ggtags'.
+;;
+;; To be efficient, the host system tool “gtags” (called “global”) should be
+;; compiled from source with “exuberant-ctags”.  Also for proper parsing, the
+;; Python package “pygments” should be installed.  For better and faster lookup
+;; support, “id-utils” should be inastalled so a database instead of a text
+;; file is used.
+;;
+;; The full requirements list ot use “gtags” is:
+;;   - exuberant-ctags
+;;   - pygment
+;;   - id-utils
+;;   - global (6.5 or later)
+;;
+;; Note: There's an Emacs tool called “ctags” that is not the same as
+;; exuberant-ctags' even though the executable is named the same.  Be careful
+;; that's not in your path first.  The one possible solution to name collision
+;; is to pass the following argument atthe configuring time:
+;;
+;;   --program-transform-name='s/^ctags$/ctags.emacs/'
 
 (use-package ggtags
   :if (and global-executable-path gtags-executable-path)
