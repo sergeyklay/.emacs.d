@@ -15,23 +15,51 @@
 
 ;;; Code:
 
+(require 'rx)
+
+;;;; Constants
+
+(defconst pandoc-executable-path (executable-find "pandoc")
+  "The pandoc executable path on this system.")
+
+(defconst gfm-patterns
+  (rx (or "README" "CONTRIBUTTING" "BACKERS"
+          (: "CHANGELOG" (? "-" (+ (in "." digit))))
+          "CODE_OF_CONDUCT"
+          "PULL_REQUEST_TEMPLATE"
+          "pull_request_template"
+          "bug_report"
+          "feature_request")
+      "."
+      (or "markdown" "md")
+      string-end)
+  "Regexp to match files with GFM format.")
+
+(unless pandoc-executable-path
+  (warn "Cannot find necessary installation of Pandoc"))
+
 ;;;; Markdown mode
 
 (use-package markdown-mode
-  :mode ("/README\\(?:\\.\\(?:markdown\\|md\\)\\)\\'" . gfm-mode)
-  :config
-  (setq markdown-command "pandoc"
-        markdown-enable-wiki-links t
-        markdown-enable-math t
-        markdown-italic-underscore t
-        markdown-asymmetric-header t
-        markdown-make-gfm-checkboxes-buttons t
-        markdown-gfm-additional-languages '("sh")
-        markdown-gfm-uppercase-checkbox t
-        markdown-fontify-code-blocks-natively t
-        markdown-hide-urls nil)
+  :mode "\\.\\(?:m\\(?:arkdown\\|d\\)\\)\\'"
+  :custom
+  (markdown-command
+   (if pandoc-executable-path "pandoc" nil))
+  (markdown-enable-wiki-links t)
+  (markdown-enable-math t)
+  (markdown-italic-underscore t)
+  (markdown-asymmetric-header t)
+  (markdown-make-gfm-checkboxes-buttons t)
+  (markdown-gfm-additional-languages
+   '("sh" "python" "js" "lisp" "elisp" "zep"))
+  (markdown-gfm-uppercase-checkbox t)
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-hide-urls nil)
   :hook
-  (markdown-mode . auto-fill-mode))
+  (markdown-mode . auto-fill-mode)
+  :config
+  (add-to-list 'auto-mode-alist
+	       `(,gfm-patterns . gfm-mode)))
 
 (provide 'langs-md)
 ;;; langs-md.el ends here
