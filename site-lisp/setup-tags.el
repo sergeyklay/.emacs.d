@@ -69,7 +69,7 @@
 ;; support, “id-utils” should be inastalled so a database instead of a text
 ;; file is used.
 ;;
-;; The full requirements list ot use “gtags” is:
+;; The full requirements list to use “gtags” is:
 ;;   - exuberant-ctags
 ;;   - pygment
 ;;   - id-utils
@@ -77,8 +77,8 @@
 ;;
 ;; Note: There's an Emacs tool called “ctags” that is not the same as
 ;; exuberant-ctags' even though the executable is named the same.  Be careful
-;; that's not in your path first.  The one possible solution to name collision
-;; is to pass the following argument atthe configuring time:
+;; that's not in your path first.  The one possible solution to resolve name
+;; collision is to pass the following option to Emacs' confige script:
 ;;
 ;;   --program-transform-name='s/^ctags$/ctags.emacs/'
 
