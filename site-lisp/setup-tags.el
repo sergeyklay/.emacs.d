@@ -30,7 +30,7 @@
 (defconst lid-executable-path (executable-find "lid")
   "The lid executable path on this system.")
 
-(defconst mid-executable-path (executable-find "mid")
+(defconst mkid-executable-path (executable-find "mkid")
   "The mid executable path on this system.")
 
 (defconst rdm-executable-path (executable-find "rdm")
@@ -39,8 +39,8 @@
 (unless (and global-executable-path gtags-executable-path)
   (warn "Cannot find necessary installation of GNU GLOBAL"))
 
-(unless (and mid-executable-path lid-executable-path)
-  (warn "Cannot find necessary installation of GNU GLOBAL"))
+(unless (and mkid-executable-path lid-executable-path)
+  (warn "Cannot find necessary installation of ID utils"))
 
 (unless rdm-executable-path
   (warn "Cannot find necessary installation of RTags"))
@@ -95,7 +95,7 @@
   ;; The over size limit for the  GTAGS file.
   (ggtags-oversize-limit (* 100 1024 1024))
   ;; Generate the idutils DB.
-  (ggtags-use-idutils (not (null mid-executable-path)))
+  (ggtags-use-idutils (not (null mkid-executable-path)))
   ;; The directory to search GNU GLOBAL executables.
   (ggtags-executable-directory
    (directory-file-name (file-name-directory global-executable-path)))
