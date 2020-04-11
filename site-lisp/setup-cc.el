@@ -17,9 +17,7 @@
 
 (eval-when-compile
   (require 'compile)
-  (require 'company)
-
-  (declare-function ggtags-eldoc-function "ggtags.el" ()))
+  (require 'company))
 
 (use-package company-c-headers
   :after company
