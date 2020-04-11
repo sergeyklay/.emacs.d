@@ -214,10 +214,10 @@
     (pcase (gethash "tags-frontend" cfg nil)
       ;; string
       ("ggtags"    (tags-enable-ggtags))
-      ("rtgas"     (tags-enable-rtags))
+      ("rtags"     (tags-enable-rtags))
       ;; symbol
       ('ggtags     (tags-enable-ggtags))
-      ('rtgas      (tags-enable-rtags))
+      ('rtags      (tags-enable-rtags))
       ;; nil
       ((pred null) nil)
       ;; unknown
@@ -237,9 +237,9 @@ The PROJECT-ROOT variable should point to the current project root."
   (interactive
    (list (completing-read
           "Tags frontend: " '("ggtags" "rtags" "disable"))))
-  (let* ((cfg (ecfg-read-project-config))
-         (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
-         (project-root (projectile-project-root)))
+  (let ((cfg (ecfg-read-project-config))
+        (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
+        (project-root (projectile-project-root)))
     (puthash "tags-frontend" tags-frontend cfg)
     (ecfg-save-project-config cfg)
     (cl-dolist (buffer (buffer-list))
