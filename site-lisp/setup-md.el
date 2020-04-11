@@ -1,4 +1,4 @@
-;;; langs-md.el --- Add support for the Markdown. -*- lexical-binding: t; -*-
+;;; setup-md.el --- Add support for the Markdown. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -11,7 +11,7 @@
 
 ;;; Commentary:
 
-;; Add support for the Markdown.
+;; Configuration of the Markdown / GFM modes.
 
 ;;; Code:
 
@@ -61,5 +61,5 @@
   (add-to-list 'auto-mode-alist
 	       `(,gfm-patterns . gfm-mode)))
 
-(provide 'langs-md)
-;;; langs-md.el ends here
+(provide 'setup-md)
+;;; setup-md.el ends here

@@ -33,13 +33,19 @@
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
 
-;; IDE related features
+;;;; IDE Features
+
 (require 'setup-helm)
 (require 'setup-tags)
 (require 'setup-cedet)
 
-;; Languages setup
+;;;; Configuration of Progmodes
+
 (require 'setup-cc)
+
+;;;; Minor Languages Support
+
+(require 'setup-md)
 
 (require 'security)     ; GPG and security related features
 (require 'projects)     ; Project navigation and management
@@ -50,7 +56,6 @@
 (require 'build-tools)  ; Add build tools support
 (require 'langs-human)  ; Settings for human languages
 (require 'langs-conf)   ; Add support for the configuration like languages
-(require 'langs-md)     ; Add markdown support
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
 (require 'langs-lua)    ; Lua support
 (require 'langs-org)    ; Org related configuration
