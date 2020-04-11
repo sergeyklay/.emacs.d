@@ -15,6 +15,7 @@
 
 ;;; Code:
 
+(require 'cl-macs)
 (require 'utils)
 (require 'emacscfg)
 (require 'directories)
@@ -220,7 +221,16 @@
       ;; nil
       ((pred null) nil)
       ;; unknown
-      (f           (message "Unknown tags fronted type: %S" f)))))
+      (f           (error "Unknown tags fronted type: %S" f)))))
+
+(defsubst tags--apply-to-project-buffers (buffer project-root)
+  "Apply tags configuration to project's BUFFER.
+The PROJECT-ROOT variable should point to the current project root."
+  (with-current-buffer buffer
+    (when (and (bufferp buffer)
+               (buffer-file-name)
+               (equal (projectile-project-root) project-root))
+      (setup-tags-fronted))))
 
 (defun tags-enable-project-wide (frontend)
   "Setup project wide FRONTEND to source code tagging system."
@@ -230,16 +240,10 @@
   (let* ((cfg (ecfg-read-project-config))
          (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
          (project-root (projectile-project-root)))
-    (progn
-      (defun apply-to-project-buffers (buf)
-        (with-current-buffer buf
-          (when (and tags-frontend
-                     (equal (projectile-project-root) project-root))
-            (setup-tags-fronted))))
-
-      (puthash "tags-frontend" tags-frontend cfg)
-      (ecfg-save-project-config cfg)
-      (mapcar 'apply-to-project-buffers (buffer-list)))))
+    (puthash "tags-frontend" tags-frontend cfg)
+    (ecfg-save-project-config cfg)
+    (cl-dolist (buffer (buffer-list))
+      (funcall #'tags--apply-to-project-buffers buffer project-root))))
 
 (provide 'setup-tags)
 
