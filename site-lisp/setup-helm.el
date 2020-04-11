@@ -18,7 +18,6 @@
 (use-package helm
   :init
   (require 'helm-config)
-  (require 'helm-grep)
   :custom
   (helm-scroll-amount 4)
   ;; Search for library in `require' and `declare-function' sexp.
@@ -53,11 +52,6 @@
          ("<tab>" . helm-execute-persistent-action)
          ("C-i"   . helm-execute-persistent-action)
          ("C-z"   . helm-select-action)
-
-         :map helm-grep-mode-map
-         ("<return>" . helm-grep-mode-jump-other-window)
-         ("n"        . helm-grep-mode-jump-other-window-forward)
-         ("p"        . helm-grep-mode-jump-other-window-backward)
 
          :map minibuffer-local-map
          ("M-p"   . helm-minibuffer-history)
@@ -105,10 +99,14 @@
 (use-package helm-projectile
   :after projectile
   :commands
-  (projectile-switch-project-action
+  (helm-projectile-ag
+   helm-projectile-find-dir
+   helm-projectile-find-file
    helm-projectile
    helm-projectile-switch-project
-   helm-projectile-find-file)
+   helm-projectile-switch-to-buffer
+   helm-projectile-grep
+   helm-projectile-recentf)
   :custom
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
@@ -126,9 +124,17 @@
   (helm-descbinds-window-style 'split "Use pop-up style window for descbinds"))
 
 (use-package helm-ag
+  :ensure helm
   :if (executable-find "ag")
   :commands (helm-ag helm-projectile-ag)
   :bind (("C-c k" . helm-ag-project-root)))
+
+(use-package helm-grep
+  :ensure helm
+  :bind (:map helm-grep-mode-map
+              ("<return>" . helm-grep-mode-jump-other-window)
+              ("n"        . helm-grep-mode-jump-other-window-forward)
+              ("p"        . helm-grep-mode-jump-other-window-backward)))
 
 (use-package helm-pass
   :after password-store
