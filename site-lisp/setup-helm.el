@@ -96,26 +96,6 @@
   :commands (helm-info-emacs)
   :bind ("C-h TAB" . helm-info-emacs))
 
-(use-package helm-projectile
-  :after projectile
-  :commands
-  (helm-projectile-ag
-   helm-projectile-find-dir
-   helm-projectile-find-file
-   helm-projectile
-   helm-projectile-switch-project
-   helm-projectile-switch-to-buffer
-   helm-projectile-grep
-   helm-projectile-recentf)
-  :custom
-  (projectile-completion-system 'helm)
-  (projectile-switch-project-action 'helm-projectile)
-  :bind (("M-s k" . helm-projectile-ag)
-         ("M-s d" . helm-projectile-find-dir)
-         ("M-s f" . helm-projectile-find-file)
-         ("M-s p" . helm-projectile))
-  :config (helm-projectile-on))
-
 (use-package helm-descbinds
   :commands (helm-descbinds)
   :bind
