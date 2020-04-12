@@ -15,7 +15,6 @@
 
 ;;; Code:
 
-(require 'f)
 (require 'pp)
 (require 'cl-lib)
 
@@ -52,7 +51,7 @@
   "Read a project configuration from FILENAME file."
   (let (data)
     (message "Open special buffer")
-    (if (f-readable-p filename)
+    (if (file-readable-p filename)
         (with-current-buffer (get-buffer-create " *ECFG Project Configuration*")
           (delete-region (point-min) (point-max))
           (insert-file-contents filename)
@@ -133,9 +132,9 @@ located.  If this directory does not exist, tries to create it."
     (cl-assert (not (null project-root))
                t "project root is unknown")
     (setq workspace-dir (concat project-root ecfg-workspace-name))
-    (unless (f-exists? workspace-dir)
+    (unless (file-directory-p workspace-dir)
       (mkdir workspace-dir t))
-    (f-full workspace-dir)))
+    workspace-dir))
 
 (defun ecfg--config-path (project-root)
   "Return absolute path to workspace confguration.
@@ -144,7 +143,7 @@ Uses PROJECT-ROOT as a project root."
     (cl-assert (not (null project-root))
                t "project root is unknown")
     (setq workspace-dir (ecfg--storage-path project-root)
-          config-path (f-join workspace-dir ecfg-config-name))
+          config-path (concat workspace-dir ecfg-config-name))
     config-path))
 
 (defun ecfg--create-workspace (project-root force)
@@ -153,8 +152,9 @@ Uses PROJECT-ROOT as a project root."
     (if project-root
         (progn
           (setq config-file (ecfg--config-path project-root))
-          (when (or (not (f-exists? config-file))
-                    (< (f-size config-file) 4) ; `nil'
+          ;; Check for file existence and its size
+          (when (or (not (file-exists-p config-file))
+                    (< (file-attribute-size (file-attributes config-file)) 4)
                     force)
             (message "Config file either empty or absent. Creating...")
             (ecfg-write-data ecfg-config-template config-file)))
@@ -172,7 +172,7 @@ passed to point desired project root working to."
     (message "ecfg-config-cache after: %S" ecfg-config-cache)
     (message "config-data after: %S" config-data)
     (unless config-data
-      (when (and (f-exists-p config-file) (f-readable-p config-file))
+      (when (file-readable-p config-file)
         (setq config-data (ecfg-read-from-file config-file))
         (push (list project-root config-data) ecfg-config-cache)))
     (message "ecfg-config-cache before: %S" ecfg-config-cache)
