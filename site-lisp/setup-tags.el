@@ -209,19 +209,19 @@
               #'ggtags-eldoc-function))
 
 (defun setup-tags-fronted ()
-  "Common hook to enable tags fronted."
-  (let ((cfg (ecfg-read-project-config)))
-    (pcase (gethash "tags-frontend" cfg nil)
-      ;; string
-      ("ggtags"    (tags-enable-ggtags))
-      ("rtags"     (tags-enable-rtags))
-      ;; symbol
-      ('ggtags     (tags-enable-ggtags))
-      ('rtags      (tags-enable-rtags))
-      ;; nil
-      ((pred null) nil)
-      ;; unknown
-      (f           (error "Unknown tags fronted type: %S" f)))))
+  "Enable tags fronted using project configuration."
+  (message "type-of :tags-frontend: %S" (type-of (ecfg-get :tags-frontend)))
+  (pcase (ecfg-get :tags-frontend)
+    ;; string
+    ("ggtags"    (tags-enable-ggtags))
+    ("rtags"     (tags-enable-rtags))
+    ;; symbol
+    ('ggtags     (tags-enable-ggtags))
+    ('rtags      (tags-enable-rtags))
+    ;; nil
+    ((pred null) nil)
+    ;; unknown
+    (f           (error "Unknown tags fronted type: %S (%s)" f f))))
 
 (defsubst tags--apply-to-project-buffers (buffer project-root)
   "Apply tags configuration to project's BUFFER.
