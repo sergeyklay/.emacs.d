@@ -20,9 +20,6 @@
 
 ;;;; Customization
 
-(defconst ecfg-use-truename t
-  "Non-nil means always expand filenames using function `file-truename'.")
-
 (defconst ecfg-workspace-name ".ecfg"
   "Workspace directory name being used to configure current project.")
 
@@ -97,8 +94,7 @@ Tries to resolve workspace root by lookup either for the
         (setq workspace (expand-file-name default-directory)))
 
       ;; Expand real path of the obtained working directory (if enabled)
-      (when ecfg-use-truename
-        (setq workspace (file-truename workspace)))
+      (setq workspace (file-truename workspace))
 
       ;; Scan for the real workspace path of the opened file.
       ;; We're looking either for the `ecfg-config-dir' directiry,

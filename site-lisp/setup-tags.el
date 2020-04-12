@@ -220,10 +220,10 @@
     ;; nil
     ((pred null) nil)
     ;; unknown
-    (f           (error "Unknown tags fronted type: %S" f))))
+    (f           (error "Unknown tags fronted type: %S (%s)" f (type-of f)))))
 
-(defsubst tags--apply-to-project-buffers (buffer project-root)
-  "Apply tags configuration to project's BUFFER.
+(defsubst tags--apply-to-buffer (buffer project-root)
+  "Apply tags configuration to buffer BUFFER.
 The PROJECT-ROOT variable should point to the current project root."
   (with-current-buffer buffer
     (when (and (bufferp buffer)
@@ -234,15 +234,13 @@ The PROJECT-ROOT variable should point to the current project root."
 (defun tags-enable-project-wide (frontend)
   "Setup project wide FRONTEND to source code tagging system."
   (interactive
-   (list (completing-read
-          "Tags frontend: " '("ggtags" "rtags" "disable"))))
-  (let ((cfg (ecfg-read-project-config))
-        (tags-frontend (if (equal frontend "disable") nil (make-symbol frontend)))
-        (project-root (projectile-project-root)))
-    (puthash "tags-frontend" tags-frontend cfg)
-    (ecfg-save-project-config cfg)
+   (list (completing-read "Tags frontend: " '(ggtags rtags disable))))
+  (let ((project-root (projectile-project-root)))
+    (when (string= frontend "disable")
+      (setq frontend nil))
+    (ecfg-set :tags-frontend frontend)
     (cl-dolist (buffer (buffer-list))
-      (funcall #'tags--apply-to-project-buffers buffer project-root))))
+      (funcall #'tags--apply-to-buffer buffer project-root))))
 
 (provide 'setup-tags)
 
