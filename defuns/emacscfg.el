@@ -33,13 +33,28 @@
 (defvar ecfg-config-cache nil
   "Holds in-memory database for per-project configuration.")
 
-;;;; Utils
-
-(defun ecfg-create-config ()
-  "Create empty ECFG configuration."
+(defconst ecfg-config-template
   (list :version "1.0.0"
         :tags-frontend nil
-        :cc (list :include-path nil)))
+        :cc (list :include-path nil))
+  "ECFG configuration template.")
+
+;;;; Utils
+
+(defun ecfg--read-from-file (filename)
+  "Read data from FILENAME."
+  (let (data)
+    (message "Open temp buffer")
+    (with-temp-buffer
+      (message "Insert file contents using %s" filename)
+      (if (and (f-exists-p filename)
+               (>= (f-size filename) 4)) ; `nil'
+          (progn
+            (insert-file-contents filename)
+            (cl-assert (eq (point) (point-min)))
+            (setq data (read (current-buffer))))
+        (setq data ecfg-config-template)))
+    data))
 
 (defun ecfg--write-data (data path)
   "Write DATA to PATH."
@@ -119,27 +134,12 @@ Uses PROJECT-ROOT as a project root."
         (progn
           (setq config-file (ecfg--config-path project-root))
           (when (or (not (f-exists? config-file))
-                    (= (f-size config-file) 0)
-                    ;; Use case for "echo '' > `config-file'"
-                    (= (f-size config-file) 1)
+                    (< (f-size config-file) 4) ; `nil'
                     force)
             (message "Config file either empty or absent. Creating...")
-            (ecfg--write-data (ecfg-create-config) config-file)))
+            (ecfg--write-data ecfg-config-template config-file)))
       (message
        "Unable to create workspace configuration: project root is unknown"))))
-
-(defun ecfg--read-from-file (filename)
-  "Read data from FILENAME."
-  (let (data)
-    (message "Open temp buffer")
-    (with-temp-buffer
-      (message "insert file contents usong %s" filename)
-      (insert-file-contents filename)
-      (cl-assert (eq (point) (point-min)))
-      (setq data (read (current-buffer)))
-      (unless (and (listp data) (not (null data)))
-        (setq data (ecfg-create-config))))
-    data))
 
 (defun ecfg-load-config (&optional project-root)
   "Return workspace configuration.
@@ -169,14 +169,13 @@ even if it already known."
   (ecfg--create-workspace (ecfg--workspace-root)
                           (not (null current-prefix-arg))))
 
-
-
-;; (defun ecfg-read-project-config ()
-;;   "Read the project configuration."
-;;   (let ((path (concat (projectile-project-root) ecfg-config-file)))
-;;     (if (file-exists-p path)
-;;         (ecfg--read-from-file path)
-;;       (ecfg--create-config))))
+(defun ecfg-get (key &optional dflt)
+  "Look up KEY in project configuration and return its assotiated value.
+If KEY is not found, return DFLT which default to nil."
+  (let ((data (ecfg-load-config)))
+    (if (plist-member data key)
+        (plist-get data key)
+      dflt)))
 
 ;; (defun ecfg-save-project-config (data)
 ;;   "Save the project configuration to file.
