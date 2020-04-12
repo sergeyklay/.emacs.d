@@ -23,6 +23,9 @@
 (defconst ecfg-workspace-name ".ecfg"
   "Workspace directory name being used to configure current project.")
 
+(defconst ecfg-config-name "settings.el"
+  "Configuration file name being used to configure current project.")
+
 (defun ecfg--workspace-root ()
   "Resolve workspace root path based on currently opened buffer.
 
@@ -79,11 +82,29 @@ located.  If this directory does not exist, tries to create it."
       (mkdir workspace-dir t))
     (f-full workspace-dir)))
 
+(defun ecfg--create-config ()
+  "Create empty ECFG configuration."
+  '(:tags-frontend nil))
+
+(defun ecfg--write-data (data path)
+  "Write DATA to PATH."
+  (with-temp-file path
+    (pp data (current-buffer))))
+
 (defun ecfg--create-workspace (project-root force)
   "Create a workspace located at PROJECT-ROOT taking into account FORCE flag."
-  (let (workspace-dir)
+  (let (workspace-dir config-file)
     (if project-root
-        (setq workspace-dir (ecfg--storage-path project-root))
+        (progn
+          (setq workspace-dir (ecfg--storage-path project-root)
+                config-file (f-join workspace-dir ecfg-config-name))
+          (when (or (not (f-exists? config-file))
+                    (= (f-size config-file) 0)
+                    ;; Use case for "echo '' > `config-file'"
+                    (= (f-size config-file) 1)
+                    force)
+            (message "Config file either empty or absent. Creating...")
+            (ecfg--print-to-file config-file (ecfg--create-config))))
       (message
        "Unable to create workspace configuration: project root is unknown"))))
 
@@ -97,10 +118,6 @@ even if it already known."
   (ecfg--create-workspace (ecfg--workspace-root)
                           (not (null current-prefix-arg))))
 
-;; (defun ecfg--create-config ()
-;;   "Create an empty config."
-;;   (make-hash-table :test 'equal))
-
 ;; (defun ecfg--read-from-file (filename)
 ;;   "Read data from FILENAME."
 ;;   (let (data)
@@ -111,11 +128,6 @@ even if it already known."
 ;;       (unless (hash-table-p data)
 ;;         (setq data (ecfg--create-config))))
 ;;     data))
-
-;; (defun ecfg--print-to-file (filename data)
-;;   "Write a DATA to the FILENAME."
-;;   (with-temp-file filename
-;;     (prin1 data (current-buffer))))
 
 ;; (defun ecfg-read-project-config ()
 ;;   "Read the project configuration."

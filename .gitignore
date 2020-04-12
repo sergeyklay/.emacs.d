@@ -33,4 +33,4 @@ ID
 package-quickstart.el
 
 # Project configuration.
-.emacscfg
+.ecfg
