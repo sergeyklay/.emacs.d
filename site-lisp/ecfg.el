@@ -1,4 +1,4 @@
-;;; emacscfg.el --- Simple way to configure Emacs projects. -*- lexical-binding: t; -*-
+;;; ecfg.el --- Simple way to configure Emacs projects. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -204,5 +204,5 @@ If KEY is not found, return DFLT which default to nil."
     (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
     (push (list project-root data) ecfg-config-cache)))
 
-(provide 'emacscfg)
-;;; emacscfg.el ends here
+(provide 'ecfg)
+;;; ecfg.el ends here

@@ -17,7 +17,7 @@
 
 (require 'cl-macs)
 (require 'utils)
-(require 'emacscfg)
+(require 'ecfg)
 (require 'directories)
 
 ;;;; Constants
