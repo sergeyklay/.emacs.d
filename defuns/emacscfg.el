@@ -41,19 +41,21 @@
 
 ;;;; Utils
 
-(defun ecfg--read-from-file (filename)
+(defun ecfg-read-from-file (filename)
   "Read a project configuration from FILENAME file."
   (let (data)
-    (message "Open temp buffer")
-    (with-temp-buffer
-      (message "Insert file contents using %s" filename)
-      (if (and (f-exists-p filename)
-               (>= (f-size filename) 4)) ; `nil'
-          (progn
-            (insert-file-contents filename)
-            (cl-assert (eq (point) (point-min)))
-            (setq data (read (current-buffer))))
-        (setq data ecfg-config-template)))
+    (message "Open special buffer")
+    (if (f-readable-p filename)
+        (with-current-buffer (get-buffer-create " *ECFG Project Configuration*")
+          (delete-region (point-min) (point-max))
+          (insert-file-contents filename)
+          (goto-char (point-min))
+          (setq data (with-demoted-errors "Error reading ECFG file: %S"
+                       (car (read-from-string
+                             (buffer-substring (point-min) (point-max))))))
+          (message "Kill special buffer")
+          (kill-buffer (current-buffer)))
+      (setq data ecfg-config-template))
     data))
 
 (defun ecfg-write-data (data path)
@@ -163,8 +165,8 @@ passed to point desired project root working to."
     (message "ecfg-config-cache after: %S" ecfg-config-cache)
     (message "config-data after: %S" config-data)
     (unless config-data
-      (when (f-exists-p config-file)
-        (setq config-data (ecfg--read-from-file config-file))
+      (when (and (f-exists-p config-file) (f-readable-p config-file))
+        (setq config-data (ecfg-read-from-file config-file))
         (push (list project-root config-data) ecfg-config-cache)))
     (message "ecfg-config-cache before: %S" ecfg-config-cache)
     (message "config before: %S" config-data)
