@@ -47,7 +47,6 @@
 (defun ecfg-read-from-file (filename)
   "Read a project configuration from FILENAME file."
   (let (data)
-    (message "Open special buffer")
     (if (file-readable-p filename)
         (with-current-buffer (get-buffer-create " *ECFG Project Configuration*")
           (delete-region (point-min) (point-max))
@@ -56,7 +55,6 @@
           (setq data (with-demoted-errors "Error reading ECFG file: %S"
                        (car (read-from-string
                              (buffer-substring (point-min) (point-max))))))
-          (message "Kill special buffer")
           (kill-buffer (current-buffer)))
       (setq data ecfg-config-template))
     data))
@@ -123,7 +121,6 @@ Tries to resolve workspace root by lookup either for the
 
 Uses PROJECT-ROOT as a path to the directory, where ECFG configuration should be
 located.  If this directory does not exist, tries to create it."
-  (message "Lookup for the storage directory...")
   (let (workspace-dir)
     (cl-assert (not (null project-root))
                t "project root is unknown")
@@ -152,7 +149,6 @@ Uses PROJECT-ROOT as a project root."
           (when (or (not (file-exists-p config-file))
                     (< (file-attribute-size (file-attributes config-file)) 4)
                     force)
-            (message "Config file either empty or absent. Creating...")
             (ecfg-write-data ecfg-config-template config-file)))
       (message
        "Unable to create workspace configuration: project root is unknown"))))
@@ -165,17 +161,10 @@ passed to point desired project root working to."
   (let* ((project-root (or project-root (ecfg-workspace-root)))
          (config-file (ecfg-config-path project-root))
          (config-data (nth 1 (assoc-string project-root ecfg-config-cache))))
-    (message "ecfg-config-cache after: %S" ecfg-config-cache)
-    (message "config-data after: %S" config-data)
     (unless config-data
-      (message "Config data is empty. Populating ...")
-      (message "Search for config file: %s" config-file)
       (when (file-readable-p config-file)
-        (message "Config file found. Loading ...")
         (setq config-data (ecfg-read-from-file config-file))
         (push (list project-root config-data) ecfg-config-cache)))
-    (message "ecfg-config-cache before: %S" ecfg-config-cache)
-    (message "config before: %S" config-data)
     config-data))
 
 (defun ecfg-init-workspace ()
