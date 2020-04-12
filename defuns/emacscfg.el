@@ -39,6 +39,13 @@
         :cc (list :include-path nil))
   "ECFG configuration template.")
 
+(defconst ecfg-footer-template
+  (concat "\n"
+          ";; Local Variables:\n"
+          ";; flycheck-disabled-checkers: (emacs-lisp-checkdoc)\n"
+          ";; End:\n")
+  "ECFG footer template.")
+
 ;;;; Utils
 
 (defun ecfg-read-from-file (filename)
@@ -68,7 +75,7 @@
       (let ((print-length nil)
             (print-level nil))
         (pp data (current-buffer)))
-      (insert (format "\n\n;; Local Variables:\n;; End:\n"))
+      (insert ecfg-footer-template)
       (condition-case nil
           (write-region (point-min) (point-max) path)
         (file-error (message "ECFG: can't write file %s" path)))
