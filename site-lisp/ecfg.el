@@ -77,7 +77,7 @@
         (file-error (message "ECFG: can't write file %s" path)))
       (kill-buffer (current-buffer)))))
 
-(defun ecfg--workspace-root ()
+(defun ecfg-workspace-root ()
   "Resolve workspace root path based on currently opened buffer.
 
 Tries to resolve workspace root by lookup either for the
@@ -118,7 +118,7 @@ Tries to resolve workspace root by lookup either for the
     ;; Return resolved workspace root path
     workspace))
 
-(defun ecfg--storage-path (project-root)
+(defun ecfg-storage-path (project-root)
   "Return absolute path to directory where ECFG configuration should be located.
 
 Uses PROJECT-ROOT as a path to the directory, where ECFG configuration should be
@@ -132,13 +132,13 @@ located.  If this directory does not exist, tries to create it."
       (mkdir workspace-dir t))
     workspace-dir))
 
-(defun ecfg--config-path (project-root)
+(defun ecfg-config-path (project-root)
   "Return absolute path to workspace confguration.
 Uses PROJECT-ROOT as a project root."
   (let (workspace-dir config-path)
     (cl-assert (not (null project-root))
                t "project root is unknown")
-    (setq workspace-dir (ecfg--storage-path project-root)
+    (setq workspace-dir (ecfg-storage-path project-root)
           config-path (expand-file-name ecfg-config-name workspace-dir))
     config-path))
 
@@ -147,7 +147,7 @@ Uses PROJECT-ROOT as a project root."
   (let (config-file)
     (if project-root
         (progn
-          (setq config-file (ecfg--config-path project-root))
+          (setq config-file (ecfg-config-path project-root))
           ;; Check for file existence and its size
           (when (or (not (file-exists-p config-file))
                     (< (file-attribute-size (file-attributes config-file)) 4)
@@ -160,10 +160,10 @@ Uses PROJECT-ROOT as a project root."
 (defun ecfg-load-config (&optional project-root)
   "Return workspace configuration.
 
-Tries to use in memory cache if possible.  Optinal PROJECT-ROOT argument can be
+Tries to use in memory cache if possible.  Optional PROJECT-ROOT argument can be
 passed to point desired project root working to."
-  (let* ((project-root (or project-root (ecfg--workspace-root)))
-         (config-file (ecfg--config-path project-root))
+  (let* ((project-root (or project-root (ecfg-workspace-root)))
+         (config-file (ecfg-config-path project-root))
          (config-data (nth 1 (assoc-string project-root ecfg-config-cache))))
     (message "ecfg-config-cache after: %S" ecfg-config-cache)
     (message "config-data after: %S" config-data)
@@ -180,16 +180,14 @@ passed to point desired project root working to."
 
 (defun ecfg-init-workspace ()
   "Initialize ECFG workspace.
-
-ECFG workspace is usually just your project root folder.  Using
-\\[universal-argument] will force to re-initialize the the current workspace
-even if it already known."
+Using \\[universal-argument] will force to re-initialize the the current
+workspace even if it already known."
   (interactive)
-  (ecfg-create-workspace (ecfg--workspace-root)
+  (ecfg-create-workspace (ecfg-workspace-root)
                          (not (null current-prefix-arg))))
 
 (defun ecfg-get (key &optional dflt)
-  "Look up KEY in project configuration and return its assotiated value.
+  "Look up KEY in project configuration and return its associated value.
 If KEY is not found, return DFLT which default to nil."
   (let ((data (ecfg-load-config)))
     (if (plist-member data key)
@@ -197,9 +195,9 @@ If KEY is not found, return DFLT which default to nil."
       dflt)))
 
 (defun ecfg-set (key value)
-  "Associate KEY with VALUE in project configuration."
+  "Associate KEY with VALUE in a project configuration."
   (let ((data (ecfg-load-config))
-        (project-root (ecfg--workspace-root)))
+        (project-root (ecfg-workspace-root)))
     (plist-put data key value)
     (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
     (push (list project-root data) ecfg-config-cache)))
