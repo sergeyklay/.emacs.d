@@ -143,10 +143,10 @@ Uses PROJECT-ROOT as a project root."
     (cl-assert (not (null project-root))
                t "project root is unknown")
     (setq workspace-dir (ecfg--storage-path project-root)
-          config-path (concat workspace-dir ecfg-config-name))
+          config-path (expand-file-name ecfg-config-name workspace-dir))
     config-path))
 
-(defun ecfg--create-workspace (project-root force)
+(defun ecfg-create-workspace (project-root force)
   "Create a workspace located at PROJECT-ROOT taking into account FORCE flag."
   (let (config-file)
     (if project-root
@@ -172,7 +172,10 @@ passed to point desired project root working to."
     (message "ecfg-config-cache after: %S" ecfg-config-cache)
     (message "config-data after: %S" config-data)
     (unless config-data
+      (message "Config data is empty. Populating ...")
+      (message "Search for config file: %s" config-file)
       (when (file-readable-p config-file)
+        (message "Config file found. Loading ...")
         (setq config-data (ecfg-read-from-file config-file))
         (push (list project-root config-data) ecfg-config-cache)))
     (message "ecfg-config-cache before: %S" ecfg-config-cache)
@@ -186,8 +189,8 @@ ECFG workspace is usually just your project root folder.  Using
 \\[universal-argument] will force to re-initialize the the current workspace
 even if it already known."
   (interactive)
-  (ecfg--create-workspace (ecfg--workspace-root)
-                          (not (null current-prefix-arg))))
+  (ecfg-create-workspace (ecfg--workspace-root)
+                         (not (null current-prefix-arg))))
 
 (defun ecfg-get (key &optional dflt)
   "Look up KEY in project configuration and return its assotiated value.
@@ -199,16 +202,11 @@ If KEY is not found, return DFLT which default to nil."
 
 (defun ecfg-set (key value)
   "Associate KEY with VALUE in project configuration."
-  (let ((data (ecfg-load-config)))
+  (let ((data (ecfg-load-config))
+        (project-root (ecfg--workspace-root)))
     (plist-put data key value)
-    (push (list (ecfg--workspace-root) data) ecfg-config-cache)))
-
-;; (defun ecfg-save-project-config (data)
-;;   "Save the project configuration to file.
-;; DATA should represent a valid hashtable object."
-;;   (let ((path (concat (projectile-project-root) ecfg-config-file)))
-;;     (when (hash-table-p data)
-;;       (ecfg--print-to-file path data))))
+    (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
+    (push (list project-root data) ecfg-config-cache)))
 
 (provide 'emacscfg)
 ;;; emacscfg.el ends here
