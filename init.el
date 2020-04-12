@@ -43,12 +43,15 @@
 
 (require 'setup-cc)
 
+;;;; Project navigation and management
+
+(require 'projects)
+
 ;;;; Minor Languages Support
 
 (require 'setup-md)
 
 (require 'security)     ; GPG and security related features
-(require 'projects)     ; Project navigation and management
 (require 'expansion)    ; Configuration of expansions
 (require 'editor)       ; Features related to editor behavior
 (require 'syntax-check) ; Syntax checkers

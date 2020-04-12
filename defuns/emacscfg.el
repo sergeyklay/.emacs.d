@@ -39,21 +39,30 @@
         :cc (list :include-path nil))
   "ECFG configuration template.")
 
+(defconst ecfg-footer-template
+  (concat "\n"
+          ";; Local Variables:\n"
+          ";; flycheck-disabled-checkers: (emacs-lisp-checkdoc)\n"
+          ";; End:\n")
+  "ECFG footer template.")
+
 ;;;; Utils
 
-(defun ecfg--read-from-file (filename)
+(defun ecfg-read-from-file (filename)
   "Read a project configuration from FILENAME file."
   (let (data)
-    (message "Open temp buffer")
-    (with-temp-buffer
-      (message "Insert file contents using %s" filename)
-      (if (and (f-exists-p filename)
-               (>= (f-size filename) 4)) ; `nil'
-          (progn
-            (insert-file-contents filename)
-            (cl-assert (eq (point) (point-min)))
-            (setq data (read (current-buffer))))
-        (setq data ecfg-config-template)))
+    (message "Open special buffer")
+    (if (f-readable-p filename)
+        (with-current-buffer (get-buffer-create " *ECFG Project Configuration*")
+          (delete-region (point-min) (point-max))
+          (insert-file-contents filename)
+          (goto-char (point-min))
+          (setq data (with-demoted-errors "Error reading ECFG file: %S"
+                       (car (read-from-string
+                             (buffer-substring (point-min) (point-max))))))
+          (message "Kill special buffer")
+          (kill-buffer (current-buffer)))
+      (setq data ecfg-config-template))
     data))
 
 (defun ecfg-write-data (data path)
@@ -66,7 +75,7 @@
       (let ((print-length nil)
             (print-level nil))
         (pp data (current-buffer)))
-      (insert (format "\n\n;; Local Variables:\n;; End:\n"))
+      (insert ecfg-footer-template)
       (condition-case nil
           (write-region (point-min) (point-max) path)
         (file-error (message "ECFG: can't write file %s" path)))
@@ -163,8 +172,8 @@ passed to point desired project root working to."
     (message "ecfg-config-cache after: %S" ecfg-config-cache)
     (message "config-data after: %S" config-data)
     (unless config-data
-      (when (f-exists-p config-file)
-        (setq config-data (ecfg--read-from-file config-file))
+      (when (and (f-exists-p config-file) (f-readable-p config-file))
+        (setq config-data (ecfg-read-from-file config-file))
         (push (list project-root config-data) ecfg-config-cache)))
     (message "ecfg-config-cache before: %S" ecfg-config-cache)
     (message "config before: %S" config-data)
@@ -187,6 +196,12 @@ If KEY is not found, return DFLT which default to nil."
     (if (plist-member data key)
         (plist-get data key)
       dflt)))
+
+(defun ecfg-set (key value)
+  "Associate KEY with VALUE in project configuration."
+  (let ((data (ecfg-load-config)))
+    (plist-put data key value)
+    (push (list (ecfg--workspace-root) data) ecfg-config-cache)))
 
 ;; (defun ecfg-save-project-config (data)
 ;;   "Save the project configuration to file.
