@@ -197,6 +197,12 @@ If KEY is not found, return DFLT which default to nil."
         (plist-get data key)
       dflt)))
 
+(defun ecfg-set (key value)
+  "Associate KEY with VALUE in project configuration."
+  (let ((data (ecfg-load-config)))
+    (plist-put data key value)
+    (push (list (ecfg--workspace-root) data) ecfg-config-cache)))
+
 ;; (defun ecfg-save-project-config (data)
 ;;   "Save the project configuration to file.
 ;; DATA should represent a valid hashtable object."

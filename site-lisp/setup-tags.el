@@ -210,7 +210,6 @@
 
 (defun setup-tags-fronted ()
   "Enable tags fronted using project configuration."
-  (message "type-of :tags-frontend: %S" (type-of (ecfg-get :tags-frontend)))
   (pcase (ecfg-get :tags-frontend)
     ;; string
     ("ggtags"    (tags-enable-ggtags))
@@ -221,7 +220,7 @@
     ;; nil
     ((pred null) nil)
     ;; unknown
-    (f           (error "Unknown tags fronted type: %S (%s)" f f))))
+    (f           (error "Unknown tags fronted type: %S" f))))
 
 (defsubst tags--apply-to-project-buffers (buffer project-root)
   "Apply tags configuration to project's BUFFER.
