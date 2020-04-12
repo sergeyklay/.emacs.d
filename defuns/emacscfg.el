@@ -42,7 +42,7 @@
 ;;;; Utils
 
 (defun ecfg--read-from-file (filename)
-  "Read data from FILENAME."
+  "Read a project configuration from FILENAME file."
   (let (data)
     (message "Open temp buffer")
     (with-temp-buffer
@@ -56,10 +56,21 @@
         (setq data ecfg-config-template)))
     data))
 
-(defun ecfg--write-data (data path)
-  "Write DATA to PATH."
-  (with-temp-file path
-    (pp data (current-buffer))))
+(defun ecfg-write-data (data path)
+  "Write out object DATA into located at PATH."
+  (let ((coding-system-for-write 'utf-8))
+    (with-current-buffer (get-buffer-create " *ECFG Project Configuration*")
+      (delete-region (point-min) (point-max))
+      (insert (format ";;; -*- coding: %s -*-\n\n;; ECFG Configuration File\n\n"
+                      (symbol-name coding-system-for-write)))
+      (let ((print-length nil)
+            (print-level nil))
+        (pp data (current-buffer)))
+      (insert (format "\n\n;; Local Variables:\n;; End:\n"))
+      (condition-case nil
+          (write-region (point-min) (point-max) path)
+        (file-error (message "ECFG: can't write file %s" path)))
+      (kill-buffer (current-buffer)))))
 
 (defun ecfg--workspace-root ()
   "Resolve workspace root path based on currently opened buffer.
@@ -137,7 +148,7 @@ Uses PROJECT-ROOT as a project root."
                     (< (f-size config-file) 4) ; `nil'
                     force)
             (message "Config file either empty or absent. Creating...")
-            (ecfg--write-data ecfg-config-template config-file)))
+            (ecfg-write-data ecfg-config-template config-file)))
       (message
        "Unable to create workspace configuration: project root is unknown"))))
 
