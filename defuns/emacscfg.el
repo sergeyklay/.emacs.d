@@ -24,7 +24,11 @@
   "Workspace directory name being used to configure current project.")
 
 (defun ecfg--workspace-root ()
-  "Resolve workspace root path based on currently opened buffer."
+  "Resolve workspace root path based on currently opened buffer.
+
+Tries to resolve workspace root by lookup either for the
+`ecfg-config-dir' directiry, or the '.projectile' file, or the
+'.git' directory."
   (let ((file-name (buffer-file-name))
         (workspace (when (fboundp 'projectile-project-root)
                      (projectile-project-root))))
@@ -61,15 +65,37 @@
     ;; Return resolved workspace root path
     workspace))
 
+(defun ecfg--storage-path (project-root)
+  "Return absolute path to directory where ECFG configuration should be located.
+
+Uses PROJECT-ROOT as a path to the directory, where ECFG configuration should be
+located.  If this directory does not exist, tries to create it."
+  (message "Lookup for the storage directory...")
+  (let (workspace-dir)
+    (cl-assert (not (null project-root))
+               t "project root is unknown")
+    (setq workspace-dir (concat project-root ecfg-workspace-name))
+    (unless (f-exists? workspace-dir)
+      (mkdir workspace-dir t))
+    (f-full workspace-dir)))
+
 (defun ecfg--create-workspace (project-root force)
   "Create a workspace located at PROJECT-ROOT taking into account FORCE flag."
-  (message "workspace: %S force: %S" project-root force))
+  (let (workspace-dir)
+    (if project-root
+        (setq workspace-dir (ecfg--storage-path project-root))
+      (message
+       "Unable to create workspace configuration: project root is unknown"))))
 
 (defun ecfg-init-workspace ()
   "Initialize ECFG workspace.
-ECFG workspace is usually just your project root folder."
+
+ECFG workspace is usually just your project root folder.  Using
+\\[universal-argument] will force to re-initialize the the current workspace
+even if it already known."
   (interactive)
-  (ecfg--create-workspace (ecfg--workspace-root) t))
+  (ecfg--create-workspace (ecfg--workspace-root)
+                          (not (null current-prefix-arg))))
 
 ;; (defun ecfg--create-config ()
 ;;   "Create an empty config."
