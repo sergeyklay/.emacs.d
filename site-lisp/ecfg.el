@@ -38,7 +38,7 @@
 (defconst ecfg-footer-template
   (concat "\n"
           ";; Local Variables:\n"
-          ";; flycheck-disabled-checkers: (emacs-lisp-checkdoc)\n"
+          ";; flycheck-disabled-checkers: (emacs-lisp-checkdoc emacs-lisp)\n"
           ";; End:\n")
   "ECFG footer template.")
 
