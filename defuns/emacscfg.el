@@ -15,7 +15,11 @@
 
 ;;; Code:
 
+(require 'f)
+(require 'pp)
 (require 'cl-lib)
+
+;;;; Customization
 
 (defconst ecfg-use-truename t
   "Non-nil means always expand filenames using function `file-truename'.")
@@ -25,6 +29,22 @@
 
 (defconst ecfg-config-name "settings.el"
   "Configuration file name being used to configure current project.")
+
+(defvar ecfg-config-cache nil
+  "Holds in-memory database for per-project configuration.")
+
+;;;; Utils
+
+(defun ecfg-create-config ()
+  "Create empty ECFG configuration."
+  (list :version "1.0.0"
+        :tags-frontend nil
+        :cc (list :include-path nil)))
+
+(defun ecfg--write-data (data path)
+  "Write DATA to PATH."
+  (with-temp-file path
+    (pp data (current-buffer))))
 
 (defun ecfg--workspace-root ()
   "Resolve workspace root path based on currently opened buffer.
@@ -82,31 +102,62 @@ located.  If this directory does not exist, tries to create it."
       (mkdir workspace-dir t))
     (f-full workspace-dir)))
 
-(defun ecfg--create-config ()
-  "Create empty ECFG configuration."
-  '(:tags-frontend nil))
-
-(defun ecfg--write-data (data path)
-  "Write DATA to PATH."
-  (with-temp-file path
-    (pp data (current-buffer))))
+(defun ecfg--config-path (project-root)
+  "Return absolute path to workspace confguration.
+Uses PROJECT-ROOT as a project root."
+  (let (workspace-dir config-path)
+    (cl-assert (not (null project-root))
+               t "project root is unknown")
+    (setq workspace-dir (ecfg--storage-path project-root)
+          config-path (f-join workspace-dir ecfg-config-name))
+    config-path))
 
 (defun ecfg--create-workspace (project-root force)
   "Create a workspace located at PROJECT-ROOT taking into account FORCE flag."
-  (let (workspace-dir config-file)
+  (let (config-file)
     (if project-root
         (progn
-          (setq workspace-dir (ecfg--storage-path project-root)
-                config-file (f-join workspace-dir ecfg-config-name))
+          (setq config-file (ecfg--config-path project-root))
           (when (or (not (f-exists? config-file))
                     (= (f-size config-file) 0)
                     ;; Use case for "echo '' > `config-file'"
                     (= (f-size config-file) 1)
                     force)
             (message "Config file either empty or absent. Creating...")
-            (ecfg--print-to-file config-file (ecfg--create-config))))
+            (ecfg--write-data (ecfg-create-config) config-file)))
       (message
        "Unable to create workspace configuration: project root is unknown"))))
+
+(defun ecfg--read-from-file (filename)
+  "Read data from FILENAME."
+  (let (data)
+    (message "Open temp buffer")
+    (with-temp-buffer
+      (message "insert file contents usong %s" filename)
+      (insert-file-contents filename)
+      (cl-assert (eq (point) (point-min)))
+      (setq data (read (current-buffer)))
+      (unless (and (listp data) (not (null data)))
+        (setq data (ecfg-create-config))))
+    data))
+
+(defun ecfg-load-config (&optional project-root)
+  "Return workspace configuration.
+
+Tries to use in memory cache if possible.  Optinal PROJECT-ROOT argument can be
+passed to point desired project root working to."
+  (let* ((project-root (or project-root (ecfg--workspace-root)))
+         (config-file (ecfg--config-path project-root))
+         (config-data (nth 1 (assoc-string project-root ecfg-config-cache))))
+    (message "ecfg-config-cache after: %S" ecfg-config-cache)
+    (message "config-data after: %S" config-data)
+    (unless config-data
+      (when (f-exists-p config-file)
+        (setq config-data (ecfg--read-from-file config-file))
+        (push (list project-root config-data) ecfg-config-cache)))
+    (message "ecfg-config-cache before: %S" ecfg-config-cache)
+    (message "config before: %S" config-data)
+    config-data))
 
 (defun ecfg-init-workspace ()
   "Initialize ECFG workspace.
@@ -118,16 +169,7 @@ even if it already known."
   (ecfg--create-workspace (ecfg--workspace-root)
                           (not (null current-prefix-arg))))
 
-;; (defun ecfg--read-from-file (filename)
-;;   "Read data from FILENAME."
-;;   (let (data)
-;;     (with-temp-buffer
-;;       (insert-file-contents filename)
-;;       (cl-assert (eq (point) (point-min)))
-;;       (setq data (read (current-buffer)))
-;;       (unless (hash-table-p data)
-;;         (setq data (ecfg--create-config))))
-;;     data))
+
 
 ;; (defun ecfg-read-project-config ()
 ;;   "Read the project configuration."
