@@ -86,5 +86,11 @@
   :config
   (auth-pass-enable))
 
+(use-package helm-pass
+  :ensure helm
+  :after password-store
+  :commands helm-pass
+  :bind ("C-c p p" . helm-pass))
+
 (provide 'security)
 ;;; security.el ends here

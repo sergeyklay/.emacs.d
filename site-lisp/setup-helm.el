@@ -82,15 +82,6 @@
          :map helm-swoop-map
          ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 
-(use-package helm-eshell
-  :ensure nil
-  :after eshell
-  :commands
-  (helm-eshell-history
-   helm-comint-input-ring
-   helm-minibuffer-history)
-  :bind (([remap eshell-list-history] . helm-eshell-history)))
-
 (use-package helm-info
   :ensure nil
   :commands (helm-info-emacs)
@@ -115,11 +106,6 @@
               ("<return>" . helm-grep-mode-jump-other-window)
               ("n"        . helm-grep-mode-jump-other-window-forward)
               ("p"        . helm-grep-mode-jump-other-window-backward)))
-
-(use-package helm-pass
-  :after password-store
-  :commands helm-pass
-  :bind ("C-c p" . helm-pass))
 
 (provide 'setup-helm)
 ;;; setup-helm.el ends here

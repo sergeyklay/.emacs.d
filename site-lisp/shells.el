@@ -68,5 +68,14 @@
     :init
     (eshell-git-prompt-use-theme 'default)))
 
+(use-package helm-eshell
+  :ensure nil
+  :after eshell
+  :commands
+  (helm-eshell-history
+   helm-comint-input-ring
+   helm-minibuffer-history)
+  :bind (([remap eshell-list-history] . helm-eshell-history)))
+
 (provide 'shells)
 ;;; shells.el ends here
