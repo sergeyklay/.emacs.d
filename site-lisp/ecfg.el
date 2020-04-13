@@ -192,11 +192,8 @@ If KEY is not found, return DFLT which default to nil."
     (push (list project-root data) ecfg-config-cache)))
 
 (defun ecfg-unset (key)
-  "Remove the association for KEY from a projectconfiguration, if there is one."
-  (let ((data (ecfg-load-config))
-        (project-root (ecfg-workspace-root)))
-    (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
-    (push (list project-root (map-delete data key)) ecfg-config-cache)))
+  "Remove the association for KEY from a project configuration, if there is one."
+  (ecfg-set key nil))
 
 (provide 'ecfg)
 ;;; ecfg.el ends here
