@@ -243,7 +243,7 @@ The PROJECT-ROOT variable should point to the current project root."
                (equal (projectile-project-root) project-root))
       (setup-tags-fronted))))
 
-(defun tags-enable-project-wide (frontend)
+(defun my/select-tags-frontend (frontend)
   "Setup project wide FRONTEND to source code tagging system."
   (interactive
    (list (completing-read "Tags frontend: " '(ggtags rtags disable))))
@@ -255,9 +255,5 @@ The PROJECT-ROOT variable should point to the current project root."
       (funcall #'tags--apply-to-buffer buffer project-root))))
 
 (provide 'setup-tags)
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars unresolved)
-;; End:
 
 ;;; setup-tags.el ends here
