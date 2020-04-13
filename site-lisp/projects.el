@@ -78,10 +78,11 @@
   :custom
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
-  :bind (("M-s k" . helm-projectile-ag)
-         ("M-s d" . helm-projectile-find-dir)
-         ("M-s f" . helm-projectile-find-file)
-         ("M-s p" . helm-projectile))
+  :bind (("C-c p h" . helm-projectile)
+         ("C-c p a" . helm-projectile-ag)
+         ("C-c p g" . helm-projectile-grep)
+         ("C-c p d" . helm-projectile-find-dir)
+         ("C-c p f" . helm-projectile-find-file))
   :config (helm-projectile-on))
 
 (provide 'projects)
