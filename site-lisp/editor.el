@@ -46,11 +46,8 @@
   (prog-mode . 80-column-rule))
 
 ;; Right margin bar.
-(use-package display-fill-column-indicator-mode
-  :unless (version< emacs-version "27")
-  :ensure nil
-  :hook
-  (prog-mode . display-fill-column-indicator-mode))
+(unless (version< emacs-version "27")
+  (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode))
 
 (use-package rainbow-delimiters)
 
