@@ -31,8 +31,9 @@
 
 (defconst ecfg-config-template
   (list :version "1.0.0"
+        :ggtags-process-environment nil
         :tags-frontend nil
-        :cc (list :include-path nil))
+        :include-path nil)
   "ECFG configuration template.")
 
 (defconst ecfg-footer-template
