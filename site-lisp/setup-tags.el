@@ -83,6 +83,17 @@
 ;;
 ;;   --program-transform-name='s/^ctags$/ctags.emacs/'
 
+(defun setup-ggtags-environment ()
+  "Setup buffer local enviroment variables for `ggtags'."
+  (pcase (ecfg-get :ggtags-process-environment)
+    ((and (pred listp) env)
+     (setq-local ggtags-process-environment env))
+    ((and (pred stringp) env)
+     (setq-local ggtags-process-environment '(env)))
+    ((pred null)
+     nil)
+    (f (warn "Unknown ggtags env type: %S (%s)" f (type-of f)))))
+
 (use-package ggtags
   :if (and global-executable-path gtags-executable-path)
   :commands (ggtags-mode)
@@ -114,6 +125,7 @@
          ("M-n"     . ggtags-navigation-next-file)
          ("M-p"     . ggtags-navigation-previous-file)
          ("M-l"     . ggtags-navigation-visible-mode))
+  :hook (ggtags-mode . setup-ggtags-environment)
   :config
   (when lid-executable-path
     (define-key ggtags-mode-map (kbd "M-]") #'ggtags-idutils-query)))
@@ -220,7 +232,7 @@
     ;; nil
     ((pred null) nil)
     ;; unknown
-    (f           (error "Unknown tags fronted type: %S (%s)" f (type-of f)))))
+    (f           (warn "Unknown tags fronted type: %S (%s)" f (type-of f)))))
 
 (defsubst tags--apply-to-buffer (buffer project-root)
   "Apply tags configuration to buffer BUFFER.
