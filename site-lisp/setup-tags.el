@@ -120,10 +120,7 @@
          ("C-c g u" . ggtags-update-tags)
          ("C-c <"   . ggtags-prev-mark)
          ("C-c >"   . ggtags-next-mark))
-  :hook (ggtags-mode . setup-ggtags-environment)
-  :config
-  (when lid-executable-path
-    (define-key ggtags-mode-map (kbd "M-]") #'ggtags-idutils-query)))
+  :hook (ggtags-mode . setup-ggtags-environment))
 
 ;;;; Rtags
 
