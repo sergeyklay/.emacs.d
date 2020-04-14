@@ -119,12 +119,7 @@
          ("C-c g c" . ggtags-create-tags)
          ("C-c g u" . ggtags-update-tags)
          ("C-c <"   . ggtags-prev-mark)
-         ("C-c >"   . ggtags-next-mark)
-
-         :map ggtags-navigation-map
-         ("M-n"     . ggtags-navigation-next-file)
-         ("M-p"     . ggtags-navigation-previous-file)
-         ("M-l"     . ggtags-navigation-visible-mode))
+         ("C-c >"   . ggtags-next-mark))
   :hook (ggtags-mode . setup-ggtags-environment)
   :config
   (when lid-executable-path
