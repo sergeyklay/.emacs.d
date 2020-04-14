@@ -158,7 +158,7 @@ This function is for interactive use only;"
 (defun my/revert-buffer-no-confirm ()
   "Revert buffer without confirmation."
   (interactive)
-  (revert-buffer :ignore-auto :noconfirm))
+  (revert-buffer :ignore-auto :noconfirm t))
 
 (provide 'editor)
 ;;; editor.el ends here
