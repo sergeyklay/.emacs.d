@@ -88,7 +88,6 @@
 
 (use-package helm-pass
   :ensure helm
-  :after password-store
   :commands helm-pass
   :bind ("C-c p p" . helm-pass))
 
