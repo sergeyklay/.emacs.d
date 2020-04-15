@@ -37,7 +37,7 @@
 
 (require 'setup-helm)
 (require 'setup-tags)
-(require 'setup-cedet)
+;; (require 'setup-cedet) ; Disabled for now
 
 ;;;; Configuration of Progmodes
 
