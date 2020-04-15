@@ -191,9 +191,5 @@ If KEY is not found, return DFLT which default to nil."
     (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
     (push (list project-root data) ecfg-config-cache)))
 
-(defun ecfg-unset (key)
-  "Remove the association for KEY from a project configuration, if there is one."
-  (ecfg-set key nil))
-
 (provide 'ecfg)
 ;;; ecfg.el ends here
