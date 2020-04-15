@@ -21,16 +21,21 @@
   (when (file-exists-p "~/.composer/vendor/bin/phpcs")
     (setq-local flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs"))
 
+  ;; Coding style
   (setq-local flycheck-phpcs-standard "PSR2")
   (setq-local php-project-coding-style 'psr2)
 
+  ;; Fill, indents
   (setq-local fill-column 120)
-  (setq-local indent-tabs-mode nil))
+  (setq-local indent-tabs-mode nil)
+
+  (when (eq 0 (buffer-size))
+    (insert "<?php\n\n")))
 
 (use-package phpt-mode
-  :defer t)
-
-(add-hook 'phpt-mode-hook #'(lambda () (flycheck-mode -1)))
+  :defer t
+  :init
+  (add-hook 'phpt-mode-hook #'(lambda () (flycheck-mode -1))))
 
 (use-package php-mode
   :defer t
@@ -38,7 +43,8 @@
   ((php-mode . subword-mode)
    (php-mode . flycheck-mode)
    (php-mode . yas-minor-mode)
-   (php-mode . my|common-php-hook))
+   (php-mode . my|common-php-hook)
+   (php-mode . php-enable-symfony2-coding-style))
   :config
   (setq php-mode-coding-style 'psr2)
   (when (file-directory-p "/usr/local/share/php/doc/html")
