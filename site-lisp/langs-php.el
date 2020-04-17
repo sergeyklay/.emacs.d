@@ -16,10 +16,10 @@
 ;;; Code:
 
 (defun my|common-php-hook ()
-  "The hook to configure `php-mode' as well as `company-php'."
+  "The hook to configure `php-mode'."
   (eval-when-compile (require 'flycheck nil t))
-  (when (file-exists-p "~/.composer/vendor/bin/phpcs")
-    (setq-local flycheck-php-phpcs-executable "~/.composer/vendor/bin/phpcs"))
+  (when (file-exists-p "~/.local/bin/phpcs")
+    (setq-local flycheck-php-phpcs-executable "~/.local/bin/phpcs"))
 
   ;; Coding style
   (setq-local flycheck-phpcs-standard "PSR2")
@@ -39,16 +39,18 @@
 
 (use-package php-mode
   :defer t
+  :custom
+  (php-mode-coding-style 'psr2)
+  (php-manual-path
+   (if (file-directory-p "/usr/local/share/php/doc/html")
+       "/usr/local/share/php/doc/html"
+     ""))
   :hook
   ((php-mode . subword-mode)
    (php-mode . flycheck-mode)
    (php-mode . yas-minor-mode)
    (php-mode . my|common-php-hook)
    (php-mode . php-enable-symfony2-coding-style))
-  :config
-  (setq php-mode-coding-style 'psr2)
-  (when (file-directory-p "/usr/local/share/php/doc/html")
-    (setq php-manual-path "/usr/local/share/php/doc/html"))
   :bind
   (:map php-mode-map
         ("C-c C--" . #'php-current-class)
