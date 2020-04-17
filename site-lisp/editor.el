@@ -154,6 +154,18 @@ This function is for interactive use only;"
 (global-set-key [M-S-down] #'my/move-text-down)
 (global-set-key (kbd "C-c d") #'my/duplicate-line)
 
+(use-package autorevert
+  :ensure nil
+  :custom
+  (auto-revert-mode-text nil)
+  :config
+  ;; Turn the delay on auto-reloading from 5 seconds down to 1 second.  We have
+  ;; to do this before turning on `auto-revert-mode' for the change to take
+  ;; effect, unless we do it through `customize-set-variable' (which is slow
+  ;; enough to show up in startup profiling).
+  (setq auto-revert-interval 1)
+  (global-auto-revert-mode 1))
+
 ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
 (defun my/revert-buffer-no-confirm ()
   "Revert buffer without confirmation."
