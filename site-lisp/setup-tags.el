@@ -226,6 +226,8 @@
     ;; unknown
     (f           (warn "Unknown tags fronted type: %S (%s)" f (type-of f)))))
 
+(add-hook 'find-file-hook #'setup-tags-fronted)
+
 (defsubst tags--apply-to-buffer (buffer project-root)
   "Apply tags configuration to buffer BUFFER.
 The PROJECT-ROOT variable should point to the current project root."
