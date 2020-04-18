@@ -39,14 +39,7 @@
 	 file-name-handler-alist-backup
 	 file-name-handler-alist)))
 
-(defun compile-init-file ()
-  "Bytecompile init file."
-  (interactive)
-  (when user-init-file
-    (byte-compile-file (file-truename user-init-file))))
-
 (add-hook 'after-init-hook #'reset-performance)
-(add-hook 'kill-emacs-hook #'compile-init-file)
 
 ;; One less file to load at startup
 (setq site-run-file nil)
