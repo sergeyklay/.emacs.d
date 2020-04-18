@@ -160,12 +160,14 @@ Uses PROJECT-ROOT as a project root."
 Tries to use in memory cache if possible.  Optional PROJECT-ROOT argument can be
 passed to point desired project root working to."
   (let* ((project-root (or project-root (ecfg-workspace-root)))
-         (config-file (ecfg-config-path project-root))
-         (config-data (nth 1 (assoc-string project-root ecfg-config-cache))))
-    (unless config-data
-      (when (file-readable-p config-file)
-        (setq config-data (ecfg-read-from-file config-file))
-        (push (list project-root config-data) ecfg-config-cache)))
+         config-file config-data)
+    (when project-root
+      (setq config-file (ecfg-config-path project-root))
+      (setq config-data (nth 1 (assoc-string project-root ecfg-config-cache)))
+      (unless config-data
+        (when (file-readable-p config-file)
+          (setq config-data (ecfg-read-from-file config-file))
+          (push (list project-root config-data) ecfg-config-cache))))
     config-data))
 
 (defun ecfg-init-workspace ()
@@ -180,16 +182,19 @@ workspace even if it already known."
   "Look up KEY in project configuration and return its associated value.
 If KEY is not found, return DFLT which default to nil."
   (let ((data (ecfg-load-config)) retval)
-    (setq retval (plist-get data key))
-    (if retval retval dflt)))
+    (when data
+      (setq retval (plist-get data key))
+      (if retval retval dflt))
+    dflt))
 
 (defun ecfg-set (key value)
   "Associate KEY with VALUE in a project configuration."
   (let ((data (ecfg-load-config))
         (project-root (ecfg-workspace-root)))
-    (plist-put data key value)
-    (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
-    (push (list project-root data) ecfg-config-cache)))
+    (when (and data project-root)
+      (plist-put data key value)
+      (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
+      (push (list project-root data) ecfg-config-cache))))
 
 (provide 'ecfg)
 ;;; ecfg.el ends here
