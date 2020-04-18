@@ -182,16 +182,14 @@ workspace even if it already known."
   "Look up KEY in project configuration and return its associated value.
 If KEY is not found, return DFLT which default to nil."
   (let ((data (ecfg-load-config)) retval)
-    (when data
-      (setq retval (plist-get data key))
-      (if retval retval dflt))
-    dflt))
+    (setq retval (plist-get data key))
+    (if retval retval dflt)))
 
 (defun ecfg-set (key value)
   "Associate KEY with VALUE in a project configuration."
   (let ((data (ecfg-load-config))
         (project-root (ecfg-workspace-root)))
-    (when (and data project-root)
+    (when project-root
       (plist-put data key value)
       (setq ecfg-config-cache (assoc-delete-all project-root ecfg-config-cache))
       (push (list project-root data) ecfg-config-cache))))
