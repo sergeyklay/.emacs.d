@@ -32,6 +32,10 @@
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
 
+;;;; Project management
+
+(require 'projects)
+
 ;;;; Setup helm
 
 (require 'setup-helm)
@@ -44,10 +48,6 @@
 
 (require 'setup-cc)
 (require 'setup-shells)
-
-;;;; Project management
-
-(require 'projects)
 
 ;;;; Minor Languages Support
 
