@@ -16,6 +16,7 @@
 ;;; Code:
 
 (require 's)
+(require 'rx)
 (require 'utils)
 
 ;;;; JSON
@@ -123,6 +124,23 @@
 
 ;;;; Shell Script
 
+(defun sh-variables-in-quotes (limit)
+  "Match variables in double-quotes up to LIMIT in `sh-mode'."
+  (with-syntax-table sh-mode-syntax-table
+    (catch 'done
+      (while (re-search-forward
+              ;; `rx' is cool, mkay.
+              (rx (or line-start (not (any "\\")))
+                  (group "$")
+                  (group
+                   (or (and "{" (+? nonl) "}")
+                       (and (+ (any alnum "_")))
+                       (and (any "*" "@" "#" "?" "-" "$" "!" "0" "_")))))
+              limit t)
+        (-when-let (string-syntax (nth 3 (syntax-ppss)))
+          (when (= string-syntax 34)
+            (throw 'done (point))))))))
+
 (use-package sh-script
   :ensure nil
   :mode (("\\.zsh\\'" . sh-mode)
@@ -134,6 +152,11 @@
          ("zshrc\\'" . sh-mode))
   :custom
   (sh-basic-offset 2))
+
+(font-lock-add-keywords
+ 'sh-mode '((sh-variables-in-quotes
+             (1 'default t)
+             (2 font-lock-variable-name-face t))))
 
 (use-package company-shell
   :after (company sh-script)
