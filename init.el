@@ -25,7 +25,6 @@
 (require 'im)           ; Key maps, IMs and relevant configurations
 (require 'devtools)     ; Various devtools
 (require 'modeline)     ; Modeline related configuration
-(require 'shells)       ; Shells configuration
 (require 'defaults)     ; Sane defaults + settings for which there is no group
 (require 'windows)      ; Windows management features
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
@@ -33,16 +32,20 @@
 (require 'vcs)          ; VCS (mostly git) related features
 (require 'completion)   ; Set up completion system
 
-;;;; IDE Features
+;;;; Setup helm
 
 (require 'setup-helm)
+
+;;;; IDE Features
+
 (require 'setup-tags)
 
-;;;; Configuration of Progmodes
+;;;; Configuration of progmodes
 
 (require 'setup-cc)
+(require 'setup-shells)
 
-;;;; Project navigation and management
+;;;; Project management
 
 (require 'projects)
 

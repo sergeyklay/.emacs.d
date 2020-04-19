@@ -15,8 +15,6 @@
 
 ;;; Code:
 
-(require 's)
-(require 'rx)
 (require 'utils)
 
 ;;;; JSON
@@ -106,64 +104,6 @@
 ;; https://github.com/holomorph/systemd-mode
 (use-package systemd
   :defer t)
-
-;; TODO: Move below code to the separated file
-
-;;;; Powershell
-
-(defconst my/pwsh-executable-path (executable-find "pwsh")
-  "The PowerShell executable path on this system.")
-
-(use-package powershell
-  :mode (("\\.ps1\\'"  . powershell-mode)
-         ("\\.psm1\\'" . powershell-mode))
-  :interpreter "pwsh"
-  :config
-  (when my/pwsh-executable-path
-    (setq powershell-location-of-exe my/pwsh-executable-path)))
-
-;;;; Shell Script
-
-(defun sh-variables-in-quotes (limit)
-  "Match variables in double-quotes up to LIMIT in `sh-mode'."
-  (with-syntax-table sh-mode-syntax-table
-    (catch 'done
-      (while (re-search-forward
-              ;; `rx' is cool, mkay.
-              (rx (or line-start (not (any "\\")))
-                  (group "$")
-                  (group
-                   (or (and "{" (+? nonl) "}")
-                       (and (+ (any alnum "_")))
-                       (and (any "*" "@" "#" "?" "-" "$" "!" "0" "_")))))
-              limit t)
-        (-when-let (string-syntax (nth 3 (syntax-ppss)))
-          (when (= string-syntax 34)
-            (throw 'done (point))))))))
-
-(use-package sh-script
-  :ensure nil
-  :mode (("\\.zsh\\'" . sh-mode)
-	 ("zlogin\\'" . sh-mode)
-	 ("zlogout\\'" . sh-mode)
-	 ("zpreztorc\\'" . sh-mode)
-	 ("zprofile\\'" . sh-mode)
-	 ("zshenv\\'" . sh-mode)
-         ("zshrc\\'" . sh-mode))
-  :custom
-  (sh-basic-offset 2))
-
-(font-lock-add-keywords
- 'sh-mode '((sh-variables-in-quotes
-             (1 'default t)
-             (2 font-lock-variable-name-face t))))
-
-(use-package company-shell
-  :after (company sh-script)
-  :init
-  (push 'company-shell company-backends)
-  (push 'company-shell-env company-backends)
-  :hook (sh-mode . company-mode))
 
 (provide 'langs-conf)
 ;;; langs-conf.el ends here

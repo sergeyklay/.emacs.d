@@ -1,4 +1,4 @@
-;;; shells.el --- Shells configuration. -*- lexical-binding: t; -*-
+;;; setup-shells.el --- Shells configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -16,6 +16,10 @@
 ;;; Code:
 
 (require 'directories)
+
+(eval-when-compile
+  (require 's)
+  (require 'rx))
 
 ;; -i is for interactive (I don't use it)
 ;; -c tells bash to read whatever commands follow
@@ -50,7 +54,7 @@
   :config
   (exec-path-from-shell-initialize))
 
-;;; Eshell
+;;;; Eshell
 
 ;; Emacs shell interactive mode.
 (use-package eshell
@@ -77,5 +81,61 @@
    helm-minibuffer-history)
   :bind (([remap eshell-list-history] . helm-eshell-history)))
 
-(provide 'shells)
-;;; shells.el ends here
+;;;; Powershell Mode
+
+(defconst my/pwsh-executable-path (executable-find "pwsh")
+  "The PowerShell executable path on this system.")
+
+(use-package powershell
+  :mode (("\\.ps1\\'"  . powershell-mode)
+         ("\\.psm1\\'" . powershell-mode))
+  :interpreter "pwsh"
+  :config
+  (when my/pwsh-executable-path
+    (setq powershell-location-of-exe my/pwsh-executable-path)))
+
+;;;; Shell Mode
+
+(defun sh-variables-in-quotes (limit)
+  "Match variables in double-quotes up to LIMIT in `sh-mode'."
+  (with-syntax-table sh-mode-syntax-table
+    (catch 'done
+      (while (re-search-forward
+              ;; `rx' is cool, mkay.
+              (rx (or line-start (not (any "\\")))
+                  (group "$")
+                  (group
+                   (or (and "{" (+? nonl) "}")
+                       (and (+ (any alnum "_")))
+                       (and (any "*" "@" "#" "?" "-" "$" "!" "0" "_")))))
+              limit t)
+        (-when-let (string-syntax (nth 3 (syntax-ppss)))
+          (when (= string-syntax 34)
+            (throw 'done (point))))))))
+
+(use-package sh-script
+  :ensure nil
+  :mode (("\\.zsh\\'" . sh-mode)
+	 ("zlogin\\'" . sh-mode)
+	 ("zlogout\\'" . sh-mode)
+	 ("zpreztorc\\'" . sh-mode)
+	 ("zprofile\\'" . sh-mode)
+	 ("zshenv\\'" . sh-mode)
+         ("zshrc\\'" . sh-mode))
+  :custom
+  (sh-basic-offset 2))
+
+(font-lock-add-keywords
+ 'sh-mode '((sh-variables-in-quotes
+             (1 'default t)
+             (2 font-lock-variable-name-face t))))
+
+(use-package company-shell
+  :after (company sh-script)
+  :init
+  (push 'company-shell company-backends)
+  (push 'company-shell-env company-backends)
+  :hook (sh-mode . company-mode))
+
+(provide 'setup-shells)
+;;; setup-shells.el ends here
