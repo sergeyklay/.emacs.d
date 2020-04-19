@@ -18,7 +18,6 @@
 (require 'directories)
 
 (eval-when-compile
-  (require 's)
   (require 'rx))
 
 ;; -i is for interactive (I don't use it)
