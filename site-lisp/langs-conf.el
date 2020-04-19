@@ -15,6 +15,7 @@
 
 ;;; Code:
 
+(require 's)
 (require 'utils)
 
 ;;;; JSON
@@ -65,8 +66,9 @@
 
 ;;;; Autoconf
 
-(add-to-list 'auto-mode-alist
-             '("/config\\.\\(ac\\|in\\|m4\\)\\'" . autoconf-mode))
+(use-package autoconf-mode
+  :ensure nil
+  :mode "/config\\.\\(ac\\|in\\|m4\\)\\'")
 
 ;;;; Nginx
 
