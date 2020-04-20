@@ -4,9 +4,11 @@
 [[https://www.gnu.org/licenses/gpl-3.0.txt][https://img.shields.io/badge/license-GPL_3-green.svg]]
 
 This repository contains my personal configuration for GNU Emacs that I use on
-the daily and port around from system to system with me.
+the daily and port around from system to system with me.  This is the second
+repository I clone — after [[https://github.com/sergeyklay/dotfiles][my dotfiles]] — when settling in on a new system.
 
-Known to work with GNU Emacs 26.1 and later.
+This configuration uses default-style keybindings and known to work with GNU
+Emacs 26.1 and later.
 
 ** Prerequisites
 
