@@ -18,8 +18,8 @@
 
 ;; I use the following directory structure for Org:
 ;;
-;;   $ tree ~/Dropbox/Org
-;;   ~/Dropbox/Org
+;;   $ tree ~/Org
+;;   ~/Org
 ;;   ├── Archive.org
 ;;   ├── Inbox.org
 ;;   ├── Personal
@@ -44,13 +44,13 @@
   org-src-strip-leading-and-trailing-blank-lines
   :custom
   (org-log-done 'time)
-  (org-directory "~/Dropbox/Org")
+  (org-directory "~/Org")
   (org-agenda-files
-   '("~/Dropbox/Org"
-     "~/Dropbox/Org/Personal"
-     "~/Dropbox/Org/Work"))
-  (org-default-notes-file "~/Dropbox/Org/Inbox.org")
-  (org-archive-location "~/Dropbox/Org/Archive.org::* From %s")
+   '("~/Org"
+     "~/Org/Personal"
+     "~/Org/Work"))
+  (org-default-notes-file "~/Org/Inbox.org")
+  (org-archive-location "~/Org/Archive.org::* From %s")
   ;; Tell Org how to find the possible targets for refile.
   (org-refile-targets '((org-agenda-files :maxlevel . 3)))
   ;; Tell Org to include the destination file as an element in the path to a
