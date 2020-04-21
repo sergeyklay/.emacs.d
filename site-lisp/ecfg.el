@@ -111,7 +111,7 @@ Tries to resolve workspace root by lookup either for the
             (setq workspace "/")))))
 
     (when (or (string= workspace "/") (equal workspace ""))
-      (message "ECFG: Unable to resolve workspace root path")
+      ;; Unable to resolve workspace root path
       (setq workspace nil))
 
     ;; Return resolved workspace root path
