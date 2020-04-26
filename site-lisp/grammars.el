@@ -13,16 +13,21 @@
 
 ;; Add support of language grammars for GNU Emacs.
 
+;;; Code:
+
 (use-package bnf-mode
   :defer t
   :mode "\\.bnf\\'")
 
 (use-package lemon-mode
   :defer t
-  :mode "\\.y\\'"
   :mode "\\.lemon\\'")
 
-;;; Code:
+(use-package bison-mode
+  :defer t
+  :mode (("\\.lex\\'" . bison-mode)
+         ("\\.yy?\\'" . bison-mode)
+         ("\\.ll?\\'" . bison-mode)))
 
 (provide 'grammars)
 ;;; grammars.el ends here
