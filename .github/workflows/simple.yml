@@ -5,6 +5,10 @@ on:
     paths-ignore:
       - '**.md'
 
+env:
+  LLVM_VERSION: '6.0'
+  RTAGS_VERSION: '2.37'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,18 +27,12 @@ jobs:
             allow_failure: true
 
     steps:
-      - name: Set environment variables
-        uses: allenevans/set-env@v1.0.0
-        with:
-          LLVM_VERSION: '6.0'
-          RTAGS_VERSION: '2.37'
-
       - name: Add LLVM repository
         run: |
           wget -q -O llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
           sudo apt-key add llvm-snapshot.gpg.key
           sudo apt-add-repository \
-            "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-$LLVM_VERSION main"
+            "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-${{ env.LLVM_VERSION }} main"
           sudo apt update -qq
 
       - name: Setup Prerequisites
@@ -45,13 +43,13 @@ jobs:
             pandoc \
             exuberant-ctags \
             sbcl \
-            "libclang-${LLVM_VERSION}-dev" \
+            "libclang-${{ env.LLVM_VERSION }}-dev" \
             cmake
 
       - name: Set RTags Cache key
         id: rtags-cache
         run: |
-          echo "::set-output name=key::${{ runner.os }}-rtags-v$RTAGS_VERSION"
+          echo "::set-output name=key::${{ runner.os }}-rtags-v${{ env.RTAGS_VERSION }}"
 
       - name: Get RTags cache
         uses: actions/cache@v1
@@ -66,7 +64,7 @@ jobs:
           if [ ! -f ~/rtags/LICENSE.txt ]; then
             rm -rf ~/rtgas
             git clone \
-              -b "v$RTAGS_VERSION" \
+              -b "v${{ env.RTAGS_VERSION }}" \
               --recursive https://github.com/Andersbakken/rtags.git \
               ~/rtags
           fi
