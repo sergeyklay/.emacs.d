@@ -37,15 +37,6 @@
 (defconst rdm-executable-path (executable-find "rdm")
   "The rdm executable path on this system.")
 
-(unless (and global-executable-path gtags-executable-path)
-  (warn "Cannot find necessary installation of GNU GLOBAL"))
-
-(unless (and mkid-executable-path lid-executable-path)
-  (warn "Cannot find necessary installation of ID utils"))
-
-(unless rdm-executable-path
-  (warn "Cannot find necessary installation of RTags"))
-
 ;;;; Etags
 
 (use-package etags
