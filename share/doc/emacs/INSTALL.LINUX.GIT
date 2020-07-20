@@ -9,6 +9,10 @@ https://git.savannah.gnu.org/cgit/emacs.git/tree/INSTALL.REPO
 
     ./autogen.sh
 
+    # -march=haswell for Core i3/i5/i7 and Xeon E3/E5/E7 *V3
+    # -march=skylake for Core i3/i5/i7 and Xeon E3/E5 *V5
+    #
+    # For more see `grep -m1 -A3 "vendor_id" /proc/cpuinfo`
     CFLAGS='-O3 -pipe -march=native' \
       ./configure \
         --with-x \
