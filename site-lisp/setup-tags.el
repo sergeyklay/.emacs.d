@@ -17,7 +17,6 @@
 
 (require 'cl-macs)
 (require 'utils)
-(require 'ecfg)
 (require 'directories)
 
 ;;;; Constants
@@ -73,17 +72,6 @@
 ;; collision is to pass the following option to Emacs' confige script:
 ;;
 ;;   --program-transform-name='s/^ctags$/ctags.emacs/'
-
-(defun setup-ggtags-environment ()
-  "Setup buffer local enviroment variables for `ggtags'."
-  (pcase (ecfg-get :ggtags-process-environment)
-    ((and (pred listp) env)
-     (setq-local ggtags-process-environment env))
-    ((and (pred stringp) env)
-     (setq-local ggtags-process-environment '(env)))
-    ((pred null)
-     nil)
-    (f (warn "Unknown ggtags env type: %S (%s)" f (type-of f)))))
 
 (use-package ggtags
   :if (and global-executable-path gtags-executable-path)
