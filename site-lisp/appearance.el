@@ -15,12 +15,8 @@
 
 ;;; Code:
 
-(use-package leuven-theme
-  :custom
-  (leuven-scale-outline-headlines nil)
-  (leuven-scale-org-agenda-structure nil)
-  :init
-  (load-theme 'leuven t))
+(add-hook 'after-init-hook
+          #'(lambda () (load-theme 'leuven)))
 
 (cond
  ((string-equal system-type "gnu/linux")
