@@ -18,19 +18,16 @@
 (add-hook 'after-init-hook
           #'(lambda () (load-theme 'leuven)))
 
-(cond
- ((string-equal system-type "gnu/linux")
-  (when (member "Source Code Pro" (font-family-list))
-    (add-to-list 'initial-frame-alist
-		 '(font . "Source Code Pro-11:hintstyle=hintfull"))
-    (add-to-list 'default-frame-alist
-		 '(font . "Source Code Pro-11:hintstyle=hintfull"))))
- ((string-equal system-type "darwin")
-  (when (member "Source Code Pro" (font-family-list))
-    (add-to-list 'initial-frame-alist
-		 '(font . "Source Code Pro-13:hintstyle=hintfull"))
-    (add-to-list 'default-frame-alist
-		 '(font . "Source Code Pro-13:hintstyle=hintfull")))))
+(defvar font-face nil)
+
+(cond ((member "JetBrains Mono" (font-family-list))
+       (setq font-face "JetBrains Mono-11:hintstyle=hintfull"))
+      ((member "Source Code Pro" (font-family-list))
+       (setq font-face "Source Code Pro-11:hintstyle=hintfull")))
+
+(when font-face
+  (add-to-list 'initial-frame-alist `(font . ,font-face))
+  (add-to-list 'default-frame-alist `(font . ,font-face)))
 
 (use-package emacs
   :ensure nil
