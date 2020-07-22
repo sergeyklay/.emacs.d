@@ -16,7 +16,7 @@
 ;;; Code:
 
 (add-hook 'after-init-hook
-          #'(lambda () (load-theme 'leuven)))
+          #'(lambda () (load-theme 'leuven t)))
 
 (defvar font-face nil)
 
