@@ -35,9 +35,6 @@
       string-end)
   "Regexp to match files with GFM format.")
 
-(unless pandoc-executable-path
-  (warn "Cannot find necessary installation of Pandoc"))
-
 ;;;; Markdown mode
 
 (use-package markdown-mode
