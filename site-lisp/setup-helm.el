@@ -94,6 +94,27 @@
   :custom
   (helm-descbinds-window-style 'split "Use pop-up style window for descbinds"))
 
+(use-package helm-projectile
+  :commands
+  (helm-projectile-ag
+   helm-projectile-find-dir
+   helm-projectile-find-file
+   helm-projectile
+   helm-projectile-switch-project
+   helm-projectile-switch-to-buffer
+   helm-projectile-grep
+   helm-projectile-recentf)
+  :custom
+  (projectile-completion-system 'helm)
+  (projectile-switch-project-action 'helm-projectile)
+  ;; “C-c p p” is reserved for `helm-pass'
+  :bind (("C-c p h" . helm-projectile-switch-project)
+         ("C-c p a" . helm-projectile-ag)
+         ("C-c p g" . helm-projectile-grep)
+         ("C-c p d" . helm-projectile-find-dir)
+         ("C-c p f" . helm-projectile-find-file))
+  :config (helm-projectile-on))
+
 (use-package helm-ag
   :ensure helm
   :if (executable-find "ag")
