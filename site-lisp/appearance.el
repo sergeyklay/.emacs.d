@@ -15,8 +15,11 @@
 
 ;;; Code:
 
-(add-hook 'after-init-hook
-          #'(lambda () (load-theme 'leuven t)))
+(use-package kaolin-themes
+  :config
+  (use-package all-the-icons)
+  (load-theme 'kaolin-light t)
+  (kaolin-treemacs-theme))
 
 (defvar font-face nil)
 
