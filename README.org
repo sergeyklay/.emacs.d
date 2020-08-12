@@ -8,7 +8,7 @@ the daily and port around from system to system with me.  This is the second
 repository I clone — after [[https://github.com/sergeyklay/dotfiles][my dotfiles]] — when settling in on a new system.
 
 This configuration uses default-style keybindings and known to work with GNU
-Emacs 26.1 and later.
+Emacs 27.1 and later.
 
 ** Prerequisites
 
