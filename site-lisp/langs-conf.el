@@ -17,8 +17,7 @@
 
 (require 'utils)
 (eval-when-compile
-  (if (>= emacs-major-version 27)
-      (require 's)))
+  (require 's))
 
 ;;;; JSON
 

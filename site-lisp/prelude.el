@@ -52,14 +52,14 @@
 (setq inhibit-startup-screen t)
 
 ;; Actually this project is my personal configuration
-;; so I use GNU Emacs 26.1 now.
+;; so I use GNU Emacs 27.1 now.
 (eval-when-compile
-  (and (version< emacs-version "26.1")
+  (and (version< emacs-version "27.1")
        (error
         (concat
          "Detected Emacs %s. "
          "This configuration is designed to work "
-         "only with Emacs 26.1 and higher. I'm sorry.")
+         "only with Emacs 27.1 and higher. I'm sorry.")
         emacs-version)))
 
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)

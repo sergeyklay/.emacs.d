@@ -33,11 +33,7 @@
   :init
   ;; For more see "man 1 gpg" for the option "--pinentry-mode"
   (unless (eq (window-system) 'w32)
-    (if (version< emacs-version "27")
-	(custom-set-variables
-	 '(epa-pinentry-mode 'loopback))
-      (custom-set-variables
-	 '(epg-pinentry-mode 'loopback))))
+    (custom-set-variables '(epg-pinentry-mode 'loopback)))
   :config
   ;; Enable automatic encryption/decryption of *.gpg files
   (unless (memq epa-file-handler file-name-handler-alist)

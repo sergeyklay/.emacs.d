@@ -38,16 +38,8 @@
 
 (electric-pair-mode t)
 
-;; Highlight the characters past the 80th column.
-(use-package column-enforce-mode
-  :if (version< emacs-version "27") ; On old Emacs versions
-  :diminish column-enforce-mode
-  :hook
-  (prog-mode . 80-column-rule))
-
 ;; Right margin bar.
-(unless (version< emacs-version "27")
-  (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode))
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
 (use-package rainbow-delimiters)
 

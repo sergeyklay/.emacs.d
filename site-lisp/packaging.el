@@ -20,11 +20,10 @@
 (eval-when-compile
   (require 'prelude))
 
-(when (eval-when-compile (version< emacs-version "27"))
-  ;; WARNING: This broke `esup' command usage.
-  ;; TODO(sergei): Fix me
-  (load "~/.emacs.d/early-init.el")
-  (require 'early-init))
+;; WARNING: This broke `esup' command usage.
+;; TODO(sergei): Fix me
+(load "~/.emacs.d/early-init.el")
+(require 'early-init)
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)
@@ -53,9 +52,7 @@
   (interactive
    (list (completing-read
           "Status : " '("new" "installed" "dependency" "obsolete"))))
-  (if (version< emacs-version "27")
-      (package-menu-filter (concat "status:" status))
-    (package-menu-filter-by-keyword (concat "status:" status))))
+  (package-menu-filter-by-keyword (concat "status:" status)))
 
 (define-key package-menu-mode-map "s" #'my/package-menu-filter-by-status)
 (define-key package-menu-mode-map "a" #'my/package-menu-find-marks)
