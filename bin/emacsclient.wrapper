@@ -37,6 +37,18 @@
 #     update-alternatives --set editor \
 #             /usr/local/bin/emacsclient.wrapper
 #
+# Fedora/CentOS
+# -------------
+#
+# 1. Install it with ``alternatives --install'':
+#
+#     alternatives --install /usr/bin/editor editor \
+#            /usr/local/bin/emacsclient.wrapper 20
+#
+# 2. Configure editor to be this wrapper:
+#
+#     alternatives --set editor /usr/local/bin/emacsclient.wrapper
+#
 # To run GNU Emacs in server mode see:
 # https://www.gnu.org/software/emacs/manual/html_node/emacs/Emacs-Server.html
 
