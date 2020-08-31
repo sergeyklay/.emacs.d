@@ -102,8 +102,10 @@
 
 (add-hook 'prog-mode-hook
           (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (tags-enable-ggtags))))
+            (when (and (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode
+                                       'emacs-lisp-mode)
+                       (and global-executable-path gtags-executable-path))
+              (ggtags-mode 1))))
 
 (provide 'setup-tags)
 
