@@ -20,5 +20,8 @@
   :commands (outline-mode outline-minor-mode)
   :hook (prog-mode . outline-minor-mode))
 
+(use-package csv-mode
+  :mode (("\\.csv\\'" . csv-mode)))
+
 (provide 'langs-human)
 ;;; langs-human.el ends here
