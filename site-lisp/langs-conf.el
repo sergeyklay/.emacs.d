@@ -46,24 +46,6 @@
   :mode "\\.?vimperatorrc\\'"
   :mode "\\.vimp\\'")
 
-;;;; Yaml
-
-(if (< emacs-major-version 27)
-    (defun s-count-matches (regexp s &optional start end)
-      "Count occurrences of REGEXP in S.
-
-START, inclusive, and END, exclusive, delimit the part of S to
-match.  START and END are both indexed starting at 1; the initial
-character in `s' is index 1.
-
-Backported from GNU Emacs 27."
-      (declare (side-effect-free t))
-      (save-match-data
-        (with-temp-buffer
-          (insert s)
-          (goto-char (point-min))
-          (count-matches regexp (or start 1) (or end (point-max)))))))
-
 (use-package yaml-mode
   :mode "\\.ya?ml\\'"
   :config
