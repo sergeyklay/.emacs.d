@@ -64,8 +64,6 @@
 (require 'langs-lisp)   ; Configure the Lisp-family of languages
 (require 'langs-lua)    ; Lua support
 (require 'langs-org)    ; Org related configuration
-(require 'langs-php)    ; PHP support
-(require 'langs-zephir) ; Zephir support
 
 (require 'grammars)     ; Various language grammars
 (require 'chats)        ; Chats support
