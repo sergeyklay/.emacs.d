@@ -108,7 +108,7 @@
   (projectile-completion-system 'helm)
   (projectile-switch-project-action 'helm-projectile)
   ;; “C-c p p” is reserved for `helm-pass'
-  :bind (("C-c p h" . helm-projectile-switch-project)
+  :bind (("C-c p p" . helm-projectile-switch-project)
          ("C-c p a" . helm-projectile-ag)
          ("C-c p g" . helm-projectile-grep)
          ("C-c p d" . helm-projectile-find-dir)
