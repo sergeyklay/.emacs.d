@@ -34,6 +34,13 @@
 	 erc-mode
 	 minibuffer-inactive-mode
 	 shell-mode))
+  ;; Setting up default backends for company
+  (company-backends
+   '((company-files      ; files & direcories
+      company-keywords   ; keywords
+      company-capf)      ; completion-at-point-functions
+     (company-abbrev     ; abbreviations
+      company-dabbrev))) ; dynamic abbreviations
   :bind
   ("<C-tab>" . company-complete)
   (:map company-active-map
