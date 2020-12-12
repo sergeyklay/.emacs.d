@@ -1,4 +1,4 @@
-;;; setup-python.el --- Lisp-family of languages. -*- lexical-binding: t; -*-
+;;; setup-python.el --- Setup Python for Emacs. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
