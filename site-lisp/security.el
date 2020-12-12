@@ -85,7 +85,7 @@
 (use-package helm-pass
   :ensure helm
   :commands helm-pass
-  :bind ("C-c p p" . helm-pass))
+  :bind ("C-c h p" . helm-pass))
 
 (provide 'security)
 ;;; security.el ends here
