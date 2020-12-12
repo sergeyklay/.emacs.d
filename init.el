@@ -48,6 +48,7 @@
 
 (require 'setup-cc)
 (require 'setup-shells)
+(require 'setup-python)
 
 ;;;; Minor Languages Support
 
