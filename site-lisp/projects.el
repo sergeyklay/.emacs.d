@@ -18,8 +18,9 @@
 (require 'directories)
 
 (use-package projectile
-  :diminish projectile-mode
   :custom
+  ;; The static part of the lighter
+  (projectile-mode-line-prefix " Pr")
   ;; The command-line option ‘-batch’ causes Emacs to run `noninteractively'.
   (projectile-enable-caching (not noninteractive))
   (projectile-cache-file (concat user-cache-dir "projectile.cache"))
