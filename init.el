@@ -30,7 +30,8 @@
 (require 'bookmarks)    ; Setting for bookmarks, recentf, etc
 (require 'docs)         ; Setting up documentation features
 (require 'vcs)          ; VCS (mostly git) related features
-(require 'completion)   ; Set up completion system
+(require 'completion)   ; Setting up completion system
+(require 'search-tools) ; Setting up search tools
 
 ;;;; Project management
 
