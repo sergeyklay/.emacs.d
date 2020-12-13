@@ -48,10 +48,12 @@
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns x))
   :custom
-  (exec-path-from-shell-variables '("PATH"))
-  (exec-path-from-shell-arguments '("-l"))
-  :config
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-arguments '("-l")))
+
+(add-hook 'after-init-hook
+          '(lambda ()
+             (exec-path-from-shell-initialize)
+             (exec-path-from-shell-copy-env "PATH")))
 
 ;;;; Eshell
 
