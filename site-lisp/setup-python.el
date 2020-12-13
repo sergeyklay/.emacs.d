@@ -31,7 +31,7 @@
   :after company
   :custom
   (python-shell-interpreter-args "-i --simple-prompt --pprint")
-  (python-shell-interpreter (executable-find "ipython3"))
+  (python-shell-interpreter "ipython3")
   :hook (python-mode . company-mode))
 
 (use-package company-jedi
