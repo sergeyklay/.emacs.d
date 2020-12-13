@@ -12,24 +12,33 @@
 ;;; Commentary:
 
 ;; Configuration for Python language.
+;;
+;; Recomended Python packages are:
+;;   - ipython
+;;   - jedi
+;;   - flake8
+;;   - autopep8
 
 ;;; Code:
 
 (require 'directories)
 
-(defvar jedi-custom-file (concat user-etc-dir "jedi-custom.el")
+(defconst jedi-custom-file (concat user-etc-dir "jedi-custom.el")
   "User-wide file to customize Jedi configuration.")
 
-(use-package python-mode
+(use-package python
   :ensure nil
   :after company
-  :hook
-  ((python-mode . company-mode)))
+  :custom
+  (python-shell-interpreter-args "-i --simple-prompt --pprint")
+  (python-shell-interpreter (executable-find "ipython3"))
+  :hook (python-mode . company-mode))
 
 (use-package company-jedi
   :commands company-jedi
   :custom
   (jedi:use-shortcuts t)
+  (jedi:complete-on-dot t)
   :config
   (defun company-jedi-hook()
     "Add `company-jedi' to the backends of `company-mode'."
@@ -37,16 +46,17 @@
   :hook ((python-mode . jedi:setup)
          (python-mode . company-jedi-hook)))
 
+;; Load custom Jedi configuration
+(with-eval-after-load 'company-jedi
+  (when (file-exists-p jedi-custom-file)
+    (load jedi-custom-file nil 'nomessage)))
+
 ;; Tidy up (require python package 'autopep8').
 (use-package py-autopep8
   :defer t
   :custom
   (py-autopep8-options '("--max-line-length=80"))
   :hook (python-mode . py-autopep8-enable-on-save))
-
-(with-eval-after-load 'company-jedi
-  (when (file-exists-p jedi-custom-file)
-    (load jedi-custom-file nil 'nomessage)))
 
 (provide 'setup-python)
 ;;; setup-python.el ends here
