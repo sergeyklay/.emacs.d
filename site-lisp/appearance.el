@@ -56,12 +56,12 @@
 
 ;; Get my initial frame to be the desired size
 (when window-system
-  (let (lpos tpos width-gain height-gain fwidth fheight)
-    (if (>= (x-display-pixel-width) 2000)
-        (progn (setq width-gain 0.3) (setq lpos 2000))
-      (progn (setq width-gain 0.5) (setq lpos 50)))
-    (setq tpos 50)
-    (setq height-gain 0.8)
+  (let ((tpos (floor (/ (x-display-pixel-height) 4)))
+        (lpos (floor (/ (x-display-pixel-width) 4)))
+        fheight fwidth
+        (height-gain 0.5)
+        (width-gain 0.5))
+
     (setq fwidth (floor (/ (* (x-display-pixel-width) width-gain)
                            (frame-char-width))))
     (setq fheight (floor (/ (* (x-display-pixel-height) height-gain)
