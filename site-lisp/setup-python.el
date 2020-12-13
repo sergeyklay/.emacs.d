@@ -15,6 +15,11 @@
 
 ;;; Code:
 
+(require 'directories)
+
+(defvar jedi-custom-file (concat user-etc-dir "jedi-custom.el")
+  "User-wide file to customize Jedi configuration.")
+
 (use-package python-mode
   :ensure nil
   :after company
@@ -31,6 +36,17 @@
     (add-to-list 'company-backends 'company-jedi))
   :hook ((python-mode . jedi:setup)
          (python-mode . company-jedi-hook)))
+
+;; Tidy up (require python package 'autopep8').
+(use-package py-autopep8
+  :defer t
+  :custom
+  (py-autopep8-options '("--max-line-length=80"))
+  :hook (python-mode . py-autopep8-enable-on-save))
+
+(with-eval-after-load 'company-jedi
+  (when (file-exists-p jedi-custom-file)
+    (load jedi-custom-file nil 'nomessage)))
 
 (provide 'setup-python)
 ;;; setup-python.el ends here
