@@ -31,8 +31,6 @@
 
 ;;; Code:
 
-(provide 'show-point-mode)
-
 
 ;; add point display to mode-line construct
 (add-to-list 'mode-line-position
@@ -51,4 +49,5 @@ mode-line (after the line and column numbers, if those are being
 displayed too).")
 
 
+(provide 'show-point-mode)
 ;;; show-point-mode.el ends here
