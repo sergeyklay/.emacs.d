@@ -28,6 +28,7 @@
 (require 'modeline)      ; Modeline related configuration
 (require 'defaults)      ; Sane defaults + settings for which there is no group
 (require 'setup-session) ; Setting for bookmarks, recentf, etc
+(require 'setup-buffer)  ; Buffer related configuration and utils
 (require 'docs)          ; Setting up documentation features
 (require 'vcs)           ; VCS (mostly git) related features
 (require 'completion)    ; Setting up completion system

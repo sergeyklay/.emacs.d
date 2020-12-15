@@ -158,11 +158,5 @@ This function is for interactive use only;"
   (setq auto-revert-interval 1)
   (global-auto-revert-mode 1))
 
-;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
-(defun my/revert-buffer-no-confirm ()
-  "Revert buffer without confirmation."
-  (interactive)
-  (revert-buffer :ignore-auto :noconfirm t))
-
 (provide 'editor)
 ;;; editor.el ends here
