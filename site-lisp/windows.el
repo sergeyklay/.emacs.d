@@ -47,16 +47,16 @@ For non-window systems will return frame dimesion."
 (defun my/calibrate-frame-geometry()
   "Set the size and position of the main Emacs frame."
   (interactive)
-  (let* ((frame (selected-frame))
-         width-in-chars
-         width-in-pixels
-         height-in-chars
-         height-in-pixels
-         top-in-chars
-         top-in-pixels
-         left-in-pixels
-         (total-width (my/monitor-pixel-width 0))
-         (total-height (my/monitor-pixel-height 0)))
+  (let ((frame (selected-frame))
+        width-in-chars
+        width-in-pixels
+        height-in-chars
+        height-in-pixels
+        top-in-chars
+        top-in-pixels
+        left-in-pixels
+        (total-width (my/monitor-pixel-width 0))
+        (total-height (my/monitor-pixel-height 0)))
 
     (if (< (my/monitor-pixel-width 0) 2000)
         (progn (setq width-in-chars 158)
