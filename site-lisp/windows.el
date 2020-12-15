@@ -44,26 +44,40 @@ For non-window systems will return frame dimesion."
   "Get current MONITOR height in pixels."
   (nth 1 (my/monitor-resolution monitor)))
 
-(defun my/calibare-main-frame()
+(defun my/calibrate-frame-geometry()
   "Set the size and position of the main Emacs frame."
   (interactive)
   (let* ((frame (selected-frame))
-         (width-in-chars 235)
-         (height-in-chars (/ (my/monitor-pixel-height 0) (frame-char-height)))
-         (width-in-pixels (* width-in-chars (frame-char-width)))
-         (left-in-pixels (/ (- (my/monitor-pixel-width 0) width-in-pixels) 2))
-         (top-in-pixels 0))
+         width-in-chars
+         width-in-pixels
+         height-in-chars
+         height-in-pixels
+         top-in-chars
+         top-in-pixels
+         left-in-pixels
+         (total-width (my/monitor-pixel-width 0))
+         (total-height (my/monitor-pixel-height 0)))
 
-    ;; TODO(serghei): Calcualte dimension for FHD
-    ;; (if (>= (x-display-pixel-width) 2000))
+    (if (< (my/monitor-pixel-width 0) 2000)
+        (progn (setq width-in-chars 158)
+               (setq top-in-chars 13))
+      (progn (setq width-in-chars 235)
+             (setq top-in-chars 0)))
+
+    (setq height-in-chars (- (/ total-height (frame-char-height)) top-in-chars))
+    (setq height-in-pixels (* height-in-chars (frame-char-height)))
+    (setq width-in-pixels (* width-in-chars (frame-char-width)))
+
+    (setq top-in-pixels (/ (- total-height height-in-pixels) 2))
+    (setq left-in-pixels (/ (- total-width width-in-pixels) 2))
 
     (set-frame-size frame width-in-chars height-in-chars)
     (set-frame-position frame left-in-pixels top-in-pixels)))
 
 (defun my|frame-setup-hook()
-  "Hook ti set the size and position of the main Emacs frame."
+  "Hook to set the size and position of the main Emacs frame."
   (let ((frame (selected-frame)))
-    (my/calibare-main-frame)
+    (my/calibrate-frame-geometry)
     (select-frame-set-input-focus frame)))
 
 (add-hook 'window-setup-hook #'my|frame-setup-hook)
