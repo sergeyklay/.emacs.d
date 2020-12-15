@@ -25,6 +25,49 @@
           '(buffer-file-name "%f"
 			     (dired-directory dired-directory "%b")))
 
+(defun my/monitor-resolution (monitor)
+  "Get current MONITOR resolution in pixels.
+For non-window systems will return frame dimesion."
+  (let* ((monitor-attrs (display-monitor-attributes-list))
+         (num-displays (length monitor-attrs))
+         (geometry (assq 'geometry (nth monitor monitor-attrs))))
+    (if (< monitor num-displays)
+        (list (nth 3 geometry)
+              (nth 4 geometry))
+      (error "Invalid monitor number: %d" monitor))))
+
+(defun my/monitor-pixel-width (monitor)
+  "Get current MONITOR width in pixels."
+  (car (my/monitor-resolution monitor)))
+
+(defun my/monitor-pixel-height (monitor)
+  "Get current MONITOR height in pixels."
+  (nth 1 (my/monitor-resolution monitor)))
+
+(defun my/calibare-main-frame()
+  "Set the size and position of the main Emacs frame."
+  (interactive)
+  (let* ((frame (selected-frame))
+         (width-in-chars 235)
+         (height-in-chars (/ (my/monitor-pixel-height 0) (frame-char-height)))
+         (width-in-pixels (* width-in-chars (frame-char-width)))
+         (left-in-pixels (/ (- (my/monitor-pixel-width 0) width-in-pixels) 2))
+         (top-in-pixels 0))
+
+    ;; TODO(serghei): Calcualte dimension for FHD
+    ;; (if (>= (x-display-pixel-width) 2000))
+
+    (set-frame-size frame width-in-chars height-in-chars)
+    (set-frame-position frame left-in-pixels top-in-pixels)))
+
+(defun my|frame-setup-hook()
+  "Hook ti set the size and position of the main Emacs frame."
+  (let ((frame (selected-frame)))
+    (my/calibare-main-frame)
+    (select-frame-set-input-focus frame)))
+
+(add-hook 'window-setup-hook #'my|frame-setup-hook)
+
 ;; Convenient keybindings to resize windows.
 ;; For more see URL `https://www.emacswiki.org/emacs/WindowResize'
 
