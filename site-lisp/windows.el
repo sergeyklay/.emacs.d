@@ -62,7 +62,7 @@ For non-window systems will return frame dimesion."
         (progn (setq width-in-chars 158)
                (setq top-in-chars 13))
       (progn (setq width-in-chars 235)
-             (setq top-in-chars 0)))
+             (setq top-in-chars 28)))
 
     (setq height-in-chars (- (/ total-height (frame-char-height)) top-in-chars))
     (setq height-in-pixels (* height-in-chars (frame-char-height)))
