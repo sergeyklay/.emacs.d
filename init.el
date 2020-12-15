@@ -20,18 +20,18 @@
 ;; Begin initialization
 (require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
 
-(require 'packaging)    ; Package management stuff and various related settings
-(require 'appearance)   ; Set up appearance as soon as we can
-(require 'windows)      ; Windows management features
-(require 'im)           ; Key maps, IMs and relevant configurations
-(require 'devtools)     ; Various devtools
-(require 'modeline)     ; Modeline related configuration
-(require 'defaults)     ; Sane defaults + settings for which there is no group
-(require 'bookmarks)    ; Setting for bookmarks, recentf, etc
-(require 'docs)         ; Setting up documentation features
-(require 'vcs)          ; VCS (mostly git) related features
-(require 'completion)   ; Setting up completion system
-(require 'search-tools) ; Setting up search tools
+(require 'packaging)     ; Package management stuff and various related settings
+(require 'appearance)    ; Set up appearance as soon as we can
+(require 'windows)       ; Windows management features
+(require 'im)            ; Key maps, IMs and relevant configurations
+(require 'devtools)      ; Various devtools
+(require 'modeline)      ; Modeline related configuration
+(require 'defaults)      ; Sane defaults + settings for which there is no group
+(require 'setup-session) ; Setting for bookmarks, recentf, etc
+(require 'docs)          ; Setting up documentation features
+(require 'vcs)           ; VCS (mostly git) related features
+(require 'completion)    ; Setting up completion system
+(require 'search-tools)  ; Setting up search tools
 
 ;;;; Project management
 

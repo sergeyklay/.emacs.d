@@ -1,4 +1,4 @@
-;;; bookmarks.el --- Setting for bookmarks, recentf, etc. -*- lexical-binding: t; -*-
+;;; setup-session.el --- Setting for bookmarks, recentf, etc. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -99,5 +99,5 @@ With ARG, re-open the nth buffer."
      (if arg (nth arg recently-killed-list)
        (car recently-killed-list)))))
 
-(provide 'bookmarks)
-;;; bookmarks.el ends here
+(provide 'setup-session)
+;;; setup-session.el ends here
