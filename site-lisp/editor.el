@@ -68,6 +68,14 @@
   :ensure nil
   :bind ("C-x t w" . #'whitespace-mode))
 
+;;;; Refactor
+
+;; Edit multiple regions in the same way simultaneously.
+(use-package iedit
+  :defer t
+  :commands (iedit-mode iedit-rectangle-mode)
+  :bind (("C-;" . iedit-mode)))
+
 ;;;; Folding
 
 (defun my--move-text-internal (arg)
