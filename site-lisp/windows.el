@@ -52,23 +52,35 @@ For non-window systems will return frame dimesion."
         width-in-pixels
         height-in-chars
         height-in-pixels
-        top-in-chars
         top-in-pixels
         left-in-pixels
         (total-width (my/monitor-pixel-width 0))
         (total-height (my/monitor-pixel-height 0)))
 
-    (if (< (my/monitor-pixel-width 0) 2000)
-        (progn (setq width-in-chars 158)
-               (setq top-in-chars 13))
-      (progn (setq width-in-chars 235)
-             (setq top-in-chars 28)))
+    (cond ((= total-width 1024)       ; 1024x640
+           (setq width-in-chars 80)
+           (setq height-in-chars 32))
+          ((= total-width 1280)       ; 1280x800
+           (setq width-in-chars 158)
+           (setq height-in-chars 40))
+          ((= total-width 1440)       ; 1440x900
+           (setq width-in-chars 158)
+           (setq height-in-chars 45))
+          ((= total-width 1680)       ; 1680x1050
+           (setq width-in-chars 158)
+           (setq height-in-chars 52))
+          ((= total-width 1920)       ; 1920x1080
+           (setq width-in-chars 158)
+           (setq height-in-chars 54))
+          (t                          ; Retina
+           (setq width-in-chars 237)
+           (setq height-in-chars 60)))
 
-    (setq height-in-chars (- (/ total-height (frame-char-height)) top-in-chars))
     (setq height-in-pixels (* height-in-chars (frame-char-height)))
     (setq width-in-pixels (* width-in-chars (frame-char-width)))
 
-    (setq top-in-pixels (/ (- total-height height-in-pixels) 2))
+    ;; Center frame.  22 here is a top menubar in Gnome, macOs and Ubuntu.
+    (setq top-in-pixels (- (/ (- total-height height-in-pixels) 2) 22))
     (setq left-in-pixels (/ (- total-width width-in-pixels) 2))
 
     (set-frame-size frame width-in-chars height-in-chars)
