@@ -74,7 +74,7 @@
 (use-package iedit
   :defer t
   :commands (iedit-mode iedit-rectangle-mode)
-  :bind (("C-;" . iedit-mode)))
+  :bind (("C-c r" . iedit-mode)))
 
 ;;;; Folding
 
