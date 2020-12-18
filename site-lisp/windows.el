@@ -48,48 +48,48 @@ For non-window systems will return frame dimesion."
   "Set the size and position of the main Emacs frame."
   (interactive)
   (let ((frame (selected-frame))
-        width-in-chars
-        width-in-pixels
-        height-in-chars
-        height-in-pixels
-        top-in-pixels
-        left-in-pixels
+        width height top left
+        width-factor
+        height-factor
         (total-width (my/monitor-pixel-width 0))
         (total-height (my/monitor-pixel-height 0)))
 
     (cond ((= total-width 1024)       ; 1024x640
-           (setq width-in-chars 80)
-           (setq height-in-chars 32))
+           (setq width-factor 1.82)
+           (setq height-factor 1.43))
           ((= total-width 1280)       ; 1280x800
-           (setq width-in-chars 158)
-           (setq height-in-chars 40))
+           (setq width-factor 1.12)
+           (setq height-factor 1.43))
           ((= total-width 1440)       ; 1440x900
-           (setq width-in-chars 158)
-           (setq height-in-chars 45))
+           (setq width-factor 1.26)
+           (setq height-factor 1.43))
           ((= total-width 1680)       ; 1680x1050
-           (setq width-in-chars 158)
-           (setq height-in-chars 52))
+           (setq width-factor 1.47)
+           (setq height-factor 1.43))
           ((= total-width 1920)       ; 1920x1080
-           (setq width-in-chars 158)
-           (setq height-in-chars 54))
+           (setq width-factor 1.52)
+           (setq height-factor 1.43))
           (t                          ; Retina
-           (setq width-in-chars 237)
-           (setq height-in-chars 60)))
+           (setq width-factor 1.30)
+           (setq height-factor 1.43)))
 
-    (setq height-in-pixels (* height-in-chars (frame-char-height)))
-    (setq width-in-pixels (* width-in-chars (frame-char-width)))
+    (setq width (round (/ total-width width-factor)))
+    (setq height (round (/ total-height height-factor)))
 
     ;; Center frame.  22 here is a top menubar in Gnome, macOs and Ubuntu.
-    (setq top-in-pixels (- (/ (- total-height height-in-pixels) 2) 22))
-    (setq left-in-pixels (/ (- total-width width-in-pixels) 2))
+    (setq top (round (- (/ (- total-height height) 2) 22)))
+    (setq left (round (/ (- total-width width) 2)))
 
-    (set-frame-size frame width-in-chars height-in-chars)
-    (set-frame-position frame left-in-pixels top-in-pixels)))
+    (set-frame-size frame width height t)
+    (set-frame-position frame left top)))
 
 (defun my|frame-setup-hook()
   "Hook to set the size and position of the main Emacs frame."
   (let ((frame (selected-frame)))
-    (my/calibrate-frame-geometry)
+    ;; For terminal frame the height in pixels is always 1.
+    ;; Do now change geometry for terminal frames.
+    (when (> (frame-char-height) 1)
+      (my/calibrate-frame-geometry))
     (select-frame-set-input-focus frame)))
 
 (add-hook 'window-setup-hook #'my|frame-setup-hook)
