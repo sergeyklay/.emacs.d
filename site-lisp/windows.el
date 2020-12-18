@@ -67,7 +67,10 @@ For non-window systems will return frame dimesion."
            (setq width-factor 1.47)
            (setq height-factor 1.43))
           ((= total-width 1920)       ; 1920x1080
-           (setq width-factor 1.52)
+           (setq width-factor 1.58)
+           (setq height-factor 1.43))
+          ((= total-width 2560)       ; 2560x1440
+           (setq width-factor 2.10)
            (setq height-factor 1.43))
           (t                          ; Retina
            (setq width-factor 1.30)
