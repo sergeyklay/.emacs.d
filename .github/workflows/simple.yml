@@ -43,12 +43,12 @@ jobs:
 
       - name: Run tests
         if: matrix.allow_failure != true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./run-tests.sh --debug
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./test/run-tests.sh --debug
 
       - name: Run tests
         if: matrix.allow_failure == true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (./run-tests.sh --debug || true)
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (./test/run-tests.sh --debug || true)
 
       - name: Run Shell Check
         if: always()
-        run: shellcheck ./run-tests.sh
+        run: shellcheck ./test/run-tests.sh
