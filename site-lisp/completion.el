@@ -106,18 +106,13 @@
     "\\|\\(?:.zwc$\\)"))
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
-  :config
-  (cond
-   ((executable-find "rg")
-    (global-set-key (kbd "C-c k") #'counsel-rg))
-   ((executable-find "ag")
-    (global-set-key (kbd "C-c k") #'counsel-ag)))
   :bind (("C-x C-r"                   . counsel-recentf)
          ("C-x C-i"                   . counsel-imenu)
          ("C-x l"                     . counsel-locate)
          ("C-h u"                     . counsel-unicode-char)
          ("C-h C-l"                   . counsel-find-library)
          ("C-h C-o"                   . counsel-info-lookup-symbol)
+         ("C-c k"                     . counsel-rg)
          ([remap list-buffers]        . counsel-ibuffer)
          ([remap eshell-list-history] . counsel-esh-history)
          ([remap describe-symbol]     . counsel-describe-symbol)

@@ -54,7 +54,8 @@
   (projectile-mode 1)
   ;; Ignore directories
   (setq projectile-globally-ignored-directories
-	(append '("__pycache__" "elpa" ".cache" "node_modules" "bower_components")
+	(append '("__pycache__" "elpa" ".cache"
+                  "node_modules" "bower_components")
 		projectile-globally-ignored-directories))
   ;; Ignore files
   (setq projectile-globally-ignored-files
@@ -67,19 +68,17 @@
   ;; Use the faster searcher to handle project files:
   ;; - user-friendly alternative of find `fd'
   ;; - ripgrep `rg'
-  ;; - the silver searcher `ag'
   (let* ((exclude (cons "" projectile-globally-ignored-directories))
         (command
 	 (cond
 	  ((executable-find "fd")
            (my/find-fd-command exclude))
           ((executable-find "rg")
-           (my/find-rg-command exclude))
-	  ((executable-find "ag")
-           (my/find-ag-command exclude)))))
-    (setq projectile-generic-command command)
-    ;; See URL `https://github.com/bbatsov/projectile/issues/1148'
-    (setq projectile-git-command command)))
+           (my/find-rg-command exclude)))))
+    (when command
+      (setq projectile-generic-command command)
+      ;; See URL `https://github.com/bbatsov/projectile/issues/1148'
+      (setq projectile-git-command command))))
 
 ;;;; Counsel Projectile
 
@@ -97,7 +96,7 @@
 	 ("C-c p d" . counsel-projectile-find-dir)
 	 ("C-c p f" . counsel-projectile-find-file)
 	 ("C-c p p" . counsel-projectile-switch-project)
-         ("C-c p a" . counsel-projectile-ag)
+         ("C-c p r" . counsel-projectile-rg)
          ("C-c p g" . counsel-projectile-grep)))
 
 (provide 'projects)

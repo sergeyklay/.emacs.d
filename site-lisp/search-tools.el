@@ -51,13 +51,5 @@ to exclude files and directories."
         (setq to-exclude (format "%s --glob '!%s'" to-exclude file-or-dir))))
     (concat rg-cmd to-exclude)))
 
-(defun my/find-ag-command (&optional exclude)
-  "Ag command to get files in a project.
-When optional EXCLUDE list is given 'ag' will use it as a list
-to exclude files and directories."
-  (concat "ag -0 -l --nocolor --hidden"
-	  (unless (null exclude)
-            (mapconcat #'identity exclude " --ignore="))))
-
 (provide 'search-tools)
 ;;; search-tools.el ends here
