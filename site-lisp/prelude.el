@@ -1,13 +1,26 @@
 ;;; prelude.el --- Begin initialization. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
-;;
-;; This file is NOT part of GNU Emacs.
-;;
-;; License: GPLv3
+
+;; This file is NOT part of Emacs.
+
+;;;; License
+
+;; This file is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -69,7 +82,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Set up load path.
 (add-to-list 'load-path user-host-dir)
 (add-to-list 'load-path user-site-lisp-dir)
-(add-to-list 'load-path user-defuns-dir)
 
 ;; Add external projects to load path.
 (dolist (pkg (directory-files user-site-lisp-dir t "\\w+"))

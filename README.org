@@ -24,7 +24,7 @@ This project relies on the following list of applications:
 - [[https://pandoc.org][Pandoc (=pandoc=)]]
 - [[https://www.passwordstore.org][Password Store (=pass=)]]
 - [[http://www.sbcl.org][Steel Bank Common Lisp (=sbcl=)]]
-  [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
+- [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 
 ** License
 

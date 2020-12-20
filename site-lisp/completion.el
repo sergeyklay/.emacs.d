@@ -107,7 +107,6 @@
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
   :bind (("C-x C-r"                   . counsel-recentf)
-         ("C-x C-i"                   . counsel-imenu)
          ("C-x l"                     . counsel-locate)
          ("C-h u"                     . counsel-unicode-char)
          ("C-h C-l"                   . counsel-find-library)
@@ -116,6 +115,9 @@
          ([remap list-buffers]        . counsel-ibuffer)
          ([remap eshell-list-history] . counsel-esh-history)
          ([remap describe-symbol]     . counsel-describe-symbol)
+
+         :map ivy-minibuffer-map
+         ("C-r"                       . counsel-minibuffer-history)
 
          :map minibuffer-local-map
          ("C-r"                       . counsel-minibuffer-history)))
@@ -165,6 +167,15 @@
 	("SPC" . company-abort)
 	("<backtab>" . company-select-previous)))
 
+;; Some packages are too noisy.
+;; See URL `http://superuser.com/a/1025827'.
+(defun my/suppress-messages (func &rest args)
+  "Suppress message output when call FUNC with remaining ARGS."
+  (cl-flet ((silence (&rest args1) (ignore)))
+    (advice-add 'message :around #'silence)
+    (unwind-protect (apply func args)
+      (advice-remove 'message #'silence))))
+
 ;; Sort company candidates by statistics.
 (use-package company-statistics
   :after company
@@ -174,7 +185,7 @@
   (company-statistics-file
    (concat user-cache-dir "company-statistics-cache.el"))
   :config
-  (advice-add 'company-statistics--load :around #'suppress-messages))
+  (advice-add 'company-statistics--load :around #'my/suppress-messages))
 
 (provide 'completion)
 ;;; completion.el ends here
