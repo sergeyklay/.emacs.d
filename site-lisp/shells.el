@@ -1,4 +1,4 @@
-;;; setup-shells.el --- Shells configuration. -*- lexical-binding: t; -*-
+;;; shells.el --- Shells configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -142,5 +142,5 @@
   (push 'company-shell-env company-backends)
   :hook (sh-mode . company-mode))
 
-(provide 'setup-shells)
-;;; setup-shells.el ends here
+(provide 'shells)
+;;; shells.el ends here

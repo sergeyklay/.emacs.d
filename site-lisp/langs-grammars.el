@@ -1,4 +1,4 @@
-;;; setup-cc.el --- Support for the C-family of languages. -*- lexical-binding: t; -*-
+;;; langs-grammars.el --- Language grammars. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -24,35 +24,23 @@
 
 ;;; Commentary:
 
-;; Support for the C-family of languages.
+;; Add support of language grammars for GNU Emacs.
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'compile)
-  (require 'company))
-
-(use-package company-c-headers
-  :after company
+(use-package bnf-mode
   :defer t
-  :init
-  (add-to-list 'company-backends 'company-c-headers)
-  :hook
-  ((c-mode-common . company-mode)))
+  :mode "\\.bnf\\'")
 
-(defun my/custom-compile-command ()
-  "Custom compile command to use for C buffers."
-  (interactive)
-  (setq-local compilation-read-command nil)
-  (call-interactively 'compile))
+(use-package lemon-mode
+  :defer t
+  :mode "\\.lemon\\'")
 
-(defun c-binds-hook ()
-  "Setup keybindings to use for C buffers."
-  (local-set-key (kbd "<f5>") #'my/custom-compile-command))
+(use-package bison-mode
+  :defer t
+  :mode (("\\.lex\\'" . bison-mode)
+         ("\\.yy?\\'" . bison-mode)
+         ("\\.ll?\\'" . bison-mode)))
 
-(use-package cc-mode
-  :ensure nil
-  :hook ((c-mode . c-binds-hook)))
-
-(provide 'setup-cc)
-;;; setup-cc.el ends here
+(provide 'langs-grammars)
+;;; langs-grammars.el ends here

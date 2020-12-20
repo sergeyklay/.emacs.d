@@ -1,4 +1,4 @@
-;;; setup-python.el --- Setup Python for Emacs. -*- lexical-binding: t; -*-
+;;; langs-python.el --- Setup Python for Emacs. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -71,5 +71,5 @@
   (py-autopep8-options '("--max-line-length=80"))
   :hook (python-mode . py-autopep8-enable-on-save))
 
-(provide 'setup-python)
-;;; setup-python.el ends here
+(provide 'langs-python)
+;;; langs-python.el ends here

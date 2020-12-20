@@ -1,4 +1,4 @@
-;;; setup-tags.el --- Setup tags. -*- lexical-binding: t; -*-
+;;; tags.el --- Setup tags. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -119,6 +119,5 @@
                        (and global-executable-path gtags-executable-path))
               (ggtags-mode 1))))
 
-(provide 'setup-tags)
-
-;;; setup-tags.el ends here
+(provide 'tags)
+;;; tags.el ends here

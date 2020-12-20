@@ -35,19 +35,17 @@
 ;; Begin initialization
 (require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
 
-(require 'packaging)     ; Package management stuff and various related settings
-(require 'appearance)    ; Set up appearance as soon as we can
-(require 'windows)       ; Windows management features
-(require 'im)            ; Key maps, IMs and relevant configurations
-(require 'devtools)      ; Various devtools
-(require 'modeline)      ; Modeline related configuration
-(require 'defaults)      ; Sane defaults + settings for which there is no group
-(require 'setup-session) ; Setting for bookmarks, recentf, etc
-(require 'setup-buffer)  ; Buffer related configuration and utils
-(require 'docs)          ; Setting up documentation features
-(require 'vcs)           ; VCS (mostly git) related features
-(require 'search-tools)  ; Setting up search tools
-(require 'completion)    ; Setting up completion system
+(require 'packaging)    ; Package management stuff and various related settings
+(require 'appearance)   ; Set up appearance as soon as we can
+(require 'windows)      ; Windows management features
+(require 'modeline)     ; Modeline related configuration
+(require 'defaults)     ; Sane defaults + settings for which there is no group
+(require 'session)      ; Setting for bookmarks, recentf, etc
+(require 'buffer)       ; Buffer related configuration and utils
+(require 'docs)         ; Setting up documentation features
+(require 'search-tools) ; Setting up search tools
+(require 'completion)   ; Setting up completion system
+(require 'shells)       ; Shells configuration
 
 ;;;; Project management
 
@@ -55,31 +53,32 @@
 
 ;;;; IDE Features
 
-(require 'setup-tags)
+(require 'devtools)
+(require 'build-tools)
+(require 'vcs)
+(require 'editor)
+(require 'tags)
+(require 'complit)
+(require 'expansion)
+(require 'syntax-check)
 
 ;;;; Configuration of progmodes
 
-(require 'setup-cc)
-(require 'setup-shells)
-(require 'setup-python)
+(require 'langs-cc)
+(require 'langs-python)
+(require 'langs-human)
+(require 'langs-conf)
+(require 'langs-lisp)
+(require 'langs-lua)
+(require 'langs-org)
+(require 'langs-md)
+(require 'langs-grammars)
 
-;;;; Minor Languages Support
+;;;; Misc
 
-(require 'setup-md)
-
+(require 'im)           ; Key maps, IMs and relevant configurations
 (require 'security)     ; GPG and security related features
-(require 'expansion)    ; Configuration of expansions
-(require 'editor)       ; Features related to editor behavior
-(require 'syntax-check) ; Syntax checkers
 (require 'spelling)     ; Spell configuration
-(require 'build-tools)  ; Add build tools support
-(require 'langs-human)  ; Settings for human languages
-(require 'langs-conf)   ; Add support for the configuration like languages
-(require 'langs-lisp)   ; Configure the Lisp-family of languages
-(require 'langs-lua)    ; Lua support
-(require 'langs-org)    ; Org related configuration
-
-(require 'grammars)     ; Various language grammars
 (require 'chats)        ; Chats support
 
 ;; Load settings specific for the current site
