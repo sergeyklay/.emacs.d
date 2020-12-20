@@ -93,5 +93,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (when (file-directory-p pkg)
     (add-to-list 'load-path pkg)))
 
+;; Measure the current start up time.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
 (provide 'prelude)
 ;;; prelude.el ends here
