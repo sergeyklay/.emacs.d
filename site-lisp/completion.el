@@ -117,6 +117,9 @@
          ([remap eshell-list-history] . counsel-esh-history)
          ([remap describe-symbol]     . counsel-describe-symbol)
 
+         :map ivy-minibuffer-map
+         ("C-r"                       . counsel-minibuffer-history)
+
          :map minibuffer-local-map
          ("C-r"                       . counsel-minibuffer-history)))
 
