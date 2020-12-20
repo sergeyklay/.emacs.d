@@ -31,7 +31,6 @@
 (require 'prelude)
 (require 'backup) ; Backup, auto-saving and history configuration
 (require 'directories)
-(require 'utils)
 
 (setq default-directory "~/")
 

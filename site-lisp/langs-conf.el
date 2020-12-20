@@ -28,7 +28,6 @@
 
 ;;; Code:
 
-(require 'utils)
 (eval-when-compile
   (require 's))
 
