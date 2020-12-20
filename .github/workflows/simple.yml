@@ -52,3 +52,6 @@ jobs:
       - name: Run Shell Check
         if: always()
         run: shellcheck ./test/run-tests.sh
+
+      - name: Python check
+        run: python3 --version
