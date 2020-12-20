@@ -37,14 +37,14 @@
 (use-package ivy
   :defer 0.1
   :diminish ivy-mode
-  :bind (("C-x b"   . ivy-switch-buffer)
-         ("C-x B"   . ivy-switch-buffer-other-window)
-         ("C-c C-r" . ivy-resume)
+  :bind (([remap switch-to-buffer] . ivy-switch-buffer)
+         ("C-x B"                  . ivy-switch-buffer-other-window)
+         ("C-c C-r"                . ivy-resume)
          :map ivy-minibuffer-map
-         ("<tab>"   . ivy-alt-done)
-         ("C-i"     . ivy-partial-or-done)
+         ("<tab>"                  . ivy-alt-done)
+         ("C-i"                    . ivy-partial-or-done)
          :map ivy-switch-buffer-map
-         ("C-k"     . ivy-switch-buffer-kill))
+         ("C-k"                    . ivy-switch-buffer-kill))
   :config
   (ivy-mode 1)
   (setq
@@ -91,6 +91,7 @@
 
 (use-package counsel
   :hook (ivy-mode . counsel-mode)
+  :after exec-path-from-shell
   :custom
   (counsel-find-file-ignore-regexp
    (concat
@@ -105,36 +106,32 @@
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
   :config
-  (when (executable-find "rg")
+  (cond
+   ((executable-find "rg")
     (setq counsel-grep-base-command (concat my/rg-base-command " %s %s")
 	  counsel-git-cmd (my/find-rg-command)
-	  counsel-rg-base-command (concat my/rg-base-command " %s .")))
-  ;; Replace standard keybindings
-  :bind (("M-x"     . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x C-b" . counsel-ibuffer)
-         ("C-x C-r" . counsel-recentf)
+	  counsel-rg-base-command (concat my/rg-base-command " %s ."))
+    (global-set-key (kbd "C-c k") #'counsel-rg))
+   ((executable-find "ag")
+    (global-set-key (kbd "C-c k") #'counsel-ag)))
+  :bind (("C-x C-r" . counsel-recentf)
          ("C-x C-i" . counsel-imenu)
-         ("C-h v"   . counsel-describe-variable)
-         ("C-h a"   . counsel-apropos)
-         ("C-h f"   . counsel-describe-function)
-         ("C-h b"   . counsel-descbinds)
+         ([remap execute-extended-command] . counsel-M-x)
+         ([remap find-file]                . counsel-find-file)
+         ([remap list-buffers]             . counsel-ibuffer)
+         ([remap describe-variable]        . counsel-describe-variable)
+         ([remap apropos-command]          . counsel-apropos)
+         ([remap describe-function]        . counsel-describe-function)
+         ([remap describe-bindings]        . counsel-descbinds)
          :map minibuffer-local-map
          ("C-r"     . counsel-minibuffer-history)))
-
-(cond
- ((executable-find "rg")
-  (global-set-key (kbd "C-c k") #'counsel-rg))
- ((executable-find "ag")
-  (global-set-key (kbd "C-c k") #'counsel-ag))
- (t (global-set-key (kbd "C-c k") #'counsel-grep)))
 
 ;;;; Swiper
 
 (use-package swiper
   :after ivy
   :commands (swiper swiper-all)
-  :bind(("C-s" . swiper)
+  :bind(([remap isearch-forward] . swiper)
         :map swiper-map
         ("M-%" . swiper-query-replace)))
 
