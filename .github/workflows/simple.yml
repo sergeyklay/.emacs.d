@@ -53,5 +53,5 @@ jobs:
         if: always()
         run: shellcheck ./test/run-tests.sh
 
-      - name: Python check
-        run: python3 --version
+      - name: License check
+        run: python3 test/check-licenses.py
