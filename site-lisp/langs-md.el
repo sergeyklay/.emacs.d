@@ -1,4 +1,4 @@
-;;; setup-md.el --- Add support for the Markdown. -*- lexical-binding: t; -*-
+;;; langs-md.el --- Add support for the Markdown. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -61,7 +61,7 @@
   (markdown-asymmetric-header t)
   (markdown-make-gfm-checkboxes-buttons t)
   (markdown-gfm-additional-languages
-   '("sh" "python" "js" "lisp" "elisp" "zep"))
+   '("sh" "python" "js" "lisp" "elisp"))
   (markdown-gfm-uppercase-checkbox t)
   (markdown-fontify-code-blocks-natively t)
   (markdown-hide-urls nil)
@@ -71,5 +71,5 @@
   (add-to-list 'auto-mode-alist
 	       `(,gfm-patterns . gfm-mode)))
 
-(provide 'setup-md)
-;;; setup-md.el ends here
+(provide 'langs-md)
+;;; langs-md.el ends here

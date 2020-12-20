@@ -1,4 +1,4 @@
-;;; setup-buffer.el --- Buffer related configuration and utils.. -*- lexical-binding: t; -*-
+;;; buffer.el --- Buffer related configuration and utils.. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -70,5 +70,5 @@ With ARG, re-open the nth buffer."
   (interactive)
   (revert-buffer :ignore-auto :noconfirm t))
 
-(provide 'setup-buffer)
-;;; setup-buffer.el ends here
+(provide 'buffer)
+;;; buffer.el ends here
