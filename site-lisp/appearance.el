@@ -17,9 +17,7 @@
 
 (use-package kaolin-themes
   :config
-  (use-package all-the-icons)
-  (load-theme 'kaolin-light t)
-  (kaolin-treemacs-theme))
+  (load-theme 'kaolin-light t))
 
 (defvar font-face nil)
 
