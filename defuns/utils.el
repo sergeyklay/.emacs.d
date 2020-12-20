@@ -26,15 +26,7 @@
      (point-min) (point-max) nil)
     (buffer-string)))
 
-;; Some packages are too noisy.
-;; See URL `http://superuser.com/a/1025827'.
-(defun suppress-messages (func &rest args)
-  "Suppress message output when call FUNC with remaining ARGS."
-  (cl-flet ((silence (&rest args1) (ignore)))
-    (advice-add 'message :around #'silence)
-    (unwind-protect
-        (apply func args)
-      (advice-remove 'message #'silence))))
+
 
 (provide 'utils)
 ;;; utils.el ends here
