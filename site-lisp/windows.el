@@ -48,38 +48,28 @@ For non-window systems will return frame dimesion."
   "Set the size and position of the main Emacs frame."
   (interactive)
   (let ((frame (selected-frame))
-        width-in-chars
         width-in-pixels
-        height-in-chars
         height-in-pixels
         top-in-pixels
         left-in-pixels
-        width-factor
-        height-factor
+        (width-in-chars 158)
+        (height-in-chars 50)
         (total-width (my/monitor-pixel-width 0))
         (total-height (my/monitor-pixel-height 0)))
 
-    (cond ((= total-width 1024)       ; 1024x640
-           (setq width-in-chars 79)
+    (cond ((<= total-height 640)
            (setq height-in-chars 34))
-          ((= total-width 1280)       ; 1280x800
-           (setq width-in-chars 158)
+          ((<= total-height 800)
            (setq height-in-chars 40))
-          ((= total-width 1440)       ; 1440x900
-           (setq width-in-chars 158)
+          ((<= total-height 900)
            (setq height-in-chars 50))
-          ((= total-width 1680)       ; 1680x1050
-           (setq width-in-chars 158)
-           (setq height-in-chars 50))
-          ((= total-width 1920)       ; 1920x1080
-           (setq width-in-chars 158)
-           (setq height-in-chars 50))
-          ((= total-width 2560)       ; 2560x1440
-           (setq width-in-chars 158)
-           (setq height-in-chars 50))
-          (t                          ; Retina
-           (setq width-in-chars 158)
-           (setq height-in-chars 50)))
+          ((<= total-height 1440)
+           (setq height-in-chars 60))
+          ((>= total-height 1692)
+           (setq height-in-chars 80)))
+
+    (when (<= total-width 1024)
+      (setq width-in-chars 79))
 
     (setq width-in-pixels (* width-in-chars (frame-char-width)))
     (setq height-in-pixels (* height-in-chars (frame-char-height)))
