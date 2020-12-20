@@ -92,6 +92,7 @@
 (use-package counsel
   :hook (ivy-mode . counsel-mode)
   :after exec-path-from-shell ; Due to `exec-path-from-shell-copy-env'
+  :diminish counsel-mode
   :custom
   (counsel-find-file-ignore-regexp
    (concat
@@ -111,26 +112,18 @@
     (global-set-key (kbd "C-c k") #'counsel-rg))
    ((executable-find "ag")
     (global-set-key (kbd "C-c k") #'counsel-ag)))
-  :bind (("C-x C-r"                        . counsel-recentf)
-         ("C-x C-i"                        . counsel-imenu)
-         ("C-x l"                          . counsel-locate)
-         ([remap execute-extended-command] . counsel-M-x)
-         ([remap find-file]                . counsel-find-file)
-         ([remap list-buffers]             . counsel-ibuffer)
-         ([remap eshell-list-history]      . counsel-esh-history)
-         ([remap yank-pop]                 . counsel-yank-pop)
+  :bind (("C-x C-r"                   . counsel-recentf)
+         ("C-x C-i"                   . counsel-imenu)
+         ("C-x l"                     . counsel-locate)
+         ("C-h u"                     . counsel-unicode-char)
+         ("C-h C-l"                   . counsel-find-library)
+         ("C-h C-o"                   . counsel-info-lookup-symbol)
+         ([remap list-buffers]        . counsel-ibuffer)
+         ([remap eshell-list-history] . counsel-esh-history)
+         ([remap describe-symbol]     . counsel-describe-symbol)
 
-         ;; C-h key bindings
-         ("C-h u"                          . counsel-unicode-char)
-         ("C-h C-l"                        . counsel-find-library)
-         ("C-h C-o"                        . counsel-info-lookup-symbol)
-         ([remap describe-symbol]          . counsel-describe-symbol)
-         ([remap describe-variable]        . counsel-describe-variable)
-         ([remap apropos-command]          . counsel-apropos)
-         ([remap describe-function]        . counsel-describe-function)
-         ([remap describe-bindings]        . counsel-descbinds)
          :map minibuffer-local-map
-         ("C-r"     . counsel-minibuffer-history)))
+         ("C-r"                       . counsel-minibuffer-history)))
 
 ;;;; Swiper
 
