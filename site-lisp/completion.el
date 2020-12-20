@@ -91,7 +91,7 @@
 
 (use-package counsel
   :hook (ivy-mode . counsel-mode)
-  :after exec-path-from-shell
+  :after exec-path-from-shell ; Due to `exec-path-from-shell-copy-env'
   :custom
   (counsel-find-file-ignore-regexp
    (concat
@@ -123,6 +123,8 @@
          ([remap apropos-command]          . counsel-apropos)
          ([remap describe-function]        . counsel-describe-function)
          ([remap describe-bindings]        . counsel-descbinds)
+         ([remap eshell-list-history]      . counsel-esh-history)
+         ([remap yank-pop]                 . counsel-yank-pop)
          :map minibuffer-local-map
          ("C-r"     . counsel-minibuffer-history)))
 
