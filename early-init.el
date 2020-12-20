@@ -30,10 +30,9 @@
 (when (fboundp 'set-scroll-bar-mode)
   (set-scroll-bar-mode nil))
 
-;; Currently I use menubar.
-;;
-;; (when (fboundp 'menu-bar-mode)
-;;   (menu-bar-mode -1))
+;; Currently I use menubar on graphical mode.
+(when (and (not (display-graphic-p)) (fboundp 'menu-bar-mode))
+  (menu-bar-mode -1))
 
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
 ;; font. By inhibiting this, we easily halve startup times with fonts that are
