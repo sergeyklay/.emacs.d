@@ -28,6 +28,10 @@
 
 ;;; Code:
 
+(defconst my/rg-base-command
+  "rg --ignore-case --no-heading --line-number --color=never"
+  "Base 'rg' command.")
+
 (defun my/find-fd-command (&optional exclude)
   "Fd command to get files in a project.
 When optional EXCLUDE list is given 'fd' will use it as a list
