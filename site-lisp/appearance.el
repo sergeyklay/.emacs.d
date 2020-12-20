@@ -1,13 +1,26 @@
 ;;; appearance.el --- Appearance related settings. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
-;;
-;; This file is NOT part of GNU Emacs.
-;;
-;; License: GPLv3
+
+;; This file is NOT part of Emacs.
+
+;;;; License
+
+;; This file is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -20,11 +33,20 @@
   (load-theme 'kaolin-light t))
 
 (defvar font-face nil)
+(defvar font-size 11)
+
+;; Increase font size on retina displays
+(when (and (display-graphic-p) (<= (frame-char-height) 15))
+  (setq font-size 13))
 
 (cond ((member "JetBrains Mono" (font-family-list))
-       (setq font-face "JetBrains Mono-11:hintstyle=hintfull"))
+       (setq font-face (concat "JetBrains Mono-"
+                               (number-to-string font-size)
+                               ":hintstyle=hintfull")))
       ((member "Source Code Pro" (font-family-list))
-       (setq font-face "Source Code Pro-11:hintstyle=hintfull")))
+       (setq font-face (concat "Source Code Pro-"
+                               (number-to-string font-size)
+                               ":hintstyle=hintfull"))))
 
 (when font-face
   (add-to-list 'initial-frame-alist `(font . ,font-face))
