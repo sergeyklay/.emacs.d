@@ -1,13 +1,26 @@
 ;;; chats.el --- Chats support. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
-;;
-;; This file is NOT part of GNU Emacs.
-;;
-;; License: GPLv3
+
+;; This file is NOT part of Emacs.
+
+;;;; License
+
+;; This file is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License
+;; as published by the Free Software Foundation; either version 3
+;; of the License, or (at your option) any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -92,7 +105,7 @@
 (defun my/search-erc-logs (term)
   "Search the irc logs for a given TERM."
   (interactive "sTerm to search for in the logs: ")
-  (helm-ag erc-logging-directory term))
+  (counsel-rg term erc-logging-directory))
 
 (provide 'chats)
 ;;; chats.el ends here
