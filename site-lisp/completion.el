@@ -107,7 +107,6 @@
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
   :bind (("C-x C-r"                   . counsel-recentf)
-         ("C-x C-i"                   . counsel-imenu)
          ("C-x l"                     . counsel-locate)
          ("C-h u"                     . counsel-unicode-char)
          ("C-h C-l"                   . counsel-find-library)
