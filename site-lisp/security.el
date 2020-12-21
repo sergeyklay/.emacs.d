@@ -1,5 +1,6 @@
 ;;; security.el --- Security related configuration. -*- lexical-binding: t; -*-
 
+;; Copyright (c) 2018 Akira Komamura
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
@@ -35,7 +36,6 @@
 (defvar my/gpg-ssh-auth-sock-set nil
   "Non-nil if a SSH auth sock by the GPG agent is set.")
 
-;; Copyright (c) 2018 Akira Komamura
 (defun my|ensure-gpg-ssh-auth-sock-hook ()
   "Ensure a SSH auth sock by the GPG agent is set."
   (unless my/gpg-ssh-auth-sock-set
