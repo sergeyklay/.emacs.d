@@ -58,15 +58,23 @@
 ;; environment variables being set than when you run it from the finder.  This
 ;; is especially annoying if you set environment variables in .bashrc or
 ;; similar, as that won't affect the "global" Emacs.
+;;
+;; Initially this code was with
+;;
+;;     :if (memq window-system '(mac ns x))
+;;
+;; however, I observed the similar issues in terminal mode, e.g.
+;;
+;;     (getenv "MANPATH")
+;;
+;; returns nil.
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns x))
+  :defer t
   :custom
-  (exec-path-from-shell-arguments '("-l")))
-
-(add-hook 'after-init-hook
-          '(lambda ()
-             (exec-path-from-shell-initialize)
-             (exec-path-from-shell-copy-env "PATH")))
+  (exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-variables
+   '("PYTHONPATH" "INFOPATH" "EMAIL" "MANPATH" "PATH"))
+  :hook (after-init . exec-path-from-shell-initialize))
 
 ;;;; Eshell
 
