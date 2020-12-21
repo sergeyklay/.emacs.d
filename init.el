@@ -46,6 +46,7 @@
 (require 'search-tools) ; Setting up search tools
 (require 'completion)   ; Setting up completion system
 (require 'shells)       ; Shells configuration
+(require 'security)     ; GPG and security related features
 
 ;;;; Project management
 
@@ -77,7 +78,6 @@
 ;;;; Misc
 
 (require 'im)           ; Key maps, IMs and relevant configurations
-(require 'security)     ; GPG and security related features
 (require 'spelling)     ; Spell configuration
 (require 'chats)        ; Chats support
 
