@@ -56,6 +56,21 @@
             (error "Invalid socket: %s" sock))
         (error "The gpgconf didn't return an agent socket")))))
 
+(defun my/gpg-agent-set-env ()
+  "Setting GPG_TTY to get appropriate pinentry for each terminal or GUI frame."
+  (if (display-graphic-p)
+      (setenv "DISPLAY" (terminal-name))
+    (progn (setenv "GPG_TTY" (terminal-name))
+           (setenv "DISPLAY"))))
+
+;; This will work in `after-make-frame-functions' too,
+;; but `window-configuration-change-hook' works more smoothly, as it now
+;; handles the case of switching between existing emacsclient frames as
+;; well as making new ones.
+;;
+;; For more see URL `https://www.emacswiki.org/emacs/EasyPG#toc5'.
+(add-hook 'window-configuration-change-hook #'my/gpg-agent-set-env)
+
 ;;;; EasyPG
 
 (use-package epg
