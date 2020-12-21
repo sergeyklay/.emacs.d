@@ -29,6 +29,7 @@
 ;;; Code:
 
 (require 'directories)
+(require 'security)
 
 (defun my|final-newline-hook()
   "Add final newline when the file is about to be saved."
@@ -44,7 +45,8 @@
 
 (use-package magit
   :after transient
-  :bind (("C-x g" . magit-status)))
+  :bind (("C-x g" . magit-status))
+  :hook (magit-credential . my|ensure-gpg-ssh-auth-sock-hook))
 
 ;;;; Git
 
