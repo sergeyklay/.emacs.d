@@ -33,13 +33,13 @@
 ;;;; SSH / GnuPG
 
 (defvar my/gpg-ssh-auth-sock-set nil
-  "Non-nil if an SSH auth sock by the GPG agent is set.")
+  "Non-nil if a SSH auth sock by the GPG agent is set.")
 
 ;; Copyright (c) 2018 Akira Komamura
 (defun my|ensure-gpg-ssh-auth-sock-hook ()
-  "Ensure and SSH auth sock by the GPG agent is set."
+  "Ensure a SSH auth sock by the GPG agent is set."
   (unless my/gpg-ssh-auth-sock-set
-    (message "Ensure and SSH auth sock by the GPG agent is set...")
+    (message "Ensure a SSH auth sock by the GPG agent is set...")
     (let ((agent-buffer (generate-new-buffer "*gpg-connect-agent*")))
       (unless (= 0 (call-process "gpg-connect-agent"
                                  nil
