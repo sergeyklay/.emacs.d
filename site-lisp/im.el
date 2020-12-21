@@ -63,8 +63,7 @@
 ;;;; `command-log-mode'
 
 (use-package command-log-mode
-  :commands (command-log-mode
-             global-command-log-mode)
+  :commands (command-log-mode global-command-log-mode)
   :custom
   ;; Does opening the command log turn on the mode?
   (command-log-mode-open-log-turns-on-mode t)

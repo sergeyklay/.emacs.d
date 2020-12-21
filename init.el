@@ -62,7 +62,7 @@
 (require 'expansion)
 (require 'syntax-check)
 
-;;;; Configuration of progmodes
+;;;; Language support
 
 (require 'langs-cc)
 (require 'langs-python)
