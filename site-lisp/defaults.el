@@ -29,10 +29,10 @@
 ;;; Code:
 
 (require 'prelude)
-(require 'backup) ; Backup, auto-saving and history configuration
+(require 'backup)
 (require 'directories)
 
-(setq default-directory "~/")
+(setq default-directory (concat (getenv "HOME") "/"))
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 
