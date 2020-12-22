@@ -40,7 +40,7 @@
 (require 'windows)      ; Windows management features
 (require 'modeline)     ; Modeline related configuration
 (require 'defaults)     ; Sane defaults + settings for which there is no group
-(require 'session)      ; Setting for bookmarks, recentf, etc
+(require 'esession)     ; Setting for bookmarks, recentf, etc
 (require 'buffer)       ; Buffer related configuration and utils
 (require 'docs)         ; Setting up documentation features
 (require 'search-tools) ; Setting up search tools

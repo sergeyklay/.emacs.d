@@ -1,4 +1,4 @@
-;;; session.el --- Setting for bookmarks, recentf, etc. -*- lexical-binding: t; -*-
+;;; esession.el --- Setting for bookmarks, recentf, etc. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -92,5 +92,5 @@ do nothing. And suppress the output from `message' and
         ad-do-it
         (setq recentf-list-prev recentf-list)))))
 
-(provide 'session)
-;;; session.el ends here
+(provide 'esession)
+;;; esession.el ends here
