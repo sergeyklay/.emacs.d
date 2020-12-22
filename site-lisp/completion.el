@@ -121,7 +121,7 @@
          ("C-h C-l"                   . counsel-find-library)
          ("C-h C-o"                   . counsel-info-lookup-symbol)
          ("C-c k"                     . counsel-rg)
-         ("C-c C-f"                   . counsel-recentf)
+         ("C-c f"                     . counsel-recentf)
          ("C-c C-h"                   . counsel-command-history)
          ([remap list-buffers]        . counsel-ibuffer)
          ([remap eshell-list-history] . counsel-esh-history)
