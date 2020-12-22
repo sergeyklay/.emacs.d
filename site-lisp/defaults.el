@@ -58,7 +58,13 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
-;; Open URLs with xdg-open
+(custom-set-variables
+ '(confirm-kill-processes nil) ; Prevent annoying query when quit Emacs
+ '(initial-scratch-message "") ; No scratch message
+ '(inhibit-startup-screen t)   ; Disable start-up screen
+ `(custom-file ,(concat user-etc-dir "custom.el")))
+
+;; Open URLs with xdg-open;  TODO: macOs
 (setq browse-url-browser-function 'browse-url-xdg-open)
 
 ;; I use C source to understand and debug built-in functions

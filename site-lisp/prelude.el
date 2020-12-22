@@ -57,13 +57,6 @@
 ;; One less file to load at startup
 (setq site-run-file nil)
 
-(custom-set-variables
- '(confirm-kill-processes nil) ; Prevent annoying query when quit Emacs
- `(custom-file ,(concat user-etc-dir "custom.el")))
-
-;; Disable start-up screen.
-(setq inhibit-startup-screen t)
-
 ;; Actually this project is my personal configuration
 ;; so I use GNU Emacs 27.1 now.
 (eval-when-compile
