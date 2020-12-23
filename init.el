@@ -72,7 +72,7 @@
 (require 'langs-lisp)
 (require 'langs-lua)
 (require 'langs-org)
-(require 'langs-md)
+(require 'langs-markup)
 (require 'langs-grammars)
 
 ;;;; Misc

@@ -1,4 +1,4 @@
-;;; langs-md.el --- Add support for the Markdown. -*- lexical-binding: t; -*-
+;;; langs-markup.el --- Markup syntax configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; Configuration of the Markdown / GFM modes.
+;; Markup syntax configuration.
 
 ;;; Code:
 
@@ -47,6 +47,13 @@
       (or "markdown" "md")
       string-end)
   "Regexp to match files with GFM format.")
+
+;;;; reStructuredText mode
+
+(use-package rst
+  :ensure nil
+  :mode (("\\.rst\\'" . rst-mode)
+         ("\\.rest\\'" . rst-mode)))
 
 ;;;; Markdown mode
 
@@ -71,5 +78,5 @@
   (add-to-list 'auto-mode-alist
 	       `(,gfm-patterns . gfm-mode)))
 
-(provide 'langs-md)
-;;; langs-md.el ends here
+(provide 'langs-markup)
+;;; langs-markup.el ends here
