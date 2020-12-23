@@ -47,6 +47,15 @@
   (python-shell-interpreter "ipython")
   :hook (python-mode . company-mode))
 
+(use-package python-environment
+  :defer t
+  :custom
+  (python-environment-directory (concat user-local-dir ".python-environments"))
+  (python-environment-default-root-name "company-jedi")
+  (python-environment-virtualenv
+   `("virtualenv" "--system-site-packages" "--python"
+          ,(executable-find "python3"))))
+
 (use-package company-jedi
   :commands company-jedi
   :custom
