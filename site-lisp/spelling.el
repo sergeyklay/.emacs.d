@@ -30,20 +30,17 @@
 
 (require 'directories)
 
-(defconst hunspell-executable-path (executable-find "hunspell")
-  "The hunspell executable path on this system.")
-
 ;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
 ;; them.  For more info on installing dictionaries see
 ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
 (use-package ispell
-  :if hunspell-executable-path
+  :if (executable-find "hunspell")
   :ensure nil
   :custom
   ;; Save personal dictionary without asking for confirmation.
   (ispell-silently-savep t)
   ;; Full path to the hunspell executable
-  (ispell-program-name hunspell-executable-path)
+  (ispell-program-name (executable-find "hunspell"))
   ;; The default dictionary I use.  To see available dictionaries
   ;; use 'hunspell -D'.
   (ispell-local-dictionary "british")
@@ -61,11 +58,12 @@
   (when (string-equal system-type "darwin")
     ;; Set dictionary file name.  Without this variable you'll see on macOs:
     ;; 'Can't open affix or dictionary files for dictionary named "XXX"'
+    ;; TODO(serghei): Still does not work
     (setenv "DICTIONARY" "en_GB")))
 
 (use-package flyspell
+  :if (executable-find "hunspell")
   :ensure nil
-  :if hunspell-executable-path
   :custom
   ;; Be silent when checking words.
   (flyspell-issue-message-flag nil)
