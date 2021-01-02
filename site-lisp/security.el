@@ -130,6 +130,11 @@
     (unless (file-exists-p passwd-dir)
       (make-directory passwd-dir t))))
 
+;; Ivy interface for pass.
+(use-package ivy-pass
+  :commands ivy-pass
+  :bind ("C-c y p" . ivy-pass))
+
 (use-package auth-password-store
   :after pass
   :disabled t
