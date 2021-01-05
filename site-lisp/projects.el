@@ -50,13 +50,10 @@
   (projectile-completion-system 'ivy)
   (projectile-known-projects-file
    (concat user-cache-dir "projectile-bookmarks.eld"))
+  (projectile-globally-ignored-directories
+   my/globally-ignored-directories)
   :config
   (projectile-mode 1)
-  ;; Ignore directories
-  (setq projectile-globally-ignored-directories
-	(append '("__pycache__" "elpa" ".cache"
-                  "node_modules" "bower_components")
-		projectile-globally-ignored-directories))
   ;; Ignore files
   (setq projectile-globally-ignored-files
 	(append '(".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH")
