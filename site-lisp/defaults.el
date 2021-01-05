@@ -64,6 +64,9 @@
  '(inhibit-startup-screen t)   ; Disable start-up screen
  `(custom-file ,(concat user-etc-dir "custom.el")))
 
+;; Configure the Scratch Buffer's Mode
+(setq initial-major-mode 'text-mode)
+
 ;; Open URLs with xdg-open;  TODO: macOs
 (setq browse-url-browser-function 'browse-url-xdg-open)
 
