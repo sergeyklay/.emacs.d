@@ -106,14 +106,15 @@
     "\\|\\(?:\\.zwc$\\)"))
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
-  (counsel-rg-base-command
-   '("rg"
+  (counsle-rg-base-command
+   `("rg"
      "--max-columns" "240" ; Don't print the lines longer than 240 bytes
      "--with-filename"     ; Display the file path for matches
      "--no-heading"        ; Don't group matches by each file
      "--line-number"       ; Show line numbers (1-based)
      "--color" "never"     ; Colors  will never be used
      "--hidden"            ; Search hidden files and directories
+     ,(my/format-rg-exclude my/globally-ignored-directories)
      "%s"))
   :bind (("C-x C-i"                   . counsel-imenu)
          ("C-x l"                     . counsel-locate)
