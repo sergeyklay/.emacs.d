@@ -103,7 +103,9 @@
     ;; macOs' custom attributes of its containing folder
     "\\|\\(?:^\\.DS_Store$\\)"
     ;; zsh compiled functions
-    "\\|\\(?:\\.zwc$\\)"))
+    "\\|\\(?:\\.zwc$\\)"
+    ;; Python bytecode
+    "\\|\\(?:^__pycache__/?$\\)"))
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
   (counsle-rg-base-command
