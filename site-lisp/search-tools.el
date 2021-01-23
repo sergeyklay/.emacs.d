@@ -34,10 +34,11 @@
 
 (defconst my/globally-ignored-directories
   '("__pycache__" "elpa" ".cache" "node_modules"
-    "bower_components" "__pycache__"
-    ".idea" ".vscode" ".ensime_cache" ".eunit" ".git" ".hg"
-    ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn"
-    ".stack-work" ".ccls-cache" ".cache" ".clangd")
+    "bower_components"  ".idea" ".vscode"
+    ".ensime_cache" ".eunit" ".git" ".hg"
+    ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox"
+    ".svn" ".stack-work" ".ccls-cache" ".cache"
+    ".clangd")
   "Globally excluded directories.")
 
 (defun my/find-fd-command (&optional exclude)
