@@ -71,7 +71,6 @@
 (require 'langs-conf)
 (require 'langs-lisp)
 (require 'langs-lua)
-(require 'langs-org)
 (require 'langs-markup)
 (require 'langs-grammars)
 
