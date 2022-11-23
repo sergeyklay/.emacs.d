@@ -46,6 +46,10 @@
 (require 'shells)       ; Shells configuration
 (require 'security)     ; GPG and security related features
 
+;;;; Project management
+
+(require 'projects)
+
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
   (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
