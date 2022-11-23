@@ -38,5 +38,6 @@
 (require 'windows)      ; Windows management features
 (require 'modeline)     ; Modeline related configuration
 (require 'defaults)     ; Sane defaults + settings for which there is no group
+(require 'esession)     ; Setting for bookmarks, recentf, etc
 
 ;;; init.el ends here
