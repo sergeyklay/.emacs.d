@@ -43,5 +43,10 @@
 (require 'docs)         ; Setting up documentation features
 (require 'search-tools) ; Setting up search tools
 (require 'completion)   ; Setting up completion system
+(require 'shells)       ; Shells configuration
+
+;; Load settings specific for the current site
+(when (file-exists-p user-host-dir)
+  (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
 
 ;;; init.el ends here
