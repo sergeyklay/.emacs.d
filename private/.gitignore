@@ -5,8 +5,9 @@
 #
 # https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
 
-# Use this as your own wish list or a temporary buffer.
-LATER
+# Ignore all files
+*
 
-# Autosaves.
-*.*~
+# Except these ones.
+!README.org
+!.gitignore
