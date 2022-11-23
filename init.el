@@ -44,6 +44,7 @@
 (require 'search-tools) ; Setting up search tools
 (require 'completion)   ; Setting up completion system
 (require 'shells)       ; Shells configuration
+(require 'security)     ; GPG and security related features
 
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
