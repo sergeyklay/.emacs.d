@@ -41,5 +41,6 @@
 (require 'esession)     ; Setting for bookmarks, recentf, etc
 (require 'buffer)       ; Buffer related configuration and utils
 (require 'docs)         ; Setting up documentation features
+(require 'search-tools) ; Setting up search tools
 
 ;;; init.el ends here
