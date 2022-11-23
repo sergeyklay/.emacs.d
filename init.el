@@ -33,4 +33,6 @@
 ;; Begin initialization
 (require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
 
+(require 'defaults)     ; Sane defaults + settings for which there is no group
+
 ;;; init.el ends here
