@@ -1,4 +1,4 @@
-;;; init.el --- Initialization file. -*- lexical-binding: t; -*-
+;;; modeline.el --- Modeline related configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -24,19 +24,16 @@
 
 ;;; Commentary:
 
-;;   This file is used to initialize GNU Emacs for my daily needs.
-;; I started this project on 4 March 2019 from this commit:
-;; eb11ce25b0866508e023db4b8be6cca536cd3044
+;; Modeline related configuration for GNU Emacs.
 
 ;;; Code:
 
-;; Begin initialization
-(require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
+;; Activate column and line number in the modeline
+(column-number-mode t)
+(line-number-mode t)
 
-(require 'packaging)    ; Package management stuff and various related settings
-(require 'appearance)   ; Set up appearance as soon as we can
-(require 'windows)      ; Windows management features
-(require 'modeline)     ; Modeline related configuration
-(require 'defaults)     ; Sane defaults + settings for which there is no group
+(use-package diminish
+  :after use-package)
 
-;;; init.el ends here
+(provide 'modeline)
+;;; modeline.el ends here
