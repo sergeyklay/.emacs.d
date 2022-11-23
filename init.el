@@ -42,5 +42,6 @@
 (require 'buffer)       ; Buffer related configuration and utils
 (require 'docs)         ; Setting up documentation features
 (require 'search-tools) ; Setting up search tools
+(require 'completion)   ; Setting up completion system
 
 ;;; init.el ends here
