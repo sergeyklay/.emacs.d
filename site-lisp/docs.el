@@ -1,4 +1,4 @@
-;;; init.el --- Initialization file. -*- lexical-binding: t; -*-
+;;; docs.el --- Setting up documentation features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -24,22 +24,29 @@
 
 ;;; Commentary:
 
-;;   This file is used to initialize GNU Emacs for my daily needs.
-;; I started this project on 4 March 2019 from this commit:
-;; eb11ce25b0866508e023db4b8be6cca536cd3044
+;; Setting up documentation features.
 
 ;;; Code:
 
-;; Begin initialization
-(require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
+;;;; Eldoc customizations.
 
-(require 'packaging)    ; Package management stuff and various related settings
-(require 'appearance)   ; Set up appearance as soon as we can
-(require 'windows)      ; Windows management features
-(require 'modeline)     ; Modeline related configuration
-(require 'defaults)     ; Sane defaults + settings for which there is no group
-(require 'esession)     ; Setting for bookmarks, recentf, etc
-(require 'buffer)       ; Buffer related configuration and utils
-(require 'docs)         ; Setting up documentation features
+(use-package eldoc
+  :ensure nil
+  :defer t
+  :commands turn-on-eldoc-mode
+  :hook
+  ((eval-expression-minibuffer . eldoc-mode)
+   (ielm-mode . eldoc-mode))
+  :config
+  (setq
+   ;; Show ElDoc messages in the echo area in 1/3 of a scend.
+   eldoc-idle-delay 0.3
+   ;; Always truncate ElDoc messages to one line.
+   ;; This prevents the echo area from resizing itself unexpectedly
+   ;; when point is on a variable with a multiline docstring.
+   eldoc-echo-area-use-multiline-p nil
+   ;; Don’t show ElDoc in the mode line.
+   eldoc-minor-mode-string nil))
 
-;;; init.el ends here
+(provide 'docs)
+;;; docs.el ends here
