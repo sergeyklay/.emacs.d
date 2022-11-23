@@ -50,6 +50,10 @@
 
 (require 'projects)
 
+;;;; IDE Features
+
+(require 'devtools)
+
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
   (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
