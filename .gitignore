@@ -11,6 +11,9 @@
 # Use this as your own wish list or a temporary buffer.
 LATER
 
+# I USE the file locking feature.
+.\#*
+
 # Autosaves.
 *.*~
 
