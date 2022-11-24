@@ -1,6 +1,5 @@
 ;;; editor.el --- Editor related configuration. -*- lexical-binding: t; -*-
 
-
 ;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
@@ -55,9 +54,7 @@
 ;; Right margin bar.
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
-
 (use-package rainbow-delimiters)
-
 
 ;;;; Show Line Numbers
 
@@ -67,7 +64,6 @@
   :init
   (setq display-line-numbers-type t
 	display-line-numbers-width 4))
-
 
 ;;;; Save point position between sessions
 
