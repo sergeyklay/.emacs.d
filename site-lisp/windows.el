@@ -123,7 +123,6 @@ For non-window systems will return frame dimesion."
   (split-window-vertically)
   (other-window 1 nil))
 
-
 (defun my/hsplit-other-window ()
   "Split the window horizontally and switch to that window."
   (interactive)

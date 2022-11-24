@@ -1,4 +1,4 @@
-;;; vcs.el --- VCS related features. -*- lexical-binding: t
+;;; vcs.el --- VCS related features. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -27,7 +27,6 @@
 ;; VCS related features for GNU Emacs.
 
 ;;; Code:
-
 
 (require 'directories)
 (require 'security)
