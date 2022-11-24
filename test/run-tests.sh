@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 #
-# Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+# Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
