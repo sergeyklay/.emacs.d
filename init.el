@@ -55,6 +55,7 @@
 (require 'devtools)
 (require 'build-tools)
 (require 'vcs)
+(require 'editor)
 
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
