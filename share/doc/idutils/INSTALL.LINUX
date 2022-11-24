@@ -1,0 +1,8 @@
+git clone git://git.savannah.gnu.org/idutils.git
+cd idutils
+./bootstrap
+
+CFLAGS='-O2 -pipe -march=native' ./configure
+
+make -j $(getconf _NPROCESSORS_ONLN)
+make install
