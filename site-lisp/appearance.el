@@ -28,10 +28,9 @@
 
 ;;; Code:
 
-; TODO: fixme
-;(use-package kaolin-themes
-;  :config
-;  (load-theme 'kaolin-dark t))
+(use-package kaolin-themes
+  :config
+  (load-theme 'kaolin-dark t))
 
 (defvar font-face nil)
 (defvar font-size 11)
