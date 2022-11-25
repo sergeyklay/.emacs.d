@@ -80,6 +80,7 @@ include_dirs = (
 exlude_files = (
     '.dir-locals.el',
     'package-quickstart.el',
+    'show-point-mode.el',
 )
 
 bad_licenses = []
