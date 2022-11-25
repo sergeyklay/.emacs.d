@@ -19,6 +19,7 @@ include default.mk
 clean:
 	$(RM) *.elc
 	$(RM) site-lisp/*.elc
+	$(RM) test/*.elc
 	$(RM) GPATH GRTAGS GTAGS
 	$(RM) -r elpa
 
@@ -29,3 +30,6 @@ install: init.el
 .PHONY: build
 build: init.el test/bc.el
 	$(RUNEMACS) --eval '(let ((debug-on-error t))(run-hooks (quote after-init-hook)))' --load init.el --load ~/.emacs.d/test/bc.el
+
+.PHONY: test
+test: build
