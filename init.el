@@ -65,6 +65,12 @@
 
 (require 'langs-cc)
 (require 'langs-python)
+(require 'langs-human)
+(require 'langs-conf)
+(require 'langs-lisp)
+(require 'langs-lua)
+(require 'langs-markup)
+(require 'langs-grammars)
 
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
