@@ -72,6 +72,12 @@
 (require 'langs-markup)
 (require 'langs-grammars)
 
+;;;; Misc
+
+(require 'im)           ; Key maps, IMs and relevant configurations
+(require 'spelling)     ; Spell configuration
+(require 'chats)        ; Chats support
+
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
   (mapc 'load (directory-files user-host-dir nil "^[^#].*el$")))
