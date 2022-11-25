@@ -33,12 +33,6 @@
 (eval-when-compile
   (require 'rx))
 
-;; Does not work in CLI mode
-;; (custom-set-variables
-;;  '(explicit-shell-file-name "/bin/zsh") ; TODO: check zsh existence
-;;  '(explicit-zsh-args '("--interactive" "--login"))
-;;  '(comint-process-echoes 0))
-
 ;; -i is for interactive (I don't use it)
 ;; -c tells bash to read whatever commands follow
 ;; -l means invoke login shells, so that .profile or .bash_profile is read
@@ -47,7 +41,7 @@
 ;;
 ;; - `https://github.com/bbatsov/projectile/issues/1097'
 ;; - `https://emacs.stackexchange.com/q/3447/16592'
-(setq shell-command-switch "-lc") ; Sortout with config above
+(setq shell-command-switch "-lc")
 
 ;;;; Exec Paths
 

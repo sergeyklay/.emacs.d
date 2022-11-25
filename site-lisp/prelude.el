@@ -58,7 +58,7 @@
 (setq site-run-file nil)
 
 ;; Actually this project is my personal configuration
-;; so I use GNU Emacs 28.1 now.
+;; so I use GNU Emacs 28.2 now.
 (eval-when-compile
   (and (version< emacs-version "28.2")
        (error

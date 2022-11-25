@@ -32,8 +32,6 @@
 
 ;;;; Constants
 
-;;;; Constants
-
 (defconst pandoc-executable-path (executable-find "pandoc")
   "The pandoc executable path on this system.")
 
