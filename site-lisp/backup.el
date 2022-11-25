@@ -28,7 +28,8 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'directories))
 
 ;;;; Backup
 
