@@ -75,12 +75,6 @@
   :hook (yaml-mode . yaml-mode-outline-hook)
   :interpreter ("yml" . yml-mode))
 
-;;;; Autoconf
-
-(use-package autoconf-mode
-  :ensure nil
-  :mode "/config\\.\\(ac\\|in\\|m4\\)\\'")
-
 ;;;; Nginx
 
 (use-package nginx-mode
