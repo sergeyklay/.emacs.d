@@ -44,3 +44,6 @@
                                     "package-quickstart.el"
                                     "early-init.el")))
         (byte-compile-file file)))))
+
+(provide 'bc)
+;;; bc.el ends here

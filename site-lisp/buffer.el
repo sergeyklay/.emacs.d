@@ -37,7 +37,7 @@
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
 (defun my/kill-dired-buffers ()
-  "Kill all dired buffers."
+  "Kill all Dired buffers."
   (interactive)
   (mapc (lambda (buffer)
           (when (eq 'dired-mode
