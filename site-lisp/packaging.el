@@ -33,6 +33,32 @@
 (eval-when-compile
   (require 'prelude))
 
+(defun my/package-initialize ()
+  "Actviate all packages (in particular autoloads)."
+  ;; Package loading optimization.
+  ;; No need to activate all the packages so early.
+  (when (>= emacs-major-version 27)
+    (setq package-quickstart t))
+  ;; `esup' need call `package-initialize'
+  ;; For more see URL `https://github.com/jschaf/esup/issues/84'
+  (when (or (featurep 'esup-child)
+            (daemonp)
+            noninteractive)
+    (package-initialize)))
+
+(my/package-initialize)
+
+(custom-set-variables
+ ;; Setting up package archives.
+ '(package-archives
+   '(("melpa"    . "https://melpa.org/packages/")
+     ("m-stable" . "https://stable.melpa.org/packages/")
+     ("gnu"      . "https://elpa.gnu.org/packages/")))
+ ;; Priorities. Default priority is 0.
+ '(package-archive-priorities
+   '(("m-stable" . 10)
+     ("melpa"    . 20))))
+
 ;; Install use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)

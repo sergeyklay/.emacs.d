@@ -59,25 +59,5 @@
 (unless (eq system-type 'gnu/linux)
   (setq command-line-x-option-alist nil))
 
-(custom-set-variables
- ;; Setting up package archives.
- '(package-archives
-   '(("melpa"    . "https://melpa.org/packages/")
-     ("m-stable" . "https://stable.melpa.org/packages/")
-     ("gnu"      . "https://elpa.gnu.org/packages/")))
- ;; Priorities. Default priority is 0.
- '(package-archive-priorities
-   '(("m-stable" . 10)
-     ("melpa"    . 20))))
-
-;; Activate all packages (in particular autoloads).  Use `package-quickstart'
-;; feature in Emacs 27 so we only need to `package-initialize' if on Emacs 26
-;; and below.  Take a look at $EMACS_CODEBASE/lisp/startup.el to refresh your
-;; memory.  The gist is that `package-activate-all' is called in Emacs 27 which
-;; reads `package-quickstart'.
-(if (>= emacs-major-version 27)
-    (setq package-quickstart t)
-  (package-initialize))
-
 (provide 'early-init)
 ;;; early-init.el ends here
