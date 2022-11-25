@@ -64,6 +64,7 @@
 ;;;; Language support
 
 (require 'langs-cc)
+(require 'langs-python)
 
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
