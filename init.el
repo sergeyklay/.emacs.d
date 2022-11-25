@@ -57,6 +57,7 @@
 (require 'vcs)
 (require 'editor)
 (require 'tags)
+(require 'complit)
 
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
