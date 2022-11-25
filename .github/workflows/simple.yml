@@ -56,11 +56,11 @@ jobs:
         with:
           version: ${{ matrix.emacs_version }}
 
-      - name: Install packages
-        run: make install
-
       - name: Prepare home dir
         run: rm -rf /home/runner/.emacs.d && ln -s $GITHUB_WORKSPACE /home/runner/.emacs.d
+
+      - name: Install packages
+        run: make install
 
       - name: Run tests
         if: matrix.allow_failure != true
