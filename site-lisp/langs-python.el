@@ -45,7 +45,7 @@
   :after company
   :custom
   (python-shell-interpreter-args "-i --simple-prompt --pprint")
-  (python-shell-interpreter "ipython")
+  (python-shell-interpreter "/opt/homebrew/bin/python3") ; TODO: make ot more universal
   :hook (python-mode . company-mode))
 
 (use-package python-environment
@@ -55,24 +55,30 @@
   (python-environment-default-root-name "company-jedi")
   (python-environment-virtualenv
    `("virtualenv" "--system-site-packages" "--python"
-     ,(executable-find "python3"))))
+     ;; TODO: make it more universal
+     ;; ,(executable-find "python3")
+     "/opt/homebrew/bin/python3"
+     )))
 
-(use-package company-jedi
-  :commands company-jedi
-  :custom
-  (jedi:use-shortcuts t)
-  (jedi:complete-on-dot t)
-  :config
-  (defun company-jedi-hook()
-    "Add `company-jedi' to the backends of `company-mode'."
-    (add-to-list 'company-backends 'company-jedi))
-  :hook ((python-mode . jedi:setup)
-         (python-mode . company-jedi-hook)))
+;; TODO: Refactor this. Does not work
+;; (use-package company-jedi
+;;   :commands company-jedi
+;;   :custom
+;;   (jedi:use-shortcuts t)
+;;   (jedi:complete-on-dot t)
+;;   ;; TODO: make it more universal
+;;   (jedi:server-command '("/opt/homebrew/bin/python3" "JEDI:SOURCE-DIR/jediepcserver.py"))
+;;   :config
+;;   (defun company-jedi-hook()
+;;     "Add `company-jedi' to the backends of `company-mode'."
+;;     (add-to-list 'company-backends 'company-jedi))
+;;   :hook ((python-mode . jedi:setup)
+;;          (python-mode . company-jedi-hook)))
 
-;; Load custom Jedi configuration
-(with-eval-after-load 'company-jedi
-  (when (file-exists-p jedi-custom-file)
-    (load jedi-custom-file nil 'nomessage)))
+;; ;; Load custom Jedi configuration
+;; (with-eval-after-load 'company-jedi
+;;   (when (file-exists-p jedi-custom-file)
+;;     (load jedi-custom-file nil 'nomessage)))
 
 ;; Tidy up (require python package 'autopep8').
 (use-package py-autopep8
