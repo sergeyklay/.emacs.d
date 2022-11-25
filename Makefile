@@ -20,6 +20,9 @@ clean:
 	$(RM) *.elc
 	$(RM) site-lisp/*.elc
 	$(RM) test/*.elc
+
+.PHONY: distclean
+distclean: clean
 	$(RM) GPATH GRTAGS GTAGS
 	$(RM) -r elpa
 
