@@ -23,15 +23,20 @@ clean:
 	$(RM) GPATH GRTAGS GTAGS
 	$(RM) -r elpa
 
- .PHONY: install
+.PHONY: install
 install: init.el
-	$(RUNEMACS) --load $<
+	$(RUNEMACS) --load $(TOP)/$<
 	$(info All GNU Emacs packages have been installed.)
 
 .PHONY: build
 build: init.el test/bc.el
-	$(RUNEMACS) --eval $(INIT_CODE) $(patsubst %,--load $(TOP)/%, $^)
+	DEBUG=1 $(RUNEMACS) --eval $(INIT_CODE) $(patsubst %,--load $(TOP)/%, $^)
 	$(info All Elisp files have been compiled.)
 
+.PHONY: checkdoc
+checkdoc: test/checkdoc.el
+	$(RUNEMACS) --load $(TOP)/$<
+	$(info All Elisp files have been checked for style errors.)
+
 .PHONY: test
-test: build
+test: checkdoc build
