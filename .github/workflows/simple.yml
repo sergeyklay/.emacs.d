@@ -56,17 +56,16 @@ jobs:
         with:
           version: ${{ matrix.emacs_version }}
 
+      - name: Install packages
+        run: make install
+
       - name: Run tests
         if: matrix.allow_failure != true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./test/run-tests.sh --debug
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && make test
 
       - name: Run tests
         if: matrix.allow_failure == true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (./test/run-tests.sh --debug || true)
-
-      - name: Run Shell Check
-        if: always()
-        run: shellcheck ./test/run-tests.sh
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (make test || true)
 
       - name: License check
         run: python3 test/check-licenses.py
