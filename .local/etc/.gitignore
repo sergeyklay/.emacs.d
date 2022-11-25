@@ -8,6 +8,9 @@
 # Ignore all files except
 *
 
+# abbrev definition file
+!abbrev-defs.el
+
 # and these ones
 !/hosts
 !.gitignore
