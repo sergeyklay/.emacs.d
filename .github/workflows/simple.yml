@@ -59,13 +59,16 @@ jobs:
       - name: Install packages
         run: make install
 
+      - name: Prepare home dir
+        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d
+
       - name: Run tests
         if: matrix.allow_failure != true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && make test
+        run: make test
 
       - name: Run tests
         if: matrix.allow_failure == true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (make test || true)
+        run: make test || true
 
       - name: License check
         run: python3 test/check-licenses.py
