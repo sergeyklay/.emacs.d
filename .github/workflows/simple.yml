@@ -60,7 +60,7 @@ jobs:
         run: make install
 
       - name: Prepare home dir
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d
+        run: rm -rf /home/runner/.emacs.d && ln -s $GITHUB_WORKSPACE /home/runner/.emacs.d
 
       - name: Run tests
         if: matrix.allow_failure != true

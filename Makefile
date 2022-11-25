@@ -25,11 +25,13 @@ clean:
 
  .PHONY: install
 install: init.el
-	$(RUNEMACS) --load init.el
+	$(RUNEMACS) --load $<
+	$(info All GNU Emacs packages have been installed.)
 
 .PHONY: build
 build: init.el test/bc.el
-	$(RUNEMACS) --eval '(let ((debug-on-error t))(run-hooks (quote after-init-hook)))' --load init.el --load ~/.emacs.d/test/bc.el
+	$(RUNEMACS) --eval $(INIT_CODE) $(patsubst %,--load $(TOP)/%, $^)
+	$(info All Elisp files have been compiled.)
 
 .PHONY: test
 test: build

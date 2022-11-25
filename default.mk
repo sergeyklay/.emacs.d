@@ -13,11 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this file.  If not, see <https://www.gnu.org/licenses/>.
 
+TOP := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
 # Run “make build” by default
 .DEFAULT_GOAL = build
 
 EMACS  ?= emacs
 
+INIT_CODE = '(let ((debug-on-error t)(user-emacs-directory default-directory))(run-hooks (quote after-init-hook)))'
 EMACSFLAGS ?=
 EMACSBATCH = $(EMACS) -Q --batch $(EMACSFLAGS)
 RUNEMACS   =
