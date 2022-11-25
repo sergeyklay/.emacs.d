@@ -59,6 +59,7 @@
 (require 'tags)
 (require 'complit)
 (require 'expansion)
+(require 'syntax-check)
 
 ;; Load settings specific for the current site
 (when (file-exists-p user-host-dir)
