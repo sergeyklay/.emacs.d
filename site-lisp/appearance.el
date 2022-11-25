@@ -52,13 +52,11 @@
   (add-to-list 'initial-frame-alist `(font . ,font-face))
   (add-to-list 'default-frame-alist `(font . ,font-face)))
 
-(use-package emacs
-  :ensure nil
-  :custom
-  (x-underline-at-descent-line t)
-  (underline-minimum-offset 1)
-  ;; Don't beep at me.
-  (visible-bell t))
+(custom-set-variables
+ '(visible-bell t)                 ; Don't beep at me
+ '(underline-minimum-offset 1)     ; Min distance between baseline and underline
+ '(x-underline-at-descent-line t)) ; Draw the underline at the same place as the
+                                   ; descent line
 
 ;; Throw away the mouse when typing.
 ;; Move the mouse to the corner only if the cursor gets too close,
