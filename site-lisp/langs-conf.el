@@ -1,6 +1,6 @@
 ;;; langs-conf.el --- Configuration like languages. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -75,12 +75,6 @@
   :hook (yaml-mode . yaml-mode-outline-hook)
   :interpreter ("yml" . yml-mode))
 
-;;;; Autoconf
-
-(use-package autoconf-mode
-  :ensure nil
-  :mode "/config\\.\\(ac\\|in\\|m4\\)\\'")
-
 ;;;; Nginx
 
 (use-package nginx-mode
@@ -92,7 +86,6 @@
   :hook
   ((nginx-mode . company-mode)
    (nginx-mode . company-nginx-keywords)))
-
 
 ;;;; conf-mode
 
@@ -109,13 +102,6 @@
 ;; https://github.com/preetpalS/emacs-dotenv-mode/tree/master
 (use-package dotenv-mode
   :mode (("\\.env\\..*\\'" . dotenv-mode)))
-
-;;;; Systemd
-
-;; Major mode for editing systemd units
-;; https://github.com/holomorph/systemd-mode
-(use-package systemd
-  :defer t)
 
 (provide 'langs-conf)
 ;;; langs-conf.el ends here

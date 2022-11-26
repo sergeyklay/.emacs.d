@@ -34,8 +34,8 @@
 
 ;; add point display to mode-line construct
 (add-to-list 'mode-line-position
-	     '(show-point-mode (5 (:eval (format "(%d)" (point)))))
-	     'append)
+             '(show-point-mode (5 (:eval (format "(%d)" (point)))))
+             'append)
 
 
 (define-minor-mode show-point-mode

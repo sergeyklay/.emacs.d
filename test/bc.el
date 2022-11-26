@@ -1,4 +1,4 @@
-;;; build-tools.el --- Build tools support. -*- lexical-binding: t; -*-
+;; bc.el --- Byte compile and syntax check the code. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
@@ -24,32 +24,26 @@
 
 ;;; Commentary:
 
-;; Support of various build tools.
+;; Byte compile and syntax check the code.
 
 ;;; Code:
 
-(use-package cmake-mode
-  :mode "CMakeLists\\.txt\\'"
-  :mode "\\.cmake\\'"
-  :hook
-  ((cmake-mode . company-mode))
-  :config
-  (setq cmake-tab-width tab-width))
+(let ((files (directory-files-recursively
+              "~/.emacs.d"
+              "^[^#].*el$"
+              nil
+              (lambda (path)
+                (let ((dir (file-name-base path)))
+                  (and
+                   (not (string-prefix-p "elpa" dir))
+                   (not (string-prefix-p ".git" dir))
+                   (not (string-prefix-p ".local" dir))))))))
+  (dolist (file files)
+    (let ((basename (file-name-nondirectory file)))
+      (when (not (member basename '(".dir-locals.el"
+                                    "package-quickstart.el"
+                                    "early-init.el")))
+        (byte-compile-file file)))))
 
-(use-package cmake-font-lock
-  :hook (cmake-mode . cmake-font-lock-activate))
-
-(use-package company-cmake
-  :ensure nil                 ; Included in company
-  :after (company cmake-mode)
-  :config
-  (push 'company-cmake company-backends))
-
-(use-package make-mode
-  :ensure nil
-  :defer t
-  :after (company)
-  :hook (makefile-mode . company-mode))
-
-(provide 'build-tools)
-;;; build-tools.el ends here
+(provide 'bc)
+;;; bc.el ends here

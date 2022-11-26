@@ -1,6 +1,6 @@
 ;;; spelling.el --- Spell checking on the fly. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -28,7 +28,8 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'directories))
 
 ;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
 ;; them.  For more info on installing dictionaries see

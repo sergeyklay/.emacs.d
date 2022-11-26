@@ -1,6 +1,6 @@
 ;;; packaging.el --- Package management. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -33,10 +33,31 @@
 (eval-when-compile
   (require 'prelude))
 
-;; WARNING: This broke `esup' command usage.
-;; TODO(sergei): Fix me
-(load "~/.emacs.d/early-init.el")
-(require 'early-init)
+(defun my/package-initialize ()
+  "Actviate all packages (in particular autoloads)."
+  ;; Package loading optimization.
+  ;; No need to activate all the packages so early.
+  (when (>= emacs-major-version 27)
+    (setq package-quickstart t))
+  ;; `esup' need call `package-initialize'
+  ;; For more see URL `https://github.com/jschaf/esup/issues/84'
+  (when (or (featurep 'esup-child)
+            (daemonp)
+            noninteractive)
+    (package-initialize)))
+
+(my/package-initialize)
+
+(custom-set-variables
+ ;; Setting up package archives.
+ '(package-archives
+   '(("melpa"    . "https://melpa.org/packages/")
+     ("m-stable" . "https://stable.melpa.org/packages/")
+     ("gnu"      . "https://elpa.gnu.org/packages/")))
+ ;; Priorities. Default priority is 0.
+ '(package-archive-priorities
+   '(("m-stable" . 10)
+     ("melpa"    . 20))))
 
 ;; Install use-package
 (unless (package-installed-p 'use-package)

@@ -1,5 +1,4 @@
-
-# Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+# Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,7 +29,7 @@ jobs:
 
       matrix:
         emacs_version:
-          - '27.1'
+          - '28.2'
           - snapshot
         include:
           - emacs_version: snapshot
@@ -57,17 +56,19 @@ jobs:
         with:
           version: ${{ matrix.emacs_version }}
 
+      - name: Prepare home dir
+        run: rm -rf /home/runner/.emacs.d && ln -s $GITHUB_WORKSPACE /home/runner/.emacs.d
+
+      - name: Install packages
+        run: make install
+
       - name: Run tests
         if: matrix.allow_failure != true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && ./test/run-tests.sh --debug
+        run: make test
 
       - name: Run tests
         if: matrix.allow_failure == true
-        run: ln -s $GITHUB_WORKSPACE $HOME/.emacs.d && (./test/run-tests.sh --debug || true)
-
-      - name: Run Shell Check
-        if: always()
-        run: shellcheck ./test/run-tests.sh
+        run: make test || true
 
       - name: License check
         run: python3 test/check-licenses.py

@@ -1,4 +1,4 @@
-# Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+# Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@ import mmap
 
 
 copyright_elisp = '''
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -44,7 +44,7 @@ copyright_elisp = '''
 '''
 
 copyright_generic = '''
-# Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+# Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -70,7 +70,7 @@ patterns = {
 
 include_dirs = (
     '.',
-    '.github',
+    # '.github', TODO: fixme
     'bin',
     'share',
     'site-lisp',
@@ -80,7 +80,7 @@ include_dirs = (
 exlude_files = (
     '.dir-locals.el',
     'package-quickstart.el',
-    'show-point-mode.el'
+    'show-point-mode.el',
 )
 
 bad_licenses = []

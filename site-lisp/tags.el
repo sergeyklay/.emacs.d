@@ -1,6 +1,6 @@
 ;;; tags.el --- Setup tags. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -86,6 +86,7 @@
 ;;   --program-transform-name='s/^ctags$/ctags.emacs/'
 
 (use-package ggtags
+  ;; TODO: unable to find these executables in CLI mode
   :if (and global-executable-path gtags-executable-path)
   :commands (ggtags-mode)
   :custom

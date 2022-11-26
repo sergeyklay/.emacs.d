@@ -1,7 +1,7 @@
 ;;; security.el --- Security related configuration. -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2018 Akira Komamura
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -110,36 +110,6 @@
   (auth-sources
    `(,(concat user-local-dir "etc/.authinfo.gpg")
      "~/.authinfo" "~/.authinfo.gpg")))
-
-;;;; Password store
-
-;; I use 'pass' on all my machines, thus I prefer avoid here
-;; any check for speed Emacs load reasons.
-(use-package password-store
-  :defer 5
-  :commands (password-store-insert
-             password-store-copy
-             password-store-get))
-
-;; See https://www.passwordstore.org/
-(use-package pass
-  :commands (pass pass-view-mode)
-  :mode ("\\.passwords/.*\\.gpg\\'" . pass-view-mode)
-  :init
-  (let ((passwd-dir "~/.password-store"))
-    (unless (file-exists-p passwd-dir)
-      (make-directory passwd-dir t))))
-
-;; Ivy interface for pass.
-(use-package ivy-pass
-  :commands ivy-pass
-  :bind ("C-c y p" . ivy-pass))
-
-(use-package auth-password-store
-  :after pass
-  :disabled t
-  :config
-  (auth-pass-enable))
 
 (provide 'security)
 ;;; security.el ends here

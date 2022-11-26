@@ -1,6 +1,6 @@
 ;;; langs-python.el --- Setup Python for Emacs. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -34,7 +34,8 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'directories))
 
 (defconst jedi-custom-file (concat user-etc-dir "jedi-custom.el")
   "User-wide file to customize Jedi configuration.")
@@ -44,7 +45,7 @@
   :after company
   :custom
   (python-shell-interpreter-args "-i --simple-prompt --pprint")
-  (python-shell-interpreter "ipython")
+  (python-shell-interpreter "python3")
   :hook (python-mode . company-mode))
 
 (use-package python-environment
@@ -54,24 +55,7 @@
   (python-environment-default-root-name "company-jedi")
   (python-environment-virtualenv
    `("virtualenv" "--system-site-packages" "--python"
-          ,(executable-find "python3"))))
-
-(use-package company-jedi
-  :commands company-jedi
-  :custom
-  (jedi:use-shortcuts t)
-  (jedi:complete-on-dot t)
-  :config
-  (defun company-jedi-hook()
-    "Add `company-jedi' to the backends of `company-mode'."
-    (add-to-list 'company-backends 'company-jedi))
-  :hook ((python-mode . jedi:setup)
-         (python-mode . company-jedi-hook)))
-
-;; Load custom Jedi configuration
-(with-eval-after-load 'company-jedi
-  (when (file-exists-p jedi-custom-file)
-    (load jedi-custom-file nil 'nomessage)))
+     ,(executable-find "python3"))))
 
 ;; Tidy up (require python package 'autopep8').
 (use-package py-autopep8

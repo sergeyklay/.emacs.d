@@ -1,6 +1,6 @@
 ;;; init.el --- Initialization file. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -29,8 +29,6 @@
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
 ;;; Code:
-
-;;;; Core
 
 ;; Begin initialization
 (require 'prelude (concat user-emacs-directory "site-lisp/prelude"))

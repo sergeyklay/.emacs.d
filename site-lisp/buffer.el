@@ -1,6 +1,6 @@
 ;;; buffer.el --- Buffer related configuration and utils.. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -37,7 +37,7 @@
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
 (defun my/kill-dired-buffers ()
-  "Kill all dired buffers."
+  "Kill all Dired buffers."
   (interactive)
   (mapc (lambda (buffer)
           (when (eq 'dired-mode

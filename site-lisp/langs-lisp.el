@@ -1,6 +1,6 @@
 ;;; langs-lisp.el --- Lisp-family of languages. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -87,16 +87,17 @@
    (lisp-interaction-mode . company-mode)
    (lisp-interaction-mode . turn-on-eldoc-mode)
    (lisp-interaction-mode . rainbow-delimiters-mode))
-  :init
+  :bind
+  (:map emacs-lisp-mode-map
+        ("C-c C-b" . #'eval-buffer)))
+
+(with-eval-after-load 'company
   (add-to-list 'company-backends
 	       '(company-elisp
 		 company-capf
 		 company-dabbrev-code
 		 company-yasnippet
-		 company-files))
-  :bind
-  (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer)))
+		 company-files)))
 
 (use-package eros
   :defer t

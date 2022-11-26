@@ -1,6 +1,6 @@
 ;;; windows.el --- Windows and frames related stuff. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -35,8 +35,8 @@
 
 ;; Set frame title.
 (setq frame-title-format
-          '(buffer-file-name "%f"
-			     (dired-directory dired-directory "%b")))
+      '(buffer-file-name "%f"
+			 (dired-directory dired-directory "%b")))
 
 (defun my/monitor-resolution (monitor)
   "Get current MONITOR resolution in pixels.

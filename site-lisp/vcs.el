@@ -1,6 +1,6 @@
-;;; init.el --- VCS related features. -*- lexical-binding: t; -*-
+;;; vcs.el --- VCS related features. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019, 2020 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019, 2020, 2021, 2022 Serghei Iakovlev <egrep@protonmail.ch>
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -50,25 +50,23 @@
 
 ;;;; Git
 
-(use-package gitconfig-mode
-  :mode "\\.gitconfig\\'"
-  :mode "\\.git/config\\'"
-  :mode "\\.gitmodules\\'"
-  :hook
-  ((gitignore-mode . my|final-newline-hook)))
+;; Git configuration modes
+(use-package git-modes
+  :mode (("/\\.gitattributes\\'"       . gitattributes-mode)
+         ("/\\.git/info/attributes\\'" . gitattributes-mode)
+         ("/git/attributes\\'"         . gitattributes-mode)
 
-(use-package gitignore-mode
-  :mode "\\.gitignore\\'"
-  :mode "\\.dockerignore\\'"
-  :mode "\\..elpaignore\\'"
-  :hook
-  ((gitignore-mode . my|final-newline-hook)))
+         ("/\\.gitconfig\\'"           . gitconfig-mode)
+         ("/\\.git/config\\'"          . gitconfig-mode)
+         ("/git/config\\'"             . gitconfig-mode)
+         ("/\\.gitmodules\\'"          . gitconfig-mode)
 
-(use-package gitattributes-mode
-  :mode "\\.gitattributes\\'"
-  :mode "\\.git/info/attributes\\'"
-  :hook
-  ((gitignore-mode . my|final-newline-hook)))
+         ("/\\.gitignore\\'"           . gitignore-mode)
+         ("/\\.dockerignore\\'"        . gitignore-mode)
+         ("/\\.elpaignore\\'"          . gitignore-mode)
+         ("/\\.git/info/exclude\\'"    . gitignore-mode)
+         ("/git/ignore\\'"             . gitignore-mode))
+  :hook ((gitignore-mode gitignore-mode gitignore-mode) . my|final-newline-hook))
 
 ;;;; `diff-hl'
 
