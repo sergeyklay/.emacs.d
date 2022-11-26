@@ -33,7 +33,7 @@ install: init.el
 
 .PHONY: build
 build: init.el test/bc.el
-	DEBUG=1 $(RUNEMACS) --eval $(INIT_CODE) $(patsubst %,--load $(TOP)/%, $^)
+	$(RUNEMACS) --eval $(INIT_CODE) $(patsubst %,--load $(TOP)/%, $^)
 	$(info All Elisp files have been compiled.)
 
 .PHONY: checkdoc

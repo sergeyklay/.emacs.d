@@ -65,10 +65,14 @@ jobs:
       - name: Run tests
         if: matrix.allow_failure != true
         run: make test
+        env:
+          DEBUG: 1
 
       - name: Run tests
         if: matrix.allow_failure == true
         run: make test || true
+        env:
+          DEBUG: 1
 
       - name: License check
         run: python3 test/check-licenses.py
