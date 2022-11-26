@@ -22,7 +22,6 @@ This project relies on the following list of applications:
 - [[https://hunspell.github.io][Hunspell (=hunspell=)]] with [[https://stackoverflow.com/a/9436234/1661465][dictionaries]]
 - [[https://www.gnu.org/software/idutils/][ID Utils (=mkid=, =lid=, =fid=, =fnid=, =xtokid=)]]
 - [[https://pandoc.org][Pandoc (=pandoc=)]]
-- [[https://www.passwordstore.org][Password Store (=pass=)]]
 - [[http://www.sbcl.org][Steel Bank Common Lisp (=sbcl=)]]
 - [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 
