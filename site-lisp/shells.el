@@ -33,15 +33,15 @@
 (eval-when-compile
   (require 'rx))
 
-;; -i is for interactive (I don't use it)
-;; -c tells bash to read whatever commands follow
-;; -l means invoke login shells, so that .profile or .bash_profile is read
+;; -i is for interactive (I use it because of zsh)
+;; -c tells shell to read whatever commands follow
+;; -l means invoke login shells
 ;;
 ;; For more see:
 ;;
 ;; - `https://github.com/bbatsov/projectile/issues/1097'
 ;; - `https://emacs.stackexchange.com/q/3447/16592'
-(setq shell-command-switch "-lc")
+(setq shell-command-switch "-lic")
 
 ;;;; Exec Paths
 
@@ -71,7 +71,7 @@
 (use-package exec-path-from-shell
   :defer t
   :custom
-  (exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-arguments '("-l" "-i"))
   (exec-path-from-shell-variables
    '("PYTHONPATH" "INFOPATH" "EMAIL" "MANPATH" "PATH"))
   :hook (after-init . exec-path-from-shell-initialize))
