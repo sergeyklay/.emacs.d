@@ -28,6 +28,11 @@
 
 ;;; Code:
 
+(when (or (featurep 'esup-child)
+          (daemonp)
+          noninteractive)
+  (setq package-enable-at-startup nil))
+
 ;; Defined in Emacs 27 and above.
 (defvar package-quickstart)
 
