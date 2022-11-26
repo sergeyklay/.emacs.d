@@ -28,7 +28,6 @@
 ;;
 ;; Recomended Python packages are:
 ;;   - ipython
-;;   - jedi
 ;;   - flake8
 ;;   - autopep8
 
@@ -36,9 +35,6 @@
 
 (eval-when-compile
   (require 'directories))
-
-(defconst jedi-custom-file (concat user-etc-dir "jedi-custom.el")
-  "User-wide file to customize Jedi configuration.")
 
 (use-package python
   :ensure nil
@@ -52,7 +48,6 @@
   :defer t
   :custom
   (python-environment-directory (concat user-local-dir ".python-environments"))
-  (python-environment-default-root-name "company-jedi")
   (python-environment-virtualenv
    `("virtualenv" "--system-site-packages" "--python"
      ,(executable-find "python3"))))
@@ -61,7 +56,8 @@
 (use-package py-autopep8
   :defer t
   :custom
-  (py-autopep8-options '("--max-line-length=80"))
+  (py-autopep8-options
+   '("--max-line-length=80"))
   :hook (python-mode . py-autopep8-enable-on-save))
 
 (provide 'langs-python)
