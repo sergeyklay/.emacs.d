@@ -29,6 +29,7 @@
 ;;; Code:
 
 (eval-when-compile
+  (require 'advices)
   (require 'directories))
 
 ;;;; Company
@@ -66,15 +67,6 @@
 	("C-p" . company-select-previous)
 	("SPC" . company-abort)
 	("<backtab>" . company-select-previous)))
-
-;; Some packages are too noisy.
-;; See URL `http://superuser.com/a/1025827'.
-(defun my/suppress-messages (func &rest args)
-  "Suppress message output when call FUNC with remaining ARGS."
-  (cl-flet ((silence (&rest _) (ignore)))
-    (advice-add 'message :around #'silence)
-    (unwind-protect (apply func args)
-      (advice-remove 'message #'silence))))
 
 ;; Sort company candidates by statistics.
 (use-package company-statistics

@@ -33,6 +33,7 @@
 ;; Begin initialization
 (require 'prelude (concat user-emacs-directory "site-lisp/prelude"))
 
+(require 'advices)      ; Advices for Elisp functions
 (require 'packaging)    ; Package management stuff and various related settings
 (require 'appearance)   ; Set up appearance as soon as we can
 (require 'windows)      ; Windows management features

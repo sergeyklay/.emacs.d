@@ -29,7 +29,9 @@
 
 ;;; Code:
 
-(require 'directories)
+(eval-when-compile
+  (require 'advices)
+  (require 'directories))
 
 ;;;; SSH / GnuPG
 
@@ -89,15 +91,10 @@
   (unless (eq (window-system) 'w32)
     (custom-set-variables '(epg-pinentry-mode 'loopback)))
   :config
+  (advice-add 'epa-file-enable :around #'my/suppress-messages)
   ;; Enable automatic encryption/decryption of *.gpg files
   (unless (memq epa-file-handler file-name-handler-alist)
-    ;; This is a quick fix to suppress the output of the
-    ;; "`epa-file' enabled" message by `epa-file-enable' defun
-    ;; in the minibuffer.
-    ;;
-    ;; TODO: Consider use `my/suppress-messages' here.
-    (let ((inhibit-message t))
-      (epa-file-enable))))
+    (epa-file-enable)))
 
 ;;;; Pin Entry
 
