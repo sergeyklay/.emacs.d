@@ -90,6 +90,7 @@
 	 ("C-c p f" . counsel-projectile-find-file)
 	 ("C-c p p" . counsel-projectile-switch-project)
          ("C-c p r" . counsel-projectile-rg)
+         ("C-c p a" . counsel-projectile-ag)
          ("C-c p g" . counsel-projectile-grep)))
 
 (provide 'projects)
