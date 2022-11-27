@@ -52,6 +52,13 @@
    (concat user-cache-dir "projectile-bookmarks.eld"))
   (projectile-globally-ignored-directories
    my/globally-ignored-directories)
+  ;; Command used by projectile to get the files in a git project
+  ;; See URL https://github.com/bbatsov/projectile/issues/1148
+  (projectile-git-command
+   (concat "comm -23 "
+           "<(git ls-files -co --exclude-standard | sort) "
+           "<(git ls-files -d | sort) "
+           "| tr '\n' '\0'"))
   :config
   (projectile-mode 1)
   ;; Ignore files
@@ -62,20 +69,9 @@
   (setq projectile-globally-ignored-file-suffixes
 	(append '(".elc" ".pyc" ".o" ".lo" ".la" ".out" ".sock" ".zwc")
 		projectile-globally-ignored-file-suffixes ))
-  ;; Use the faster searcher to handle project files:
-  ;; - user-friendly alternative of find `fd'
-  ;; - ripgrep `rg'
-  (let* ((exclude (cons "" projectile-globally-ignored-directories))
-        (command
-	 (cond
-	  ((executable-find "fd")
-           (my/find-fd-command exclude))
-          ((executable-find "rg")
-           (my/find-rg-command exclude)))))
-    (when command
-      (setq projectile-generic-command command)
-      ;; See URL `https://github.com/bbatsov/projectile/issues/1148'
-      (setq projectile-git-command command))))
+    ;; Command used by projectile to get the files in a generic project
+  (setq projectile-generic-command
+   (my/find-fd-command (cons "" projectile-globally-ignored-directories))))
 
 ;;;; Counsel Projectile
 
