@@ -28,9 +28,9 @@
 
 ;;; Code:
 
-(use-package kaolin-themes
+(use-package doom-themes
   :config
-  (load-theme 'kaolin-dark t))
+  (load-theme 'doom-palenight t))
 
 (defvar font-face nil)
 (defvar font-size 11)
