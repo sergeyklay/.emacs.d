@@ -53,11 +53,14 @@
   :config
   (setq ispell-really-aspell nil)
   (setq ispell-really-hunspell t)
-  (when (string-equal system-type "darwin")
-    ;; Set dictionary file name.  Without this variable you'll see on macOs:
-    ;; 'Can't open affix or dictionary files for dictionary named "XXX"'
-    ;; TODO(serghei): Still does not work
-    (setenv "DICTIONARY" "en_GB")))
+  ;; 2022/11/27: commended because I'm not sure if it's still needed
+  ;;
+  ;; (when (string-equal system-type "darwin")
+  ;;   ;; Set dictionary file name.  Without this variable you'll see on macOs:
+  ;;   ;; 'Can't open affix or dictionary files for dictionary named "XXX"'
+  ;;   ;; TODO(serghei): Still does not work
+  ;;   (setenv "DICTIONARY" "en_GB"))
+  )
 
 (use-package flyspell
   :if (executable-find "hunspell")
