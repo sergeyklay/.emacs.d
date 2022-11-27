@@ -41,7 +41,6 @@
 (require 'esession)     ; Setting for bookmarks, recentf, etc
 (require 'buffer)       ; Buffer related configuration and utils
 (require 'docs)         ; Setting up documentation features
-(require 'search-tools) ; Setting up search tools
 (require 'completion)   ; Setting up completion system
 (require 'shells)       ; Shells configuration
 (require 'security)     ; GPG and security related features

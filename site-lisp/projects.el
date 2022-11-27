@@ -29,8 +29,23 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'directories)
-  (require 'search-tools))
+  (require 'directories))
+
+(defconst my/globally-ignored-directories
+  '("__pycache__" "elpa" ".cache" "node_modules"
+    "bower_components"  ".idea" ".vscode"
+    ".ensime_cache" ".eunit" ".git" ".hg"
+    ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox"
+    ".svn" ".stack-work" ".ccls-cache" ".clangd")
+  "Globally excluded directories.")
+
+(defun my/find-fd-command (&optional exclude)
+  "Fd command to get files in a project.
+When optional EXCLUDE list is given 'fd' will use it as a list
+to exclude files and directories."
+  (concat "fd . --color=never --type f -0 -H"
+	  (unless (null exclude)
+            (mapconcat #'identity exclude " -E "))))
 
 ;;;; Projectile
 
