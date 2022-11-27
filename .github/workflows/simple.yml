@@ -73,6 +73,3 @@ jobs:
         run: make test || true
         env:
           DEBUG: 1
-
-      - name: License check
-        run: python3 test/check-licenses.py
