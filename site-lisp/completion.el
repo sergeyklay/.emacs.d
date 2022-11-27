@@ -29,8 +29,7 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'directories)
-  (require 'search-tools))
+  (require 'directories))
 
 ;;;; Ivy
 
@@ -108,7 +107,7 @@
     "\\|\\(?:^__pycache__/?$\\)"))
   ;; Let counsel-find-file-at-point choose the file under cursor
   (counsel-find-file-at-point t)
-  (counsle-rg-base-command
+  (counsel-rg-base-command
    `("rg"
      "--max-columns" "240" ; Don't print the lines longer than 240 bytes
      "--with-filename"     ; Display the file path for matches
@@ -116,7 +115,6 @@
      "--line-number"       ; Show line numbers (1-based)
      "--color" "never"     ; Colors  will never be used
      "--hidden"            ; Search hidden files and directories
-     ,(my/format-rg-exclude my/globally-ignored-directories)
      "%s"))
   :bind (("C-x C-i"                   . counsel-imenu)
          ("C-x l"                     . counsel-locate)
