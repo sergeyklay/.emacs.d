@@ -1,0 +1,11 @@
+git clone git://git.savannah.gnu.org/idutils.git
+cd idutils
+./bootstrap
+
+# NOTE: This works only with vanilla GCC, not Apple Clang
+CC=<path/to/vanilla/gcc> \
+  CFLAGS='-O2 -pipe -march=native -Wno-deprecated-declarations -Wno-error=suggest-attribute=pure' \
+  ./configure
+
+make -j $(getconf _NPROCESSORS_ONLN)
+make install
