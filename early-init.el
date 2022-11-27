@@ -43,6 +43,14 @@
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 
+;; Contrary to what many Emacs users have in their configs, you don't need
+;; more than this to make UTF-8 the default coding system:
+(set-language-environment "UTF-8")
+
+;; Assign higher priority to the unicode charsets.
+(when (fboundp 'set-charset-priority)
+  (set-charset-priority 'unicode))
+
 ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
 (setq tool-bar-mode nil)
 (when (fboundp 'set-scroll-bar-mode)

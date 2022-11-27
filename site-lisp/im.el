@@ -24,30 +24,9 @@
 
 ;;; Commentary:
 
-;; Key maps, IMs and relevant configurations.
+;; Key maps, inputs and relevant configurations.
 
 ;;; Code:
-
-;;;; Input Method and Encoding
-
-(use-package mule-cmds
-  :ensure nil
-  :defer t
-  :custom
-  (default-input-method "russian-computer")
-  :init
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-
-  (when (fboundp 'set-charset-priority)
-    (set-charset-priority 'unicode))
-
-  (setq locale-coding-system 'utf-8)
-  (setq-default buffer-file-coding-system 'utf-8)
-  :config
-  (prefer-coding-system 'utf-8)
-  (add-to-list 'auto-coding-alist '("/#[^/]+#\\'" . utf-8)))
 
 ;;;; `which-key'
 
