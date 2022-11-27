@@ -28,9 +28,6 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'directories))
-
 ;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
 ;; them.  For more info on installing dictionaries see
 ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
