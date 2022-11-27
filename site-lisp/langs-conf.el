@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(declare-function s-count-matches (regexp s &optional start end))
+
 (eval-when-compile
   (require 's))
 
