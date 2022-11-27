@@ -91,7 +91,13 @@
   :config
   ;; Enable automatic encryption/decryption of *.gpg files
   (unless (memq epa-file-handler file-name-handler-alist)
-    (epa-file-enable)))
+    ;; This is a quick fix to suppress the output of the
+    ;; "`epa-file' enabled" message by `epa-file-enable' defun
+    ;; in the minibuffer.
+    ;;
+    ;; TODO: Consider use `my/suppress-messages' here.
+    (let ((inhibit-message t))
+      (epa-file-enable))))
 
 ;;;; Pin Entry
 
