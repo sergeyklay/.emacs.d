@@ -71,6 +71,7 @@
 (use-package exec-path-from-shell
   :defer t
   :custom
+  (exec-path-from-shell-warn-duration-millis 700)
   (exec-path-from-shell-arguments '("-l" "-i"))
   (exec-path-from-shell-variables
    '("PYTHONPATH" "INFOPATH" "EMAIL" "MANPATH" "PATH"))
