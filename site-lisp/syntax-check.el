@@ -62,9 +62,12 @@ This lets us fix any errors as quickly as possible, but in a clean
 buffer we're an order of magnitude laxer about checking."
     (setq flycheck-idle-change-delay
 	  (if flycheck-current-errors 0.5 3.0)))
-  ;; Each buffer gets its own idle-change-delay because of the
-  ;; buffer-sensitive adjustment above.
-  (make-variable-buffer-local 'flycheck-idle-change-delay))
+  ;; 2022/11/27: commented because I'm not sure if it's still needed
+  ;;
+  ;; ;; Each buffer gets its own idle-change-delay because of the
+  ;; ;; buffer-sensitive adjustment above.
+  ;; (make-variable-buffer-local 'flycheck-idle-change-delay)
+  )
 
 (provide 'syntax-check)
 ;;; syntax-check.el ends here

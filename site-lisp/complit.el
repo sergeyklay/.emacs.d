@@ -71,7 +71,7 @@
 ;; See URL `http://superuser.com/a/1025827'.
 (defun my/suppress-messages (func &rest args)
   "Suppress message output when call FUNC with remaining ARGS."
-  (cl-flet ((silence (&rest args1) (ignore)))
+  (cl-flet ((silence (&rest _) (ignore)))
     (advice-add 'message :around #'silence)
     (unwind-protect (apply func args)
       (advice-remove 'message #'silence))))

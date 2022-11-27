@@ -109,6 +109,9 @@
 
 ;;;; Shell Mode
 
+(eval-when-compile
+  (require 'sh-script))
+
 (defun sh-variables-in-quotes (limit)
   "Match variables in double-quotes up to LIMIT in `sh-mode'."
   (with-syntax-table sh-mode-syntax-table

@@ -53,7 +53,7 @@
   :config
   (setq ispell-really-aspell nil)
   (setq ispell-really-hunspell t)
-  ;; 2022/11/27: commended because I'm not sure if it's still needed
+  ;; 2022/11/27: commented because I'm not sure if it's still needed
   ;;
   ;; (when (string-equal system-type "darwin")
   ;;   ;; Set dictionary file name.  Without this variable you'll see on macOs:
