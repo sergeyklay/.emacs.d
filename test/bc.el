@@ -37,7 +37,8 @@
                   (and
                    (not (string-prefix-p "elpa" dir))
                    (not (string-prefix-p ".git" dir))
-                   (not (string-prefix-p ".local" dir))))))))
+                   (not (string-prefix-p ".local" dir)))))))
+      (byte-compile-error-on-warn t))
   (dolist (file files)
     (let ((basename (file-name-nondirectory file)))
       (when (not (member basename '(".dir-locals.el"
