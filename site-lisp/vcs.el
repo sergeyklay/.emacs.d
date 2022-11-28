@@ -68,18 +68,5 @@
          ("/git/ignore\\'"             . gitignore-mode))
   :hook ((gitignore-mode gitignore-mode gitignore-mode) . my|final-newline-hook))
 
-;;;; `diff-hl'
-
-(use-package diff-hl
-  :hook
-  ((dired-mode . diff-hl-dired-mode)
-   (after-init . global-diff-hl-mode)
-   (vc-dir-mode . turn-on-diff-hl-mode)
-   (magit-post-refresh . diff-hl-magit-post-refresh))
-  :config
-  (if (display-graphic-p)
-      (diff-hl-flydiff-mode t)
-    (diff-hl-margin-mode t)))
-
 (provide 'vcs)
 ;;; vcs.el ends here
