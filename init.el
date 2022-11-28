@@ -24,7 +24,9 @@
 
 ;;; Commentary:
 
-;;   This file is used to initialize GNU Emacs for my daily needs.
+;;   This file bootstraps the configuration, which is divided into a number of
+;; other files.
+;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
