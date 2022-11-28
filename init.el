@@ -37,10 +37,10 @@
 
 (require 'advices)      ; Advices for Elisp functions
 (require 'packaging)    ; Package management stuff and various related settings
+(require 'defaults)     ; Sane defaults + settings for which there is no group
 (require 'appearance)   ; Set up appearance as soon as we can
 (require 'windows)      ; Windows management features
 (require 'modeline)     ; Modeline related configuration
-(require 'defaults)     ; Sane defaults + settings for which there is no group
 (require 'esession)     ; Setting for bookmarks, recentf, etc
 (require 'buffer)       ; Buffer related configuration and utils
 (require 'docs)         ; Setting up documentation features
