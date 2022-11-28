@@ -36,6 +36,18 @@
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 
+;; Garbage Collector Magic Hack
+(use-package gcmh
+  :diminish
+  :hook (emacs-startup . gcmh-mode)
+  :custom
+  ;; Idle time to wait in seconds before triggering GC.
+  (gcmh-idle-delay 'auto)
+  ;; Factor to compute the idle delay when in idle-delay auto mode.
+  (gcmh-auto-idle-delay-factor 10)
+  ;; High cons GC threshold.
+  (gcmh-high-cons-threshold #x1000000))
+
 ;;;; Sane defaults
 
 (setq-default
