@@ -37,5 +37,16 @@
     (unwind-protect (apply func args)
       (advice-remove 'message #'silence))))
 
+;; See URL `https://superuser.com/a/1025827/280737'.
+(defun my/who-called-me? (func format &rest args)
+  "Allow determine who called FUNC with FORMAT and remaining ARGS.
+Usage:
+  (advice-add 'message :around #'my/who-called-me?)"
+  (let ((trace nil) (n 1) (frame nil))
+      (while (setf frame (backtrace-frame n))
+        (setf n (1+ n)
+              trace (cons (cadr frame) trace)) )
+      (apply func (concat "<<%S>>\n" format) (cons trace args))))
+
 (provide 'advices)
 ;;; advices.el ends here
