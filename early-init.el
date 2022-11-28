@@ -47,9 +47,8 @@
 ;; more than this to make UTF-8 the default coding system:
 (set-language-environment "UTF-8")
 
-;; Assign higher priority to the unicode charsets.
-(when (fboundp 'set-charset-priority)
-  (set-charset-priority 'unicode))
+;; `set-language-enviornment' sets `default-input-method', which is unwanted.
+(setq default-input-method nil)
 
 ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
 (setq tool-bar-mode nil)
