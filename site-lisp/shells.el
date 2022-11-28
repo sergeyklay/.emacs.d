@@ -33,7 +33,7 @@
 (eval-when-compile
   (require 'rx))
 
-;; -i is for interactive (I use it because of zsh)
+;; -i is for interactive (I don't use it)
 ;; -c tells shell to read whatever commands follow
 ;; -l means invoke login shells
 ;;
@@ -41,9 +41,14 @@
 ;;
 ;; - `https://github.com/bbatsov/projectile/issues/1097'
 ;; - `https://emacs.stackexchange.com/q/3447/16592'
-(setq shell-command-switch "-lic")
+(setq shell-command-switch "-lc")
 
 ;;;; Exec Paths
+
+(defun my|exec-path-hook()
+  "Set '$MANPATH', '$PATH' and variable `exec-path' from shell."
+  (when (or (memq window-system '(mac ns x)) (daemonp))
+    (exec-path-from-shell-initialize)))
 
 ;; Emacs does set `exec-path' from the value of PATH on startup, but will not
 ;; look at it again later.  But if you run a command, it will inherit PATH,
@@ -71,11 +76,10 @@
 (use-package exec-path-from-shell
   :defer t
   :custom
-  (exec-path-from-shell-warn-duration-millis 700)
-  (exec-path-from-shell-arguments '("-l" "-i"))
+  (exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-variables
    '("PYTHONPATH" "INFOPATH" "EMAIL" "MANPATH" "PATH"))
-  :hook (after-init . exec-path-from-shell-initialize))
+  :hook (after-init . my|exec-path-hook))
 
 ;;;; Eshell
 
