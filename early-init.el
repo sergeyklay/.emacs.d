@@ -33,15 +33,19 @@
           noninteractive)
   (setq package-enable-at-startup nil))
 
-;; Defined in Emacs 27 and above.
-(defvar package-quickstart)
-
-;; Increasing GC is a common way to speed up Emacs.
-;; `gc-cons-threshold' sets at what point Emacs should
-;; invoke its garbage collector.  When set it temporarily
-;; to a large number, we only garbage collect once on startup.
+;; Increasing GC is a common way to speed up Emacs. `gc-cons-threshold'
+;; sets at what point Emacs should invoke its garbage collector.  When
+;; set it temporarily to a large number, we only garbage collect once
+;; on startup.  We'll reset it later by enabling `gcmh-mode'. Not
+;; resetting it will cause stuttering/freezes.
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
+
+;; The command-line option ‘-batch’ causes Emacs to run noninteractively.
+;; In noninteractive sessions, prioritize non-byte-compiled source files to
+;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
+;; to skip the mtime checks on every *.elc file.
+(setq load-prefer-newer noninteractive)
 
 ;; Contrary to what many Emacs users have in their configs, you don't need
 ;; more than this to make UTF-8 the default coding system:

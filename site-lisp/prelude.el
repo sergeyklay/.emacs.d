@@ -38,22 +38,6 @@
 ;; a proper handler for the file, but during startup, it won’t need any of them.
 (setq file-name-handler-alist nil)
 
-;; Reset `gc-cons-threshold' to the standard value after initializing the Emacs
-;; session.  Also we restore `file-name-handler-alist' here.
-(defun reset-performance ()
-  "Reset Emacs performace settings to the standard ones."
-  (garbage-collect)
-  (setq gc-cons-threshold
-	(car (get 'gc-cons-threshold 'standard-value))
-        gc-cons-percentage
-	(car (get 'gc-cons-percentage 'standard-value))
-        file-name-handler-alist
-	(append
-	 file-name-handler-alist-backup
-	 file-name-handler-alist)))
-
-(add-hook 'after-init-hook #'reset-performance)
-
 ;; One less file to load at startup
 (setq site-run-file nil)
 
