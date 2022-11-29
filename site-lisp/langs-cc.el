@@ -46,13 +46,16 @@
   (setq-local compilation-read-command nil)
   (call-interactively 'compile))
 
-(defun c-binds-hook ()
+(defun my|c-binds-hook ()
   "Setup keybindings to use for C buffers."
   (local-set-key (kbd "<f5>") #'my/custom-compile-command))
 
 (use-package cc-mode
   :ensure nil
-  :hook ((c-mode . c-binds-hook)))
+  :custom
+  (c-basic-offset 2)
+  (c-comment-only-line-offset 0)
+  :hook ((c-mode . my|c-binds-hook)))
 
 (provide 'langs-cc)
 ;;; langs-cc.el ends here
