@@ -43,6 +43,7 @@
   (flycheck-indication-mode 'right-fringe)
   (flycheck-standard-error-navigation nil)
   (flycheck-emacs-lisp-load-path 'inherit)
+  (flycheck-disabled-checkers '(python-mypy))
   ;; Remove ‘new-line’ checks, since they would trigger an immediate
   ;; check when we want the idle-change-delay to be effect while
   ;; editing.
