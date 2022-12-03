@@ -36,6 +36,10 @@
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 
+;; Modern API for working with files and directories in Emacs.
+(use-package f
+  :defer t)
+
 ;; Garbage Collector Magic Hack
 (use-package gcmh
   :diminish
