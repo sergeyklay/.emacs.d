@@ -76,7 +76,7 @@
    (expand-file-name "~/.pyenv/shims/python"))
   ;; pip install flake8
   (flycheck-python-flake8-executable
-   (expand-file-name "~/.pyenv/shims/flake8")))
+   (expand-file-name "~/.pyenv/shims/flake8"))
   :config
   ;; I set `exec-path' from `$PATH' variable. Therefore,
   ;; there is no need to set this variable here.
