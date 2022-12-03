@@ -34,7 +34,6 @@
 ;;; Code:
 
 (eval-when-compile
-  (require 'projects)
   (require 'directories))
 
 (require 'f)
@@ -69,7 +68,6 @@
 ;; I use pyenv on a daily basis.
 (use-package pyenv-mode
   :if (executable-find "pyenv")
-  :after projectile
   :init
   (setenv "WORKON_HOME" "~/.pyenv/versions/")
   :custom
@@ -88,7 +86,16 @@
   ;;
   ;; (add-to-list 'exec-path "~/.pyenv/shims")
   ;;
+  ;; Start `pyenv-mode' as soon as possible.
   (pyenv-mode)
+  (defun my|pyenv-init-hook ()
+    "Set python version according to return value of pyenv global command."
+    (let ((global-pyenv (replace-regexp-in-string
+                         "\n" ""
+                         (shell-command-to-string "pyenv global"))))
+      (message "Setting pyenv version to %s" global-pyenv)
+      (pyenv-mode-set global-pyenv)))
+
   (defun my|projectile-pyenv-mode-hook ()
     "Set pyenv version matching project name."
     (let ((project (projectile-project-name)))
@@ -99,8 +106,7 @@
   :bind
   ("C-c p e" . my/pyenv-activate-current-project)
   :hook
-  ((after-init .pyenv-init)
-   (python-mode . pyenv-mode)
+  ((after-init . my|pyenv-init-hook)
    (projectile-switch-project . my|projectile-pyenv-mode-hook)))
 
 (provide 'langs-python)
