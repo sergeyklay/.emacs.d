@@ -1,0 +1,24 @@
+# Please do not use this ignore file to define platform specific files.
+#
+# For these purposes create a global .gitignore file, which is a list of rules
+# for ignoring files in every Git repository on your computer.
+#
+# https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+
+# Directories to ignore (do not add trailing '/'s, they skip symlinks).
+/auto-save-list
+
+# Use this as your own wish list or a temporary buffer.
+LATER
+
+# Ignore files that start and end with a hash symbol (#)
+# (autosaves), for example: #.sqliterc#
+\#*\#
+
+# Ignore files that end with a tilde (~)
+# (backup files), for example: .gitignore~
+.*~
+*.*~
+
+# Byte compiled elisp files.
+*.elc
