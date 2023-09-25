@@ -1,0 +1,22 @@
+* Serghei's GNU Emacs Configuration
+
+[[https://www.gnu.org/licenses/gpl-3.0.txt][https://img.shields.io/badge/license-GPL_3-green.svg]]
+
+This repository contains my personal configuration for GNU Emacs that I use on
+the daily and port around from system to system with me.  This is the second
+repository I clone — after [[https://github.com/sergeyklay/dotfiles][my dotfiles]] — when settling in on a new system.
+
+This configuration uses default-style keybindings and known to work with GNU
+Emacs 29.1 and later.
+
+** License
+
+This project is open source software licensed under the [[https://github.com/sergeyklay/.emacs.d/blob/master/LICENSE][GNU General Public Licence version 3]].
+Copyright © 2019, 2020, 2021, 2022, 2023 Serghei Iakovlev.
+
+*** Note On Copyright Years
+
+In copyright notices where the copyright holder is Serghei Iakovlev,
+then where a range of years appears, this is an inclusive range that applies to
+every year in the range.  For example: 2019-2023 represents the years 2019,
+2020, 2021, 2022 and 2023.
