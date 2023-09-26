@@ -7,6 +7,9 @@
 
 # Directories to ignore (do not add trailing '/'s, they skip symlinks).
 /auto-save-list
+/elpa
+/eshell
+/transient
 
 # Use this as your own wish list or a temporary buffer.
 LATER
@@ -17,8 +20,18 @@ LATER
 
 # Ignore files that end with a tilde (~)
 # (backup files), for example: .gitignore~
+*~
 .*~
 *.*~
 
 # Byte compiled elisp files.
 *.elc
+
+# projects.el
+projects
+
+# Ignore the TRAMP file used for caching remote file access in Emacs.
+tramp
+
+# Recent opened files
+recentf
