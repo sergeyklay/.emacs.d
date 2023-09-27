@@ -38,6 +38,7 @@ jobs:
           - emacs_version: snapshot
             allow_failure: true
 
+    steps:
       - name: Checkout Code
         uses: actions/checkout@v2
         with:
