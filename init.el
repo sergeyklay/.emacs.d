@@ -56,6 +56,13 @@
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
+(defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
+  "If non-nil, all Emacs will be verbose.
+Set DEBUG=1 in the command line or use --debug-init to enable this.")
+
+(global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
+(setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
+
 ;;;; Packaging
 
 (defun my/package-initialize ()
@@ -64,9 +71,12 @@
   ;; No need to activate all the packages so early.
   (when (>= emacs-major-version 27)
     (setq package-quickstart t))
-  (when (or (daemonp)
-            noninteractive)
-    (package-initialize)))
+  (package-initialize)
+  ;; TODO: Do I really need this?
+  ;; (when (or (daemonp)
+  ;;          noninteractive)
+  ;;  (package-initialize))
+  )
 
 (my/package-initialize)
 
