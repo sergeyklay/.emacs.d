@@ -47,6 +47,7 @@
 
 ;;;; Emacs Server
 
+(declare-function server-running-p "server")
 (add-hook 'after-init-hook
           #'(lambda ()
               (require 'server)
