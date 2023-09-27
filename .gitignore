@@ -35,3 +35,6 @@ tramp
 
 # Recent opened files
 recentf
+
+# Quickstart file to activate all packages at startup.
+package-quickstart.el
