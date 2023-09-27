@@ -25,7 +25,7 @@
 ;;; Commentary:
 
 ;;   The guiding philosophy behind this Emacs configuration is that it should
-;; be a direct extension of my own memory. This project serves as a
+;; be a direct extension of my own memory.  This project serves as a
 ;; representation of what I can actively recall and understand.
 ;;
 ;; As a result, you won't find overly complex settings or esoteric designs here.
@@ -34,7 +34,7 @@
 ;; mentally.
 ;;
 ;; If you come across this project, bear in mind that it's molded to fit what I
-;; can keep "in my head" rather than what Emacs is capable of doing. The
+;; can keep "in my head" rather than what Emacs is capable of doing.  The
 ;; simplicity is intentional and serves as a mnemonic aid for me.
 ;;
 ;;   This file bootstraps the configuration, which is divided into a number of
@@ -79,6 +79,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(leuven))
+ '(global-visual-line-mode t)
  '(inhibit-startup-screen t)
  '(initial-major-mode 'text-mode)
  '(initial-scratch-message nil)
