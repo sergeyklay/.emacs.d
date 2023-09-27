@@ -47,7 +47,19 @@
 
 ;;;; Emacs Server
 
+;; Declare the function `server-running-p' from the "server" module.
+;;
+;; This declaration informs the Emacs Lisp compiler that the function
+;; `server-running-p' exists, but is defined in an external module ("server").
+;; This prevents compile-time warnings and helps in generating better bytecode.
+;; The `declare-function' acts as a forward declaration, essentially saying:
+;; "Trust me, this function will be available at runtime, even if you can't see
+;; it now at compile time."
+;;
+;; Note: This is not a substitute for `(require 'server)` or `(load "server")`,
+;; it is only for the compiler's benefit.
 (declare-function server-running-p "server")
+
 (add-hook 'after-init-hook
           #'(lambda ()
               (require 'server)
