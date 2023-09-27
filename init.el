@@ -56,6 +56,20 @@
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
+;;;; Packaging
+
+(defun my/package-initialize ()
+  "Actviate all packages (in particular autoloads)."
+  ;; Package loading optimization.
+  ;; No need to activate all the packages so early.
+  (when (>= emacs-major-version 27)
+    (setq package-quickstart t))
+  (when (or (daemonp)
+            noninteractive)
+    (package-initialize)))
+
+(my/package-initialize)
+
 ;;;; Emacs Server
 
 ;; Declare the function `server-running-p' from the "server" module.
@@ -76,6 +90,11 @@
               (require 'server)
               (unless (server-running-p)
                 (server-start))))
+
+;;;; Language support
+
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
 ;;;; Custom Variables and Faces
 
@@ -107,6 +126,12 @@
  '(inhibit-startup-screen t)
  '(initial-major-mode 'text-mode)
  '(initial-scratch-message nil)
+ '(package-archive-priorities '(("m-stable" . 10) ("melpa" . 20)))
+ '(package-archives
+   '(("melpa" . "https://melpa.org/packages/")
+     ("m-stable" . "https://stable.melpa.org/packages/")
+     ("gnu" . "https://elpa.gnu.org/packages/")))
+ '(package-selected-packages '(yaml-mode))
  '(ring-bell-function 'ignore))
 
 (custom-set-faces
