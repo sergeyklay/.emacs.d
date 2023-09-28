@@ -61,7 +61,7 @@ jobs:
         env:
           DEBUG: 1
 
-      - name: Run tests
+      - name: Run flaky tests
         if: matrix.allow_failure == true
         run: make test || true
         env:
