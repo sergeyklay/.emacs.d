@@ -45,7 +45,7 @@
 
 ;;; Code:
 
-;;;; Prelude
+;;;; Profiling and debuging
 
 ;; Measure the current start up time.
 (add-hook 'emacs-startup-hook
@@ -62,23 +62,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 (setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
-
-;;;; Packaging
-
-(defun my/package-initialize ()
-  "Actviate all packages (in particular autoloads)."
-  ;; Package loading optimization.
-  ;; No need to activate all the packages so early.
-  (when (>= emacs-major-version 27)
-    (setq package-quickstart t))
-  (package-initialize)
-  ;; TODO: Do I really need this?
-  ;; (when (or (daemonp)
-  ;;          noninteractive)
-  ;;  (package-initialize))
-  )
-
-(my/package-initialize)
 
 ;;;; Emacs Server
 
