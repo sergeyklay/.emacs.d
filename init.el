@@ -37,9 +37,6 @@
 ;; can keep "in my head" rather than what Emacs is capable of doing.  The
 ;; simplicity is intentional and serves as a mnemonic aid for me.
 ;;
-;;   This file bootstraps the configuration, which is divided into a number of
-;; other files.
-;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
@@ -61,8 +58,15 @@
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
-(setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
 
+(setq-default
+ vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
+ debug-on-error (and (not noninteractive) emacs-debug-mode))
+
+(custom-set-variables
+ '(initial-scratch-message "")     ; No scratch message
+ '(inhibit-startup-screen t)       ; Disable start-up screen
+ '(initial-major-mode 'text-mode)) ; Configure the Scratch Buffer's Mode
 
 ;;;; Packaging
 
@@ -105,6 +109,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (require 'use-package))
 
 (require 'bind-key)
+
+;; Garbage Collector Magic Hack
+(use-package gcmh
+  :diminish
+  :hook (emacs-startup . gcmh-mode)
+  :custom
+  ;; Idle time to wait in seconds before triggering GC.
+  (gcmh-idle-delay 'auto)
+  ;; Factor to compute the idle delay when in idle-delay auto mode.
+  (gcmh-auto-idle-delay-factor 10)
+  ;; High cons GC threshold.
+  (gcmh-high-cons-threshold #x1000000))
 
 ;;;; Emacs Server
 
@@ -161,9 +177,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(leuven))
  '(global-visual-line-mode t)
- '(inhibit-startup-screen t)
- '(initial-major-mode 'text-mode)
- '(initial-scratch-message nil)
  '(ring-bell-function 'ignore))
 
 (custom-set-faces
