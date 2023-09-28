@@ -38,3 +38,6 @@ recentf
 
 # Quickstart file to activate all packages at startup.
 package-quickstart.el
+
+# Custom Variables and Faces
+custom.el
