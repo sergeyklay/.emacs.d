@@ -46,7 +46,9 @@
                    (not (string-prefix-p "transient" dir))))))))
   (dolist (file files)
     (let ((basename (file-name-nondirectory file)))
-      (when (not (member basename '("package-quickstart.el" ".dir-locals.el")))
+      (when (not (member basename '(".dir-locals.el"
+                                    "custom.el"
+                                    "package-quickstart.el")))
         (checkdoc-file file)))))
 
 (provide 'checkdoc)

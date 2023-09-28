@@ -41,8 +41,9 @@
   (dolist (file files)
     (let ((basename (file-name-nondirectory file)))
       (when (not (member basename '(".dir-locals.el"
-                                    "package-quickstart.el"
-                                    "early-init.el")))
+                                    "custom.el"
+                                    "early-init.el"
+                                    "package-quickstart.el")))
         (byte-compile-file file)))))
 
 (provide 'bc)
