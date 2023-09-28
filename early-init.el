@@ -28,6 +28,10 @@
 
 ;;; Code:
 
+(when (or (daemonp)
+          noninteractive)
+  (setq package-enable-at-startup nil))
+
 ;; Increasing GC is a common way to speed up Emacs. `gc-cons-threshold'
 ;; sets at what point Emacs should invoke its garbage collector.  When
 ;; set it temporarily to a large number, we only garbage collect once

@@ -67,8 +67,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Packaging
 
 (require 'package)
-(setq package-selected-packages
-      '(yaml-mode))
+
+(defun my/package-initialize ()
+  "Actviate all packages (in particular autoloads)."
+  ;; Package loading optimization.
+  ;; No need to activate all the packages so early.
+  (when (>= emacs-major-version 27)
+    (setq package-quickstart t))
+  (when (or (daemonp)
+            noninteractive)
+    (package-initialize)))
+
+(my/package-initialize)
 
 (custom-set-variables
  ;; Setting up package archives.
@@ -81,12 +91,20 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    '(("m-stable" . 10)
      ("melpa"    . 20))))
 
-(package-initialize)
+;; Install use-package
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-(unless package-archive-contents
-  (package-refresh-contents))
+(custom-set-variables
+ '(use-package-enable-imenu-support t) ; enable imenu support for `use-package'
+ '(use-package-always-ensure t)        ; all packages should be installed
+ '(use-package-verbose emacs-debug-mode))
 
-(package-install-selected-packages)
+(eval-when-compile
+  (require 'use-package))
+
+(require 'bind-key)
 
 ;;;; Emacs Server
 
@@ -111,8 +129,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Language support
 
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(use-package yaml-mode
+  :mode "\\.ya?ml\\'"
+  :config
+  :interpreter ("yml" . yml-mode))
 
 ;;;; Custom Variables and Faces
 
@@ -144,12 +164,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
  '(inhibit-startup-screen t)
  '(initial-major-mode 'text-mode)
  '(initial-scratch-message nil)
- ;; '(package-archive-priorities '(("m-stable" . 10) ("melpa" . 20)))
- ;; '(package-archives
- ;;   '(("melpa" . "https://melpa.org/packages/")
- ;;     ("m-stable" . "https://stable.melpa.org/packages/")
- ;;     ("gnu" . "https://elpa.gnu.org/packages/")))
-;; '(package-selected-packages '(yaml-mode))
  '(ring-bell-function 'ignore))
 
 (custom-set-faces

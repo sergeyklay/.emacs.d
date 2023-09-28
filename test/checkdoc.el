@@ -39,7 +39,6 @@
               (lambda (path)
                 (let ((dir (file-name-base path)))
                   (and
-                   
                    (not (string-prefix-p ".git" dir))
                    (not (string-prefix-p "auto-save-list" dir))
                    (not (string-prefix-p "elpa" dir))
