@@ -63,6 +63,31 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
 (setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
 
+
+;;;; Packaging
+
+(require 'package)
+(setq package-selected-packages
+      '(yaml-mode))
+
+(custom-set-variables
+ ;; Setting up package archives.
+ '(package-archives
+   '(("melpa"    . "https://melpa.org/packages/")
+     ("m-stable" . "https://stable.melpa.org/packages/")
+     ("gnu"      . "https://elpa.gnu.org/packages/")))
+ ;; Priorities. Default priority is 0.
+ '(package-archive-priorities
+   '(("m-stable" . 10)
+     ("melpa"    . 20))))
+
+(package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(package-install-selected-packages)
+
 ;;;; Emacs Server
 
 ;; Declare the function `server-running-p' from the "server" module.
@@ -119,12 +144,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
  '(inhibit-startup-screen t)
  '(initial-major-mode 'text-mode)
  '(initial-scratch-message nil)
- '(package-archive-priorities '(("m-stable" . 10) ("melpa" . 20)))
- '(package-archives
-   '(("melpa" . "https://melpa.org/packages/")
-     ("m-stable" . "https://stable.melpa.org/packages/")
-     ("gnu" . "https://elpa.gnu.org/packages/")))
- '(package-selected-packages '(yaml-mode))
+ ;; '(package-archive-priorities '(("m-stable" . 10) ("melpa" . 20)))
+ ;; '(package-archives
+ ;;   '(("melpa" . "https://melpa.org/packages/")
+ ;;     ("m-stable" . "https://stable.melpa.org/packages/")
+ ;;     ("gnu" . "https://elpa.gnu.org/packages/")))
+;; '(package-selected-packages '(yaml-mode))
  '(ring-bell-function 'ignore))
 
 (custom-set-faces
