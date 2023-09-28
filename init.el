@@ -42,7 +42,29 @@
 
 ;;; Code:
 
-;;;; Profiling and debuging
+;;;; Begin initialization.
+
+;; Every file opened and loaded by Emacs will run through this list to check for
+;; a proper handler for the file, but during startup, it won’t need any of them.
+(setq file-name-handler-alist nil)
+
+;; One less file to load at startup
+(setq site-run-file nil)
+
+;; Actually this project is my personal configuration
+;; so I use GNU Emacs 29.1 now.
+(eval-when-compile
+  (and (version< emacs-version "29.1")
+       (error
+        (concat
+         "Detected Emacs %s. "
+         "This configuration is designed to work "
+         "only with Emacs 29.1 and higher. I'm sorry.")
+        emacs-version)))
+
+(defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
+  "If non-nil, all Emacs will be verbose.
+Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Measure the current start up time.
 (add-hook 'emacs-startup-hook
@@ -53,21 +75,6 @@
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
-(defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
-  "If non-nil, all Emacs will be verbose.
-Set DEBUG=1 in the command line or use --debug-init to enable this.")
-
-(global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
-
-(setq-default
- vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
- debug-on-error (and (not noninteractive) emacs-debug-mode))
-
-(custom-set-variables
- '(initial-scratch-message "")     ; No scratch message
- '(inhibit-startup-screen t)       ; Disable start-up screen
- '(initial-major-mode 'text-mode)) ; Configure the Scratch Buffer's Mode
-
 ;;;; Packaging
 
 (require 'package)
@@ -76,8 +83,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   "Actviate all packages (in particular autoloads)."
   ;; Package loading optimization.
   ;; No need to activate all the packages so early.
-  (when (>= emacs-major-version 27)
-    (setq package-quickstart t))
+  (setq package-quickstart t)
   (when (or (daemonp)
             noninteractive)
     (package-initialize)))
@@ -110,6 +116,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (require 'bind-key)
 
+;;;; Sane defaults
+
+(setq default-directory (concat (getenv "HOME") "/"))
+
+(global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
+
+;; Modern API for working with files and directories in Emacs.
+(use-package f
+  :defer t)
+
 ;; Garbage Collector Magic Hack
 (use-package gcmh
   :diminish
@@ -121,6 +137,15 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (gcmh-auto-idle-delay-factor 10)
   ;; High cons GC threshold.
   (gcmh-high-cons-threshold #x1000000))
+
+(setq-default
+ vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
+ debug-on-error (and (not noninteractive) emacs-debug-mode))
+
+(custom-set-variables
+ '(initial-scratch-message "")     ; No scratch message
+ '(inhibit-startup-screen t)       ; Disable start-up screen
+ '(initial-major-mode 'text-mode)) ; Configure the Scratch Buffer's Mode
 
 ;;;; Emacs Server
 
