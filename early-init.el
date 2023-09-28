@@ -28,6 +28,10 @@
 
 ;;; Code:
 
+;; Disable package initialization at startup when running as a daemon
+;; or in batch mode.  This is useful for optimizing startup time and
+;; avoiding potential conflicts, especially when using `use-package'
+;; for lazy loading and package configuration.
 (when (or (daemonp)
           noninteractive)
   (setq package-enable-at-startup nil))
