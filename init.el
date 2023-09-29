@@ -135,6 +135,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
  '(initial-scratch-message "")    ; No scratch message
  '(inhibit-startup-screen t)      ; Disable start-up screen
  '(initial-major-mode 'text-mode) ; Configure the Scratch Buffer's Mode
+ '(cursor-type '(bar . 2))        ; Vertical cursor width
  `(custom-file ,(concat user-emacs-directory "custom.el")))
 
 ;;;; Appearance
@@ -145,6 +146,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (custom-set-variables
  '(global-visual-line-mode t)
  '(ring-bell-function 'ignore))
+
+(custom-set-faces
+ ;; TODO: I may want to change this in the future, but as long as the
+ ;; theme is light, a black cursor will be appropriate
+ '(cursor ((t (:background "#000000")))))
 
 ;;;; Emacs Server
 
