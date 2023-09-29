@@ -70,8 +70,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (defun my/package-initialize ()
   "Actviate all packages (in particular autoloads)."
-  ;; Package loading optimization.
-  ;; No need to activate all the packages so early.
   (setq package-quickstart t)
   (when (or (daemonp)
             noninteractive)
