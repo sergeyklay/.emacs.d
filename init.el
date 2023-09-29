@@ -51,17 +51,6 @@
 ;; One less file to load at startup
 (setq site-run-file nil)
 
-;; Actually this project is my personal configuration
-;; so I use GNU Emacs 29.1 now.
-(eval-when-compile
-  (and (version< emacs-version "29.1")
-       (error
-        (concat
-         "Detected Emacs %s. "
-         "This configuration is designed to work "
-         "only with Emacs 29.1 and higher. I'm sorry.")
-        emacs-version)))
-
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
@@ -184,5 +173,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :mode "\\.ya?ml\\'"
   :config
   :interpreter ("yml" . yml-mode))
+
+;; TODO: I may want to add company-anaconda to company-backends later
+;; if (when) I will use company
+(use-package anaconda-mode
+  :ensure t
+  :diminish anaconda-mode)
+
+(use-package python
+  :custom
+  (python-shell-interpreter "python3")
+  (python-shell-interpreter-args "-i --simple-prompt --pprint")
+  :init (add-hook 'python-mode-hook (lambda ()
+                                      (anaconda-mode))))
 
 ;;; init.el ends here
