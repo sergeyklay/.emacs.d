@@ -39,6 +39,10 @@ jobs:
             allow_failure: true
 
     steps:
+      - name: Setup Prerequisites
+        run: |
+          sudo snap install ripgrep --classic
+
       - name: Checkout Code
         uses: actions/checkout@v2
         with:

@@ -171,6 +171,30 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               (unless (server-running-p)
                 (server-start))))
 
+;;;; Project management
+
+(use-package project
+  :ensure nil
+  :commands (project-find-file
+             project-switch-to-buffer
+             project-switch-project
+             project-switch-project-open-file)
+  :custom
+  (project-vc-ignores
+   '(;; Ignore files that end with a tilde (~)
+     ;; (backup files), for example: .gitignore~
+     "*~" ".*~"
+     ;; Ignore files that start and end with a hash symbol (#)
+     ;; (autosaves), for example: #.sqliterc#
+     "#*#" ".#*"))
+  :config
+  ;; Use Ripgrep if installed
+  (when (shell-command-to-string "command rg --version")
+    (setq xref-search-program 'ripgrep))
+  ;; Remove zombie projects from `project-list-file'
+  (project-forget-zombie-projects))
+
+
 ;;;; Language support
 
 (use-package yaml-mode
@@ -185,6 +209,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :diminish anaconda-mode)
 
 (use-package python
+  :ensure nil
+  :mode ("\\.py\\'" . python-mode)
   :custom
   (python-shell-interpreter "python3")
   (python-shell-interpreter-args "-i --simple-prompt --pprint")
