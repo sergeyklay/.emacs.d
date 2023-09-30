@@ -44,8 +44,13 @@
 
 ;;;; Begin initialization.
 
-;; Every file opened and loaded by Emacs will run through this list to check for
-;; a proper handler for the file, but during startup, it won’t need any of them.
+;; Every file opened and loaded by Emacs will run through this list to
+;; check for a proper handler for the file, but during startup, it
+;; won’t need any of them.
+;;
+;; TODO: Do I need restore `file-name-handler-alist' later, because it
+;; is needed for handling encrypted or compressed files, among other
+;; things?
 (setq file-name-handler-alist nil)
 
 ;; One less file to load at startup
@@ -135,6 +140,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
  '(initial-major-mode 'text-mode) ; Configure the Scratch Buffer's Mode
  '(cursor-type '(bar . 2))        ; Vertical cursor width
  `(custom-file ,(concat user-emacs-directory "custom.el")))
+
+;; I use C source to understand and debug built-in functions.
+(let ((src "~/src/emacs.git"))
+  (when (or (file-directory-p src)
+            (file-symlink-p src))
+    (setq source-directory
+          (expand-file-name (substitute-in-file-name src)))))
 
 ;;;; Appearance
 
