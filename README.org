@@ -11,11 +11,13 @@ with GNU Emacs 29.1 and later. If you're using an older version, you
 may encounter issues that won't be addressed. Please update your Emacs
 to meet this requirement for a smooth experience.
 
-My configuration counts on the following applications:
+Typically, I roll with environments that have the following set of tools:
 
 - [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 - [[https://git-scm.com][Git (=git=)]]
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
+
+So, this config project is kinda built around that fact.
 
 ** License
 
