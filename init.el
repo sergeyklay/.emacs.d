@@ -131,6 +131,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (unless (file-exists-p my-auto-save-dir)
     (make-directory my-auto-save-dir t)))
 
+;; Save point position between sessions
+(use-package saveplace
+  :config
+  ;; Automatically save place in each file.
+  (save-place-mode t))
+
 ;;;; History
 (use-package savehist
   :custom
@@ -148,18 +154,32 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (savehist-mode t))
 
 ;;;; Sane defaults
-;; No tabs - except for some files, and Emacs knows which ones.
-(setq-default indent-tabs-mode nil)
+(use-package emacs
+  :config
+  ;; All things utf-8
+  (set-default-coding-systems 'utf-8)
+  (prefer-coding-system 'utf-8)
 
-;; Use tab key as completion option
-(setq tab-always-indent 'complete)
+  ;; Use tab key as completion option.
+  (setq tab-always-indent 'complete)
 
-(custom-set-variables
- '(initial-scratch-message "")    ; No scratch message
- '(inhibit-startup-screen t)      ; Disable start-up screen
- '(initial-major-mode 'text-mode) ; Configure the Scratch Buffer's Mode
- '(cursor-type '(bar . 2))        ; Vertical cursor width
- `(custom-file ,(concat user-emacs-directory "custom.el")))
+  ;; No scratch message.
+  (setq-default initial-scratch-message "")
+
+  ;; Disable start-up screen
+  (setq inhibit-startup-screen t)
+
+  ;; Configure the Scratch Buffer's Mode
+  (setq initial-major-mode 'text-mode)
+
+  ;; Show possible whitespace problems in code and text files.
+  (dolist (hook '(text-mode-hook prog-mode-hook))
+    (add-hook hook (lambda () (setq show-trailing-whitespace t))))
+
+  ;; Save custom variables in custom.el
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file)))
 
 ;; I use C source to understand and debug built-in functions.
 (let ((src "~/src/emacs.git"))
@@ -179,16 +199,24 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Appearance
 (load-theme 'modus-vivendi)
 
-(defun my-terminal-visible-bell ()
+;; I prefer the thin cursor.
+(setq-default cursor-type '(bar . 2))
+
+(defun my/terminal-visible-bell ()
    "A friendlier visual bell effect."
    (invert-face 'mode-line)
    (run-with-timer 0.1 nil 'invert-face 'mode-line))
 
 ;; Just blink the modeline on errors.
-(setq ring-bell-function #'my-terminal-visible-bell)
+(setq ring-bell-function #'my/terminal-visible-bell)
 
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook 'show-paren-mode)
+
+;; Highlight brackets according to their depth
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; I prefer not to have any of the GUI elements.
 ;; This keeps the window clean. And a bit speed up loading.
@@ -207,11 +235,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
              project-forget-zombie-projects)
   :custom
   (project-vc-ignores
-   '(;; Ignore these suffixes
-     "*.elc" "*.pyc" "*.o" "*.lo" "*.la" "*.out" "*.sock" "*.zwc"
-     ;; Ignore these files
+   '("#*#" ".#*" "*~" ".*~" "*.*~"
+     "*.elc" "*.pyc" "*.o" "*.lo" "*.la" "*.sock" "*.zwc"
      ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
-     ;; Ignore project dependency directories
      "node_modules"))
   :config
   ;; Auto clean up zombie projects from `project-list-file'
@@ -219,6 +245,31 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep)))
+
+;;;; Editor
+;; No tabs - except for some files, and Emacs knows which ones.
+(setq-default indent-tabs-mode nil)
+
+;; Increase the warning threshold for big files
+(setq large-file-warning-threshold (* 50 1024 1024))
+
+;; Set the default width of fill mode to 80
+(setq-default fill-column 80)
+
+;; Visually indicate empty lines after the buffer end
+(setq-default indicate-empty-lines t)
+
+(use-package elec-pair
+  :hook
+  ;; Activate electric-pair-mode automatically after Emacs initialization.
+  (after-init . electric-pair-mode)
+  ;; Disable electric-pair-local-mode in the minibuffer.
+  (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
+
+;; Show Line Numbers
+(use-package display-line-numbers
+  :custom (display-line-numbers-width 4)
+  :hook (prog-mode . display-line-numbers-mode))
 
 ;;;; Language support
 (use-package yaml-mode
