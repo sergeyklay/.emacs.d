@@ -23,6 +23,7 @@ clean:
 .PHONY: distclean
 distclean: clean
 	$(RM) GPATH GRTAGS GTAGS
+	$(RM) package-quickstart.el
 	$(RM) -r elpa
 
 .PHONY: install

@@ -49,6 +49,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Package management
 
+;; Package management in Emacs can be done in several ways. I personally like
+;; `use-package' together with package.el. Some will prefer straight.el, but I
+;; haven't found the need for it yet.
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
 
@@ -56,24 +59,25 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (custom-set-variables '(package-quickstart t))
 
 ;; No need to activate all the packages so early.
-(when (or (daemonp)
-          noninteractive)
+(when (or (daemonp) noninteractive)
   (package-initialize))
 
-(unless (package-installed-p 'use-package)
-  (require 'package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
 (custom-set-variables
- '(use-package-enable-imenu-support t) ; enable imenu support for `use-package'
+ '(use-package-enable-imenu-support t)
  '(use-package-verbose emacs-debug-mode))
 
+;; For the actual package configuration, I use `use-package'.
 (eval-when-compile
-  (setq use-package-always-ensure t)
-  (require 'use-package))
-
-(require 'bind-key)
+  (unless (ignore-errors (require 'use-package))
+    ;; This is a seldomly-run part of my configuration, as `use-package' is
+    ;; installed on Emacs' first run.
+    (require 'package)
+    (package-refresh-contents)
+    (package-install 'use-package)
+    ;; Only in the first run all packages configured within this file will get
+    ;; ensured. Speeds up other startups quite nicely.
+    (setq use-package-always-ensure t)
+    (require 'use-package)))
 
 ;;;; Sane defaults
 
