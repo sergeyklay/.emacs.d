@@ -173,15 +173,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (load-theme 'modus-vivendi)
 
-(custom-set-variables
- '(visible-bell t)
- '(global-visual-line-mode t))
+(defun my-terminal-visible-bell ()
+   "A friendlier visual bell effect."
+   (invert-face 'mode-line)
+   (run-with-timer 0.1 nil 'invert-face 'mode-line))
 
 ;; Just blink the modeline on errors.
-(setq ring-bell-function
-      (lambda ()
-        (invert-face 'mode-line)
-        (run-with-timer 0.05 nil 'invert-face 'mode-line)))
+(setq ring-bell-function #'my-terminal-visible-bell)
 
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook 'show-paren-mode)
