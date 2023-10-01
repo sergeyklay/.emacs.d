@@ -34,18 +34,6 @@
 
 ;;;; Begin initialization.
 
-;; Every file opened and loaded by Emacs will run through this list to
-;; check for a proper handler for the file, but during startup, it
-;; won’t need any of them.
-;;
-;; TODO: Do I need restore `file-name-handler-alist' later, because it
-;; is needed for handling encrypted or compressed files, among other
-;; things?
-(setq file-name-handler-alist nil)
-
-;; One less file to load at startup
-(setq site-run-file nil)
-
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
@@ -59,44 +47,30 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
-;;;; Packaging
+;;;; Package management
 
-(require 'package)
+(with-eval-after-load 'package
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
 
-(defun my/package-initialize ()
-  "Actviate all packages (in particular autoloads)."
-  ;; Package loading optimization.
-  ;; No need to activate all the packages so early.
-  ;; Note: This requires Emacs >= 27.0
-  (setq package-quickstart t)
-  (when (or (daemonp)
-            noninteractive)
-    (package-initialize)))
+;; Package loading optimization.
+(custom-set-variables '(package-quickstart t))
 
-(my/package-initialize)
+;; No need to activate all the packages so early.
+(when (or (daemonp)
+          noninteractive)
+  (package-initialize))
 
-(custom-set-variables
- ;; Setting up package archives.
- '(package-archives
-   '(("melpa"    . "https://melpa.org/packages/")
-     ("m-stable" . "https://stable.melpa.org/packages/")
-     ("gnu"      . "https://elpa.gnu.org/packages/")))
- ;; Priorities. Default priority is 0.
- '(package-archive-priorities
-   '(("m-stable" . 10)
-     ("melpa"    . 20))))
-
-;; Install use-package
 (unless (package-installed-p 'use-package)
+  (require 'package)
   (package-refresh-contents)
   (package-install 'use-package))
 
 (custom-set-variables
  '(use-package-enable-imenu-support t) ; enable imenu support for `use-package'
- '(use-package-always-ensure t)        ; all packages should be installed
  '(use-package-verbose emacs-debug-mode))
 
 (eval-when-compile
+  (setq use-package-always-ensure t)
   (require 'use-package))
 
 (require 'bind-key)
@@ -106,10 +80,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq default-directory (concat (getenv "HOME") "/"))
 
 (global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
-
-;; Modern API for working with files and directories in Emacs.
-(use-package f
-  :defer t)
 
 (setq-default
  vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
@@ -167,7 +137,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Project management
 
 (use-package project
-  :ensure nil
   :commands (project-find-file
              project-switch-to-buffer
              project-switch-project
@@ -197,6 +166,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Language support
 
 (use-package yaml-mode
+  :ensure t
   :mode "\\.ya?ml\\'"
   :config
   :interpreter ("yml" . yml-mode))
@@ -208,7 +178,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :diminish anaconda-mode)
 
 (use-package python
-  :ensure nil
   :mode ("\\.py\\'" . python-mode)
   :custom
   (python-shell-interpreter "python3")
