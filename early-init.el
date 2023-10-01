@@ -4,6 +4,7 @@
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
+;; Keywords: configuration, misc
 
 ;; This file is NOT part of Emacs.
 
@@ -36,13 +37,19 @@
           noninteractive)
   (setq package-enable-at-startup nil))
 
-;; Increasing GC is a common way to speed up Emacs. `gc-cons-threshold'
-;; sets at what point Emacs should invoke its garbage collector.  When
-;; set it temporarily to a large number, we only garbage collect once
-;; on startup.  We'll reset it later by enabling `gcmh-mode'. Not
-;; resetting it will cause stuttering/freezes.
-(setq gc-cons-threshold most-positive-fixnum
+;; Increasing GC is a common way to speed up Emacs. `gc-cons-threshold' sets at
+;; what point Emacs should invoke its garbage collector.  When set it
+;; temporarily to a large number, we only garbage collect once on startup.
+;; We'll reset it later, in this file. Not resetting it will cause
+;; stuttering/freezes.
+(setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
       gc-cons-percentage 0.6)
+
+;; Garbage Collector Magic Hack
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 16 1024 1024) ; 16mb
+                  gc-cons-percentage 0.1)))
 
 ;; The command-line option ‘-batch’ causes Emacs to run noninteractively.
 ;; In noninteractive sessions, prioritize non-byte-compiled source files to
@@ -80,3 +87,10 @@
 
 (provide 'early-init)
 ;;; early-init.el ends here
+
+;; Local Variables:
+;; fill-column: 80
+;; eval: (outline-minor-mode)
+;; eval: (display-fill-column-indicator-mode)
+;; coding: utf-8-unix
+;; End:

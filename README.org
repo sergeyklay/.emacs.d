@@ -4,6 +4,36 @@ This repository contains my personal configuration for GNU Emacs that I use on
 the daily and port around from system to system with me.  This is the second
 repository I clone — after [[https://github.com/sergeyklay/dotfiles][my dotfiles]] — when settling in on a new system.
 
+** The Philosophy
+
+The guiding philosophy behind this Emacs configuration is that it
+should be a direct extension of my own memory.  This project serves as
+a representation of what I can actively recall and understand.
+
+As a result, you won't find overly complex settings or sophisticated
+designs here.  The aim is to keep everything as straightforward and
+transparent as possible.  This ensures that the configuration can be
+easily read, understood, and held mentally.
+
+If you come across this project, bear in mind that it's molded to fit
+what I can keep "in my head" rather than what Emacs is capable of
+doing.  The simplicity is intentional and serves as a mnemonic aid for
+me.
+
+This Emacs configuration is designed around four core principles that
+aim to make it an efficient, transparent, and portable extension of my
+workflow:
+
+- self-contained :: A duo of =early-init.el= and =init.el= files
+  responsible for loading and configuring publicly available packages,
+  with the exception of ~custom.el~.
+- small :: The configuration files collectively stay under 512 lines
+  in total.
+- built-in packages :: Preference is given to built-in solutions; if
+  unavailable, GNU alternatives take precedence over MELPA packages.
+- system-agnostic :: The setup should function seamlessly across
+  different operating systems.
+
 ** Requirements
 
 This configuration uses default-style keybindings and known to work

@@ -24,18 +24,7 @@
 
 ;;; Commentary:
 
-;;   The guiding philosophy behind this Emacs configuration is that it should
-;; be a direct extension of my own memory.  This project serves as a
-;; representation of what I can actively recall and understand.
-;;
-;; As a result, you won't find overly complex settings or esoteric designs here.
-;; The aim is to keep everything as straightforward and transparent as possible.
-;; This ensures that the configuration can be easily read, understood, and held
-;; mentally.
-;;
-;; If you come across this project, bear in mind that it's molded to fit what I
-;; can keep "in my head" rather than what Emacs is capable of doing.  The
-;; simplicity is intentional and serves as a mnemonic aid for me.
+;;   This file bootstraps the Emacs configuration.
 ;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
@@ -75,6 +64,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (defun my/package-initialize ()
   "Actviate all packages (in particular autoloads)."
+  ;; Package loading optimization.
+  ;; No need to activate all the packages so early.
+  ;; Note: This requires Emacs >= 27.0
   (setq package-quickstart t)
   (when (or (daemonp)
             noninteractive)
@@ -117,18 +109,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Modern API for working with files and directories in Emacs.
 (use-package f
   :defer t)
-
-;; Garbage Collector Magic Hack
-(use-package gcmh
-  :diminish
-  :hook (emacs-startup . gcmh-mode)
-  :custom
-  ;; Idle time to wait in seconds before triggering GC.
-  (gcmh-idle-delay 'auto)
-  ;; Factor to compute the idle delay when in idle-delay auto mode.
-  (gcmh-auto-idle-delay-factor 10)
-  ;; High cons GC threshold.
-  (gcmh-high-cons-threshold #x1000000))
 
 (setq-default
  vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
@@ -198,7 +178,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      "*~" ".*~"
      ;; Ignore files that start and end with a hash symbol (#)
      ;; (autosaves), for example: #.sqliterc#
-     "#*#" ".#*"))
+     "#*#" ".#*"
+     ;; Ignore these suffixes
+     "*.elc" "*.pyc" "*.o" "*.lo" "*.la" "*.out" "*.sock" "*.zwc"
+     ;; Ignore these files
+     ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
+     ;; Ignore project dependency directories
+     "node_modules"))
   :config
   ;; Use Ripgrep if installed
   (when (shell-command-to-string "command rg --version")
@@ -230,3 +216,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                                       (anaconda-mode))))
 
 ;;; init.el ends here
+
+;; Local Variables:
+;; fill-column: 80
+;; eval: (outline-minor-mode)
+;; eval: (display-fill-column-indicator-mode)
+;; coding: utf-8-unix
+;; End:
