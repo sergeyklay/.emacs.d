@@ -105,17 +105,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Appearance
 
-(use-package leuven-theme
-    :init (load-theme 'leuven t))
+(load-theme 'modus-vivendi)
 
 (custom-set-variables
  '(global-visual-line-mode t)
  '(ring-bell-function 'ignore))
-
-(custom-set-faces
- ;; TODO: I may want to change this in the future, but as long as the
- ;; theme is light, a black cursor will be appropriate
- '(cursor ((t (:background "#000000")))))
 
 ;;;; Emacs Server
 
@@ -149,7 +143,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (project-vc-ignores
    '(;; Ignore files that end with a tilde (~)
      ;; (backup files), for example: .gitignore~
-     "*~" ".*~"
+     "*~" ".*~" "*.*~"
      ;; Ignore files that start and end with a hash symbol (#)
      ;; (autosaves), for example: #.sqliterc#
      "#*#" ".#*"
@@ -160,7 +154,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      ;; Ignore project dependency directories
      "node_modules"))
   :config
-  ;; Use Ripgrep if installed
+  ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep))
   ;; Remove zombie projects from `project-list-file'
