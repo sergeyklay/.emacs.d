@@ -41,7 +41,7 @@
                   (and
                    (not (string-prefix-p ".git" dir))
                    (not (string-prefix-p "anaconda-mode" dir))
-                   (not (string-prefix-p "autosave" dir))
+                   (not (string-prefix-p "auto-save-list" dir))
                    (not (string-prefix-p "backup" dir))
                    (not (string-prefix-p "elpa" dir))
                    (not (string-prefix-p "eshell" dir))

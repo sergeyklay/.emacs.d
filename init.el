@@ -119,7 +119,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (make-directory my-backup-dir t)))
 
 ;;;; Auto-Saving
-(let ((my-auto-save-dir (concat user-emacs-directory "autosave/")))
+(let ((my-auto-save-dir (concat user-emacs-directory "auto-save-list/")))
   (setq
    auto-save-file-name-transforms
    `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t))
