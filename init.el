@@ -79,7 +79,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq use-package-always-ensure t)
     (require 'use-package)))
 
-
 ;;;; Backup
 
 ;; Delete excess backup versions silently.
@@ -214,7 +213,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep)))
-
 
 ;;;; Language support
 
