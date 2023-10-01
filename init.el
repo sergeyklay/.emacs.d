@@ -194,10 +194,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Project management
 
 (use-package project
-  :commands (project-find-file
+  :defer t
+  :commands (project-root
+             project-find-file
              project-switch-to-buffer
              project-switch-project
-             project-switch-project-open-file)
+             project-switch-project-open-file
+             project-prompt-project-dir
+             project-forget-zombie-projects)
   :custom
   (project-vc-ignores
    '(;; Ignore these suffixes
@@ -207,11 +211,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      ;; Ignore project dependency directories
      "node_modules"))
   :config
+  ;; Auto clean up zombie projects from `project-list-file'
+  (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
-    (setq xref-search-program 'ripgrep))
-  ;; Remove zombie projects from `project-list-file'
-  (project-forget-zombie-projects))
+    (setq xref-search-program 'ripgrep)))
 
 
 ;;;; Language support
@@ -222,19 +226,17 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :config
   :interpreter ("yml" . yml-mode))
 
-;; TODO: I may want to add company-anaconda to company-backends later
-;; if (when) I will use company
-(use-package anaconda-mode
-  :ensure t
-  :diminish anaconda-mode)
-
 (use-package python
-  :mode ("\\.py\\'" . python-mode)
+  :defer t
   :custom
   (python-shell-interpreter "python3")
-  (python-shell-interpreter-args "-i --simple-prompt --pprint")
-  :init (add-hook 'python-mode-hook (lambda ()
-                                      (anaconda-mode))))
+  (python-shell-interpreter-args "-i --simple-prompt --pprint"))
+
+(use-package anaconda-mode
+  :ensure t
+  :after python
+  :hook ((python-mode . anaconda-mode)
+         (python-mode . anaconda-eldoc-mode)))
 
 ;; Local Variables:
 ;; fill-column: 80

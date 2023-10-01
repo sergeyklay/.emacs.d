@@ -42,8 +42,7 @@
     (let ((basename (file-name-nondirectory file)))
       (when (not (member basename '(".dir-locals.el"
                                     "custom.el"
-                                    "early-init.el"
-                                    "package-quickstart.el")))
+                                    "early-init.el")))
         (byte-compile-file file)))))
 
 (provide 'bc)
