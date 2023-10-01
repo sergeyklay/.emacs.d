@@ -25,18 +25,45 @@
 
 ;;; Commentary:
 
-;;   This file bootstraps the Emacs configuration.
+;; Welcome to my GNU Emacs haven.  This configuration is a reflection of my
+;; desire for a minimalist yet powerful editing environment.  Here are the
+;; guiding principles that shape this setup:
+;;
+;; 1. Maintain a lean line count: The entire configuration, including comments
+;;    and the early-init.el file, shall remain under 512 lines.  The
+;;    `fill-column’ is firmly set at 80 to ensure readability and maintain the
+;;    compact nature.
+;; 2. Modularity is key: Configurations are organized into self-contained
+;;    sections, making it a breeze to lift and shift any part of the setup into
+;;    another configuration if need be.
+;; 3. Embrace outlines: The structure adheres to `outline-minor-mode' standards,
+;;    allowing for a clean and organized view of the configuration's skeleton.
+;; 4. No line-count gimmicks: There's a ban on line-count reduction tricks like
+;;    squishing multiple `setq' arguments into a single line.  However, `dolist’
+;;    and similar constructs are fair game.
+;; 5. A delightful Emacs experience: The setup is crafted to provide a pleasant
+;;    and efficient Emacs experience, tailored to my preferences and workflow.
+;;
+;; Each section of the configuration is meticulously crafted to adhere to these
+;; principles while ensuring that Emacs remains a powerful and efficient tool
+;; for all my text editing needs.
 ;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
 ;;; Code:
 
-;;;; Begin initialization.
-
+;;;; Profiling and Debug
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
   "If non-nil, all Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
+
+;; Set the `debug-on-error' variable as per the runtime context:
+;; - Enable debugging on error if Emacs is running in interactive mode,
+;;   and the custom variable `emacs-debug-mode' is true.
+;; - Do not enable debugging on error in non-interactive mode,
+;;   regardless of the `emacs-debug-mode' value.
+(setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
 
 ;; Measure the current start up time.
 (add-hook 'emacs-startup-hook
@@ -48,26 +75,21 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                      gcs-done)))
 
 ;;;; Package management
-
 ;; Package management in Emacs can be done in several ways. I personally like
 ;; `use-package' together with package.el. Some will prefer straight.el, but I
 ;; haven't found the need for it yet.
 (with-eval-after-load 'package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
+(setq package-quickstart t)
 
-;; Package loading optimization.
-(custom-set-variables '(package-quickstart t))
-
-;; No need to activate all the packages so early.
+;; No need to activate all the packages so early in server or non-interactive
+;; mode.
 (when (or (daemonp) noninteractive)
   (package-initialize))
 
-(custom-set-variables
- '(use-package-enable-imenu-support t)
- '(use-package-verbose emacs-debug-mode))
-
 ;; For the actual package configuration, I use `use-package'.
 (eval-when-compile
+  (setq use-package-enable-imenu-support t)
   (unless (ignore-errors (require 'use-package))
     ;; This is a seldomly-run part of my configuration, as `use-package' is
     ;; installed on Emacs' first run.
@@ -80,7 +102,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (require 'use-package)))
 
 ;;;; Backup
-
 ;; Delete excess backup versions silently.
 (setq delete-old-versions t)
 
@@ -98,7 +119,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (make-directory my-backup-dir t)))
 
 ;;;; Auto-Saving
-
 (let ((my-auto-save-dir (concat user-emacs-directory "autosave/")))
   (setq
    auto-save-file-name-transforms
@@ -111,27 +131,28 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (unless (file-exists-p my-auto-save-dir)
     (make-directory my-auto-save-dir t)))
 
-(setq auto-save-default t
-      auto-save-timeout 10
-      auto-save-interval 200)
-
 ;;;; History
-
-(setq-default
- history-length 1000
- history-delete-duplicates t)
-
-(savehist-mode 1)
+(use-package savehist
+  :custom
+  ;; Set the default history length to 1000 entries.  The default value is
+  ;; typically lower, but increasing it allows for a more comprehensive history,
+  ;; which can be beneficial when needing to recall or reuse previous inputs
+  ;; across sessions.
+  (history-length 1000)
+  ;; Enable the automatic deletion of duplicate entries from history.  By
+  ;; default, this is disabled, but enabling it helps in keeping the history
+  ;; clean and more manageable, especially when frequently reusing the same
+  ;; inputs.
+  (history-delete-duplicates t)
+  :init
+  (savehist-mode t))
 
 ;;;; Sane defaults
+;; No tabs - except for some files, and Emacs knows which ones.
+(setq-default indent-tabs-mode nil)
 
-(setq default-directory (concat (getenv "HOME") "/"))
-
-(global-set-key (kbd "C-x t d") #'toggle-debug-on-error)
-
-(setq-default
- vc-follow-symlinks t ; Don't ask for confirmation when opening symlinks
- debug-on-error (and (not noninteractive) emacs-debug-mode))
+;; Use tab key as completion option
+(setq tab-always-indent 'complete)
 
 (custom-set-variables
  '(initial-scratch-message "")    ; No scratch message
@@ -148,20 +169,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
           (expand-file-name (substitute-in-file-name src)))))
 
 ;;;; Emacs Server
-
-;; Declare the function `server-running-p' from the "server" module.
-;;
-;; This declaration informs the Emacs Lisp compiler that the function
-;; `server-running-p' exists, but is defined in an external module ("server").
-;; This prevents compile-time warnings and helps in generating better bytecode.
-;; The `declare-function' acts as a forward declaration, essentially saying:
-;; "Trust me, this function will be available at runtime, even if you can't see
-;; it now at compile time."
-;;
-;; Note: This is not a substitute for `(require 'server)` or `(load "server")`,
-;; it is only for the compiler's benefit.
 (declare-function server-running-p "server")
-
 (add-hook 'after-init-hook
           #'(lambda ()
               (require 'server)
@@ -169,7 +177,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                 (server-start))))
 
 ;;;; Appearance
-
 (load-theme 'modus-vivendi)
 
 (defun my-terminal-visible-bell ()

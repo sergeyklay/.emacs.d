@@ -51,4 +51,12 @@
         (byte-compile-file file)))))
 
 (provide 'bc)
+
+;; Local Variables:
+;; fill-column: 80
+;; eval: (outline-minor-mode)
+;; eval: (display-fill-column-indicator-mode)
+;; coding: utf-8-unix
+;; End:
+
 ;;; bc.el ends here
