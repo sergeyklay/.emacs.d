@@ -79,6 +79,51 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq use-package-always-ensure t)
     (require 'use-package)))
 
+
+;;;; Backup
+
+;; Delete excess backup versions silently.
+(setq delete-old-versions t)
+
+;; Make numeric backup versions unconditionally.
+(setq version-control t)
+
+;; Make backup files even in version controlled directories.
+(setq vc-make-backup-files t)
+
+;; Keep all backup in one directory.
+(let ((my-backup-dir (concat user-emacs-directory "backup/")))
+  (setq backup-directory-alist
+        `(("." . ,(file-name-as-directory my-backup-dir))))
+  (unless (file-exists-p my-backup-dir)
+    (make-directory my-backup-dir t)))
+
+;;;; Auto-Saving
+
+(let ((my-auto-save-dir (concat user-emacs-directory "autosave/")))
+  (setq
+   auto-save-file-name-transforms
+   `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t))
+
+   auto-save-list-file-name
+   (concat my-auto-save-dir
+           (format ".saves-%d-%s~" (emacs-pid) (system-name))))
+
+  (unless (file-exists-p my-auto-save-dir)
+    (make-directory my-auto-save-dir t)))
+
+(setq auto-save-default t
+      auto-save-timeout 10
+      auto-save-interval 200)
+
+;;;; History
+
+(setq-default
+ history-length 1000
+ history-delete-duplicates t)
+
+(savehist-mode 1)
+
 ;;;; Sane defaults
 
 (setq default-directory (concat (getenv "HOME") "/"))
@@ -103,23 +148,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq source-directory
           (expand-file-name (substitute-in-file-name src)))))
 
-;;;; Appearance
-
-(load-theme 'modus-vivendi)
-
-(custom-set-variables
- '(visible-bell t)
- '(global-visual-line-mode t))
-
-;; Just blink the modeline on errors.
-(setq ring-bell-function
-      (lambda ()
-        (invert-face 'mode-line)
-        (run-with-timer 0.05 nil 'invert-face 'mode-line)))
-
-;; Highlight matching parentheses when the point is on them.
-(add-hook 'after-init-hook 'show-paren-mode)
-
 ;;;; Emacs Server
 
 ;; Declare the function `server-running-p' from the "server" module.
@@ -141,6 +169,28 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               (unless (server-running-p)
                 (server-start))))
 
+;;;; Appearance
+
+(load-theme 'modus-vivendi)
+
+(custom-set-variables
+ '(visible-bell t)
+ '(global-visual-line-mode t))
+
+;; Just blink the modeline on errors.
+(setq ring-bell-function
+      (lambda ()
+        (invert-face 'mode-line)
+        (run-with-timer 0.05 nil 'invert-face 'mode-line)))
+
+;; Highlight matching parentheses when the point is on them.
+(add-hook 'after-init-hook 'show-paren-mode)
+
+;; I prefer not to have any of the GUI elements.
+;; This keeps the window clean. And a bit speed up loading.
+(setq use-file-dialog nil)
+(setq use-dialog-box nil)
+
 ;;;; Project management
 
 (use-package project
@@ -150,13 +200,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
              project-switch-project-open-file)
   :custom
   (project-vc-ignores
-   '(;; Ignore files that end with a tilde (~)
-     ;; (backup files), for example: .gitignore~
-     "*~" ".*~" "*.*~"
-     ;; Ignore files that start and end with a hash symbol (#)
-     ;; (autosaves), for example: #.sqliterc#
-     "#*#" ".#*"
-     ;; Ignore these suffixes
+   '(;; Ignore these suffixes
      "*.elc" "*.pyc" "*.o" "*.lo" "*.la" "*.out" "*.sock" "*.zwc"
      ;; Ignore these files
      ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
