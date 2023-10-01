@@ -4,6 +4,7 @@
 
 ;; Author: Serghei Iakovlev <egrep@protonmail.ch>
 ;; URL: https://github.com/sergeyklay/.emacs.d
+;; Keywords: configuration, misc
 
 ;; This file is NOT part of Emacs.
 
@@ -215,11 +216,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :init (add-hook 'python-mode-hook (lambda ()
                                       (anaconda-mode))))
 
-;;; init.el ends here
-
 ;; Local Variables:
 ;; fill-column: 80
 ;; eval: (outline-minor-mode)
 ;; eval: (display-fill-column-indicator-mode)
 ;; coding: utf-8-unix
 ;; End:
+
+;;; init.el ends here

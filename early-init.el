@@ -86,7 +86,6 @@
   (setq command-line-x-option-alist nil))
 
 (provide 'early-init)
-;;; early-init.el ends here
 
 ;; Local Variables:
 ;; fill-column: 80
@@ -94,3 +93,5 @@
 ;; eval: (display-fill-column-indicator-mode)
 ;; coding: utf-8-unix
 ;; End:
+
+;;; early-init.el ends here
