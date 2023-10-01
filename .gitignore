@@ -21,6 +21,9 @@
 # Byte compiled elisp files.
 *.elc
 
+# Emacs Bookmark.
+/bookmarks
+
 # Save places.
 /places
 
