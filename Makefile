@@ -40,3 +40,23 @@ checkdoc: test/checkdoc.el
 
 .PHONY: test
 test: checkdoc build
+
+.PHONY: help
+help:
+	@echo ''
+	@echo 'Run "make install" first to install dependencies.'
+	@echo ''
+	@echo 'Available targets:'
+	@echo '  help:       Show this help and exit'
+	@echo '  install:    Install dependencies'
+	@echo '  checkdoc:   Check doc for errors'
+	@echo '  build:      Byte compile configuration files'
+	@echo '  test:       Run the non-interactive test suite'
+	@echo '  clean:      Remove byte compiled files and artifacts'
+	@echo ''
+
+# Local Variables:
+# fill-column: 80
+# mode: makefile-gmake
+# coding: utf-8-unix
+# End:

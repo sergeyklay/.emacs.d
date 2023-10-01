@@ -32,3 +32,9 @@ RUNEMACS = $(EMACSBATCH)
 else
 RUNEMACS = $(CASK) exec $(EMACSBATCH)
 endif
+
+# Local Variables:
+# fill-column: 80
+# mode: makefile-gmake
+# coding: utf-8-unix
+# End:
