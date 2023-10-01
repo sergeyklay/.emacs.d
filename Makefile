@@ -38,8 +38,12 @@ build: init.el test/bc.el
 checkdoc: test/checkdoc.el
 	$(RUNEMACS) --load $(TOP)/$<
 
+.PHONY: linescount
+linescount: test/lc.el
+	$(RUNEMACS) --load $(TOP)/$<
+
 .PHONY: test
-test: checkdoc build
+test: linescount checkdoc build
 
 .PHONY: help
 help:
@@ -50,6 +54,7 @@ help:
 	@echo '  help:       Show this help and exit'
 	@echo '  install:    Install dependencies'
 	@echo '  checkdoc:   Check doc for errors'
+	@echo '  linescount: Check the total line count of config files'
 	@echo '  build:      Byte compile configuration files'
 	@echo '  test:       Run the non-interactive test suite'
 	@echo '  clean:      Remove byte compiled files and artifacts'

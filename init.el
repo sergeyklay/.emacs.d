@@ -196,7 +196,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq use-dialog-box nil)
 
 ;;;; Project management
-
 (use-package project
   :defer t
   :commands (project-root
@@ -222,7 +221,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq xref-search-program 'ripgrep)))
 
 ;;;; Language support
-
 (use-package yaml-mode
   :ensure t
   :mode "\\.ya?ml\\'"
