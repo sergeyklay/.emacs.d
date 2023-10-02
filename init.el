@@ -55,7 +55,7 @@
 
 ;;;; Profiling and Debug
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
-  "If non-nil, all Emacs will be verbose.
+  "If non-nil, Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Set the `debug-on-error' variable as per the runtime context:
@@ -82,8 +82,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
 (setq package-quickstart t)
 
-;; No need to activate all the packages so early in server or non-interactive
-;; mode.
+;; No need to activate all the packages so early in either server or
+;; non-interactive mode.
 (when (or (daemonp) noninteractive)
   (package-initialize))
 
@@ -96,13 +96,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (require 'package)
     (package-refresh-contents)
     (package-install 'use-package)
-    ;; Only in the first run all packages configured within this file will get
-    ;; ensured. Speeds up other startups quite nicely.
+    ;; Only on the first run will all packages configured within this file be
+    ;; ensured. This speeds up subsequent startups quite nicely.
     (setq use-package-always-ensure t)
     (require 'use-package)))
 
 ;;;; Backup
-;; Delete excess backup versions silently.
+;; Silently delete excess backup versions.
 (setq delete-old-versions t)
 
 ;; Make numeric backup versions unconditionally.
@@ -111,7 +111,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Make backup files even in version controlled directories.
 (setq vc-make-backup-files t)
 
-;; Keep all backup in one directory.
+;; Keep all backups in one directory.
 (let ((my-backup-dir (concat user-emacs-directory "backup/")))
   (setq backup-directory-alist
         `(("." . ,(file-name-as-directory my-backup-dir))))
@@ -229,9 +229,79 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; I prefer not to have any of the GUI elements.
-;; This keeps the window clean. And a bit speed up loading.
-(setq use-file-dialog nil)
-(setq use-dialog-box nil)
+;; This keeps the window clean and speeds up loading a bit.
+(setq-default use-file-dialog nil)
+(setq-default use-dialog-box nil)
+
+;;;; Windows and frames
+(defun my/monitor-resolution (monitor)
+  "Get current MONITOR resolution in pixels.
+For non-window systems, this will return frame dimesion."
+  (let* ((monitor-attrs (display-monitor-attributes-list))
+         (num-displays (length monitor-attrs))
+         (geometry (assq 'geometry (nth monitor monitor-attrs))))
+    (if (< monitor num-displays)
+        (list (nth 3 geometry)
+              (nth 4 geometry))
+      (error "Invalid monitor number: %d" monitor))))
+
+(defun my/monitor-pixel-width (monitor)
+  "Get current MONITOR width in pixels."
+  (car (my/monitor-resolution monitor)))
+
+(defun my/monitor-pixel-height (monitor)
+  "Get current MONITOR height in pixels."
+  (nth 1 (my/monitor-resolution monitor)))
+
+(defun my/calibrate-frame-geometry()
+  "Set the size and position of the main Emacs frame."
+  (interactive)
+  (let ((frame (selected-frame))
+        width-in-pixels
+        height-in-pixels
+        top-in-pixels
+        left-in-pixels
+        (width-in-chars 175)
+        (height-in-chars 50)
+        (total-width (my/monitor-pixel-width 0))
+        (total-height (my/monitor-pixel-height 0)))
+
+    ;; Adjust frame height based on monitor height
+    (cond ((<= total-height 640)
+           (setq height-in-chars 34))
+          ((<= total-height 800)
+           (setq height-in-chars 40))
+          ((<= total-height 900)
+           (setq height-in-chars 45))
+          ((<= total-height 1440)
+           (setq height-in-chars 50))
+          ((>= total-height 1692)
+           (setq height-in-chars 60)))
+
+    ;; Adjust frame width for small monitors
+    (when (<= total-width 1024)
+      (setq width-in-chars 86))
+
+    (setq width-in-pixels (* width-in-chars (frame-char-width)))
+    (setq height-in-pixels (* height-in-chars (frame-char-height)))
+
+    ;; Center frame.  22 here is a top menubar in Gnome, macOs and Ubuntu.
+    (setq top-in-pixels (round (- (/ (- total-height height-in-pixels) 2) 22)))
+    (setq left-in-pixels (round (/ (- total-width width-in-pixels) 2)))
+
+    (set-frame-size frame width-in-chars height-in-chars)
+    (set-frame-position frame left-in-pixels top-in-pixels)))
+
+(defun my|frame-setup-hook()
+  "Hook to set the size and position of the main Emacs frame."
+  (let ((frame (selected-frame)))
+    ;; For terminal frame the height in pixels is always 1.
+    ;; Do not change geometry for terminal frames.
+    (when (> (frame-char-height) 1)
+      (my/calibrate-frame-geometry))
+    (select-frame-set-input-focus frame)))
+
+(add-hook 'window-setup-hook #'my|frame-setup-hook)
 
 ;;;; Project management
 (use-package project
@@ -266,7 +336,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Set the default width of fill mode to 80
 (setq-default fill-column 80)
 
-;; Visually indicate empty lines after the buffer end
+;; Visually indicate empty lines after the buffer's end.
 (setq-default indicate-empty-lines t)
 
 ;; Show column number next to line number in mode line.
@@ -275,6 +345,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Redefine line and column format. It will looks like " 278:59 ".
 (setq-default mode-line-position-column-line-format '(" %l:%c "))
+
+;; Show Line Numbers
+(use-package display-line-numbers
+  :custom (display-line-numbers-width 4)
+  :hook (prog-mode . display-line-numbers-mode))
 
 (use-package elec-pair
   :hook
@@ -286,9 +361,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Language support
 (use-package yaml-mode
   :ensure t
-  :mode "\\.ya?ml\\'"
-  :config
-  :interpreter ("yml" . yml-mode))
+  :mode "\\.ya?ml\\'")
 
 (use-package python
   :defer t
