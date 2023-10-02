@@ -269,6 +269,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Visually indicate empty lines after the buffer end
 (setq-default indicate-empty-lines t)
 
+;; Show column number next to line number in mode line.
+;; Emacs displays line numbers by default.
+(setq-default column-number-mode t)
+
+;; Redefine line and column format. It will looks like " 278:59 ".
+(setq-default mode-line-position-column-line-format '(" %l:%c "))
+
 (use-package elec-pair
   :hook
   ;; Activate electric-pair-mode automatically after Emacs initialization.
