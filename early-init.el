@@ -25,7 +25,7 @@
 
 ;;; Commentary:
 
-;; Deal with packages only and early init stuff.
+;; Handle only package initialization and early initialization tasks.
 
 ;;; Code:
 
@@ -37,28 +37,28 @@
           noninteractive)
   (setq package-enable-at-startup nil))
 
-;; Increasing GC is a common way to speed up Emacs. `gc-cons-threshold' sets at
-;; what point Emacs should invoke its garbage collector.  When set it
-;; temporarily to a large number, we only garbage collect once on startup.
-;; We'll reset it later, in this file. Not resetting it will cause
-;; stuttering/freezes.
+;; Increasing the GC threshold is a common way to speed up Emacs.
+;; `gc-cons-threshold' sets at what point Emacs should invoke its garbage
+;; collector.  When set it temporarily to a large number, we only garbage
+;; collect once on startup.  We'll reset it later, in this file.  Not
+;; resetting it will cause stuttering/freezes.
 (setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
       gc-cons-percentage 0.6)
 
-;; Garbage Collector Magic Hack
+;; Garbage Collector Optimization Hack
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold (* 16 1024 1024) ; 16mb
                   gc-cons-percentage 0.1)))
 
-;; The command-line option ‘-batch’ causes Emacs to run noninteractively.
+;; The command-line option ‘-batch’ makes Emacs to run noninteractively.
 ;; In noninteractive sessions, prioritize non-byte-compiled source files to
-;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
-;; to skip the mtime checks on every *.elc file.
+;; prevent the use of stale byte-code.  Otherwise, skipping the mtime checks
+;; on every *.elc file saves a bit of IO time.
 (setq load-prefer-newer noninteractive)
 
-;; Contrary to what many Emacs users have in their configs, you don't need
-;; more than this to make UTF-8 the default coding system:
+;; Contrary to common configurations, this is all that's needed to set UTF-8
+;; as the default coding system:
 (set-language-environment "UTF-8")
 
 ;; `set-language-enviornment' sets `default-input-method', which is unwanted.
@@ -74,12 +74,12 @@
   (menu-bar-mode -1))
 
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
-;; font. By inhibiting this, we easily halve startup times with fonts that are
-;; larger than the system default.
+;; font.  By inhibiting this, the startup time is significantly reduced,
+;; especially with fonts larger than the system default.
 (setq frame-inhibit-implied-resize t)
 
-;; Remove command line options that aren't relevant to our current OS; means
-;; slightly less to process at startup.
+;; Remove command line options that aren't relevant to the current OS; this
+;; results in slightly less processing at startup.
 (unless (eq system-type 'darwin)
   (setq command-line-ns-option-alist nil))
 (unless (eq system-type 'gnu/linux)

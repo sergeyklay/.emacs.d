@@ -82,7 +82,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
 (setq package-quickstart t)
 
-;; No need to activate all the packages so early in either server or
+;; No need to activate all packages so early in either server or
 ;; non-interactive mode.
 (when (or (daemonp) noninteractive)
   (package-initialize))
@@ -102,7 +102,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (require 'use-package)))
 
 ;;;; Backup
-;; Silently delete excess backup versions.
+;; Silently deletes excess backup versions.
 (setq delete-old-versions t)
 
 ;; Make numeric backup versions unconditionally.
@@ -327,7 +327,7 @@ For non-window systems, this will return frame dimesion."
     (setq xref-search-program 'ripgrep)))
 
 ;;;; Editor
-;; No tabs - except for some files, and Emacs knows which ones.
+;; No tabs - except for specific files, which Emacs can identify.
 (setq-default indent-tabs-mode nil)
 
 ;; Increase the warning threshold for big files
