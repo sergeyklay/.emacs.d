@@ -154,6 +154,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (savehist-mode t))
 
 (use-package recentf
+  :if (not noninteractive)
   :defer 2
   :custom
   (recentf-max-saved-items 100)
@@ -161,7 +162,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 		  file-remote-p file-readable-p))
   :config
   (recentf-mode)
-  (run-with-idle-timer (* 3 60) t #'recentf-save-list))
+  (when (fboundp 'recentf-save-list)
+    (run-with-idle-timer (* 3 60) t #'recentf-save-list)))
 
 ;;;; Sane defaults
 (use-package emacs
