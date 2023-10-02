@@ -153,6 +153,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :init
   (savehist-mode t))
 
+(use-package recentf
+  :defer 2
+  :custom
+  (recentf-max-saved-items 100)
+  (recentf-keep '(recentf-keep-default-predicate
+		  file-remote-p file-readable-p))
+  :config
+  (recentf-mode)
+  (run-with-idle-timer (* 3 60) t #'recentf-save-list))
+
 ;;;; Sane defaults
 (use-package emacs
   :config
@@ -265,11 +275,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (after-init . electric-pair-mode)
   ;; Disable electric-pair-local-mode in the minibuffer.
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
-
-;; Show Line Numbers
-(use-package display-line-numbers
-  :custom (display-line-numbers-width 4)
-  :hook (prog-mode . display-line-numbers-mode))
 
 ;;;; Language support
 (use-package yaml-mode
