@@ -54,19 +54,25 @@ jobs:
           version: ${{ matrix.emacs_version }}
 
       - name: Prepare home dir
-        run: rm -rf /home/runner/.emacs.d && ln -s $GITHUB_WORKSPACE /home/runner/.emacs.d
+        run: ln -sf $GITHUB_WORKSPACE /home/runner/.emacs.d
 
       - name: Install packages
         run: make install
 
-      - name: Run tests
+      - name: Check for style errors
+        run: make checkdoc
+
+      - name: Check the total line count
+        run: make linescount
+
+      - name: Byte compile configuration files
         if: matrix.allow_failure != true
-        run: make test
+        run: make build
         env:
           DEBUG: 1
 
-      - name: Run flaky tests
+      - name: Byte compile configuration files (allow failure)
         if: matrix.allow_failure == true
-        run: make test || true
+        run: make build || true
         env:
           DEBUG: 1

@@ -43,7 +43,7 @@ linescount: test/lc.el
 	$(RUNEMACS) --load $(TOP)/$<
 
 .PHONY: test
-test: linescount checkdoc build
+test: linescount checkdoc
 
 .PHONY: help
 help:
