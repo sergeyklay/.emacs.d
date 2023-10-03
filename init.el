@@ -246,76 +246,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
 
-;;;; Windows and frames
-(defun my/monitor-resolution (monitor)
-  "Get current MONITOR resolution in pixels.
-For non-window systems, this will return frame dimesion."
-  (let* ((monitor-attrs (display-monitor-attributes-list))
-         (num-displays (length monitor-attrs))
-         (geometry (assq 'geometry (nth monitor monitor-attrs))))
-    (if (< monitor num-displays)
-        (list (nth 3 geometry)
-              (nth 4 geometry))
-      (error "Invalid monitor number: %d" monitor))))
-
-(defun my/monitor-pixel-width (monitor)
-  "Get current MONITOR width in pixels."
-  (car (my/monitor-resolution monitor)))
-
-(defun my/monitor-pixel-height (monitor)
-  "Get current MONITOR height in pixels."
-  (nth 1 (my/monitor-resolution monitor)))
-
-(defun my/calibrate-frame-geometry()
-  "Set the size and position of the main Emacs frame."
-  (interactive)
-  (let ((frame (selected-frame))
-        width-in-pixels
-        height-in-pixels
-        top-in-pixels
-        left-in-pixels
-        (width-in-chars 175)
-        (height-in-chars 50)
-        (total-width (my/monitor-pixel-width 0))
-        (total-height (my/monitor-pixel-height 0)))
-
-    ;; Adjust frame height based on monitor height
-    (cond ((<= total-height 640)
-           (setq height-in-chars 34))
-          ((<= total-height 800)
-           (setq height-in-chars 40))
-          ((<= total-height 900)
-           (setq height-in-chars 45))
-          ((<= total-height 1440)
-           (setq height-in-chars 50))
-          ((>= total-height 1692)
-           (setq height-in-chars 60)))
-
-    ;; Adjust frame width for small monitors
-    (when (<= total-width 1024)
-      (setq width-in-chars 86))
-
-    (setq width-in-pixels (* width-in-chars (frame-char-width)))
-    (setq height-in-pixels (* height-in-chars (frame-char-height)))
-
-    ;; Center frame.  22 here is a top menubar in Gnome, macOs and Ubuntu.
-    (setq top-in-pixels (round (- (/ (- total-height height-in-pixels) 2) 22)))
-    (setq left-in-pixels (round (/ (- total-width width-in-pixels) 2)))
-
-    (set-frame-size frame width-in-chars height-in-chars)
-    (set-frame-position frame left-in-pixels top-in-pixels)))
-
-(defun my|frame-setup-hook()
-  "Hook to set the size and position of the main Emacs frame."
-  (let ((frame (selected-frame)))
-    ;; For terminal frame the height in pixels is always 1.
-    ;; Do not change geometry for terminal frames.
-    (when (> (frame-char-height) 1)
-      (my/calibrate-frame-geometry))
-    (select-frame-set-input-focus frame)))
-
-(add-hook 'window-setup-hook #'my|frame-setup-hook)
-
 ;;;; Project management
 (use-package project
   :defer t
@@ -393,5 +323,12 @@ For non-window systems, this will return frame dimesion."
   :after python
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
+
+;; Local Variables:
+;; fill-column: 80
+;; eval: (outline-minor-mode)
+;; eval: (display-fill-column-indicator-mode)
+;; coding: utf-8-unix
+;; End:
 
 ;;; init.el ends here

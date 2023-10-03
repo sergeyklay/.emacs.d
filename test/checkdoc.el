@@ -54,4 +54,12 @@
         (checkdoc-file file)))))
 
 (provide 'checkdoc)
+
+;; Local Variables:
+;; fill-column: 80
+;; eval: (outline-minor-mode)
+;; eval: (display-fill-column-indicator-mode)
+;; coding: utf-8-unix
+;; End:
+
 ;;; checkdoc.el ends here
