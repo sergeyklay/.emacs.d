@@ -360,7 +360,12 @@ For non-window systems, this will return frame dimesion."
   ;; Disable electric-pair-local-mode in the minibuffer.
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
 
-;;;; Language support
+;;;; Human Languages
+(use-package outline
+  :commands (outline-mode outline-minor-mode)
+  :hook (prog-mode . outline-minor-mode))
+
+;;;; Programming Languages, Markup and Configurations
 (use-package yaml-mode
   :ensure t
   :mode "\\.ya?ml\\'")
@@ -377,9 +382,9 @@ For non-window systems, this will return frame dimesion."
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
 
+
 ;; Local Variables:
 ;; fill-column: 80
-;; eval: (outline-minor-mode)
 ;; eval: (display-fill-column-indicator-mode)
 ;; coding: utf-8-unix
 ;; End:
