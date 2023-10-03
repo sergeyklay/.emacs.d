@@ -182,27 +182,38 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Sane defaults
 (use-package emacs
-  :config
+  :custom
   ;; Use tab key as completion option.
-  (setq tab-always-indent 'complete)
-
+  (tab-always-indent 'complete)
   ;; No scratch message.
-  (setq-default initial-scratch-message "")
-
+  (initial-scratch-message "")
   ;; Disable start-up screen
-  (setq inhibit-startup-screen t)
-
+  (inhibit-startup-screen t)
   ;; Configure the Scratch Buffer's Mode
-  (setq initial-major-mode 'text-mode)
-
-  ;; Show possible whitespace problems in code and text files.
-  (dolist (hook '(text-mode-hook prog-mode-hook))
-    (add-hook hook (lambda () (setq show-trailing-whitespace t))))
-
+  (initial-major-mode 'text-mode)
   ;; Save custom variables in custom.el
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (when (file-exists-p custom-file)
-    (load custom-file)))
+  (custom-file (expand-file-name "custom.el" user-emacs-directory))
+  :hook
+  ((text-mode prog-mode) . #'my|show-trailing-whitespace)
+  :init
+  (when (or (file-exists-p custom-file)
+            (file-symlink-p custom-file))
+    (load custom-file t t))
+  :config
+  (defun my|show-trailing-whitespace ()
+    "Enable display of trailing whitespace."
+    (setq show-trailing-whitespace t))
+  (defun my/edit-user-configuration ()
+    "Open the user configuration."
+    (interactive)
+    (find-file user-init-file))
+  (defun my/edit-user-customization ()
+    "Edit the custom file."
+    (interactive)
+    (when (or (not (file-exists-p custom-file))
+              (not (file-symlink-p custom-file)))
+      (custom-save-all))
+    (find-file custom-file)))
 
 ;; I use C source to understand and debug built-in functions.
 (let ((src "~/src/emacs.git"))
