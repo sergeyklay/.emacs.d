@@ -133,12 +133,22 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Save point position between sessions
 (use-package saveplace
-  :config
+  ;; Do not enable on daemon or batch mode.
+  :if (and (not noninteractive) (not (daemonp)))
+  :demand 2
+  :init
   ;; Automatically save place in each file.
+  ;; Utilizing `save-place-mode' within the :init section is preferable
+  ;; over setting the analogous variable in :custom due to performance reasons.
+  ;; It ensures that the mode is activated before the package is fully loaded,
+  ;; which can lead to a quicker startup.
   (save-place-mode t))
 
 ;;;; History
 (use-package savehist
+  ;; Do not enable on daemon or batch mode.
+  :if (and (not noninteractive) (not (daemonp)))
+  :demand 2
   :custom
   ;; Set the default history length to 1000 entries.  The default value is
   ;; typically lower, but increasing it allows for a more comprehensive history,
@@ -151,6 +161,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; inputs.
   (history-delete-duplicates t)
   :init
+  ;; Save minibuffer history.
+  ;; Utilizing `savehist-mode' within the :init section is preferable
+  ;; over setting the analogous variable in :custom due to performance reasons.
+  ;; It ensures that the mode is activated before the package is fully loaded,
+  ;; which can lead to a quicker startup.
   (savehist-mode t))
 
 (use-package recentf
@@ -168,10 +183,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Sane defaults
 (use-package emacs
   :config
-  ;; All things utf-8
-  (set-default-coding-systems 'utf-8)
-  (prefer-coding-system 'utf-8)
-
   ;; Use tab key as completion option.
   (setq tab-always-indent 'complete)
 
