@@ -348,6 +348,7 @@ For non-window systems, this will return frame dimesion."
 
 ;; Set the default width of fill mode to 80
 (setq-default fill-column 80)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
 ;; Visually indicate empty lines after the buffer's end.
 (setq-default indicate-empty-lines t)
@@ -392,12 +393,5 @@ For non-window systems, this will return frame dimesion."
   :after python
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
-
-
-;; Local Variables:
-;; fill-column: 80
-;; eval: (display-fill-column-indicator-mode)
-;; coding: utf-8-unix
-;; End:
 
 ;;; init.el ends here

@@ -45,11 +45,4 @@
     (message "Total line count is within limit: %s" total-lines)))
 
 (provide 'lc)
-
-;; Local Variables:
-;; fill-column: 80
-;; eval: (display-fill-column-indicator-mode)
-;; coding: utf-8-unix
-;; End:
-
 ;;; lc.el ends here
