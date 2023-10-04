@@ -199,9 +199,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (indent-tabs-mode nil)
   ;; Visually indicate empty lines after the buffer's end.
   (indicate-empty-lines t)
+  ;; Redefine line and column format. It will looks like " 278:59 ".
+  (mode-line-position '((line-number-mode ("%l" (column-number-mode ":%c")))))
   :hook
   ((text-mode prog-mode) . #'my|show-trailing-whitespace)
   :init
+  ;; Show column number next to line number in mode line.
+  ;; Emacs displays line numbers by default.
+  (column-number-mode t)
   (when (or (file-exists-p custom-file)
             (file-symlink-p custom-file))
     (load custom-file t t))
@@ -262,15 +267,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; This keeps the window clean and speeds up loading a bit.
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
-
-(use-package modeline
-  :custom
-  ;; Redefine line and column format. It will looks like " 278:59 ".
-  (mode-line-position-column-line-format '(" %l:%c "))
-  :init
-  ;; Show column number next to line number in mode line.
-  ;; Emacs displays line numbers by default.
-  (column-number-mode t))
 
 ;; Show Line Numbers
 (use-package display-line-numbers
