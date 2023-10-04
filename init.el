@@ -187,12 +187,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (tab-always-indent 'complete)
   ;; No scratch message.
   (initial-scratch-message "")
-  ;; Disable start-up screen
+  ;; Disable start-up screen.
   (inhibit-startup-screen t)
-  ;; Configure the Scratch Buffer's Mode
+  ;; Configure the Scratch Buffer's Mode.
   (initial-major-mode 'text-mode)
-  ;; Save custom variables in custom.el
+  ;; Save custom variables in custom.el.
   (custom-file (expand-file-name "custom.el" user-emacs-directory))
+  ;; Disable lockfiles on Windows, as they are a hassle.
+  (create-lockfiles (not (member system-type '(windows-nt))))
+  ;; No tabs - except for specific files, which Emacs can identify.
+  (indent-tabs-mode nil)
+  ;; Visually indicate empty lines after the buffer's end.
+  (indicate-empty-lines t)
   :hook
   ((text-mode prog-mode) . #'my|show-trailing-whitespace)
   :init
@@ -257,6 +263,36 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
 
+(use-package modeline
+  :custom
+  ;; Redefine line and column format. It will looks like " 278:59 ".
+  (mode-line-position-column-line-format '(" %l:%c "))
+  :init
+  ;; Show column number next to line number in mode line.
+  ;; Emacs displays line numbers by default.
+  (column-number-mode t))
+
+;; Show Line Numbers
+(use-package display-line-numbers
+  :custom (display-line-numbers-width 4)
+  :hook (prog-mode . display-line-numbers-mode))
+
+(use-package elec-pair
+  :hook
+  ;; Activate electric-pair-mode automatically after Emacs initialization.
+  (after-init . electric-pair-mode)
+  ;; Disable electric-pair-local-mode in the minibuffer.
+  (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
+
+;;;; Editing
+(use-package outline
+  :custom
+  ;; Have a blank line before a heading
+  (outline-blank-line t)
+  :commands (outline-mode outline-minor-mode)
+  :diminish outline-minor-mode
+  :hook (prog-mode . outline-minor-mode))
+
 ;;;; Project management
 (use-package project
   :defer t
@@ -272,51 +308,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    '("#*#" ".#*" "*~" ".*~" "*.*~"
      "*.elc" "*.pyc" "*.o" "*.lo" "*.la" "*.sock" "*.zwc"
      ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
-     "node_modules"))
+     "__pycache__" "node_modules"))
   :config
   ;; Auto clean up zombie projects from `project-list-file'
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep)))
-
-;;;; Editor
-;; No tabs - except for specific files, which Emacs can identify.
-(setq-default indent-tabs-mode nil)
-
-;; Increase the warning threshold for big files
-(setq large-file-warning-threshold (* 50 1024 1024))
-
-;; Set the default width of fill mode to 80
-(setq-default fill-column 80)
-(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-
-;; Visually indicate empty lines after the buffer's end.
-(setq-default indicate-empty-lines t)
-
-;; Show column number next to line number in mode line.
-;; Emacs displays line numbers by default.
-(setq-default column-number-mode t)
-
-;; Redefine line and column format. It will looks like " 278:59 ".
-(setq-default mode-line-position-column-line-format '(" %l:%c "))
-
-;; Show Line Numbers
-(use-package display-line-numbers
-  :custom (display-line-numbers-width 4)
-  :hook (prog-mode . display-line-numbers-mode))
-
-(use-package elec-pair
-  :hook
-  ;; Activate electric-pair-mode automatically after Emacs initialization.
-  (after-init . electric-pair-mode)
-  ;; Disable electric-pair-local-mode in the minibuffer.
-  (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
-
-;;;; Human Languages
-(use-package outline
-  :commands (outline-mode outline-minor-mode)
-  :hook (prog-mode . outline-minor-mode))
 
 ;;;; Programming Languages, Markup and Configurations
 (use-package yaml-mode
