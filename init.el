@@ -351,6 +351,20 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :ensure t
   :mode "\\.ya?ml\\'")
 
+(use-package rst
+  :mode ("\\.rst\\'" . rst-mode)
+  :custom
+  ;; This setting is used to automate the creation of section adornments in
+  ;; reStructuredText files.  When a new section is created,
+  ;; `rst-new-adornment-down' ensures the adornment level is one level lower
+  ;; than the previous section, rather than keeping the same level.
+  (rst-new-adornment-down t)
+  :bind (:map rst-mode-map ("C-c . t" . rst-toc))
+  :hook ((rst-mode . visual-line-mode)
+         ;; This hook is utilized to automatically update the inline
+         ;; table-of-contents whenever a section title is adjusted.
+         (rst-adjust . rst-toc-update)))
+
 (use-package python
   :defer t
   :custom
