@@ -207,6 +207,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Show column number next to line number in mode line.
   ;; Emacs displays line numbers by default.
   (column-number-mode t)
+  ;; Load cutomization, if any
   (when (or (file-exists-p custom-file)
             (file-symlink-p custom-file))
     (load custom-file t t))
@@ -240,6 +241,39 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               (require 'server)
               (unless (server-running-p)
                 (server-start))))
+
+;;;; Organization
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :custom
+  ;; Resize images to 300px, unless there's an attribute
+  (org-image-actual-width '(300))
+  ;; Enable shift+arrow for text selection
+  (org-support-shift-select t)
+  ;; Also include diary on org-agenda
+  (org-agenda-include-diary t)
+  ;; Don' clutter the actual entry with notes
+  (org-log-into-drawer t)
+  ;; Allow eval emacs-lisp code without confirmation
+  (org-confirm-babel-evaluate 'my/org-confirm-babel-evaluate)
+  :config
+  (declare-function org-agenda-prepare-buffers "org" files)
+  (declare-function org-agenda-files "org" (&optional unrestricted archives))
+  (defun my|org-agenda-refresh-on-idle-hook ()
+    "Set up a timer to refresh Org Agenda buffers after 60s of idle time."
+    (run-with-idle-timer 60 nil
+                         (apply-partially #'org-agenda-prepare-buffers
+                                          (org-agenda-files t t))))
+  (defun my/org-confirm-babel-evaluate (lang _body)
+    "Check whether LANG should evaluate BODY without confirmation."
+    (not (string= lang "emacs-lisp")))
+  :hook ((org-mode . visual-line-mode)
+         (org-mode . org-indent-mode)
+         (org-mode . org-display-inline-images)
+         (org-agenda-mode . #'my/org-agenda-refresh-on-idle))
+  :bind (("C-c c" . #'org-capture)
+         ("C-c a" . #'org-agenda)
+         ("C-c l" . #'org-store-link)))
 
 ;;;; Appearance
 (load-theme 'modus-vivendi)
