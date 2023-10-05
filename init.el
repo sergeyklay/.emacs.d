@@ -377,6 +377,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
 
+;;;; Utils
+(defun my|delete-trailing-whitespace ()
+  "Remove trailing whitespace in specific modes.
+Currently, this function is set to operate in `python-mode' and
+`emacs-lisp-mode'.  Adjust the list of modes in the `dolist` expression to
+tailor the behavior to your needs."
+  (dolist (mode '(python-mode emacs-lisp-mode))
+    (when (apply 'derived-mode-p (list mode))
+      (delete-trailing-whitespace))))
+
+(add-hook 'before-save-hook #'my|delete-trailing-whitespace)
+
 ;; Local Variables:
 ;; fill-column: 80
 ;; eval: (outline-minor-mode)
