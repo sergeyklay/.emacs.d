@@ -361,6 +361,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ("/\\.dockerignore\\'"  . gitignore-mode)
          ("/\\.elpaignore\\'"    . gitignore-mode)))
 
+(use-package magit
+  :ensure t
+  :after transient
+  :commands (magit magit-status)
+  :bind (("C-x g" . magit-status)))
+
 ;;;; Programming Languages, Markup and Configurations
 (use-package yaml-mode
   :ensure t
