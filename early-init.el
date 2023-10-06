@@ -1,4 +1,4 @@
-;; early-init.el --- Early init file to use for Emacs >= 27.x -*- lexical-binding: t; -*-
+;; early-init.el --- Early init file to use for Emacs >= 29.x -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019-2023 Serghei Iakovlev <egrep@protonmail.ch>
 
