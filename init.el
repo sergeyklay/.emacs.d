@@ -208,37 +208,37 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             (file-symlink-p custom-file))
     (load custom-file t t))
   :config
-  (defun my|show-trailing-whitespace ()
+  (defun my|show-trailing-whitespace-hook ()
     "Enable display of trailing whitespace."
-    (setq show-trailing-whitespace t))
-  (defun my/edit-user-configuration ()
-    "Open the user configuration."
-    (interactive)
-    (find-file user-init-file))
-  (defun my/edit-user-customization ()
-    "Edit the custom file."
-    (interactive)
-    (when (or (not (file-exists-p custom-file))
-              (not (file-symlink-p custom-file)))
-      (custom-save-all))
-    (find-file custom-file)))
+    (setq show-trailing-whitespace t)))
 
 ;; I use C source to understand and debug built-in functions.
 (let ((src "~/src/emacs.git"))
-  (when (or (file-directory-p src)
-            (file-symlink-p src))
-    (setq source-directory
-          (expand-file-name (substitute-in-file-name src)))))
+  (when (or (file-directory-p src)(file-symlink-p src))
+    (setq source-directory (expand-file-name (substitute-in-file-name src)))))
 
 ;;;; Emacs Server
 (declare-function server-running-p "server")
 (add-hook 'after-init-hook
           #'(lambda ()
               (require 'server)
-              (unless (server-running-p)
-                (server-start))))
+              (unless (server-running-p)(server-start))))
 
 ;;;; Organization
+;; For the `'org-mode' I use the following directory structure:
+;;
+;;   $ tree ~/org
+;;   ~/org
+;;   ├── archive.org
+;;   ├── notes.org
+;;   ├── personal
+;;   │   ├── backlog.org
+;;   │   ├── ...
+;;   │   └── x.org
+;;   ├── work
+;;   │   ├── backlog.org
+;;   │   ├── ...
+;;   │   └── x.org
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :custom
@@ -252,6 +252,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (org-log-into-drawer t)
   ;; Allow eval emacs-lisp code without confirmation
   (org-confirm-babel-evaluate 'my/org-confirm-babel-evaluate)
+  ;; Files location
+  (org-agenda-files "~/org" "~/org/personal" "~/org/work")
+  (org-default-notes-file "~/org/notes.org")
+  (org-archive-location "~/org/archive.org::* From %s")
   :config
   (declare-function org-agenda-prepare-buffers "org" files)
   (declare-function org-agenda-files "org" (&optional unrestricted archives))
