@@ -127,7 +127,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    auto-save-file-name-transforms `((".*" ,(expand-file-name "\\2" save-dir) t))
    auto-save-list-file-name
    (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
-  (unless (file-exists-p save-dir) (make-directory my-auto-save-dir t)))
+  (unless (file-exists-p save-dir) (make-directory save-dir t)))
 
 ;; Save point position between sessions
 (use-package saveplace
