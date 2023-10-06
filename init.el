@@ -152,10 +152,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :if (and (not noninteractive) (not (daemonp)))
   :demand 2
   :custom
-  ;; Set the default history length to 1000 entries.  The default value is
-  ;; typically lower, but increasing it allows for a more comprehensive history,
-  ;; which can be beneficial when needing to recall or reuse previous inputs
-  ;; across sessions.
+  ;; The default value is typically lower, but increasing it allows for a more
+  ;; comprehensive history, which can be beneficial when needing to recall or
+  ;; reuse previous inputs across sessions.
   (history-length 1000)
   ;; Enable the automatic deletion of duplicate entries from history.  By
   ;; default, this is disabled, but enabling it helps in keeping the history
@@ -163,11 +162,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; inputs.
   (history-delete-duplicates t)
   :init
-  ;; Save minibuffer history.
-  ;; Utilizing `savehist-mode' within the :init section is preferable
-  ;; over setting the analogous variable in :custom due to performance reasons.
-  ;; It ensures that the mode is activated before the package is fully loaded,
-  ;; which can lead to a quicker startup.
+  ;; Save minibuffer history.  Utilizing `savehist-mode' within the :init
+  ;; section is preferable over setting the analogous variable in :custom due to
+  ;; performance reasons.  It ensures that the mode is activated before the
+  ;; package is fully loaded, which can lead to a quicker startup.
   (savehist-mode t))
 
 (use-package recentf
@@ -304,7 +302,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
 
-;; Show Line Numbers
+;; Show line numbers
 (use-package display-line-numbers
   :custom (display-line-numbers-width 4)
   :hook (prog-mode . display-line-numbers-mode))
@@ -319,7 +317,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Editing
 (use-package outline
   :custom
-  ;; Have a blank line before a heading
+  ;; Have a blank line before a heading.
   (outline-blank-line t)
   :commands (outline-mode outline-minor-mode)
   :diminish outline-minor-mode
