@@ -198,19 +198,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Redefine line and column format. It will looks like " 278:59 ".
   (mode-line-position '((line-number-mode ("%l" (column-number-mode ":%c")))))
   :hook
-  ((text-mode prog-mode) . #'my|show-trailing-whitespace-hook)
+  ((text-mode prog-mode) . (lambda () (setq show-trailing-whitespace t)))
   :init
   ;; Show column number next to line number in mode line.
   ;; Emacs displays line numbers by default.
   (column-number-mode t)
   ;; Load cutomization, if any
-  (when (or (file-exists-p custom-file)
-            (file-symlink-p custom-file))
-    (load custom-file t t))
-  :config
-  (defun my|show-trailing-whitespace-hook ()
-    "Enable display of trailing whitespace."
-    (setq show-trailing-whitespace t)))
+  (when (or (file-exists-p custom-file) (file-symlink-p custom-file))
+    (load custom-file t t)))
 
 ;; I use C source to understand and debug built-in functions.
 (let ((src "~/src/emacs.git"))
