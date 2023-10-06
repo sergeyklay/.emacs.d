@@ -66,13 +66,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
 
 ;; Measure the current start up time.
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs ready in %s with %d garbage collections."
-                     (format "%.2f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
+(add-hook
+ 'emacs-startup-hook
+ #'(lambda ()
+     (message "Emacs ready in %s with %d garbage collections."
+              (format "%.2f seconds"
+                      (float-time
+                       (time-subtract after-init-time before-init-time)))
+              gcs-done)))
 
 ;;;; Package management
 ;; Package management in Emacs can be done in several ways. I personally like
@@ -121,17 +122,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (make-directory my-backup-dir t)))
 
 ;;;; Auto-Saving
-(let ((my-auto-save-dir (concat user-emacs-directory "auto-save-list/")))
+(let ((save-dir (concat user-emacs-directory "auto-save-list/")))
   (setq
-   auto-save-file-name-transforms
-   `((".*" ,(expand-file-name "\\2" my-auto-save-dir) t))
-
+   auto-save-file-name-transforms `((".*" ,(expand-file-name "\\2" save-dir) t))
    auto-save-list-file-name
-   (concat my-auto-save-dir
-           (format ".saves-%d-%s~" (emacs-pid) (system-name))))
-
-  (unless (file-exists-p my-auto-save-dir)
-    (make-directory my-auto-save-dir t)))
+   (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
+  (unless (file-exists-p save-dir) (make-directory my-auto-save-dir t)))
 
 ;; Save point position between sessions
 (use-package saveplace
@@ -340,19 +336,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;;;; Project management
 (use-package project
   :defer t
-  :commands (project-root
-             project-find-file
+  :commands (project-find-file
              project-switch-to-buffer
              project-switch-project
-             project-switch-project-open-file
-             project-prompt-project-dir
              project-forget-zombie-projects)
   :custom
-  (project-vc-ignores
-   '("#*#" ".#*" "*~" ".*~" "*.*~"
-     "*.elc" "*.pyc" "*.o" "*.lo" "*.la" "*.sock" "*.zwc"
-     ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
-     "__pycache__" "node_modules"))
+  (project-vc-ignores '("#*#" ".#*" "*~" ".*~" "*.*~" "*.elc" "*.pyc" "*.o"
+   "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
+   "__pycache__" "node_modules"))
   :config
   ;; Auto clean up zombie projects from `project-list-file'
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
