@@ -101,6 +101,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq use-package-always-ensure t)
     (require 'use-package)))
 
+(require 'bind-key)
+
 ;;;; Backup
 ;; Silently deletes excess backup versions.
 (setq delete-old-versions t)
@@ -323,6 +325,20 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :diminish outline-minor-mode
   :hook (prog-mode . outline-minor-mode))
 
+;; This hook is set globally to delete trailing whitespace on save in all modes.
+;; If there are modes or projects where trailing whitespace should be retained,
+;; it is suggested to override this setting on a per-mode or per-project basis
+;; by removing `delete-trailing-whitespace' from `before-save-hook' locally or
+;; by using directory-local variables to change the behavior as needed.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; This setting is applied globally to ensure a final newline on save in all
+;; modes.  If there are modes or projects where a final newline should not be
+;; added, it is suggested to override this setting on a per-mode or per-project
+;; basis by removing the local setting for `require-final-newline' or by using
+;; directory-local variables to change the behavior as needed.
+(setq-default require-final-newline t)
+
 ;;;; Project management
 (use-package project
   :defer t
@@ -345,6 +361,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep)))
+
+;;;; VCS
+(use-package git-modes
+  :ensure t
+  :mode (("/\\.gitattributes\\'" . gitattributes-mode)
+         ("/\\.gitconfig\\'"     . gitconfig-mode)
+         ("/\\.gitmodules\\'"    . gitconfig-mode)
+         ("/\\.gitignore\\'"     . gitignore-mode)
+         ("/\\.dockerignore\\'"  . gitignore-mode)
+         ("/\\.elpaignore\\'"    . gitignore-mode)))
 
 ;;;; Programming Languages, Markup and Configurations
 (use-package yaml-mode
@@ -376,18 +402,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :after python
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
-
-;;;; Utils
-(defun my|delete-trailing-whitespace ()
-  "Remove trailing whitespace in specific modes.
-Currently, this function is set to operate in `python-mode' and
-`emacs-lisp-mode'.  Adjust the list of modes in the `dolist` expression to
-tailor the behavior to your needs."
-  (dolist (mode '(python-mode emacs-lisp-mode))
-    (when (apply 'derived-mode-p (list mode))
-      (delete-trailing-whitespace))))
-
-(add-hook 'before-save-hook #'my|delete-trailing-whitespace)
 
 ;; Local Variables:
 ;; fill-column: 80
