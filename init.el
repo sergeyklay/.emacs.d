@@ -225,20 +225,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               (unless (server-running-p)(server-start))))
 
 ;;;; Organization
-;; For the `'org-mode' I use the following directory structure:
-;;
-;;   $ tree ~/org
-;;   ~/org
-;;   ├── archive.org
-;;   ├── notes.org
-;;   ├── personal
-;;   │   ├── backlog.org
-;;   │   ├── ...
-;;   │   └── x.org
-;;   ├── work
-;;   │   ├── backlog.org
-;;   │   ├── ...
-;;   │   └── x.org
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :custom
@@ -250,12 +236,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (org-agenda-include-diary t)
   ;; Don' clutter the actual entry with notes
   (org-log-into-drawer t)
-  ;; Allow eval emacs-lisp code without confirmation
-  (org-confirm-babel-evaluate 'my/org-confirm-babel-evaluate)
-  ;; Files location
-  (org-agenda-files "~/org" "~/org/personal" "~/org/work")
-  (org-default-notes-file "~/org/notes.org")
-  (org-archive-location "~/org/archive.org::* From %s")
   :config
   (declare-function org-agenda-prepare-buffers "org" files)
   (declare-function org-agenda-files "org" (&optional unrestricted archives))
@@ -264,9 +244,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (run-with-idle-timer 60 nil
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
-  (defun my/org-confirm-babel-evaluate (lang _body)
-    "Check whether LANG should evaluate BODY without confirmation."
-    (not (string= lang "emacs-lisp")))
+  (unless (file-exists-p org-directory)
+    (make-directory org-directory))
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
