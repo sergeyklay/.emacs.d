@@ -204,7 +204,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Redefine line and column format. It will looks like " 278:59 ".
   (mode-line-position '((line-number-mode ("%l" (column-number-mode ":%c")))))
   :hook
-  ((text-mode prog-mode) . #'my|show-trailing-whitespace)
+  ((text-mode prog-mode) . #'my|show-trailing-whitespace-hook)
   :init
   ;; Show column number next to line number in mode line.
   ;; Emacs displays line numbers by default.
@@ -292,7 +292,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq ring-bell-function #'my/terminal-visible-bell)
 
 ;; Highlight matching parentheses when the point is on them.
-(add-hook 'after-init-hook 'show-paren-mode)
+(add-hook 'after-init-hook #'show-paren-mode)
 
 ;; Highlight brackets according to their depth
 (use-package rainbow-delimiters
@@ -330,7 +330,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; it is suggested to override this setting on a per-mode or per-project basis
 ;; by removing `delete-trailing-whitespace' from `before-save-hook' locally or
 ;; by using directory-local variables to change the behavior as needed.
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; This setting is applied globally to ensure a final newline on save in all
 ;; modes.  If there are modes or projects where a final newline should not be
