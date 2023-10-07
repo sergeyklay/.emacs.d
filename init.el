@@ -346,6 +346,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :bind (("C-x g" . magit-status)))
 
 ;;;; Programming Languages, Markup and Configurations
+(use-package css-mode
+  :mode "\\.css$"
+  :custom
+  (css-indent-offset 2))
+
+(use-package rainbow-mode
+  :ensure t
+  :defer t
+  :hook css-mode)
+
 (use-package yaml-mode
   :ensure t
   :mode "\\.ya?ml\\'")
