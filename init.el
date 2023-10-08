@@ -351,6 +351,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :custom
   (css-indent-offset 2))
 
+(use-package js
+  :mode (("\\.js\\'" . js-mode))
+  :custom
+  (js-indent-level 2))
+
 (use-package rainbow-mode
   :ensure t
   :defer t
