@@ -317,7 +317,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :commands (project-find-file
              project-switch-to-buffer
              project-switch-project
-             project-forget-zombie-projects)
+             project-switch-project-open-file)
+  :bind (:map project-prefix-map
+              ("s" . my-switch-project-and-kill-buffers)
+              ("R" . project-remember-projects-under)
+              ("K" . project-kill-buffers))
   :custom
   (project-vc-ignores '("#*#" ".#*" "*~" ".*~" "*.*~" "*.elc" "*.pyc" "*.o"
    "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "__pycache__" "node_modules"))
@@ -326,7 +330,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
-    (setq xref-search-program 'ripgrep)))
+    (setq xref-search-program 'ripgrep))
+  (defun my-switch-project-and-kill-buffers ()
+    "Kill all buffers of the current project, then switch to a new project."
+    (interactive)
+    (project-kill-buffers t)
+    (call-interactively 'project-switch-project)))
 
 ;;;; VCS
 (use-package git-modes
