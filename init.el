@@ -320,8 +320,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
              project-forget-zombie-projects)
   :custom
   (project-vc-ignores '("#*#" ".#*" "*~" ".*~" "*.*~" "*.elc" "*.pyc" "*.o"
-   "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "Icon" "GRTAGS" "GTAGS" "GPATH"
-   "__pycache__" "node_modules"))
+   "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "__pycache__" "node_modules"))
   :config
   ;; Auto clean up zombie projects from `project-list-file'
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
