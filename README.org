@@ -62,7 +62,7 @@ tools:
 - [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 - [[https://git-scm.com][Git (=git=)]]
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
-- [[https://imagemagick.org][imagemagick]]
+- [[https://imagemagick.org][Imagemagick (=convert=)]]
 
 So, this config project is kinda built around that fact.
 
