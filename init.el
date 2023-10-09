@@ -379,6 +379,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ;; table-of-contents whenever a section title is adjusted.
          (rst-adjust . rst-toc-update)))
 
+(use-package markdown-mode
+  :ensure t
+  :mode (("\\.md\\'" . markdown-mode))
+  :hook ((markdown-mode . visual-line-mode)))
+
 (use-package python
   :defer t
   :custom
