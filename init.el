@@ -319,6 +319,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
              project-switch-project
              project-switch-project-open-file)
   :bind (:map project-prefix-map
+              ("p" . my-project-switch-project)
               ("s" . my-switch-project-and-kill-buffers)
               ("R" . project-remember-projects-under)
               ("K" . project-kill-buffers))
@@ -331,21 +332,30 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep))
+
   (defun my-switch-project-and-kill-buffers ()
     "Kill all buffers of the current project, then switch to a new project."
     (interactive)
     (project-kill-buffers t)
-    (call-interactively 'project-switch-project)))
+    (call-interactively 'project-switch-project))
+
+  (declare-function project-prompt-project-dir "project")
+  (defun my-project-switch-project (dir)
+    "\"Switch\" to another project by running an Emacs command.
+Directly use `project-find-file' instead of getting prompted.
+
+When called in a program, it will use the project corresponding
+to directory DIR."
+    (interactive (list (project-prompt-project-dir)))
+    (let ((project-current-directory-override dir))
+      (project-find-file))))
 
 ;;;; VCS
 (use-package git-modes
   :ensure t
   :mode (("/\\.gitattributes\\'" . gitattributes-mode)
-         ("/\\.gitconfig\\'"     . gitconfig-mode)
-         ("/\\.gitmodules\\'"    . gitconfig-mode)
-         ("/\\.gitignore\\'"     . gitignore-mode)
-         ("/\\.dockerignore\\'"  . gitignore-mode)
-         ("/\\.elpaignore\\'"    . gitignore-mode)))
+         ("/\\.git\\(config\\|modules\\)\\'" . gitconfig-mode)
+         ("/\\.\\(git\\|docker\\|elpa\\)ignore\\'" . gitignore-mode)))
 
 (use-package magit
   :ensure t
