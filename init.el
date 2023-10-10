@@ -59,10 +59,10 @@
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Set the `debug-on-error' variable as per the runtime context:
-;; - Enable debugging on error if Emacs is running in interactive mode,
-;;   and the custom variable `emacs-debug-mode' is true.
-;; - Do not enable debugging on error in non-interactive mode,
-;;   regardless of the `emacs-debug-mode' value.
+;; - Enable debugging on error if Emacs is running in interactive mode, and the
+;;   custom variable `emacs-debug-mode' is true.
+;; - Do not enable debugging on error in non-interactive mode, regardless of the
+;;   `emacs-debug-mode' value.
 (setq-default debug-on-error (and (not noninteractive) emacs-debug-mode))
 
 ;; Measure the current start up time.
@@ -83,8 +83,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
 (setq package-quickstart t)
 
-;; No need to activate all packages so early in either server or
-;; non-interactive mode.
+;; No need to activate all packages so early in either server or non-interactive
+;; mode.
 (when (or (daemonp) noninteractive)
   (package-initialize))
 
@@ -135,11 +135,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :if (and (not noninteractive) (not (daemonp)))
   :demand 2
   :init
-  ;; Automatically save place in each file.
-  ;; Utilizing `save-place-mode' within the :init section is preferable
-  ;; over setting the analogous variable in :custom due to performance reasons.
-  ;; It ensures that the mode is activated before the package is fully loaded,
-  ;; which can lead to a quicker startup.
+  ;; Automatically save place in each file.  Utilizing `save-place-mode' within
+  ;; the :init section is preferable over setting the analogous variable in
+  ;; :custom due to performance reasons.  It ensures that the mode is activated
+  ;; before the package is fully loaded, which can lead to a quicker startup.
   (save-place-mode t))
 
 ;;;; History
@@ -201,9 +200,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ((text-mode prog-mode) . (lambda () (setq show-trailing-whitespace t)))
   :init
   ;; Show column number next to line number in mode line.
-  ;; Emacs displays line numbers by default.
   (column-number-mode t)
-  ;; Load cutomization, if any
   (when (or (file-exists-p custom-file) (file-symlink-p custom-file))
     (load custom-file t t)))
 
@@ -223,13 +220,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :custom
-  ;; Resize images to 300px, unless there's an attribute
+  ;; Resize images to 300px, unless there's an attribute.
   (org-image-actual-width '(300))
-  ;; Enable shift+arrow for text selection
+  ;; Enable shift+arrow for text selection.
   (org-support-shift-select t)
-  ;; Also include diary on org-agenda
+  ;; Also include diary on org-agenda.
   (org-agenda-include-diary t)
-  ;; Don' clutter the actual entry with notes
+  ;; Don' clutter the actual entry with notes.
   (org-log-into-drawer t)
   :config
   (declare-function org-agenda-prepare-buffers "org" files)
@@ -266,13 +263,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook #'show-paren-mode)
 
-;; Highlight brackets according to their depth
+;; Highlight brackets according to their depth.
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; I prefer not to have any of the GUI elements.
-;; This keeps the window clean and speeds up loading a bit.
+;; I prefer not to have any of the GUI elements.  This keeps the window clean
+;; and speeds up loading a bit.
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
 
@@ -283,9 +280,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (use-package elec-pair
   :hook
-  ;; Activate electric-pair-mode automatically after Emacs initialization.
   (after-init . electric-pair-mode)
-  ;; Disable electric-pair-local-mode in the minibuffer.
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
 
 ;;;; Editing
@@ -297,18 +292,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :diminish outline-minor-mode
   :hook (prog-mode . outline-minor-mode))
 
-;; This hook is set globally to delete trailing whitespace on save in all modes.
-;; If there are modes or projects where trailing whitespace should be retained,
-;; it is suggested to override this setting on a per-mode or per-project basis
-;; by removing `delete-trailing-whitespace' from `before-save-hook' locally or
-;; by using directory-local variables to change the behavior as needed.
+;; Delete trailing whitespace on save in all modes.  If there are modes or
+;; projects where trailing whitespace should be retained, it is suggested to
+;; override this setting on a per-mode or per-project basis by removing
+;; `delete-trailing-whitespace' from `before-save-hook' locally or by using
+;; directory-local variables to change the behavior as needed.
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-;; This setting is applied globally to ensure a final newline on save in all
-;; modes.  If there are modes or projects where a final newline should not be
-;; added, it is suggested to override this setting on a per-mode or per-project
-;; basis by removing the local setting for `require-final-newline' or by using
-;; directory-local variables to change the behavior as needed.
+;; Ensure a final newline on save in all modes.  If there are modes or projects
+;; where a final newline should not be added, it is suggested to override this
+;; setting on a per-mode or per-project basis by removing the local setting for
+;; `require-final-newline' or by using directory-local variables to change the
+;; behavior as needed.
 (setq-default require-final-newline t)
 
 ;;;; Project management
@@ -386,16 +381,12 @@ to directory DIR."
 (use-package rst
   :mode ("\\.rst\\'" . rst-mode)
   :custom
-  ;; This setting is used to automate the creation of section adornments in
-  ;; reStructuredText files.  When a new section is created,
-  ;; `rst-new-adornment-down' ensures the adornment level is one level lower
-  ;; than the previous section, rather than keeping the same level.
+  ;; This setting is used to automate the creation of section adornments in rst
+  ;; files.  When a new section is created, `rst-new-adornment-down' ensures the
+  ;; adornment level is one level lower than the previous section, rather than
+  ;; keeping the same level.
   (rst-new-adornment-down t)
-  :bind (:map rst-mode-map ("C-c . t" . rst-toc))
-  :hook ((rst-mode . visual-line-mode)
-         ;; This hook is utilized to automatically update the inline
-         ;; table-of-contents whenever a section title is adjusted.
-         (rst-adjust . rst-toc-update)))
+  :hook ((rst-mode . visual-line-mode)))
 
 (use-package markdown-mode
   :ensure t
