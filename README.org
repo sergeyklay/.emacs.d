@@ -63,7 +63,7 @@ So, this config project is kinda built around that fact.
 
 This project is open source software licensed under the
 [[https://github.com/sergeyklay/.emacs.d/blob/master/LICENSE][GNU General Public Licence version 3]].
-Copyright © 2019, 2020, 2021, 2022, 2023 Serghei Iakovlev.
+Copyright © 2019, 2020, 2021, 2022, 2023, 2024 Serghei Iakovlev.
 
 *** Note On Copyright Years
 
