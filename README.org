@@ -69,5 +69,5 @@ Copyright © 2019, 2020, 2021, 2022, 2023 Serghei Iakovlev.
 
 In copyright notices where the copyright holder is Serghei Iakovlev,
 then where a range of years appears, this is an inclusive range that
-applies to every year in the range.  For example: 2019-2023 represents
-the years 2019, 2020, 2021, 2022 and 2023.
+applies to every year in the range.  For example: 2019-2024 represents
+the years 2019, 2020, 2021, 2022, 2023 and 2024.
