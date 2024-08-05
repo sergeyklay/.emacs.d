@@ -85,8 +85,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; No need to activate all packages so early in either server or non-interactive
 ;; mode.
-(when (or (daemonp) noninteractive)
-  (package-initialize))
+(when (or (daemonp) noninteractive) (package-initialize))
 
 ;; For the actual package configuration, I use `use-package'.
 (eval-when-compile
@@ -168,8 +167,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :defer 2
   :custom
   (recentf-max-saved-items 100)
-  (recentf-keep '(recentf-keep-default-predicate
-		  file-remote-p file-readable-p))
+  (recentf-keep '(recentf-keep-default-predicate file-remote-p file-readable-p))
   :config
   (recentf-mode)
   (when (fboundp 'recentf-save-list)
@@ -263,11 +261,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook #'show-paren-mode)
 
-;; Highlight brackets according to their depth.
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
-
 ;; I prefer not to have any of the GUI elements.  This keeps the window clean
 ;; and speeds up loading a bit.
 (setq-default use-file-dialog nil)
@@ -348,37 +341,6 @@ to directory DIR."
       (project-kill-buffers t)
       (call-interactively 'my-project-switch-project)))
 
-(defun my-dired-sidebar-toggle ()
-  "Toggle dired sidebar."
-  (interactive)
-  (let* ((buffer-name "*Dired-Sidebar*")
-         (buffer (get-buffer buffer-name))
-         (root (or (when (project-current)
-                     (project-root (project-current)))
-                   "~")))
-    (if buffer
-        (progn
-          (kill-buffer buffer)
-          (delete-window))
-      (progn
-        (split-window-right)
-        (other-window 1)
-        (dired root)
-        (rename-buffer buffer-name)))))
-
-(use-package dired
-  :custom
-  (dired-use-ls-dired nil))
-
-(global-set-key (kbd "C-x C-d") 'my-dired-sidebar-toggle)
-
-(use-package breadcrumb
-  :ensure t
-  :defer t
-  :hook
-  (prog-mode . breadcrumb-local-mode)
-  (text-mode . breadcrumb-local-mode))
-
 ;;;; VCS
 (use-package git-modes
   :ensure t
@@ -393,26 +355,6 @@ to directory DIR."
   :bind (("C-x g" . magit-status)))
 
 ;;;; Programming Languages, Markup and Configurations
-(use-package web-mode
-  :ensure t
-  :mode
-  ("\\.html?\\'" . web-mode)
-  ("\\.js\\'" . web-mode)
-  ("\\.json\\'" . web-mode)
-  ("\\.drawio\\'" . web-mode)
-  :custom
-  (web-mode-code-indent-offset 2)
-  (web-mode-css-indent-offset 2)
-  (web-mode-markup-indent-offset 2)
-  (web-mode-attr-indent-offset 2)
-  (web-mode-sql-indent-offset 2)
-  :config
-  (defun my|web-mode-hook ()
-    "Default tweaks for `web-mode'."
-    (setq-local tab-width 2)
-    (hs-minor-mode t))
-  :hook (web-mode . my|web-mode-hook))
-
 (use-package css-mode
   :mode "\\.css$"
   :custom
