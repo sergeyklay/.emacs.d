@@ -241,7 +241,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
-         (org-agenda-mode . #'my/org-agenda-refresh-on-idle))
+         (org-agenda-mode . #'my|org-agenda-refresh-on-idle-hook))
   :bind (("C-c c" . #'org-capture)
          ("C-c a" . #'org-agenda)
          ("C-c l" . #'org-store-link)))
@@ -320,19 +320,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               ("K" . project-kill-buffers))
   :custom
   (project-vc-ignores '("#*#" ".#*" "*~" ".*~" "*.*~" "*.elc" "*.pyc" "*.o"
-   "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "__pycache__" "node_modules"))
+                        "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "__pycache__"))
+  (vc-directory-exclusion-list '("SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git"
+                                 ".hg" ".bzr" "_MTN" "_darcs" "node_modules"
+                                 "{arch}"))
   :config
   ;; Auto clean up zombie projects from `project-list-file'
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
   ;; Use ripgrep if installed
   (when (shell-command-to-string "command rg --version")
     (setq xref-search-program 'ripgrep))
-
-  (defun my-switch-project-and-kill-buffers ()
-    "Kill all buffers of the current project, then switch to a new project."
-    (interactive)
-    (project-kill-buffers t)
-    (call-interactively 'project-switch-project))
 
   (declare-function project-prompt-project-dir "project")
   (defun my-project-switch-project (dir)
@@ -343,7 +340,44 @@ When called in a program, it will use the project corresponding
 to directory DIR."
     (interactive (list (project-prompt-project-dir)))
     (let ((project-current-directory-override dir))
-      (project-find-file))))
+      (project-find-file)))
+
+    (defun my-switch-project-and-kill-buffers ()
+      "Kill all buffers of the current project, then switch to a new project."
+      (interactive)
+      (project-kill-buffers t)
+      (call-interactively 'my-project-switch-project)))
+
+(defun my-dired-sidebar-toggle ()
+  "Toggle dired sidebar."
+  (interactive)
+  (let* ((buffer-name "*Dired-Sidebar*")
+         (buffer (get-buffer buffer-name))
+         (root (or (when (project-current)
+                     (project-root (project-current)))
+                   "~")))
+    (if buffer
+        (progn
+          (kill-buffer buffer)
+          (delete-window))
+      (progn
+        (split-window-right)
+        (other-window 1)
+        (dired root)
+        (rename-buffer buffer-name)))))
+
+(use-package dired
+  :custom
+  (dired-use-ls-dired nil))
+
+(global-set-key (kbd "C-x C-d") 'my-dired-sidebar-toggle)
+
+(use-package breadcrumb
+  :ensure t
+  :defer t
+  :hook
+  (prog-mode . breadcrumb-local-mode)
+  (text-mode . breadcrumb-local-mode))
 
 ;;;; VCS
 (use-package git-modes
@@ -359,6 +393,26 @@ to directory DIR."
   :bind (("C-x g" . magit-status)))
 
 ;;;; Programming Languages, Markup and Configurations
+(use-package web-mode
+  :ensure t
+  :mode
+  ("\\.html?\\'" . web-mode)
+  ("\\.js\\'" . web-mode)
+  ("\\.json\\'" . web-mode)
+  ("\\.drawio\\'" . web-mode)
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-attr-indent-offset 2)
+  (web-mode-sql-indent-offset 2)
+  :config
+  (defun my|web-mode-hook ()
+    "Default tweaks for `web-mode'."
+    (setq-local tab-width 2)
+    (hs-minor-mode t))
+  :hook (web-mode . my|web-mode-hook))
+
 (use-package css-mode
   :mode "\\.css$"
   :custom
