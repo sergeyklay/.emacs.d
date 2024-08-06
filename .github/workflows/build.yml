@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2023 Serghei Iakovlev <egrep@protonmail.ch>
+# Copyright (C) 2019-2024 Serghei Iakovlev <egrep@protonmail.ch>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,10 +16,14 @@
 name: build
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
+    branches-ignore:
+      # These should always correspond to pull requests, so ignore them for
+      # the push trigger and let them be triggered by the pull_request
+      # trigger, avoiding running the workflow twice.  This is a minor
+      # optimization so there's no need to ensure this is comprehensive.
+      - 'dependabot/**'
+  pull_request:
     branches:
       - main
 
@@ -33,6 +37,9 @@ jobs:
       matrix:
         emacs_version:
           - '29.1'
+          - '29.2'
+          - '29.3'
+          - '29.4'
           - snapshot
         include:
           - emacs_version: snapshot
