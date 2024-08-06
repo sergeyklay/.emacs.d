@@ -311,12 +311,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               ("s" . my-switch-project-and-kill-buffers)
               ("R" . project-remember-projects-under)
               ("K" . project-kill-buffers))
-  :custom
-  (project-vc-ignores '("#*#" ".#*" "*~" ".*~" "*.*~" "*.elc" "*.pyc" "*.o"
-                        "*.lo" "*.la" "*.sock" "*.zwc" ".DS_Store" "__pycache__"))
-  (vc-directory-exclusion-list '("SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git"
-                                 ".hg" ".bzr" "_MTN" "_darcs" "node_modules"
-                                 "{arch}"))
   :config
   ;; Auto clean up zombie projects from `project-list-file'
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
