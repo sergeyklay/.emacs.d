@@ -208,11 +208,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq source-directory (expand-file-name (substitute-in-file-name src)))))
 
 ;;;; Emacs Server
-(declare-function server-running-p "server")
-(add-hook 'after-init-hook
-          #'(lambda ()
-              (require 'server)
-              (unless (server-running-p)(server-start))))
+(use-package server
+  :config
+  (or (server-running-p) (server-mode)))
 
 ;;;; Organization
 (use-package org
