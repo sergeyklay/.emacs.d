@@ -33,8 +33,7 @@
 ;; or in batch mode.  This is useful for optimizing startup time and
 ;; avoiding potential conflicts, especially when using `use-package'
 ;; for lazy loading and package configuration.
-(when (or (daemonp)
-          noninteractive)
+(when (or (daemonp) noninteractive)
   (setq package-enable-at-startup nil))
 
 ;; Increasing the GC threshold is a common way to speed up Emacs.

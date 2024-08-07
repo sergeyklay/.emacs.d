@@ -83,8 +83,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
 (setq package-quickstart t)
 
-;; No need to activate all packages so early in either server or non-interactive
-;; mode.
+;; Manually initialize packages in daemon or noninteractive mode.
 (when (or (daemonp) noninteractive) (package-initialize))
 
 ;; For the actual package configuration, I use `use-package'.
