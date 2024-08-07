@@ -238,6 +238,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook #'show-paren-mode)
 
+;; Highlight brackets according to their depth.
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 ;; I prefer not to have any of the GUI elements.  This keeps the window clean
 ;; and speeds up loading a bit.
 (setq-default use-file-dialog nil)
