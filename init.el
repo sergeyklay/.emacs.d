@@ -26,27 +26,7 @@
 ;;; Commentary:
 
 ;; Welcome to my GNU Emacs haven.  This configuration is a reflection of my
-;; desire for a minimalist yet powerful editing environment.  Here are the
-;; guiding principles that shape this setup:
-;;
-;; 1. Maintain a lean line count: The entire configuration, including comments
-;;    and the early-init.el file, shall remain under 512 lines.  The
-;;    `fill-column’ is firmly set at 80 to ensure readability and maintain the
-;;    compact nature.
-;; 2. Modularity is key: Configurations are organized into self-contained
-;;    sections, making it a breeze to lift and shift any part of the setup into
-;;    another configuration if need be.
-;; 3. Embrace outlines: The structure adheres to `outline-minor-mode' standards,
-;;    allowing for a clean and organized view of the configuration's skeleton.
-;; 4. No line-count gimmicks: There's a ban on line-count reduction tricks like
-;;    squishing multiple `setq' arguments into a single line.  However, `dolist’
-;;    and similar constructs are fair game.
-;; 5. A delightful Emacs experience: The setup is crafted to provide a pleasant
-;;    and efficient Emacs experience, tailored to my preferences and workflow.
-;;
-;; Each section of the configuration is meticulously crafted to adhere to these
-;; principles while ensuring that Emacs remains a powerful and efficient tool
-;; for all my text editing needs.
+;; desire for a minimalist yet powerful editing environment.
 ;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044

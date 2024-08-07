@@ -29,13 +29,6 @@
 
 ;;; Code:
 
-;; Disable package initialization at startup when running as a daemon
-;; or in batch mode.  This is useful for optimizing startup time and
-;; avoiding potential conflicts, especially when using `use-package'
-;; for lazy loading and package configuration.
-(when (or (daemonp) noninteractive)
-  (setq package-enable-at-startup nil))
-
 ;; Increasing the GC threshold is a common way to speed up Emacs.
 ;; `gc-cons-threshold' sets at what point Emacs should invoke its garbage
 ;; collector.  When set it temporarily to a large number, we only garbage
