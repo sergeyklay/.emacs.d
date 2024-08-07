@@ -110,7 +110,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Save point position between sessions
 (use-package saveplace
   ;; Do not enable on daemon or batch mode.
-  :if (and (not noninteractive) (not (daemonp)))
+  :if (not (or noninteractive (daemonp)))
   :demand 2
   :init
   ;; Automatically save place in each file.  Utilizing `save-place-mode' within
@@ -220,6 +220,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :bind (("C-c c" . #'org-capture)
          ("C-c a" . #'org-agenda)
          ("C-c l" . #'org-store-link)))
+
+;;;; Window Handling
+;; Restore old window configurations
+(use-package winner
+  :commands (winner-undo winner-redo)
+  :custom
+  ;; List of buffer names whose windows `winner-undo' will not restore.
+  (winner-boring-buffers
+   '(
+     "*Completions*" "*Apropos*" "*Help*"
+     "*Buffer List*" "*Ibuffer*" "*Messages*"))
+  :hook (after-init . winner-mode))
 
 ;;;; Appearance
 (load-theme 'modus-vivendi)
