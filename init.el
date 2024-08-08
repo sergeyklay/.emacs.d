@@ -228,8 +228,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :custom
   ;; List of buffer names whose windows `winner-undo' will not restore.
   (winner-boring-buffers
-   '(
-     "*Completions*" "*Apropos*" "*Help*"
+   '("*Completions*" "*Apropos*" "*Help*"
      "*Buffer List*" "*Ibuffer*" "*Messages*"))
   :hook (after-init . winner-mode))
 
