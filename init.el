@@ -228,7 +228,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :custom
   ;; List of buffer names whose windows `winner-undo' will not restore.
   (winner-boring-buffers
-   '("*Completions*" "*Apropos*" "*Help*"
+   '("*Completions*" "*Compile-Log*" "*Apropos*" "*Help*"
      "*Buffer List*" "*Ibuffer*" "*Messages*"))
   :hook (after-init . winner-mode))
 
@@ -268,6 +268,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook
   (after-init . electric-pair-mode)
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
+
 
 ;;;; Editing
 (use-package outline
@@ -387,6 +388,14 @@ to directory DIR."
   :after python
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
+
+
+;;;; Helpers
+(use-package which-key
+  :ensure t
+  :defer 1
+  :config
+  (which-key-mode 1))
 
 ;; Local Variables:
 ;; fill-column: 80
