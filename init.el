@@ -397,6 +397,14 @@ to directory DIR."
   :config
   (which-key-mode 1))
 
+(use-package writegood-mode
+  :ensure t
+  :hook ((text-mode . writegood-mode)
+         (org-mode . writegood-mode)
+         (rst-mode . writegood-mode)
+         (markdown-mode . writegood-mode)
+         (latext-mode . writegood-mode)))
+
 ;; Local Variables:
 ;; fill-column: 80
 ;; eval: (outline-minor-mode)
