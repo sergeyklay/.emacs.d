@@ -109,8 +109,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Save point position between sessions
 (use-package saveplace
-  ;; Do not enable on daemon or batch mode.
-  :if (not (or noninteractive (daemonp)))
+  :unless noninteractive
   :demand 2
   :init
   ;; Automatically save place in each file.  Utilizing `save-place-mode' within
@@ -121,8 +120,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; History
 (use-package savehist
-  ;; Do not enable on daemon or batch mode.
-  :if (and (not noninteractive) (not (daemonp)))
+  :unless noninteractive
   :demand 2
   :custom
   ;; The default value is typically lower, but increasing it allows for a more
@@ -142,7 +140,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (savehist-mode t))
 
 (use-package recentf
-  :if (not noninteractive)
+  :unless noninteractive
   :defer 2
   :custom
   (recentf-max-saved-items 100)
