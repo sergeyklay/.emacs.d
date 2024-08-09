@@ -284,7 +284,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Project management
 (use-package project
-  :defer t
   :commands (project-find-file
              project-switch-to-buffer
              project-switch-project
@@ -331,6 +330,28 @@ buffers related to your current project."
     (project-list-buffers t)
     (pop-to-buffer "*Buffer List*")))
 
+;;;; Security
+(use-package epg
+  :custom
+  (epg-gpg-program "gpg"))
+
+(use-package epa
+  :after epg
+  :init
+  ;; For more see "man 1 gpg" for the option "--pinentry-mode"
+  (unless (eq (window-system) 'w32)
+    (custom-set-variables '(epg-pinentry-mode 'loopback)))
+  :config
+  ;; Enable automatic encryption/decryption of *.gpg files
+  (unless (memq epa-file-handler file-name-handler-alist)
+    (epa-file-enable)))
+
+(use-package auth-source
+  :custom
+  (auth-sources
+   `(,(concat user-emacs-directory ".authinfo.gpg")
+     "~/.authinfo" "~/.authinfo.gpg")))
+
 ;;;; VCS
 (use-package git-modes
   :ensure t
@@ -343,6 +364,86 @@ buffers related to your current project."
   :after transient
   :commands (magit magit-status)
   :bind (("C-x g" . magit-status)))
+
+;;;; IRC and other communication
+(use-package erc
+  :after auth-source
+  :commands (erc erc-tls)
+  :custom
+  (erc-autojoin-channels-alist '(("Libera.Chat" "#emacs" "#re2c")))
+  (erc-autojoin-timing 'ident)
+  (erc-user-full-name user-full-name)
+  (erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
+  (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-threshold-time 43200)
+  (erc-prompt-for-password nil)
+  (erc-fill-function 'erc-fill-static)
+  (erc-fill-static-center 22)
+  :config
+  (add-to-list 'erc-modules 'log)
+
+  (defconst erc-logging-directory
+    (concat user-emacs-directory "logs/erc/"))
+
+  (defun my/erc-logging-hook ()
+    "Setting up channel logging for `erc'."
+    (eval-when-compile (require 'erc-log nil t))
+    (custom-set-variables
+     '(erc-log-channels-directory erc-logging-directory)
+     '(erc-log-insert-log-on-open t)
+     '(erc-save-buffer-on-part nil)
+     '(erc-save-queries-on-quit nil)
+     '(erc-log-write-after-insert t)
+     '(erc-log-write-after-send t))
+    (unless (file-exists-p erc-logging-directory)
+      (make-directory erc-logging-directory t)))
+  :hook
+  (erc-mode . my/erc-logging-hook))
+
+(use-package erc-services
+  :after erc
+  :custom
+  (erc-prompt-for-nickserv-password nil)
+  (erc-use-auth-source-for-nickserv-password t)
+  :config
+  (erc-services-mode 1))
+
+(use-package erc-spelling
+  :after erc
+  :config
+  (erc-spelling-mode 1))
+
+(use-package erc-track
+  :after erc
+  :custom
+  (erc-track-exclude-types
+   '("JOIN" "MODE" "NICK" "PART" "QUIT"
+     "301" ; away notice
+     "305" ; return from awayness
+     "306" ; set awayness
+     "324" ; modes
+     "329" ; channel creation date
+     "332" ; topic notice
+     "333" ; who set the channel topic
+     "353" ; listing of users on the current channel
+     "477")))
+
+(use-package erc-hl-nicks
+  :ensure t
+  :after erc)
+
+(declare-function erc-track-switch-buffer (arg))
+(declare-function erc-update-modules ())
+
+(defun my/erc-start-or-switch ()
+  "Connects to ERC, or switch to last active buffer."
+  (interactive)
+  (if (get-buffer "Libera.Chat")
+      (erc-track-switch-buffer 1)
+    (when (y-or-n-p "Start ERC? ")
+      (erc :server "irc.libera.chat" :port 6667))))
+
+(global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)
 
 ;;;; Programming Languages, Markup and Configurations
 (use-package css-mode
