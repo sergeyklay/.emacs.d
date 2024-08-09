@@ -38,12 +38,12 @@ build: init.el test/bc.el
 checkdoc: test/checkdoc.el
 	$(RUNEMACS) --load $(TOP)/$<
 
-.PHONY: linescount
-linescount: test/lc.el
+.PHONY: checkstyle
+checkstyle: test/passive-voice-check.el
 	$(RUNEMACS) --load $(TOP)/$<
 
 .PHONY: test
-test: linescount checkdoc
+test: checkdoc checkstyle
 
 .PHONY: help
 help:
@@ -54,7 +54,7 @@ help:
 	@echo '  help:       Show this help and exit'
 	@echo '  install:    Install dependencies'
 	@echo '  checkdoc:   Check doc for errors'
-	@echo '  linescount: Check the total line count of config files'
+	@echo '  checkstyle: Check for passive voice in documentation'
 	@echo '  build:      Byte compile configuration files'
 	@echo '  test:       Run the non-interactive test suite'
 	@echo '  clean:      Remove byte compiled files and artifacts'
