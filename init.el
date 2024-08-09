@@ -259,7 +259,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (after-init . electric-pair-mode)
   (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
 
-
 ;;;; Editing
 (use-package outline
   :custom
@@ -293,6 +292,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :bind (:map project-prefix-map
               ("p" . my-project-switch-project)
               ("s" . my-switch-project-and-kill-buffers)
+              ("C-b" . my-project-list-buffers)
               ("R" . project-remember-projects-under)
               ("K" . project-kill-buffers))
   :config
@@ -313,11 +313,23 @@ to directory DIR."
     (let ((project-current-directory-override dir))
       (project-find-file)))
 
-    (defun my-switch-project-and-kill-buffers ()
-      "Kill all buffers of the current project, then switch to a new project."
-      (interactive)
-      (project-kill-buffers t)
-      (call-interactively 'my-project-switch-project)))
+  (defun my-switch-project-and-kill-buffers ()
+    "Kill all buffers of the current project, then switch to a new project."
+    (interactive)
+    (project-kill-buffers t)
+    (call-interactively 'my-project-switch-project))
+
+  (defun my-project-list-buffers ()
+    "Display a list of buffers associated with the current project.
+
+This function calls `project-list-buffers' with a non-nil argument,
+which filters the list to show only file-visiting buffers. After
+generating the buffer list, it pops up the `*Buffer List*` buffer
+in a new window, allowing you to easily navigate through the
+buffers related to your current project."
+    (interactive)
+    (project-list-buffers t)
+    (pop-to-buffer "*Buffer List*")))
 
 ;;;; VCS
 (use-package git-modes
