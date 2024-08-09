@@ -112,11 +112,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :unless noninteractive
   :demand 2
   :init
-  ;; Automatically save place in each file.  Utilizing `save-place-mode' within
-  ;; the :init section is preferable over setting the analogous variable in
-  ;; :custom due to performance reasons.  It ensures that the mode is activated
-  ;; before the package is fully loaded, which can lead to a quicker startup.
-  (save-place-mode t))
+  (save-place-mode t)) ; Automatically save place in each file.
 
 ;;;; History
 (use-package savehist
@@ -133,10 +129,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; inputs.
   (history-delete-duplicates t)
   :init
-  ;; Save minibuffer history.  Utilizing `savehist-mode' within the :init
-  ;; section is preferable over setting the analogous variable in :custom due to
-  ;; performance reasons.  It ensures that the mode is activated before the
-  ;; package is fully loaded, which can lead to a quicker startup.
   (savehist-mode t))
 
 (use-package recentf
