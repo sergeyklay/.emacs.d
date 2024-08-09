@@ -66,11 +66,11 @@ jobs:
       - name: Install packages
         run: make install
 
-      - name: Check for style errors
+      - name: Check for code style
         run: make checkdoc
 
-      - name: Check the total line count
-        run: make linescount
+      - name: Check for doc style
+        run: make checkstyle
 
       - name: Byte compile configuration files
         if: matrix.allow_failure != true
