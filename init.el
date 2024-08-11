@@ -383,7 +383,7 @@ buffers related to your current project."
   (add-to-list 'erc-modules 'log)
 
   (defconst erc-logging-directory
-    (concat user-emacs-directory "logs/erc/"))
+    (concat (expand-file-name "~") "/logs/erc/"))
 
   (defun my/erc-logging-hook ()
     "Setting up channel logging for `erc'."
