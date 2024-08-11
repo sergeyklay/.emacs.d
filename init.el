@@ -201,12 +201,34 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (run-with-idle-timer 60 nil
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
+
+  (defun my|org-setup-babel-languages ()
+    "Setup languages for org code blocks.
+
+For full list of supported languages see:
+https://orgmode.org/worg/org-contrib/babel/languages/index.html"
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((C . t)
+       (cpp . t)
+       (emacs-lisp . t)
+       (haskell . t)
+       (js . t)
+       (latex . t)
+       (lisp . t)
+       (makefile . t)
+       (org . t)
+       (python . t)
+       (scheme . t)
+       (shell . t)
+       (sql . t))))
   (unless (file-exists-p org-directory)
     (make-directory org-directory))
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
-         (org-agenda-mode . #'my|org-agenda-refresh-on-idle-hook))
+         (org-mode . my|org-setup-babel-languages)
+         (org-agenda-mode . my|org-agenda-refresh-on-idle-hook))
   :bind (("C-c c" . #'org-capture)
          ("C-c a" . #'org-agenda)
          ("C-c l" . #'org-store-link)))
