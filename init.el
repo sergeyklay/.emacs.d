@@ -467,6 +467,17 @@ buffers related to your current project."
 
 (global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)
 
+;;;; Shell
+(use-package eshell
+  :commands (eshell-mode eshell)
+  :custom
+  ;; Always scrolls the window to the end when entering a new command
+  (eshell-scroll-to-bottom-on-input t)
+  ;; Scrolls the window to the end when new output appears
+  (eshell-scroll-to-bottom-on-output 'all)
+  :bind
+  (("M-s e" . eshell)))
+
 ;;;; Programming Languages, Markup and Configurations
 (use-package css-mode
   :mode "\\.css$"
@@ -504,11 +515,17 @@ buffers related to your current project."
 
 (use-package sql
   :mode ("\\.sql\\'" . sql-mode)
-  :defer t)
+  :bind (("M-s s" . sql-sqlite)))
 
 (use-package sql-indent
   :ensure t
   :hook ((sql-mode . sqlind-minor-mode)))
+
+(use-package sqlite-mode
+  :bind (("M-s q" . sqlite-mode-open-file)
+         :map sqlite-mode-map
+         ("M-K" . sqlite-mode-list-tables)
+         ("TAB" . sqlite-mode-list-data)))
 
 (use-package csv-mode
   :ensure t
