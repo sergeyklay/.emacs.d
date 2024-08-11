@@ -480,6 +480,14 @@ buffers related to your current project."
   :mode (("\\.md\\'" . markdown-mode))
   :hook ((markdown-mode . visual-line-mode)))
 
+(use-package sql
+  :mode ("\\.sql\\'" . sql-mode)
+  :defer t)
+
+(use-package sql-indent
+  :ensure t
+  :hook ((sql-mode . sqlind-minor-mode)))
+
 (use-package python
   :defer t
   :custom
