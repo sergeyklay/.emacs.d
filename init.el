@@ -407,7 +407,7 @@ buffers related to your current project."
   (defconst erc-logging-directory
     (concat (expand-file-name "~") "/logs/erc/"))
 
-  (defun my/erc-logging-hook ()
+  (defun my|erc-logging-hook ()
     "Setting up channel logging for `erc'."
     (eval-when-compile (require 'erc-log nil t))
     (custom-set-variables
@@ -420,7 +420,7 @@ buffers related to your current project."
     (unless (file-exists-p erc-logging-directory)
       (make-directory erc-logging-directory t)))
   :hook
-  (erc-mode . my/erc-logging-hook))
+  (erc-mode . my|erc-logging-hook))
 
 (use-package erc-services
   :after erc
