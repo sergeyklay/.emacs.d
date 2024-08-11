@@ -510,6 +510,11 @@ buffers related to your current project."
   :ensure t
   :hook ((sql-mode . sqlind-minor-mode)))
 
+(use-package csv-mode
+  :ensure t
+  :mode (("\\.csv\\'" . csv-mode))
+  :hook ((csv-mode . csv-align-mode)))
+
 (use-package python
   :defer t
   :custom
@@ -521,7 +526,6 @@ buffers related to your current project."
   :after python
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
-
 
 ;;;; Helpers
 (use-package which-key
