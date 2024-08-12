@@ -401,15 +401,24 @@ buffers related to your current project."
   (erc-prompt-for-password nil)
   (erc-fill-function 'erc-fill-static)
   (erc-fill-static-center 22)
-  ;; Logging
+  :config
+  (defun my|setup-erc-modules ()
+    "Set up modules for ERC."
+    (add-to-list 'erc-modules 'log)
+    (erc-update-modules))
+  :hook ((erc-mode . my|setup-erc-modules)))
+
+(use-package erc-log
+  :after erc
+  :custom
+  (erc-log-channels-directory #'my-erc-monthly-log-directory)
+  (erc-generate-log-file-name-function #'my-erc-log-file-name-short)
   (erc-log-insert-log-on-open t)
   (erc-save-buffer-on-part nil)
   (erc-save-queries-on-quit nil)
   (erc-log-write-after-insert t)
   (erc-log-write-after-send t)
   :config
-  (add-to-list 'erc-modules 'log)
-
   (defconst my-erc-base-log-directory
     (concat (expand-file-name "~") "/logs/erc/")
     "The base directory where ERC logs will be stored.
@@ -437,10 +446,7 @@ The resulting path is of the form: ~/logs/erc/YYYY/MM/."
 This results in a filename of the form #channel@server.txt, for example:
 #emacs@irc.libera.chat.txt."
     (let ((file (concat target "@" server ".txt")))
-      (convert-standard-filename file)))
-
-  (setq erc-log-channels-directory #'my-erc-monthly-log-directory)
-  (setq erc-generate-log-file-name-function #'my-erc-log-file-name-short))
+      (convert-standard-filename file))))
 
 (use-package erc-services
   :after erc
