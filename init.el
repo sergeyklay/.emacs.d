@@ -401,26 +401,46 @@ buffers related to your current project."
   (erc-prompt-for-password nil)
   (erc-fill-function 'erc-fill-static)
   (erc-fill-static-center 22)
+  ;; Logging
+  (erc-log-insert-log-on-open t)
+  (erc-save-buffer-on-part nil)
+  (erc-save-queries-on-quit nil)
+  (erc-log-write-after-insert t)
+  (erc-log-write-after-send t)
   :config
   (add-to-list 'erc-modules 'log)
 
-  (defconst erc-logging-directory
-    (concat (expand-file-name "~") "/logs/erc/"))
+  (defconst my-erc-base-log-directory
+    (concat (expand-file-name "~") "/logs/erc/")
+    "The base directory where ERC logs will be stored.
 
-  (defun my|erc-logging-hook ()
-    "Setting up channel logging for `erc'."
-    (eval-when-compile (require 'erc-log nil t))
-    (custom-set-variables
-     '(erc-log-channels-directory erc-logging-directory)
-     '(erc-log-insert-log-on-open t)
-     '(erc-save-buffer-on-part nil)
-     '(erc-save-queries-on-quit nil)
-     '(erc-log-write-after-insert t)
-     '(erc-log-write-after-send t))
-    (unless (file-exists-p erc-logging-directory)
-      (make-directory erc-logging-directory t)))
-  :hook
-  (erc-mode . my|erc-logging-hook))
+This directory serves as the root for all ERC logs, with further
+subdirectories being created for specific periods. The log files
+are organized by year and month to ensure easy access and
+management of chat history.")
+
+  (defun my-erc-monthly-log-directory (&rest _ignore)
+    "Return the directory path for storing ERC logs for the current month.
+
+This function generates a directory path based on the current
+year and month, ensuring that logs are organized chronologically.
+If the directory does not already exist, it will be created.
+The resulting path is of the form: ~/logs/erc/YYYY/MM/."
+    (let ((directory (concat my-erc-base-log-directory (format-time-string "%Y/%m"))))
+      (unless (file-exists-p directory)
+        (make-directory directory t))
+      directory))
+
+  (defun my-erc-log-file-name-short (buffer target nick server port)
+    "Computes a log file name from the TARGET and SERVER only.
+
+This results in a filename of the form #channel@server.txt, for example:
+#emacs@irc.libera.chat.txt."
+    (let ((file (concat target "@" server ".txt")))
+      (convert-standard-filename file)))
+
+  (setq erc-log-channels-directory #'my-erc-monthly-log-directory)
+  (setq erc-generate-log-file-name-function #'my-erc-log-file-name-short))
 
 (use-package erc-services
   :after erc
