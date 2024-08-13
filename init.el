@@ -455,17 +455,23 @@ buffers related to your current project."
 ;; filtering of candidates based on your history and frequently used items.
 (use-package prescient
   :ensure t
-  :init
-  ;; Enable persistence of sorting across sessions
-  (prescient-persist-mode 1))
+  :custom
+  ;; The default settings seem a little forgetful to me. Let's try
+  ;; this out.
+  (prescient-history-length 1000)
+  ;; Common sense.
+  (prescient-sort-full-matches-first t)
+  :config
+  ;; Remember usage statistics across Emacs sessions.
+  (prescient-persist-mode +1))
 
 ;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
 ;; combine powerful sorting and filtering with the Vertico completion system.
 (use-package vertico-prescient
   :ensure t
-  :after vertico
-  :init
-  (vertico-prescient-mode 1))
+  :after (vertico prescient)
+  :init (vertico-prescient-mode 1)
+  :config (prescient-persist-mode 1))
 
 ;; Enable CTRLF as a modern replacement for Isearch and Swiper.  CTRLF provides
 ;; a modernized interface for incremental search, offering more intuitive
