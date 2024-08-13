@@ -389,107 +389,91 @@ buffers related to your current project."
 
 ;;;; Setup completion
 
-(use-package ivy
+;; Provide a nicer `completing-read'.
+(use-package vertico
   :ensure t
-  :defer 0.1
   :custom
-  ;; Don't show "./" and "../"
-  (ivy-extra-directories '())
-  ;; Show candidate index and total count
-  (ivy-count-format "(%d/%d) ")
-  ;; Number of lines for the minibuffer window
-  (ivy-height 12)
-  ;; do not set `completion-in-region-function'
-  (ivy-do-completion-in-region nil)
-  ;; Wrap around after the first and the last candidate
-  (ivy-wrap t)
-  ;; Fix the height of the minibuffer during ivy completion
-  (ivy-fixed-height-minibuffer t)
-  ;; Add recent files and bookmarks to `ivy-switch-buffer'
-  (ivy-use-virtual-buffers t)
-  ;; Don't use ^ as initial input
-  (ivy-initial-inputs-alist nil)
-  ;; Disable magic slash on non-match
-  (ivy-magic-slash-non-match-action nil)
-  (ivy-ignore-buffers '("\\` " "\\`\\*tramp/" "\\*Messages\\*" "TAGS"))
-  ;; Allow minibuffer commands while in the minibuffer
-  (enable-recursive-minibuffers t)
-  :bind (([remap switch-to-buffer] . ivy-switch-buffer)
-         ("C-x B"                  . ivy-switch-buffer-other-window)
-         ("C-c C-r"                . ivy-resume)
-         :map ivy-minibuffer-map
-         ("<tab>"                  . ivy-alt-done)
-         ("C-i"                    . ivy-partial-or-done)
-         :map ivy-switch-buffer-map
-         ("C-k"                    . ivy-switch-buffer-kill))
-  :config
-  (ivy-mode 1)
-  (when (fboundp 'ivy-format-function-line)
-    ;; Highlight til EOL
-    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)))
+  ;; Show more candidates in the minibuffer
+  (vertico-count 12)
+  ;; Enable cycling through candidates
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
 
-;; With smex installed, `counsel-M-x' lists all available commands but places
-;; the most recently used ones on top of the list ordered by frequency.
-(use-package smex
+;; Enable Consult for enhanced command completion.  Consult provides
+;; replacements for many standard commands, offering better interface and
+;; additional features.
+(use-package consult
   :ensure t
-  :commands smex
-  :custom
-  (smex-history-length 20)
-  :config
-  (smex-initialize))
-
-(use-package counsel
-  :ensure t
-  :hook (ivy-mode . counsel-mode)
-  :custom
-  (counsel-find-file-ignore-regexp
-   (concat
-    ;; file names beginning with #
-    "\\(?:^[#]\\)"
-    ;; file names ending with # or ~
-    "\\|\\(?:[#~]$\\)"
-    ;; file names beginning with Icon
-    "\\|\\(?:^Icon?\\)"
-    ;; macOs' custom attributes of its containing folder
-    "\\|\\(?:^\\.DS_Store$\\)"
-    ;; zsh compiled functions
-    "\\|\\(?:\\.zwc$\\)"
-    ;; Python bytecode
-    "\\|\\(?:^__pycache__/?$\\)"))
-  ;; Let counsel-find-file-at-point choose the file under cursor
-  (counsel-find-file-at-point t)
-  (counsel-rg-base-command
-   `("rg"
-     "--max-columns" "240" ; Don't print the lines longer than 240 bytes
-     "--with-filename"     ; Display the file path for matches
-     "--no-heading"        ; Don't group matches by each file
-     "--line-number"       ; Show line numbers (1-based)
-     "--color" "never"     ; Colors  will never be used
-     "--hidden"            ; Search hidden files and directories
-     "%s"))
-  :bind (("C-x C-i"                   . counsel-imenu)
-         ("C-x l"                     . counsel-locate)
-         ("C-h u"                     . counsel-unicode-char)
-         ("C-h C-l"                   . counsel-find-library)
-         ("C-h C-o"                   . counsel-info-lookup-symbol)
-         ("C-c k"                     . counsel-rg)
-         ("C-c f"                     . counsel-recentf)
-         ("C-c C-h"                   . counsel-command-history)
-         ([remap list-buffers]        . counsel-ibuffer)
-         ([remap eshell-list-history] . counsel-esh-history)
-         ([remap describe-symbol]     . counsel-describe-symbol)
-         :map ivy-minibuffer-map
-         ("C-r"                       . counsel-minibuffer-history)
+  :bind (("C-x C-i" . consult-imenu)
+         ("C-x l"   . consult-locate)
+         ("C-x b"   . consult-buffer)
+         ("C-x B"   . consult-buffer-other-window)
+         ("C-c k"   . consult-ripgrep)
+         ("C-c f"   . consult-recent-file)
+         ("C-r"     . consult-history)
+         ("C-S-s"   . consult-line)
          :map minibuffer-local-map
-         ("C-r"                       . counsel-minibuffer-history)))
+         ("C-r"     . consult-history)))
 
-(use-package swiper
+;; Add additional context and annotations to completion UI.  Marginalia enriches
+;; the completion interface with more information, such as documentation
+;; strings, file sizes, etc.
+(use-package marginalia
   :ensure t
-  :after ivy
-  :commands (swiper swiper-all)
-  :bind(([remap isearch-forward] . swiper)
-        :map swiper-map
-        ("M-%" . swiper-query-replace)))
+  :after vertico
+  :init
+  (marginalia-mode))
+
+;; Enable Orderless for flexible matching style.  Orderless provides advanced
+;; matching capabilities that allow you to combine multiple search patterns.
+(use-package orderless
+  :ensure t
+  :custom
+  ;; Use orderless as the default completion style
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)
+  ;; Adjust completion for specific contexts, e.g., file paths
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  :config
+  ;; Ensure case-insensitive matching for all completions
+  (setq completion-ignore-case t))
+
+;; Enable Embark for additional actions within completion UI.  Embark adds the
+;; ability to perform actions directly from completion buffers (e.g.,
+;; minibuffer, `completing-read`).
+(use-package embark
+  :ensure t
+  :bind
+  (("C-." . embark-act)           ;; Act on selected completion item
+   ("C-;" . embark-dwim)          ;; Do-What-I-Mean (e.g., open or describe)
+   :map minibuffer-local-map
+   ("C-c C-o" . embark-export)    ;; Export candidates to another buffer
+   ("C-c C-c" . embark-collect))) ;; Collect and act on multiple candidates
+
+;; Prescient for improved sorting and filtering.  Prescient enhances sorting and
+;; filtering of candidates based on your history and frequently used items.
+(use-package prescient
+  :ensure t
+  :init
+  ;; Enable persistence of sorting across sessions
+  (prescient-persist-mode 1))
+
+;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
+;; combine powerful sorting and filtering with the Vertico completion system.
+(use-package vertico-prescient
+  :ensure t
+  :after vertico
+  :init
+  (vertico-prescient-mode 1))
+
+;; Enable CTRLF as a modern replacement for Isearch and Swiper.  CTRLF provides
+;; a modernized interface for incremental search, offering more intuitive
+;; navigation and search options.
+(use-package ctrlf
+  :ensure t
+  :init
+  (ctrlf-mode 1))
 
 ;;;; IRC and other communication
 (use-package erc
@@ -585,8 +569,6 @@ This results in a filename of the form #channel@server.txt, for example:
   :after erc)
 
 (declare-function erc-track-switch-buffer (arg))
-(declare-function erc-update-modules ())
-
 (defun my/erc-start-or-switch ()
   "Connects to ERC, or switch to last active buffer."
   (interactive)
