@@ -320,7 +320,7 @@ https://orgmode.org/worg/org-contrib/babel/languages/index.html"
   ;; Auto clean up zombie projects from `project-list-file'
   (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
   ;; Use ripgrep if installed
-  (when (shell-command-to-string "command rg --version")
+  (when (executable-find "rg")
     (setq xref-search-program 'ripgrep))
 
   (declare-function project-prompt-project-dir "project")
