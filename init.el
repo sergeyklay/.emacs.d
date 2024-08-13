@@ -181,6 +181,47 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :config
   (or (server-running-p) (server-mode)))
 
+;;;; Spell
+;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
+;; them.  For more info on installing dictionaries see
+;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
+(use-package ispell
+  :if (executable-find "hunspell")
+  :custom
+  ;; Save personal dictionary without asking for confirmation.
+  (ispell-silently-savep t)
+  ;; Full path to the hunspell executable
+  (ispell-program-name (executable-find "hunspell"))
+  ;; The default dictionary I use.  To see available dictionaries
+  ;; use 'hunspell -D'.
+  (ispell-local-dictionary "en_US")
+  ;; Setting up dictionary definitions
+  (ispell-local-dictionary-alist
+   '(("english" "[[:alpha:]]" "[^[:alpha]]" "[']" t
+      ("-d" "en_US") nil utf-8)
+     ("polish" "[[:alpha:]]" "[^[:alpha]]" "[']" t
+      ("-d" "pl") nil utf-8)
+     ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
+      ("-d" "russian-aot-ieyo") nil utf-8)))
+  :config
+  (setq ispell-really-aspell nil)
+  (setq ispell-really-hunspell t))
+
+(use-package flyspell
+  :if (executable-find "hunspell")
+  :custom
+  ;; Be silent when checking words.
+  (flyspell-issue-message-flag nil)
+  :bind ("C-x t s" . flyspell-mode))
+
+(use-package writegood-mode
+  :ensure t
+  :hook ((text-mode . writegood-mode)
+         (org-mode . writegood-mode)
+         (rst-mode . writegood-mode)
+         (markdown-mode . writegood-mode)
+         (latext-mode . writegood-mode)))
+
 ;;;; Organization
 (use-package org
   :ensure t
@@ -481,6 +522,21 @@ related to your current project."
          :map minibuffer-local-map
          ("C-r"     . consult-history)))
 
+;; Init flyspell-correct for spell correction
+(use-package flyspell-correct
+  :ensure t
+  :defer t
+  :after flyspell)
+
+;; Completion of misspelled words in buffer.
+(use-package consult-flyspell
+  :ensure t
+  :after (consult flyspell-correct)
+  :bind (:map flyspell-mode-map
+              ("C-;" . consult-flyspell))
+  :config
+  (setq consult-flyspell-select-function 'flyspell-correct-at-point))
+
 ;; Add additional context and annotations to completion UI.  Marginalia enriches
 ;; the completion interface with more information, such as documentation
 ;; strings, file sizes, etc.
@@ -763,14 +819,6 @@ This function serves multiple purposes:
   :defer 1
   :config
   (which-key-mode 1))
-
-(use-package writegood-mode
-  :ensure t
-  :hook ((text-mode . writegood-mode)
-         (org-mode . writegood-mode)
-         (rst-mode . writegood-mode)
-         (markdown-mode . writegood-mode)
-         (latext-mode . writegood-mode)))
 
 ;; Local Variables:
 ;; fill-column: 80
