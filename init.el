@@ -590,10 +590,11 @@ This results in a filename of the form #channel@server.txt, for example:
 (defun my/erc-start-or-switch ()
   "Connects to ERC, or switch to last active buffer."
   (interactive)
-  (if (get-buffer "Libera.Chat")
-      (erc-track-switch-buffer 1)
-    (when (y-or-n-p "Start ERC? ")
-      (erc :server "irc.libera.chat" :port 6667))))
+  (let ((erc-buffers '("Libera.Chat" "irc.libera.chat" "irc.libera.chat:6667")))
+    (if (seq-some #'get-buffer erc-buffers)
+        (erc-track-switch-buffer 1)
+      (when (y-or-n-p "Start ERC? ")
+        (erc :server "irc.libera.chat" :port 6667)))))
 
 (global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)
 
