@@ -303,26 +303,21 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
          ("n" "Note" entry
          (file+headline "~/org/notes.org" "Random Notes")
-         "** %?"
+         "** %?\n  %U"
          :empty-lines 0)
 
         ("b" "Blog Idea" entry
          (file+headline "~/org/notes.org" "Blog Ideas")
-         "** %?"
+         "** %?\n  %U"
          :empty-lines 0)
 
-        ("g" "General To-Do" entry
-         (file+headline "~/org/todos.org" "General Tasks")
-         "* TODO [#B] %?\n:Created: %T\n "
-         :empty-lines 0)
-
-        ("r" "Read Later" checkitem
-         (file+headline "~/org/later.org" "Read Later")
+        ("r" "To-Read" checkitem
+         (file+headline "~/org/later.org" "To-Read List")
          "- [ ] %?  :read:"
          :empty-lines 0)
 
-        ("f" "Watch Later" checkitem
-         (file+headline "~/org/later.org" "Watch Later")
+        ("f" "To-Watch" checkitem
+         (file+headline "~/org/later.org" "To-Watch List")
          "- [ ] %?  :watch:"
          :empty-lines 0)
 
