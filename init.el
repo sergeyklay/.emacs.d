@@ -343,11 +343,10 @@ to directory DIR."
   (defun my-project-list-buffers ()
     "Display a list of buffers associated with the current project.
 
-This function calls `project-list-buffers' with a non-nil argument,
-which filters the list to show only file-visiting buffers. After
-generating the buffer list, it pops up the `*Buffer List*` buffer
-in a new window, allowing you to easily navigate through the
-buffers related to your current project."
+This function filters the list to show only file-visiting buffers.
+After generating the buffer list, it pops up the `*Buffer List*` buffer
+in a new window, allowing you to easily navigate through the buffers
+related to your current project."
     (interactive)
     (project-list-buffers t)
     (pop-to-buffer "*Buffer List*")))
@@ -574,12 +573,41 @@ This results in a filename of the form #channel@server.txt, for example:
   :ensure t
   :after erc)
 
+(defun my/erc-buffer-connected-p (buffer)
+  "Check if ERC BUFFER is connected."
+  (with-current-buffer buffer
+    (and (erc-server-process-alive)
+         erc-server-connected)))
+
 (declare-function erc-track-switch-buffer (arg))
 (defun my/erc-start-or-switch ()
-  "Connects to ERC, or switch to last active buffer."
+  "Connects to ERC, or switch to last active buffer.
+
+This function serves multiple purposes:
+
+1. Check Active Buffers: It iterates through a predefined list of ERC buffers
+   to determine if any of them are actively connected to an IRC server.
+
+2. Verify Connection Status: For each buffer, it checks whether the associated
+   ERC process is alive and whether there is an established network connection
+   to the server. This is done using the `erc-server-process-alive' function and
+   the `erc-server-connected' variable.
+
+3. Switch to Active Buffer: If any buffer is found to be actively connected,
+   the function switches to that buffer using `erc-track-switch-buffer'.
+
+4. Reconnect if Disconnected: If none of the checked buffers are connected,
+   the function prompts the user to reconnect to the IRC server. If the user
+   confirms, a new connection is initiated using the `erc' command with the
+   server and port specified (`irc.libera.chat` on port 6667)."
   (interactive)
-  (let ((erc-buffers '("Libera.Chat" "irc.libera.chat" "irc.libera.chat:6667")))
-    (if (seq-some #'get-buffer erc-buffers)
+  (let ((erc-buffers '("Libera.Chat" "irc.libera.chat" "irc.libera.chat:6667"))
+        (connected nil))
+    (dolist (buffer erc-buffers)
+      (when (and (get-buffer buffer)
+                 (my/erc-buffer-connected-p buffer))
+        (setq connected t)))
+    (if connected
         (erc-track-switch-buffer 1)
       (when (y-or-n-p "Start ERC? ")
         (erc :server "irc.libera.chat" :port 6667)))))
