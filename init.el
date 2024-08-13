@@ -183,8 +183,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Organization
 (use-package org
+  :ensure t
   :mode ("\\.org\\'" . org-mode)
   :custom
+  ;; When a TODO is set to a done state, record a timestamp
+  (org-log-done t)
+  ;; Hide the markers so you just see bold text as BOLD and not *BOLD*
+  (org-hide-emphasis-markers t)
   ;; Resize images to 300px, unless there's an attribute.
   (org-image-actual-width '(300))
   ;; Enable shift+arrow for text selection.
@@ -193,47 +198,108 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (org-agenda-include-diary t)
   ;; Don' clutter the actual entry with notes.
   (org-log-into-drawer t)
+  ;; Set up global org directory.
+  (org-direcory "~/org")
+  (org-agenda-files '("~/org"))
   :config
-  (declare-function org-agenda-prepare-buffers "org" files)
-  (declare-function org-agenda-files "org" (&optional unrestricted archives))
-  (defun my|org-agenda-refresh-on-idle-hook ()
+  ;; Setup languages for org code blocks.  For full list of supported languages
+  ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (emacs-lisp . t)
+     (haskell . t)
+     (js . t)
+     (latex . t)
+     (lisp . t)
+     (makefile . t)
+     (org . t)
+     (python . t)
+     (scheme . t)
+     (shell . t)
+     (sql .t)
+     (calc . t)))
+
+  (defun my|org-agenda-refresh-on-idle ()
     "Set up a timer to refresh Org Agenda buffers after 60s of idle time."
     (run-with-idle-timer 60 nil
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
 
-  (defun my|org-setup-babel-languages ()
-    "Setup languages for org code blocks.
-
-For full list of supported languages see:
-https://orgmode.org/worg/org-contrib/babel/languages/index.html"
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((C . t)
-       (cpp . t)
-       (emacs-lisp . t)
-       (haskell . t)
-       (js . t)
-       (latex . t)
-       (lisp . t)
-       (makefile . t)
-       (org . t)
-       (python . t)
-       (scheme . t)
-       (shell . t)
-       (sql . t))))
   (unless (file-exists-p org-directory)
     (make-directory org-directory))
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
-         (org-mode . my|org-setup-babel-languages)
-         (org-agenda-mode . my|org-agenda-refresh-on-idle-hook))
-  :bind (("C-c c" . #'org-capture)
-         ("C-c a" . #'org-agenda)
-         ("C-c l" . #'org-store-link)))
+         (org-agenda-mode . my|org-agenda-refresh-on-idle))
+  :bind (("C-c c"       . #'org-capture)
+         ("C-c a"       . #'org-agenda)
+         ("C-c l"       . #'org-store-link)
+         ("C-c r"       . #'org-refile)
+         ("C-c C-x C-a" . #'org-archive-subtree)))
 
-;;;; Window Handling
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
+
+(setq org-todo-keyword-faces
+      '(("TODO" . org-warning)
+        ("IN-PROGRESS" . "yellow")
+        ("WAITING" . "orange")
+        ("DONE" . "green")
+        ("CANCELLED" . "red")))
+
+;; Define custom Org Capture templates
+(setq org-capture-templates
+      '(("w" "Work Log Entry" entry
+         (file+datetree "~/org/work-log.org")
+         "* %?  :work:"
+         :empty-lines 0)
+
+        ("p" "Personal Tasks" entry
+         (file+datetree "~/org/personal-tasks.org")
+         "* %?  :personal:"
+         :empty-lines 0)
+
+         ("n" "Note" entry
+         (file+headline "~/org/notes.org" "Random Notes")
+         "** %?"
+         :empty-lines 0)
+
+        ("b" "Blog Idea" entry
+         (file+headline "~/org/notes.org" "Blog Ideas")
+         "** %?"
+         :empty-lines 0)
+
+        ("g" "General To-Do" entry
+         (file+headline "~/org/todos.org" "General Tasks")
+         "* TODO [#B] %?\n:Created: %T\n "
+         :empty-lines 0)
+
+        ("r" "Read Later" checkitem
+         (file+headline "~/org/later.org" "Read Later")
+         "- [ ] %?  :read:"
+         :empty-lines 0)
+
+        ("f" "Watch Later" checkitem
+         (file+headline "~/org/later.org" "Watch Later")
+         "- [ ] %?  :watch:"
+         :empty-lines 0)
+
+        ("t" "Trip Checklist" checkitem
+         (file+headline "~/org/trips.org" "Trips"))))
+
+;; Define custom Org Agenda commands
+(setq org-agenda-custom-commands
+      '(("w" "Work Entries" tags-todo "work")
+        ("p" "Personal Tasks" tags-todo "personal")
+        ("r" "Read Later" tags-todo "read")
+        ("f" "Watch Later" tags-todo "watch")
+        ("x" "View All Tasks" alltodo "")))
+
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
+
+;;;; Window Handlingqqq
 ;; Restore old window configurations
 (use-package winner
   :commands (winner-undo winner-redo)
@@ -440,7 +506,7 @@ related to your current project."
 
 ;; Enable Embark for additional actions within completion UI.  Embark adds the
 ;; ability to perform actions directly from completion buffers (e.g.,
-;; minibuffer, `completing-read`).
+;; minibuffer, `completing-read').
 (use-package embark
   :ensure t
   :bind
