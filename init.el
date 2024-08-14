@@ -241,6 +241,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Set up global org directory.
   (org-direcory "~/org")
   (org-agenda-files '("~/org"))
+  ;; Custom archive location for completed tasks and notes.
+  (org-archive-location "~/org/archive/archive%Y.org::datetree/")
   :config
   ;; Setup languages for org code blocks.  For full list of supported languages
   ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
@@ -260,6 +262,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      (sql .t)
      (calc . t)))
 
+  (defun my|org-setup-archive-directory ()
+    "Set up the Org archive directory."
+    (let ((archive-dir (expand-file-name "~/org/archive/")))
+      (unless (file-exists-p archive-dir)
+        (make-directory archive-dir))))
+
   (defun my|org-agenda-refresh-on-idle ()
     "Set up a timer to refresh Org Agenda buffers after 60s of idle time."
     (run-with-idle-timer 60 nil
@@ -271,6 +279,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
+         (org-mode . my|org-setup-archive-directory)
          (org-agenda-mode . my|org-agenda-refresh-on-idle))
   :bind (("C-c c"       . #'org-capture)
          ("C-c a"       . #'org-agenda)
