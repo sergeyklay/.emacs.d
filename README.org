@@ -60,12 +60,10 @@ tools:
 
 So, I created this configuration with these tools in mind.
 
-#+begin_note
 Since I speak, write, and read in three languages — English, Polish,
 and Russian — I've configured the spell-checking setup to support
 these languages, though I've left it disabled by default. You might
 want to override this configuration to fit your linguistic needs.
-#+end_note
 
 ** License
 
