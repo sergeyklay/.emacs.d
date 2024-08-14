@@ -82,6 +82,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (require 'bind-key)
 
+;;;; Common functions
+(defun my-ensure-directory-exists (dir)
+  "Ensure that the directory DIR exists, create it if it doesn't."
+  (unless (file-exists-p dir)
+    (make-directory dir t)))
+
 ;;;; Backup
 ;; Silently deletes excess backup versions.
 (setq delete-old-versions t)
@@ -96,8 +102,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (let ((my-backup-dir (concat user-emacs-directory "backup/")))
   (setq backup-directory-alist
         `(("." . ,(file-name-as-directory my-backup-dir))))
-  (unless (file-exists-p my-backup-dir)
-    (make-directory my-backup-dir t)))
+  (my-ensure-directory-exists my-backup-dir))
 
 ;;;; Auto-Saving
 (let ((save-dir (concat user-emacs-directory "auto-save-list/")))
@@ -105,7 +110,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    auto-save-file-name-transforms `((".*" ,(expand-file-name "\\2" save-dir) t))
    auto-save-list-file-name
    (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
-  (unless (file-exists-p save-dir) (make-directory save-dir t)))
+  (my-ensure-directory-exists save-dir))
 
 ;; Save point position between sessions
 (use-package saveplace
@@ -222,6 +227,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (latex-mode . writegood-mode)))
 
 ;;;; Organization
+(defconst user-org-dir (expand-file-name "~/org")
+  "Path to the user org files directory.")
+
+(defconst user-org-archive-dir
+  (concat (file-name-as-directory user-org-dir) "archive")
+  "Path to the user archive for org files.")
+
 (use-package org
   :ensure t
   :mode ("\\.org\\'" . org-mode)
@@ -239,10 +251,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Don' clutter the actual entry with notes.
   (org-log-into-drawer t)
   ;; Set up global org directory.
-  (org-direcory "~/org")
-  (org-agenda-files '("~/org"))
-  ;; Custom archive location for completed tasks and notes.
-  (org-archive-location "~/org/archive/archive%Y.org::datetree/")
+  (org-direcory user-org-dir)
+  (org-agenda-files (list user-org-dir))
   :config
   ;; Setup languages for org code blocks.  For full list of supported languages
   ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
@@ -262,24 +272,28 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      (sql .t)
      (calc . t)))
 
-  (defun my|org-setup-archive-directory ()
-    "Set up the Org archive directory."
-    (let ((archive-dir (expand-file-name "~/org/archive/")))
-      (unless (file-exists-p archive-dir)
-        (make-directory archive-dir))))
-
   (defun my|org-agenda-refresh-on-idle ()
     "Set up a timer to refresh Org Agenda buffers after 60s of idle time."
     (run-with-idle-timer 60 nil
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
 
-  (unless (file-exists-p org-directory)
-    (make-directory org-directory))
+  ;; Custom archive location for completed tasks and notes.
+  ;; Should be something like "~/org/archive/archive2024.org::datetree/
+  (setq org-archive-location
+        (lambda ()
+          (let ((year (format-time-string "%Y")))
+            (concat
+             (file-name-as-directory user-org-archive-dir)
+             "archive"
+             year
+             ".org::datetree/"))))
+
+  (my-ensure-directory-exists user-org-dir)
+  (my-ensure-directory-exists user-org-archive-dir)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
-         (org-mode . my|org-setup-archive-directory)
          (org-agenda-mode . my|org-agenda-refresh-on-idle))
   :bind (("C-c c"       . #'org-capture)
          ("C-c a"       . #'org-agenda)
@@ -299,38 +313,50 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Define custom Org Capture templates
 (setq org-capture-templates
-      '(("w" "Work Log Entry" entry
-         (file+datetree "~/org/work-log.org")
+      `(("w" "Work Log Entry" entry
+         (file+datetree
+          ,(concat (file-name-as-directory user-org-dir) "work-log.org"))
          "* %?  :work:"
          :empty-lines 0)
 
         ("p" "Personal Tasks" entry
-         (file+datetree "~/org/personal-tasks.org")
+         (file+datetree
+          ,(concat (file-name-as-directory user-org-dir) "personal-tasks.org"))
          "* %?  :personal:"
          :empty-lines 0)
 
          ("n" "Note" entry
-         (file+headline "~/org/notes.org" "Random Notes")
+          (file+headline
+           ,(concat (file-name-as-directory user-org-dir) "notes.org")
+           "Random Notes")
          "** %?\n  %U"
          :empty-lines 0)
 
         ("b" "Blog Idea" entry
-         (file+headline "~/org/notes.org" "Blog Ideas")
+         (file+headline
+          ,(concat (file-name-as-directory user-org-dir) "notes.org")
+          "Blog Ideas")
          "** %?\n  %U"
          :empty-lines 0)
 
         ("r" "To-Read" checkitem
-         (file+headline "~/org/later.org" "To-Read List")
+         (file+headline
+          ,(concat (file-name-as-directory user-org-dir) "later.org")
+          "To-Read List")
          "- [ ] %?  :read:"
          :empty-lines 0)
 
         ("f" "To-Watch" checkitem
-         (file+headline "~/org/later.org" "To-Watch List")
+         (file+headline
+          ,(concat (file-name-as-directory user-org-dir) "later.org")
+          "To-Watch List")
          "- [ ] %?  :watch:"
          :empty-lines 0)
 
         ("t" "Trip Checklist" checkitem
-         (file+headline "~/org/trips.org" "Trips"))))
+         (file+headline
+          ,(concat (file-name-as-directory user-org-dir) "trips.org")
+          "Trips"))))
 
 ;; Define custom Org Agenda commands
 (setq org-agenda-custom-commands
@@ -654,8 +680,7 @@ year and month, ensuring that logs are organized chronologically.
 If the directory does not already exist, it will be created.
 The resulting path is of the form: ~/logs/erc/YYYY/MM/."
     (let ((directory (concat my-erc-base-log-directory (format-time-string "%Y/%m"))))
-      (unless (file-exists-p directory)
-        (make-directory directory t))
+      (my-ensure-directory-exists directory)
       directory))
 
   (defun my-erc-log-file-name-short (buffer target nick server port)
