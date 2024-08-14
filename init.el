@@ -335,11 +335,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("t" "Tasks")
         ("tw" "Work Log Entry" entry
          (file+datetree ,(-org-path "work-log.org"))
-         "* %?  :work:"
+         "* TODO %?  :work:"
          :empty-lines 0)
         ("tp" "Personal Tasks" entry
          (file+datetree ,(-org-path "personal-tasks.org"))
-         "* %?  :personal:"
+         "* TODO %?  :personal:"
          :empty-lines 0)
 
         ("m" "Media")
