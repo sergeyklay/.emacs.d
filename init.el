@@ -311,6 +311,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("DONE" . "green")
         ("CANCELLED" . "red")))
 
+;; TODO: temporary helper. I probable remove it in future
 (defun -org-path(file)
   (concat (file-name-as-directory user-org-dir) file))
 
@@ -377,6 +378,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; I prefer the thin cursor.
 (setq-default cursor-type '(bar . 2))
+
+;; Nicer scrolling
+(when (>=  emacs-major-version 29)
+  (pixel-scroll-precision-mode 1))
 
 (defun my/terminal-visible-bell ()
    "A friendlier visual bell effect."
