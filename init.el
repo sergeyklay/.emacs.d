@@ -212,15 +212,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :custom
   ;; Be silent when checking words.
   (flyspell-issue-message-flag nil)
+  :hook ((text-mode . flyspell-mode)
+         (latex-mode . flyspell-mode))
   :bind ("C-x t s" . flyspell-mode))
 
 (use-package writegood-mode
   :ensure t
   :hook ((text-mode . writegood-mode)
-         (org-mode . writegood-mode)
-         (rst-mode . writegood-mode)
-         (markdown-mode . writegood-mode)
-         (latext-mode . writegood-mode)))
+         (latex-mode . writegood-mode)))
 
 ;;;; Organization
 (use-package org
