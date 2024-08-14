@@ -311,52 +311,44 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("DONE" . "green")
         ("CANCELLED" . "red")))
 
+(defun -org-path(file)
+  (concat (file-name-as-directory user-org-dir) file))
+
 ;; Define custom Org Capture templates
 (setq org-capture-templates
-      `(("w" "Work Log Entry" entry
-         (file+datetree
-          ,(concat (file-name-as-directory user-org-dir) "work-log.org"))
-         "* %?  :work:"
+      `(("n" "Quick Notes")
+        ("nr" "Random Note" entry
+          (file+headline ,(-org-path "notes.org") "Random Notes")
+         "** %?\n  %U"
+         :empty-lines 0)
+        ("nb" "Blog Idea" entry
+         (file+headline ,(-org-path "notes.org") "Blog Ideas")
+         "** %?\n  %U"
          :empty-lines 0)
 
-        ("p" "Personal Tasks" entry
-         (file+datetree
-          ,(concat (file-name-as-directory user-org-dir) "personal-tasks.org"))
+        ("t" "Tasks")
+        ("tw" "Work Log Entry" entry
+         (file+datetree ,(-org-path "work-log.org"))
+         "* %?  :work:"
+         :empty-lines 0)
+        ("tp" "Personal Tasks" entry
+         (file+datetree ,(-org-path "personal-tasks.org"))
          "* %?  :personal:"
          :empty-lines 0)
 
-         ("n" "Note" entry
-          (file+headline
-           ,(concat (file-name-as-directory user-org-dir) "notes.org")
-           "Random Notes")
-         "** %?\n  %U"
-         :empty-lines 0)
-
-        ("b" "Blog Idea" entry
-         (file+headline
-          ,(concat (file-name-as-directory user-org-dir) "notes.org")
-          "Blog Ideas")
-         "** %?\n  %U"
-         :empty-lines 0)
-
-        ("r" "To-Read" checkitem
-         (file+headline
-          ,(concat (file-name-as-directory user-org-dir) "later.org")
-          "To-Read List")
+        ("m" "Media")
+        ("mr" "To-Read" checkitem
+         (file+headline ,(-org-path "later.org") "To-Read List")
          "- [ ] %?  :read:"
          :empty-lines 0)
-
-        ("f" "To-Watch" checkitem
-         (file+headline
-          ,(concat (file-name-as-directory user-org-dir) "later.org")
-          "To-Watch List")
+        ("mf" "To-Watch" checkitem
+         (file+headline ,(-org-path "later.org") "To-Watch List")
          "- [ ] %?  :watch:"
          :empty-lines 0)
 
-        ("t" "Trip Checklist" checkitem
-         (file+headline
-          ,(concat (file-name-as-directory user-org-dir) "trips.org")
-          "Trips"))))
+        ("c" "Checklists")
+        ("ct" "Trip Checklist" checkitem
+         (file+headline ,(-org-path "trips.org") "Trip Checklist"))))
 
 ;; Define custom Org Agenda commands
 (setq org-agenda-custom-commands
