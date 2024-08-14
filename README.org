@@ -19,17 +19,17 @@ Rather than pushing Emacs to its limits, this setup stays within a
 range that remains practical and easy to manage, serving as an
 efficient tool rather than an overengineered solution.
 
-The configuration follows four core principles:
-
-- self-contained :: A duo of =early-init.el= and =init.el= files
-  handle loading and configuring publicly available packages, with
-  ~custom.el~ being the only exception.
-- small :: The configuration remains concise and straightforward,
-  prioritizing clarity and simplicity.
-- built-in packages :: I prefer built-in solutions; when they aren't
-  available, I choose GNU alternatives over MELPA packages.
-- system-agnostic :: The setup should function seamlessly across
-  different operating systems.
+I follow four core principles in this configuration. First, I make
+sure everything is self-contained by managing it within the
+=early-init.el= and =init.el= files, which handle loading and
+configuring publicly available packages. The only exception to this is
+=custom.el=. Second, I keep the setup intentionally small, focusing on
+clarity and simplicity to ensure the configuration remains concise and
+straightforward. Third, I prefer using built-in packages whenever
+possible, and if they aren't available, I choose GNU alternatives over
+packages from MELPA. Finally, I design the configuration to be
+system-agnostic, so it works seamlessly across different operating
+systems.
 
 While the setup emphasizes minimalism, clear documentation remains
 essential for maintenance. Unlike literate programming, my approach
@@ -56,8 +56,16 @@ tools:
 - [[https://git-scm.com][Git (=git=)]]
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
 - [[https://imagemagick.org][Imagemagick (=convert=)]]
+- [[https://hunspell.github.io/][hunspell (=hunspell=)]]
 
 So, I created this configuration with these tools in mind.
+
+#+begin_note
+Since I speak, write, and read in three languages — English, Polish,
+and Russian — I've configured the spell-checking setup to support
+these languages, though I've left it disabled by default. You might
+want to override this configuration to fit your linguistic needs.
+#+end_note
 
 ** License
 
