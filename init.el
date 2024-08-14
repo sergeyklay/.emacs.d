@@ -628,7 +628,7 @@ related to your current project."
   :after auth-source
   :commands (erc erc-tls)
   :custom
-  (erc-autojoin-channels-alist '(("Libera.Chat" "#emacs" "#re2c")))
+  (erc-autojoin-channels-alist '(("Libera.Chat" "#emacs" "#org-mode" "#re2c")))
   (erc-autojoin-timing 'ident)
   (erc-user-full-name user-full-name)
   (erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
