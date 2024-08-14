@@ -56,17 +56,34 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
               gcs-done)))
 
 ;;;; Package management
-;; Package management in Emacs can be done in several ways. I personally like
-;; `use-package' together with package.el. Some will prefer straight.el, but I
-;; haven't found the need for it yet.
-(with-eval-after-load 'package
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/")))
+(custom-set-variables
+ ;; Setting up package archives.
+ '(package-archives
+   '(("melpa"    . "https://melpa.org/packages/")
+     ("m-stable" . "https://stable.melpa.org/packages/")
+     ("gnu"      . "https://elpa.gnu.org/packages/")
+     ("nongnu"   . "https://elpa.nongnu.org/nongnu/")))
+ ;; Priorities. Default priority is 0.
+ '(package-archive-priorities
+   '(("gnu"      . 100)
+     ("nongnu"   . 50)
+     ("m-stable" . 20)
+     ("melpa"    . 10))))
+
+;; Precompute activation actions to speed up startup.
 (setq package-quickstart t)
 
 ;; Manually initialize packages in daemon or noninteractive mode.
-(when (or (daemonp) noninteractive) (package-initialize))
+;; `esup' need call `package-initialize'
+;; For more see URL `https://github.com/jschaf/esup/issues/84'
+(when (or (featurep 'esup-child)
+          (daemonp)
+          noninteractive)
+  (package-initialize))
 
-;; For the actual package configuration, I use `use-package'.
+;; Package management in Emacs can be done in several ways. I personally like
+;; `use-package' together with package.el. Some will prefer straight.el, but I
+;; haven't found the need for it yet.
 (eval-when-compile
   (setq use-package-enable-imenu-support t)
   (unless (ignore-errors (require 'use-package))
