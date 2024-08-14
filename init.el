@@ -278,19 +278,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
 
-  ;; Custom archive location for completed tasks and notes.
-  ;; Should be something like "~/org/archive/archive2024.org::datetree/
-  (setq org-archive-location
-        (lambda ()
-          (let ((year (format-time-string "%Y")))
-            (concat
-             (file-name-as-directory user-org-archive-dir)
-             "archive"
-             year
-             ".org::datetree/"))))
-
   (my-ensure-directory-exists user-org-dir)
-  (my-ensure-directory-exists user-org-archive-dir)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
@@ -302,7 +290,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ("C-c C-x C-a" . #'org-archive-subtree)))
 
 (setq org-todo-keywords
-      '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
+      '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "CANCELLED")))
 
 (setq org-todo-keyword-faces
       '(("TODO" . org-warning)
