@@ -833,6 +833,17 @@ This function serves multiple purposes:
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
 
+(use-package elisp-mode
+  :hook
+  ((emacs-lisp-mode . turn-on-eldoc-mode)
+   (emacs-lisp-mode . rainbow-delimiters-mode)
+
+   (lisp-interaction-mode . turn-on-eldoc-mode)
+   (lisp-interaction-mode . rainbow-delimiters-mode))
+  :bind
+  (:map emacs-lisp-mode-map
+        ("C-c C-b" . #'eval-buffer)))
+
 ;;;; Helpers
 (use-package which-key
   :ensure t
