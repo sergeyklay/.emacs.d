@@ -244,16 +244,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (latex-mode . writegood-mode)))
 
 ;;;; Organization
-(defconst user-org-dir (expand-file-name "~/org")
+(defconst my-org-dir (expand-file-name "~/org")
   "Path to the user org files directory.")
 
 (defconst user-org-archive-dir
-  (concat (file-name-as-directory user-org-dir) "archive")
+  (concat (file-name-as-directory my-org-dir) "archive")
   "Path to the user archive for org files.")
 
 ;; TODO: temporary helper. I probable remove it in future
 (defun -org-path(file)
-  (concat (file-name-as-directory user-org-dir) file))
+  (concat (file-name-as-directory my-org-dir) file))
 
 (use-package org
   :ensure t
@@ -278,11 +278,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Also include diary on org-agenda.
   (org-agenda-include-diary t)
   ;; Set up global org directory.
-  (org-direcory user-org-dir)
+  (org-direcory my-org-dir)
   ;; Default target for storing notes.
   (org-default-notes-file (-org-path "inbox.org"))
   ;; Scan this dir for org files
-  (org-agenda-files (list user-org-dir))
+  (org-agenda-files (list my-org-dir))
   ;; Undone TODO will block switching the parent to DONE
   (org-enforce-todo-dependencies t)
   ;; I customize this just to redefine 'agenda'
@@ -329,7 +329,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
 
-  (my-ensure-directory-exists user-org-dir)
+  (my-ensure-directory-exists my-org-dir)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
