@@ -247,10 +247,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (defconst my-org-dir (expand-file-name "~/org")
   "Path to the user org files directory.")
 
-(defconst user-org-archive-dir
-  (concat (file-name-as-directory my-org-dir) "archive")
-  "Path to the user archive for org files.")
-
 ;; TODO: temporary helper. I probable remove it in future
 (defun -org-path(file)
   (concat (file-name-as-directory my-org-dir) file))
