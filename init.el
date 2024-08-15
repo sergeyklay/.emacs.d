@@ -344,7 +344,35 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Do not generate IDs for all headings
   (org-mobile-force-id-on-agenda-items nil)
   ;; Append captured notes and flags to ~/org/index.org
-  (org-mobile-inbox-for-pull (-org-path "index.org")))
+  (org-mobile-inbox-for-pull (-org-path "index.org"))
+  :config
+  (defvar my-org-mobile-sync-timer nil
+    "Timer object for automatic Org Mobile sync on idle.")
+
+  (defvar my-org-mobile-sync-idle-secs (* 60 10)
+    "Number of idle seconds before triggering Org Mobile sync.")
+
+  (defun my/org-mobile-sync ()
+    "Synchronize Org Mobile."
+    (interactive)
+    (org-mobile-pull)
+    (org-mobile-push))
+
+  (defun my/org-mobile-sync-enable ()
+    "Enable automatic synchronization of Org Mobile on idle."
+    (interactive)
+    (setq my-org-mobile-sync-timer
+          (run-with-idle-timer my-org-mobile-sync-idle-secs t
+                               'my-org-mobile-sync)))
+
+  (defun my/org-mobile-sync-disable ()
+    "Disable the automatic Org Mobile synchronization on idle."
+    (interactive)
+    (cancel-timer my-org-mobile-sync-timer))
+
+  ;; Automatically enable idle sync.
+  ;; Source: https://stackoverflow.com/q/8432108/1661465
+  (my/org-mobile-sync-enable))
 
 ;; Define my default keywords as workflow states.
 ;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
