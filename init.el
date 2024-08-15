@@ -381,22 +381,22 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
         ("n" "Random Note" entry
           (file+headline ,(-org-path "notes.org") "Random Notes")
-         "** %?\n  %U" :empty-lines 2)
+         "** %?\n  %U" :empty-lines 1)
         ("i" "Blog Idea" entry
          (file+headline ,(-org-path "blog.org") "Blog Ideas")
-         "** %?\n  %U" :empty-lines 2)
+         "** %?\n  %U" :empty-lines 1)
         ("w" "Work Log Entry" entry
          (file+datetree ,(-org-path "work-log.org"))
-         "* TODO %?  :work:" :empty-lines 2)
+         "* TODO %?  :work:" :empty-lines 1)
         ("p" "Personal Tasks" entry
          (file+datetree ,(-org-path "personal-tasks.org"))
-         "* TODO %?  :personal:" :empty-lines 2)
+         "* TODO %?  :personal:" :empty-lines 1)
         ("r" "To-Read" checkitem
          (file+headline ,(-org-path "later.org") "To-Read List")
-         "- [ ] %?  :read:" :empty-lines 2)
+         "- [ ] %?  :read:" :empty-lines 1)
         ("f" "To-Watch" checkitem
          (file+headline ,(-org-path "later.org") "To-Watch List")
-         "- [ ] %?  :watch:" :empty-lines 2)
+         "- [ ] %?  :watch:" :empty-lines 1)
         ("t" "Trip Checklist" checkitem
          (file+headline ,(-org-path "trips.org") "Trip Checklist"))))
 
