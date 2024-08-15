@@ -244,12 +244,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (latex-mode . writegood-mode)))
 
 ;;;; Organization
-(defconst my-org-dir (expand-file-name "~/org")
+(defconst my-org-dir
+  (file-name-as-directory
+   (concat (file-name-as-directory (expand-file-name "~")) "org"))
   "Path to the user org files directory.")
-
-;; TODO: temporary helper. I probable remove it in future
-(defun -org-path(file)
-  (concat (file-name-as-directory my-org-dir) file))
 
 (use-package org
   :ensure t
@@ -274,11 +272,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Also include diary on org-agenda.
   (org-agenda-include-diary t)
   ;; Set up global org directory.
-  (org-direcory my-org-dir)
-  ;; Default target for storing notes.
-  (org-default-notes-file (-org-path "inbox.org"))
+  (org-direcory (directory-file-name my-org-dir))
+  ;; default target for storing notes.
+  (org-default-notes-file (concat my-org-dir "inbox.org"))
   ;; Scan this dir for org files
-  (org-agenda-files (list my-org-dir))
+  (org-agenda-files (list (directory-file-name my-org-dir)))
   ;; Undone TODO will block switching the parent to DONE
   (org-enforce-todo-dependencies t)
   ;; I customize this just to redefine 'agenda'
@@ -344,7 +342,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Do not generate IDs for all headings
   (org-mobile-force-id-on-agenda-items nil)
   ;; Append captured notes and flags to ~/org/index.org
-  (org-mobile-inbox-for-pull (-org-path "index.org"))
+  (org-mobile-inbox-for-pull (concat my-org-dir "index.org"))
   :config
   (defvar my-org-mobile-sync-timer nil
     "Timer object for automatic Org Mobile sync on idle.")
@@ -401,28 +399,28 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Define custom Org Capture templates
 (setq org-capture-templates
       `(("b" "Bookmark" entry
-         (file+headline ,(-org-path "notes.org") "Bookmarks")
+         (file+headline ,(concat my-org-dir "notes.org") "Bookmarks")
          "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
         ("n" "Random Note" entry
-          (file+headline ,(-org-path "notes.org") "Random Notes")
+          (file+headline ,(concat my-org-dir "notes.org") "Random Notes")
          "** %?\n  %U" :empty-lines 1)
         ("i" "Blog Idea" entry
-         (file+headline ,(-org-path "blog.org") "Blog Ideas")
+         (file+headline ,(concat my-org-dir "blog.org") "Blog Ideas")
          "** %?\n  %U" :empty-lines 1)
         ("w" "Work Log Entry" entry
-         (file+datetree ,(-org-path "work-log.org"))
+         (file+datetree ,(concat my-org-dir "work-log.org"))
          "* TODO %?  :work:" :empty-lines 1)
         ("p" "Personal Tasks" entry
-         (file+datetree ,(-org-path "personal-tasks.org"))
+         (file+datetree ,(concat my-org-dir "personal-tasks.org"))
          "* TODO %?  :personal:" :empty-lines 1)
         ("r" "To-Read" checkitem
-         (file+headline ,(-org-path "later.org") "To-Read List")
+         (file+headline ,(concat my-org-dir "later.org") "To-Read List")
          "- [ ] %?  :read:" :empty-lines 1)
         ("f" "To-Watch" checkitem
-         (file+headline ,(-org-path "later.org") "To-Watch List")
+         (file+headline ,(concat my-org-dir "later.org") "To-Watch List")
          "- [ ] %?  :watch:" :empty-lines 1)
         ("t" "Trip Checklist" checkitem
-         (file+headline ,(-org-path "trips.org") "Trip Checklist"))))
+         (file+headline ,(concat my-org-dir "trips.org") "Trip Checklist"))))
 
 ;; Define custom Org Agenda commands
 (setq org-agenda-custom-commands
@@ -445,7 +443,8 @@ FILENAME should be the name of the Org file without any directory
 path.  The file is expected to reside in the `~/org/` directory.
 "
   (switch-to-buffer
-   (or (get-buffer filename) (find-file-noselect (-org-path filename)))))
+   (or (get-buffer filename)
+       (find-file-noselect (concat my-org-dir filename)))))
 
 (defun my/org-move-bookmark-to-notes()
   "Move and format bookmark heading from 'index.org' to 'notes.org'.
