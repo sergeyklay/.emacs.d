@@ -251,25 +251,59 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (concat (file-name-as-directory user-org-dir) "archive")
   "Path to the user archive for org files.")
 
+;; TODO: temporary helper. I probable remove it in future
+(defun -org-path(file)
+  (concat (file-name-as-directory user-org-dir) file))
+
 (use-package org
   :ensure t
-  :mode ("\\.org\\'" . org-mode)
+  :mode ("\\.\\(org\\|org_archive\\)\\'" . org-mode)
   :custom
+  ;; When opening an Org file, all top-level headers (first level headers) will
+  ;; be collapsed. Since I use large files with a lot of headers, the default
+  ;; value does not work for me
+  (org-startup-folded t)
+  ;; Do not initialize agenda Org files when generating (only) agenda.
+  (org-agenda-inhibit-startup t)
   ;; When a TODO is set to a done state, record a timestamp
-  (org-log-done t)
+  (org-log-done (quote time))
+  ;; Don' clutter the actual entry with notes.
+  (org-log-into-drawer t)
   ;; Hide the markers so you just see bold text as BOLD and not *BOLD*
   (org-hide-emphasis-markers t)
-  ;; Resize images to 300px, unless there's an attribute.
-  (org-image-actual-width '(300))
+  ;; Resize images to 600px, unless there's an attribute.
+  (org-image-actual-width '(600))
   ;; Enable shift+arrow for text selection.
   (org-support-shift-select t)
   ;; Also include diary on org-agenda.
   (org-agenda-include-diary t)
-  ;; Don' clutter the actual entry with notes.
-  (org-log-into-drawer t)
   ;; Set up global org directory.
   (org-direcory user-org-dir)
+  ;; Default target for storing notes.
+  (org-default-notes-file (-org-path "inbox.org"))
+  ;; Scan this dir for org files
   (org-agenda-files (list user-org-dir))
+  ;; Undone TODO will block switching the parent to DONE
+  (org-enforce-todo-dependencies t)
+  ;; I customize this just to redefine 'agenda'
+  (org-fold-show-context-detail
+   '((agenda . lineage)
+     (bookmark-jump . lineage)
+     (isearch . lineage)
+     (default . ancestors)))
+  ;; Tags with fast selection keys.
+  ;; For more see: http://orgmode.org/org.html#Setting-tags
+  (org-tag-alist
+   '(
+     ("requirements" . ?r)
+     ("issue" . ?i)
+     (:startgroup)
+     ("someday" . ?s)
+     ("reward" . ?R)
+     ("focus" . ?f)
+     (:endgroup)))
+  ;; Allow setting single tags without the menu
+  (org-fast-tag-selection-single-key t)
   :config
   ;; Setup languages for org code blocks.  For full list of supported languages
   ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
@@ -306,54 +340,64 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ("C-c r"       . #'org-refile)
          ("C-c C-x C-a" . #'org-archive-subtree)))
 
+(use-package org-mobile
+  :after org
+  :custom
+  ;; Setting up MobileOrg sync path
+  (org-mobile-directory (expand-file-name "~/Dropbox/Apps/MobileOrg"))
+  ;; Do not generate IDs for all headings
+  (org-mobile-force-id-on-agenda-items nil)
+  ;; Append captured notes and flags to ~/org/index.org
+  (org-mobile-inbox-for-pull (-org-path "index.org")))
+
+;; Define my default keywords as workflow states.
+;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
+;; For details see: https://orgmode.org/manual/Workflow-states.html
 (setq org-todo-keywords
-      '((sequence "TODO" "STARTED" "WAITING" "|" "DONE" "CANCELLED")))
+      '((sequence
+         ;; Need action
+         "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|"
+         ;; Done
+         "DONE(d!/!)" "CANCELLED(c@/!)")))
 
+;; Define the style of the keywords
 (setq org-todo-keyword-faces
-      '(("TODO" . org-warning)
-        ("IN-PROGRESS" . "yellow")
-        ("WAITING" . "orange")
-        ("DONE" . "green")
-        ("CANCELLED" . "red")))
+      '(("TODO"      :foreground "firebrick1"   :weight bold)
+        ("NEXT"      :foreground "firebrick1"   :weight bold)
+        ("STARTED"   :foreground "red3"         :weight bold)
+        ("DONE"      :foreground "forest green" :weight bold)
+        ("WAITING"   :foreground "orange"       :weight bold)
+        ("SOMEDAY"   :foreground "magenta"      :weight bold)
+        ("CANCELLED" :foreground "lime green"   :weight bold)))
 
-;; TODO: temporary helper. I probable remove it in future
-(defun -org-path(file)
-  (concat (file-name-as-directory user-org-dir) file))
+(defconst my-capture-template-simple
+  "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
+  "A shortcut for a simple heading with keyword TODO.")
 
 ;; Define custom Org Capture templates
 (setq org-capture-templates
-      `(("n" "Quick Notes")
-        ("nr" "Random Note" entry
+      `(("b" "Bookmark" entry
+         (file+headline ,(-org-path "notes.org") "Bookmarks")
+         "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+        ("n" "Random Note" entry
           (file+headline ,(-org-path "notes.org") "Random Notes")
-         "** %?\n  %U"
-         :empty-lines 0)
-        ("nb" "Blog Idea" entry
-         (file+headline ,(-org-path "notes.org") "Blog Ideas")
-         "** %?\n  %U"
-         :empty-lines 0)
-
-        ("t" "Tasks")
-        ("tw" "Work Log Entry" entry
+         "** %?\n  %U" :empty-lines 2)
+        ("i" "Blog Idea" entry
+         (file+headline ,(-org-path "blog.org") "Blog Ideas")
+         "** %?\n  %U" :empty-lines 2)
+        ("w" "Work Log Entry" entry
          (file+datetree ,(-org-path "work-log.org"))
-         "* TODO %?  :work:"
-         :empty-lines 0)
-        ("tp" "Personal Tasks" entry
+         "* TODO %?  :work:" :empty-lines 2)
+        ("p" "Personal Tasks" entry
          (file+datetree ,(-org-path "personal-tasks.org"))
-         "* TODO %?  :personal:"
-         :empty-lines 0)
-
-        ("m" "Media")
-        ("mr" "To-Read" checkitem
+         "* TODO %?  :personal:" :empty-lines 2)
+        ("r" "To-Read" checkitem
          (file+headline ,(-org-path "later.org") "To-Read List")
-         "- [ ] %?  :read:"
-         :empty-lines 0)
-        ("mf" "To-Watch" checkitem
+         "- [ ] %?  :read:" :empty-lines 2)
+        ("f" "To-Watch" checkitem
          (file+headline ,(-org-path "later.org") "To-Watch List")
-         "- [ ] %?  :watch:"
-         :empty-lines 0)
-
-        ("c" "Checklists")
-        ("ct" "Trip Checklist" checkitem
+         "- [ ] %?  :watch:" :empty-lines 2)
+        ("t" "Trip Checklist" checkitem
          (file+headline ,(-org-path "trips.org") "Trip Checklist"))))
 
 ;; Define custom Org Agenda commands
@@ -361,13 +405,85 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
       '(("w" "Work Entries" tags-todo "work")
         ("p" "Personal Tasks" tags-todo "personal")
         ("r" "Read Later" tags-todo "read")
-        ("f" "Watch Later" tags-todo "watch")
-        ("x" "View All Tasks" alltodo "")))
+        ("f" "Watch Later" tags-todo "watch")))
 
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
 
-;;;; Window Handlingqqq
+(defun my-org-switch-to-buffer (filename)
+  "Switch to the buffer associated with the given Org FILENAME.
+
+If a buffer visiting FILENAME is already open, switch to it.  If
+the buffer does not exist, open the FILENAME from the `~/org/`
+directory and switch to the newly created buffer.
+
+FILENAME should be the name of the Org file without any directory
+path.  The file is expected to reside in the `~/org/` directory.
+"
+  (switch-to-buffer
+   (or (get-buffer filename) (find-file-noselect (-org-path filename)))))
+
+(defun my/org-move-bookmark-to-notes()
+  "Move and format bookmark heading from 'index.org' to 'notes.org'.
+
+This function is specifically designed for a workflow where notes
+and bookmarks are synchronized from MobileOrg (e.g., from
+'mobileorg.org' file) into a catch-all Org file like '~/org/index.org'.
+
+- Remove the keywords 'TODO' and 'Bookmark' from the heading.
+- Convert the heading to a second-level heading.
+- Insert a creation date property under the heading.
+- Move the cleaned and formatted heading to the end of 'notes.org'.
+
+This function is adapted from an implementation by Karl Voit, and
+has been reworked to enhance its readability, maintainability,
+and alignment with my specific workflow.
+
+For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
+  (interactive)
+  (save-excursion
+    ;; Step 1: Save the starting point and narrow to the current heading
+    (beginning-of-line)
+    (let ((start (point)))
+      (outline-next-visible-heading 1)
+      (save-restriction
+        (narrow-to-region start (point))
+
+        ;; Step 2: Clean up heading by removing unwanted keywords
+        (goto-char (point-min))
+        (while (re-search-forward "\\* \\(TODO \\)?\\(Bookmark \\)?" nil t)
+          (replace-match "* " nil nil))
+
+        ;; Step 3: Ensure the heading is at the second level
+        (goto-char (point-min))
+        (when (looking-at "\\*+")
+          (let ((current-level (- (match-end 0) (match-beginning 0))))
+            (cond
+             ; if level 1, add one more "*"
+             ((= current-level 1) (insert "*"))
+             ; if level > 2, remove excess "*"
+             ((> current-level 2) (delete-char (- current-level 2))))))
+
+        ;; Step 4: Insert creation date properties
+        (search-forward-regexp "^\\[20")
+        (beginning-of-line)
+        (insert ":PROPERTIES:\n:CREATED: ")
+        (end-of-line)
+        (newline)
+        (insert ":END:\n")
+
+        ;; Step 5: Cut the current heading and move it to the notes.org file
+        (kill-region start (point))
+        (my-org-switch-to-buffer "notes.org")
+        (end-of-buffer)
+        (newline)
+        (yank)  ;; Paste the heading into notes.org
+
+        ;; Step 6: Reapply tags to the previous heading in notes.org
+        (outline-previous-visible-heading 1)
+        (org-set-tags-command)))))
+
+;;;; Window Handlin
 ;; Restore old window configurations
 (use-package winner
   :commands (winner-undo winner-redo)
