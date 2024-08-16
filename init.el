@@ -556,7 +556,7 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   (define-key org-mode-map (kbd "C-c r") #'org-refile )
   (define-key org-mode-map (kbd "C-c C-x C-a") #'org-archive-subtree))
 
-;;;; Window Handlin
+;;;; Window Handling
 ;; Restore old window configurations
 (use-package winner
   :commands (winner-undo winner-redo)
@@ -1104,6 +1104,9 @@ This function serves multiple purposes:
   "Custom configurations for Lisp modes."
   (turn-on-eldoc-mode)
   (rainbow-delimiters-mode)
+
+  ;; Automatically rescan imenu on each call
+  (setq-local imenu-auto-rescan t)
 
   ;; Disable optimization for finding previous index positions.
   ;; Ensures custom imenu expressions work correctly.
