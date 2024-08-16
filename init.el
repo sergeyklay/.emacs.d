@@ -423,6 +423,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
       `(("s" "Shorts" entry
          (file+headline ,(concat my-org-dir "misc.org") "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)
+        ("e" "Event" entry
+         (file+headline ,(concat my-org-dir "misc.org") "Events")
+         "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
         ("t" "Trip Checklist" checkitem
          (file+headline ,(concat my-org-dir "misc.org") "Trip Checklist"))
         ("b" "Bookmark" entry
