@@ -436,19 +436,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ,my-org-capture-template-blog :empty-lines 1)
         ("n" "Random Note" entry
           (file+headline ,(concat my-org-dir "notes.org") "Random Notes")
-         "** %?\n  %U" :empty-lines 1)
+          "** %?\n  %U" :empty-lines 1)
+        ("r" "To-Read" entry
+         (file+headline ,(concat my-org-dir "misc.org") "To-Read List")
+         "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
+        ("w" "To-Watch" entry
+         (file+headline ,(concat my-org-dir "misc.org") "To-Watch List")
+         "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 
         ("B" "Business")
         ("Bs" "Shorts" entry
          (file+headline ,(concat my-org-dir "business.org") "Shorts")
-         ,my-org-capture-template-simple :empty-lines 1)
-
-        ("r" "To-Read" checkitem
-         (file+headline ,(concat my-org-dir "media.org") "To-Read List")
-         "- [ ] %?  :read:" :empty-lines 1)
-        ("w" "To-Watch" checkitem
-         (file+headline ,(concat my-org-dir "media.org") "To-Watch List")
-         "- [ ] %?  :watch:" :empty-lines 1)))
+         ,my-org-capture-template-simple :empty-lines 1)))
 
 ;;;;; Org Agenda
 
