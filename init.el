@@ -334,12 +334,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)
-         (org-agenda-mode . my|org-agenda-refresh-on-idle))
-  :bind (("C-c c"       . #'org-capture)
-         ("C-c a"       . #'org-agenda)
-         ("C-c l"       . #'org-store-link)
-         ("C-c r"       . #'org-refile)
-         ("C-c C-x C-a" . #'org-archive-subtree)))
+         (org-agenda-mode . my|org-agenda-refresh-on-idle)))
 
 (use-package org-mobile
   :after org
@@ -441,9 +436,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("r" "Read Later" tags-todo "read")
         ("f" "Watch Later" tags-todo "watch")))
 
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c a") 'org-agenda)
-
 (defun my-org-switch-to-buffer (filename)
   "Switch to the buffer associated with the given Org FILENAME.
 
@@ -517,6 +509,17 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
         ;; Step 6: Reapply tags to the previous heading in notes.org
         (outline-previous-visible-heading 1)
         (org-set-tags-command)))))
+
+;;;;; Org keys
+;; Global keys
+(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c l") #'org-store-link)
+
+;; Local keys
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c r") #'org-refile )
+  (define-key org-mode-map (kbd "C-c C-x C-a") #'org-archive-subtree))
 
 ;;;; Window Handlin
 ;; Restore old window configurations
