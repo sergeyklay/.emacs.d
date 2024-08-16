@@ -558,13 +558,10 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (add-hook 'after-load-theme-hook 'my-set-cursor-color-based-on-theme)
 
 ;; Modus themes
-(use-package modus-themes
-  :demand t
-  :init
-  (load-theme 'modus-vivendi :no-confirm)
-  (my-set-cursor-color-based-on-theme)
-  :bind (("<f5>" . modus-themes-toggle)
-         ("C-<f5>" . consult-theme)))
+(load-theme 'modus-vivendi t)
+(my-set-cursor-color-based-on-theme)
+
+(global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
 ;; Nicer scrolling
 (when (>=  emacs-major-version 29)
@@ -732,6 +729,7 @@ related to your current project."
          ("C-c f"   . consult-recent-file)
          ("C-r"     . consult-history)
          ("C-S-s"   . consult-line)
+         ("C-<f5>"  . consult-theme)
          :map minibuffer-local-map
          ("C-r"     . consult-history)))
 
