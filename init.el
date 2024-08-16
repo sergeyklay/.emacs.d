@@ -372,6 +372,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Source: https://stackoverflow.com/q/8432108/1661465
   (my/org-mobile-sync-enable))
 
+(use-package org-cliplink
+  :ensure t
+  :after org
+  :bind ("C-x p i" . org-cliplink))
+
 ;; Define my default keywords as workflow states.
 ;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
 ;; For details see: https://orgmode.org/manual/Workflow-states.html
