@@ -336,48 +336,54 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (org-mode . org-display-inline-images)
          (org-agenda-mode . my|org-agenda-refresh-on-idle)))
 
-(use-package org-mobile
-  :after org
-  :custom
-  ;; Setting up MobileOrg sync path
-  (org-mobile-directory (expand-file-name "~/Dropbox/Apps/MobileOrg"))
-  ;; Do not generate IDs for all headings
-  (org-mobile-force-id-on-agenda-items nil)
-  ;; Append captured notes and flags to ~/org/index.org
-  (org-mobile-inbox-for-pull (concat my-org-dir "index.org"))
-  :config
-  (defvar my-org-mobile-sync-timer nil
-    "Timer object for automatic Org Mobile sync on idle.")
+;;;;; Org Mobile
 
-  (defvar my-org-mobile-sync-idle-secs (* 60 10)
-    "Number of idle seconds before triggering Org Mobile sync.")
+;; Setting up MobileOrg sync path
+(setq org-mobile-directory (expand-file-name "~/Dropbox/Apps/MobileOrg"))
 
-  (defun my/org-mobile-sync ()
-    "Synchronize Org Mobile."
-    (interactive)
-    (org-mobile-pull)
-    (org-mobile-push))
+;; Do not generate IDs for all headings
+(setq org-mobile-force-id-on-agenda-items nil)
 
-  (defun my/org-mobile-sync-enable ()
-    "Enable automatic synchronization of Org Mobile on idle."
-    (interactive)
-    (setq my-org-mobile-sync-timer
-          (run-with-idle-timer my-org-mobile-sync-idle-secs t
-                               'my-org-mobile-sync)))
+;; Append captured notes and flags to ~/org/index.org
+(setq org-mobile-inbox-for-pull (concat my-org-dir "index.org"))
 
-  (defun my/org-mobile-sync-disable ()
-    "Disable the automatic Org Mobile synchronization on idle."
-    (interactive)
-    (cancel-timer my-org-mobile-sync-timer))
+(defvar my-org-mobile-sync-timer nil
+  "Timer object for automatic Org Mobile sync on idle.")
 
+(defvar my-org-mobile-sync-idle-secs (* 60 10)
+  "Number of idle seconds before triggering Org Mobile sync.")
+
+(defun my/org-mobile-sync ()
+  "Synchronize Org Mobile."
+  (interactive)
+  (org-mobile-pull)
+  (org-mobile-push))
+
+(defun my/org-mobile-sync-enable ()
+  "Enable automatic synchronization of Org Mobile on idle."
+  (interactive)
+  (setq my-org-mobile-sync-timer
+        (run-with-idle-timer my-org-mobile-sync-idle-secs t
+                             'my-org-mobile-sync)))
+
+(defun my/org-mobile-sync-disable ()
+  "Disable the automatic Org Mobile synchronization on idle."
+  (interactive)
+  (cancel-timer my-org-mobile-sync-timer))
+
+(with-eval-after-load 'org
   ;; Automatically enable idle sync.
   ;; Source: https://stackoverflow.com/q/8432108/1661465
   (my/org-mobile-sync-enable))
+
+;;;;; Org Contib
 
 (use-package org-cliplink
   :ensure t
   :after org
   :bind ("C-x p i" . org-cliplink))
+
+;;;;; Org TODO
 
 ;; Define my default keywords as workflow states.
 ;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
@@ -461,15 +467,17 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("r" "Read Later" tags-todo "read")
         ("f" "Watch Later" tags-todo "watch")))
 
+;;;;; Org Bookmarks
+
 (defun my-org-switch-to-buffer (filename)
   "Switch to the buffer associated with the given Org FILENAME.
 
 If a buffer visiting FILENAME is already open, switch to it.  If
-the buffer does not exist, open the FILENAME from the `~/org/`
+the buffer does not exist, open the FILENAME from the '~/org'
 directory and switch to the newly created buffer.
 
 FILENAME should be the name of the Org file without any directory
-path.  The file is expected to reside in the `~/org/` directory.
+path.  The file is expected to reside in the '~/org' directory.
 "
   (switch-to-buffer
    (or (get-buffer filename)
@@ -482,7 +490,9 @@ This function is specifically designed for a workflow where notes
 and bookmarks are synchronized from MobileOrg (e.g., from
 'mobileorg.org' file) into a catch-all Org file like '~/org/index.org'.
 
-- Remove the keywords 'TODO' and 'Bookmark' from the heading.
+What happens here:
+
+- Remove the keywords like 'TODO', 'Bookmark' and so on from the heading.
 - Convert the heading to a second-level heading.
 - Insert a creation date property under the heading.
 - Move the cleaned and formatted heading to the end of 'notes.org'.
