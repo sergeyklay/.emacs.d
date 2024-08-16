@@ -559,22 +559,7 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; Modus themes
 (use-package modus-themes
-  :ensure t
   :demand t
-  :custom
-  (modus-themes-custom-auto-reload nil)
-  (modus-themes-to-toggle '(modus-operandi modus-vivendi))
-  (modus-themes-mixed-fonts t)
-  (modus-themes-variable-pitch-ui t)
-  (modus-themes-italic-constructs nil)
-  (modus-themes-bold-constructs nil)
-  (modus-themes-completions '((t . (extrabold))))
-  (modus-themes-prompts '(extrabold))
-  (modus-themes-headings
-   '((agenda-structure . (variable-pitch light 2.2))
-     (agenda-date . (variable-pitch regular 1.3))
-     (t . (regular 1.15))))
-  (modus-themes-common-palette-overrides nil)
   :init
   (load-theme 'modus-vivendi :no-confirm)
   (my-set-cursor-color-based-on-theme)
