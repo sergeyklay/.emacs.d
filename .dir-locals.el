@@ -5,7 +5,7 @@
   (sentence-end-double-space . t))
  (emacs-lisp-mode
   (indent-tabs-mode . nil)
-  (outline-regexp . ";;[;*]+[\s\t]+"))
+  (outline-regexp . ";;[;]\\{1,8\\}[\s\t]+"))
  (makefile-gmake-mode
   (outline-regexp . "##")))
 

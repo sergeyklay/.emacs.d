@@ -32,6 +32,13 @@
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
 ;;; Code:
+;; For those who use my dotfiles and need an easy way to write their
+;; own extras on top of what I already load.  The file must exist at
+;; ~/.emacs.d/pre-custom.el
+;;
+;; The purpose of this file is for the user to define their
+;; preferences BEFORE loading any of the modules.
+(load (locate-user-emacs-file "pre-custom.el") :no-error :no-message)
 
 ;;;; Profiling and Debug
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
@@ -550,8 +557,29 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 (add-hook 'after-load-theme-hook 'my-set-cursor-color-based-on-theme)
 
-(load-theme 'modus-vivendi)
-(my-set-cursor-color-based-on-theme)
+;; Modus themes
+(use-package modus-themes
+  :ensure t
+  :demand t
+  :custom
+  (modus-themes-custom-auto-reload nil)
+  (modus-themes-to-toggle '(modus-operandi modus-vivendi))
+  (modus-themes-mixed-fonts t)
+  (modus-themes-variable-pitch-ui t)
+  (modus-themes-italic-constructs nil)
+  (modus-themes-bold-constructs nil)
+  (modus-themes-completions '((t . (extrabold))))
+  (modus-themes-prompts '(extrabold))
+  (modus-themes-headings
+   '((agenda-structure . (variable-pitch light 2.2))
+     (agenda-date . (variable-pitch regular 1.3))
+     (t . (regular 1.15))))
+  (modus-themes-common-palette-overrides nil)
+  :init
+  (load-theme 'modus-vivendi :no-confirm)
+  (my-set-cursor-color-based-on-theme)
+  :bind (("<f5>" . modus-themes-toggle)
+         ("C-<f5>" . consult-theme)))
 
 ;; Nicer scrolling
 (when (>=  emacs-major-version 29)
@@ -1036,7 +1064,7 @@ This function serves multiple purposes:
 
   (add-to-list
    'imenu-generic-expression
-   '("Sections" "^\\(;;;\\{1,7\\}[\s\t]+\\)\\(.*\\)" 2) t))
+   '("Sections" "^\\(;;[;]\\{1,8\\}[\s\t]+\\)\\(.*\\)$" 2) t))
 
 (add-hook 'emacs-lisp-mode-hook #'my|lisp-modes-setup)
 (add-hook 'lisp-interaction-mode-hook #'my|lisp-modes-setup)
@@ -1049,6 +1077,16 @@ This function serves multiple purposes:
   :defer 1
   :config
   (which-key-mode 1))
+
+;; For those who use my dotfiles and need an easy way to write their
+;; own extras on top of what I already load.  The file must exist at
+;; ~/.emacs.d/post-custom.el
+;;
+;; The purpose of the "post customisations" is to make tweaks to what
+;; I already define, such as to change the default theme.  See above
+;; for the `pre-custom.el' to make changes BEFORE loading any of my
+;; other configurations.
+(load (locate-user-emacs-file "post-custom.el") :no-error :no-message)
 
 ;; Local Variables:
 ;; fill-column: 80
