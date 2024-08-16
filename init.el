@@ -518,10 +518,35 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   :hook (after-init . winner-mode))
 
 ;;;; Appearance
-(load-theme 'modus-vivendi)
+;; I prefer the box cursor.
+(setq-default cursor-type 'box)
 
-;; I prefer the thin cursor.
-(setq-default cursor-type '(bar . 2))
+(defun my-theme-dark-p ()
+  "Return t if the current Emacs theme is dark."
+  (let* ((bg-color (face-background 'default nil 'default))
+         (bg-rgb (color-values bg-color))
+         (brightness (apply '+ (mapcar (lambda (x) (/ x 65535.0)) bg-rgb))))
+    (< brightness 1.5)))
+
+(defun my-set-cursor-color-based-on-theme ()
+  "Set cursor color based on whether the theme is dark or light."
+  (if (my-theme-dark-p)
+      (custom-set-faces
+       '(cursor ((t (:background "#F6CB47")))))  ;; Orange
+    (custom-set-faces
+     '(cursor ((t (:background "#000000")))))))  ;; Black
+
+(defvar after-load-theme-hook nil
+  "Hook run after a color theme is loaded using `load-theme'.")
+
+(defadvice load-theme (after run-after-load-theme-hook activate)
+  "Run `after-load-theme-hook'."
+  (run-hooks 'after-load-theme-hook))
+
+(add-hook 'after-load-theme-hook 'my-set-cursor-color-based-on-theme)
+
+(load-theme 'modus-vivendi)
+(my-set-cursor-color-based-on-theme)
 
 ;; Nicer scrolling
 (when (>=  emacs-major-version 29)
