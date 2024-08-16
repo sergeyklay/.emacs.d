@@ -1012,16 +1012,36 @@ This function serves multiple purposes:
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode)))
 
-(use-package elisp-mode
-  :hook
-  ((emacs-lisp-mode . turn-on-eldoc-mode)
-   (emacs-lisp-mode . rainbow-delimiters-mode)
+;;;;; Lisp and company
+(defun my|lisp-modes-setup ()
+  "Custom configurations for Lisp modes."
+  (turn-on-eldoc-mode)
+  (rainbow-delimiters-mode)
 
-   (lisp-interaction-mode . turn-on-eldoc-mode)
-   (lisp-interaction-mode . rainbow-delimiters-mode))
-  :bind
-  (:map emacs-lisp-mode-map
-        ("C-c C-b" . #'eval-buffer)))
+  ;; Disable optimization for finding previous index positions.
+  ;; Ensures custom imenu expressions work correctly.
+  (setq-local imenu-prev-index-position-function nil)
+
+  ;; Disable custom index name extraction.
+  ;; Allows using the full heading text in imenu without modification.
+  (setq-local imenu-extract-index-name-function nil)
+
+  ;; Set the default function for creating the imenu index.
+  ;; Ensures our customizations integrate with the standard index creation process.
+  (setq-local imenu-create-index-function 'imenu-default-create-index-function)
+
+  ;; Disable skipping of comments and strings when creating the index.
+  ;; Ensures that headings in comments are included in imenu.
+  (setq-local imenu-generic-skip-comments-and-strings nil)
+
+  (add-to-list
+   'imenu-generic-expression
+   '("Sections" "^\\(;;;\\{1,7\\}[\s\t]+\\)\\(.*\\)" 2) t))
+
+(add-hook 'emacs-lisp-mode-hook #'my|lisp-modes-setup)
+(add-hook 'lisp-interaction-mode-hook #'my|lisp-modes-setup)
+
+(define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
 
 ;;;; Helpers
 (use-package which-key
