@@ -399,35 +399,60 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("SOMEDAY"   :foreground "magenta"      :weight bold)
         ("CANCELLED" :foreground "lime green"   :weight bold)))
 
-(defconst my-capture-template-simple
+;;;;; Org Capture
+
+(defconst my-org-capture-template-simple
   "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
-  "A shortcut for a simple heading with keyword TODO.")
+  "A template for a simple heading with keyword TODO in Org files.")
+
+(defconst my-org-capture-template-blog
+  ;; Quick template expansion explanation:
+  ;;
+  ;; %?         - position point here
+  ;; %^g        - prompt for tags
+  ;; %U         - date
+  ;; %^{PROMPT} - prompt for a string
+  ;;
+  ;; For the full documentation see:
+  ;; https://orgmode.org/org.html#Template-expansion-1
+  (concat
+   "* TODO %?        :blog:%^g\n"
+   ":PROPERTIES:\n:CREATED: %U\n:ID: %^{PROMPT}\n:END:\n\n"
+   "-----------------------\n"
+   "- [ ] Link on older/similar articles?\n"
+   "- [ ] Link on tag pages?\n\n")
+  "A template for capturing blog-related ideas.")
 
 ;; Define custom Org Capture templates
 (setq org-capture-templates
-      `(("b" "Bookmark" entry
+      `(("s" "Shorts" entry
+         (file+headline ,(concat my-org-dir "misc.org") "Shorts")
+         ,my-org-capture-template-simple :empty-lines 1)
+        ("t" "Trip Checklist" checkitem
+         (file+headline ,(concat my-org-dir "misc.org") "Trip Checklist"))
+        ("b" "Bookmark" entry
          (file+headline ,(concat my-org-dir "notes.org") "Bookmarks")
          "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+        ("i" "Blog Idea" entry
+         (file+headline ,(concat my-org-dir "blog.org") "Captured Blog Ideas")
+         ,my-org-capture-template-blog :empty-lines 1)
         ("n" "Random Note" entry
           (file+headline ,(concat my-org-dir "notes.org") "Random Notes")
          "** %?\n  %U" :empty-lines 1)
-        ("i" "Blog Idea" entry
-         (file+headline ,(concat my-org-dir "blog.org") "Blog Ideas")
-         "** %?\n  %U" :empty-lines 1)
-        ("w" "Work Log Entry" entry
-         (file+datetree ,(concat my-org-dir "work-log.org"))
-         "* TODO %?  :work:" :empty-lines 1)
-        ("p" "Personal Tasks" entry
-         (file+datetree ,(concat my-org-dir "personal-tasks.org"))
-         "* TODO %?  :personal:" :empty-lines 1)
+
+        ("B" "Business")
+        ("Bs" "Shorts" entry
+         (file+headline ,(concat my-org-dir "business.org") "Shorts")
+         ,my-org-capture-template-simple :empty-lines 1)
+
         ("r" "To-Read" checkitem
-         (file+headline ,(concat my-org-dir "later.org") "To-Read List")
+         (file+headline ,(concat my-org-dir "media.org") "To-Read List")
          "- [ ] %?  :read:" :empty-lines 1)
-        ("f" "To-Watch" checkitem
-         (file+headline ,(concat my-org-dir "later.org") "To-Watch List")
-         "- [ ] %?  :watch:" :empty-lines 1)
-        ("t" "Trip Checklist" checkitem
-         (file+headline ,(concat my-org-dir "trips.org") "Trip Checklist"))))
+        ("w" "To-Watch" checkitem
+         (file+headline ,(concat my-org-dir "media.org") "To-Watch List")
+         "- [ ] %?  :watch:" :empty-lines 1)))
+
+;;;;; Org Agenda
 
 ;; Define custom Org Agenda commands
 (setq org-agenda-custom-commands
