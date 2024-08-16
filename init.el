@@ -292,17 +292,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      (bookmark-jump . lineage)
      (isearch . lineage)
      (default . ancestors)))
-  ;; Tags with fast selection keys.
-  ;; For more see: http://orgmode.org/org.html#Setting-tags
-  (org-tag-alist
-   '(
-     ("requirements" . ?r)
-     ("issue" . ?i)
-     (:startgroup)
-     ("someday" . ?s)
-     ("reward" . ?R)
-     ("focus" . ?f)
-     (:endgroup)))
   ;; Allow setting single tags without the menu
   (org-fast-tag-selection-single-key t)
   :config
