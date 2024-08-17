@@ -573,11 +573,11 @@ function with a built-in solution."
         (insert ":END:\n")
 
         ;; Step 4: Cut the current heading and move it to the 'notes.org' file
-        (kill-region start (point))
+        (org-cut-subtree)
         (my-org-switch-to-buffer "notes.org")
         (end-of-buffer)
         (newline)
-        (yank)  ;; Paste the heading into the 'notes.org' file
+        (org-paste-subtree)  ; Paste the heading into the 'notes.org' file
 
         ;; Step 5: Reapply tags to the previous heading in the 'notes.org' file
         (outline-previous-visible-heading 1)
