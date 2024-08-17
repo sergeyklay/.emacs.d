@@ -503,7 +503,13 @@ know so I can address them.
 
 Steps performed by this function:
 
-1. Remove the keywords 'NEXT Bookmark', 'NEXT' and 'Bookmark' from the heading.
+1. Remove unwanted keywords from beggining of the heading:
+   - 'NEXT Bookmark'
+   - 'TODO Bookmark'
+   - 'NEXT'
+   - 'Bookmark'
+   - 'BOOKMARK'
+   - 'TODO'
 2. Convert the heading to a second-level heading if needed.
 3. Insert a creation date property under the heading.
 4. Move the cleaned and formatted bookmark to the end of 'notes.org'.
@@ -521,8 +527,11 @@ better implementation exists, and I may eventually replace this
 function with a built-in solution."
   (interactive)
   (save-excursion
+    ;; Use `org-back-to-heading' instead `beginning-of-line' here
+    ;; just because the cursor may not be on the heading, but below it,
+    ;; in a block.
+    (org-back-to-heading t)
     ;; Save the starting point and narrow to the current heading
-    (beginning-of-line)
     (let ((start (point)))
       (outline-next-visible-heading 1)
       (save-restriction
@@ -530,7 +539,10 @@ function with a built-in solution."
 
         ;; Step 1: Clean up heading by removing unwanted keywords
         (goto-char (point-min))
-        (while (re-search-forward "\\* \\(NEXT \\)?\\(Bookmark \\)?" nil t)
+        (when (re-search-forward
+               (concat "\\*\\s-+\\(\\(\\(NEXT\\|TODO\\)\\s-+\\)?"
+                       "Bookmark\\|BOOKMARK\\|NEXT\\|TODO\\)\\>")
+               nil t)
           (replace-match "* " nil nil))
 
         ;; Step 2: Ensure the heading is at the second level
