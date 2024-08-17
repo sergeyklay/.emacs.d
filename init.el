@@ -106,6 +106,17 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (require 'bind-key)
 
+;; Create and setup my own keyboard map.
+;; For details see: https://elpa.gnu.org/packages/bind-key.html
+(bind-keys
+ :prefix-map my-keyboard-map
+ :prefix-docstring "My own keyboard map"
+ :prefix "C-c C-/"
+ ("-" . text-scale-decrease)
+ ("+" . text-scale-increase)
+ ;; because "+" needs "S-=" and I might forget to press shift
+ ("=" . text-scale-increase))
+
 ;;;; Common functions
 (defun my-ensure-directory-exists (dir)
   "Ensure that the directory DIR exists, create it if it doesn't."
@@ -559,6 +570,8 @@ function with a built-in solution."
         ;; Step 5: Reapply tags to the previous heading in the 'notes.org' file
         (outline-previous-visible-heading 1)
         (org-set-tags-command)))))
+
+(bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
 
 ;;;;; Org keys
 ;; Global keys
