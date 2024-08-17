@@ -327,8 +327,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;;; Org Mobile
 
-;; Setting up MobileOrg sync path
-(setq org-mobile-directory (expand-file-name "~/Dropbox/Apps/MobileOrg"))
+;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
+;; and create file called 'mobileorg' (w/o extension) finally
+;; setup sync Beorg to Dropbox 'Notes'.
+(setq org-mobile-directory (expand-file-name "~/Dropbox/Notes"))
 
 ;; Do not generate IDs for all headings
 (setq org-mobile-force-id-on-agenda-items nil)
@@ -475,39 +477,52 @@ path.  The file is expected to reside in the '~/org' directory.
        (find-file-noselect (concat my-org-dir filename)))))
 
 (defun my/org-move-bookmark-to-notes()
-  "Move and format bookmark heading from 'index.org' to 'notes.org'.
+  "Move and format mobile bookmark heading.
 
-This function is specifically designed for a workflow where notes
-and bookmarks are synchronized from MobileOrg (e.g., from
-'mobileorg.org' file) into a catch-all Org file like '~/org/index.org'.
+This function is designed to integrate with workflows where you
+use a mobile app for capturing notes. These notes are
+synchronized into a file specified by `org-mobile-inbox-for-pull'
+using `org-mobile-pull'. The primary purpose of this function is
+to move bookmarks, which you add on your mobile device and which
+end up in the `org-mobile-inbox-for-pull' file, into 'notes.org'
+while formatting them according to my preferred style. I have
+accounted for the specific formats used by MobileOrg and Beorg in
+this implementation, but if you encounter issues, please let me
+know so I can address them.
 
-What happens here:
+Steps performed by this function:
 
-- Remove the keywords like 'TODO', 'Bookmark' and so on from the heading.
-- Convert the heading to a second-level heading.
-- Insert a creation date property under the heading.
-- Move the cleaned and formatted heading to the end of 'notes.org'.
+1. Remove the keywords 'NEXT Bookmark', 'NEXT' and 'Bookmark' from the heading.
+2. Convert the heading to a second-level heading if needed.
+3. Insert a creation date property under the heading.
+4. Move the cleaned and formatted bookmark to the end of 'notes.org'.
+5. Reapply tags to the previous heading in 'notes.org'.
 
 This function is adapted from an implementation by Karl Voit, and
 has been reworked to enhance its readability, maintainability,
-and alignment with my specific workflow.
+and alignment with my specific workflow. For origin see:
+https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/
 
-For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
+Note: Currently, I'm not certain if there is an existing function
+in the `org-refile' family or in any other Org package that
+could achieve the same result. Therefore, it's possible that a
+better implementation exists, and I may eventually replace this
+function with a built-in solution."
   (interactive)
   (save-excursion
-    ;; Step 1: Save the starting point and narrow to the current heading
+    ;; Save the starting point and narrow to the current heading
     (beginning-of-line)
     (let ((start (point)))
       (outline-next-visible-heading 1)
       (save-restriction
         (narrow-to-region start (point))
 
-        ;; Step 2: Clean up heading by removing unwanted keywords
+        ;; Step 1: Clean up heading by removing unwanted keywords
         (goto-char (point-min))
-        (while (re-search-forward "\\* \\(TODO \\)?\\(Bookmark \\)?" nil t)
+        (while (re-search-forward "\\* \\(NEXT \\)?\\(Bookmark \\)?" nil t)
           (replace-match "* " nil nil))
 
-        ;; Step 3: Ensure the heading is at the second level
+        ;; Step 2: Ensure the heading is at the second level
         (goto-char (point-min))
         (when (looking-at "\\*+")
           (let ((current-level (- (match-end 0) (match-beginning 0))))
@@ -517,22 +532,31 @@ For origin see: https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
              ; if level > 2, remove excess "*"
              ((> current-level 2) (delete-char (- current-level 2))))))
 
-        ;; Step 4: Insert creation date properties
-        (search-forward-regexp "^\\[20")
-        (beginning-of-line)
-        (insert ":PROPERTIES:\n:CREATED: ")
+        ;; Step 3: Insert creation date properties
+        (if (search-forward-regexp "^\\[20" nil t)
+            ;; Pure MobileOrg file format with date right after heading
+            (progn
+              (beginning-of-line)
+              (insert ":PROPERTIES:\n:CREATED: "))
+          ;; Beorg file format w/o date
+          (progn
+            ;; If no date found, insert the current date
+            (end-of-line)
+            (newline)
+            (insert ":PROPERTIES:\n:CREATED: ")
+            (insert (format-time-string "[%Y-%m-%d %a %H:%M]"))))
         (end-of-line)
         (newline)
         (insert ":END:\n")
 
-        ;; Step 5: Cut the current heading and move it to the notes.org file
+        ;; Step 4: Cut the current heading and move it to the 'notes.org' file
         (kill-region start (point))
         (my-org-switch-to-buffer "notes.org")
         (end-of-buffer)
         (newline)
-        (yank)  ;; Paste the heading into notes.org
+        (yank)  ;; Paste the heading into the 'notes.org' file
 
-        ;; Step 6: Reapply tags to the previous heading in notes.org
+        ;; Step 5: Reapply tags to the previous heading in the 'notes.org' file
         (outline-previous-visible-heading 1)
         (org-set-tags-command)))))
 
