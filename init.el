@@ -370,7 +370,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (interactive)
   (setq my-org-mobile-sync-timer
         (run-with-idle-timer my-org-mobile-sync-idle-secs t
-                             'my-org-mobile-sync)))
+                             'my/org-mobile-sync)))
 
 (defun my/org-mobile-sync-disable ()
   "Disable the automatic Org Mobile synchronization on idle."
