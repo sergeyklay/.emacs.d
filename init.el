@@ -392,22 +392,23 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Define my default keywords as workflow states.
 ;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
 ;; For details see: https://orgmode.org/manual/Workflow-states.html
+(setq org-done-keywords '("DONE" "CANCELED"))
 (setq org-todo-keywords
       '((sequence
          ;; Need action
          "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|"
          ;; Done
-         "DONE(d!/!)" "CANCELLED(c@/!)")))
+         "DONE(d!/!)" "CANCELED(c@/!)")))
 
 ;; Define the style of the keywords
 (setq org-todo-keyword-faces
-      '(("TODO"      :foreground "firebrick1"   :weight bold)
-        ("NEXT"      :foreground "firebrick1"   :weight bold)
-        ("STARTED"   :foreground "red3"         :weight bold)
-        ("DONE"      :foreground "forest green" :weight bold)
-        ("WAITING"   :foreground "orange"       :weight bold)
-        ("SOMEDAY"   :foreground "magenta"      :weight bold)
-        ("CANCELLED" :foreground "lime green"   :weight bold)))
+      '(("TODO"     :foreground "firebrick1"   :weight bold)
+        ("NEXT"     :foreground "firebrick1"   :weight bold)
+        ("STARTED"  :foreground "red3"         :weight bold)
+        ("DONE"     :foreground "forest green" :weight bold)
+        ("WAITING"  :foreground "orange"       :weight bold)
+        ("SOMEDAY"  :foreground "magenta"      :weight bold)
+        ("CANCELED" :foreground "lime green"   :weight bold)))
 
 ;;;;; Org Capture
 (defconst my-org-capture-template-simple
@@ -525,19 +526,28 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook (org-agenda-mode . org-super-agenda-mode))
 
 ;; TODO: It is early draft. Idefenitely refactor this ASAP
+;; TODO: Setup buffer title for each selected filter here
 (setq org-agenda-custom-commands
-      '(("p" "Priority agenda view"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Hight prio unfinished tasks:")))
-          (tags "PRIORITY=\"B\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Medium prio unfinished tasks:")))
-          (tags "PRIORITY=\"C\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Low prio unfinished tasks:")))
-          (agenda "")
-          (alltodo "")))))
+      '(("g" "Agenda" agenda "")
+        ;; List of tasks to add missed tags
+        ("u" "Untagged tasks" tags-todo "-{.*}")
+        ;; Probably need to add :someday: tag
+        ("o" "Unfinished, but not scheduled tasks"
+         ((tags-todo "-someday-project"
+                     ((org-agenda-skip-function
+                       '(org-agenda-skip-entry-if 'scheduled))))))
+        ;; Probably need to remove the scheduled date
+        ("O" "Scheduled, but with :someday: tag"
+         ((tags "+someday"
+                ((org-agenda-skip-function
+                  '(or (org-agenda-skip-entry-if 'notscheduled)
+                       (org-agenda-skip-entry-if 'done)))))))
+        ;; Unscheduled with :someday: tag
+        ("p" "Pick a task from unscheduled list"
+         ((tags "+someday"
+                ((org-agenda-skip-function
+                  '(or (org-agenda-skip-entry-if 'scheduled)
+                       (org-agenda-skip-entry-if 'done)))))))))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
@@ -552,12 +562,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   "Switch to the buffer associated with the given Org FILENAME.
 
 If a buffer visiting FILENAME is already open, switch to it.  If
-the buffer does not exist, open the FILENAME from the '~/org'
+the buffer does not exist, open the FILENAME from the 'my-org-dir'
 directory and switch to the newly created buffer.
 
 FILENAME should be the name of the Org file without any directory
-path.  The file is expected to reside in the '~/org' directory.
-"
+path.  The file is expected to reside in the `my-org-dir' directory."
   (switch-to-buffer
    (or (get-buffer filename)
        (find-file-noselect (concat my-org-dir filename)))))
