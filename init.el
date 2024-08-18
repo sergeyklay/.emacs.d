@@ -287,14 +287,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (org-image-actual-width '(600))
   ;; Enable shift+arrow for text selection.
   (org-support-shift-select t)
-  ;; Also include diary on org-agenda.
-  (org-agenda-include-diary t)
   ;; Set up global org directory.
   (org-direcory (directory-file-name my-org-dir))
   ;; default target for storing notes.
   (org-default-notes-file (concat my-org-dir "inbox.org"))
-  ;; Scan this dir for org files
-  (org-agenda-files (list (directory-file-name my-org-dir)))
   ;; Undone TODO will block switching the parent to DONE
   (org-enforce-todo-dependencies t)
   ;; I customize this just to redefine 'agenda'
@@ -463,16 +459,65 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ,my-org-capture-template-simple :empty-lines 1)))
 
 ;;;;; Org Agenda
+(defconst my-org-agenda-files-work
+  `(,(concat my-org-dir "business.org")
+    ,(concat my-org-dir "airslate.org"))
+  "The list of my work agenda files.")
 
-;; Define custom Org Agenda commands
-(setq org-agenda-custom-commands
-      '(("w" "Work Entries" tags-todo "work")
-        ("p" "Personal Tasks" tags-todo "personal")
-        ("r" "Read Later" tags-todo "read")
-        ("f" "Watch Later" tags-todo "watch")))
+(defconst my-org-agenda-files-life
+  `(,(concat my-org-dir "blog.org")
+    ,(concat my-org-dir "contacts.org")
+    ;; Finances / Legal / Assure / Insure / Regulate
+    ,(concat my-org-dir "flair.org")
+    ,(concat my-org-dir "housing.org")
+    ,(concat my-org-dir "index.org")
+    ,(concat my-org-dir "misc.org")
+    ,(concat my-org-dir "notes.org"))
+  "The list of my non-work agenda files.")
+
+;; I maintain two categories of agenda files: work and non-work files.
+(setq org-agenda-files
+      (append my-org-agenda-files-work my-org-agenda-files-life))
+
+;; Also include diary on org-agenda.
+(setq org-agenda-include-diary t)
+
+;; Restore windows layout after quit agenda.
+(setq org-agenda-restore-windows-after-quit t)
+
+;; Open agenda in the current window.
+(setq org-agenda-window-setup 'current-window)
+
+;; Super agenda mode.
+;; For documentation  see: https://github.com/alphapapa/org-super-agenda
+(use-package org-super-agenda
+  :ensure t
+  :custom
+  (org-super-agenda-hide-empty-groups t)
+  (org-super-agenda-groups
+   '(;; Each group has an implicit boolean OR operator between its selectors.
+     (:name "Today" :scheduled today)
+     (:name "DEADLINES" :deadline t :order 1)
+     (:name "Important" :priority "A" :order 2 :face (:append t :weight bold))
+     (:name "Prio ≤ B" :priority<= "B" :order 30)
+     (:name "Started"
+            :and
+            (:todo "STARTED" :not (:tag "someday")
+             :not (:priority "C") :not (:priority "B"))
+            :order 10)
+     (:todo "WAITING" :order 18)
+
+     ;; TODO: sort out with Someday groups bellow by merging them into one.
+     (:name "Someday"
+            :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
+            :order 25)
+
+     (:name "Someday"
+            :and (:todo ("SOMEDAY" "WATCHING") :not (:priority "C") :not (:priority "B"))
+            :order 25)))
+  :hook (org-agenda-mode . org-super-agenda-mode))
 
 ;;;;; Org Bookmarks
-
 (defun my-org-switch-to-buffer (filename)
   "Switch to the buffer associated with the given Org FILENAME.
 
