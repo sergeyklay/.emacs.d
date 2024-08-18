@@ -525,10 +525,21 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             :order 25)))
   :hook (org-agenda-mode . org-super-agenda-mode))
 
+;; HTML export functionality used bellow in `org-agenda-custom-commands'.
+;; The main purpose of this package in my configuration is to call the
+;; `org-store-agenda-view' function, which uses certain commands defined in
+;; `org-agenda-custom-commands' to generate HTML reports.
+(use-package htmlize
+  :ensure t
+  :defer 110
+  :config
+  (require 'htmlize))
+
 ;; TODO: It is early draft. Idefenitely refactor this ASAP
 ;; TODO: Setup buffer title for each selected filter here
+;; TODO: Add `org-store-agenda-view' to cronjob
 (setq org-agenda-custom-commands
-      '(("g" "Agenda" agenda "")
+      `(("g" "Agenda" agenda "")
         ;; List of tasks to add missed tags
         ("u" "Untagged tasks" tags-todo "-{.*}")
         ;; Probably need to add :someday: tag
@@ -547,7 +558,24 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ((tags "+someday"
                 ((org-agenda-skip-function
                   '(or (org-agenda-skip-entry-if 'scheduled)
-                       (org-agenda-skip-entry-if 'done)))))))))
+                       (org-agenda-skip-entry-if 'done)))))))
+        ;; This command creates an agenda view for the next 180 days, excluding
+        ;; all TODO items. It displays all scheduled events that are not tasks
+        ;; with TODO states, over the specified period. To save the result as an
+        ;; HTML file, you must manually call the `org-store-agenda-view' which
+        ;; generates and saves the HTML report directly based on the defined
+        ;; commands, without needing to first display the agenda view. The
+        ;; resulting file will be saved in the directory specified by
+        ;; `my-org-dir' and will be named 'agenda_180d_filtered.html'.
+        ("n" "No TODO events +180d"
+         ((agenda "no TODO events +180d"
+                  ((org-agenda-span 180)
+                   (org-agenda-time-grid nil)
+                   (org-agenda-entry-types '(:timestamp :sexp))
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'todo 'any)) )))
+         nil
+         (,(concat my-org-dir "agenda_180d_filtered.html")))))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
