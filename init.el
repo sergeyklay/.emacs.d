@@ -518,13 +518,7 @@ Steps performed by this function:
 This function is adapted from an implementation by Karl Voit, and
 has been reworked to enhance its readability, maintainability,
 and alignment with my specific workflow. For origin see:
-https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/
-
-Note: Currently, I'm not certain if there is an existing function
-in the `org-refile' family or in any other Org package that
-could achieve the same result. Therefore, it's possible that a
-better implementation exists, and I may eventually replace this
-function with a built-in solution."
+https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   (interactive)
   (save-excursion
     ;; Use `org-back-to-heading' instead `beginning-of-line' here
@@ -541,7 +535,7 @@ function with a built-in solution."
         (goto-char (point-min))
         (when (re-search-forward
                (concat "\\*\\s-+\\(\\(\\(NEXT\\|TODO\\)\\s-+\\)?"
-                       "Bookmark\\|BOOKMARK\\|NEXT\\|TODO\\)\\>")
+                       "Bookmark\\|BOOKMARK\\|NEXT\\|TODO\\)\\s-+")
                nil t)
           (replace-match "* " nil nil))
 
@@ -555,22 +549,22 @@ function with a built-in solution."
              ; if level > 2, remove excess "*"
              ((> current-level 2) (delete-char (- current-level 2))))))
 
-        ;; Step 3: Insert creation date properties
-        (if (search-forward-regexp "^\\[20" nil t)
-            ;; Pure MobileOrg file format with date right after heading
-            (progn
-              (beginning-of-line)
-              (insert ":PROPERTIES:\n:CREATED: "))
-          ;; Beorg file format w/o date
-          (progn
-            ;; If no date found, insert the current date
-            (end-of-line)
-            (newline)
-            (insert ":PROPERTIES:\n:CREATED: ")
-            (insert (format-time-string "[%Y-%m-%d %a %H:%M]"))))
-        (end-of-line)
-        (newline)
-        (insert ":END:\n")
+        ;; Step 3: Insert creation date property
+        (unless (org-entry-get nil "CREATED")
+          (goto-char (point-min))
+          ;; Check if the date already persist
+          (if (re-search-forward org-ts-regexp-inactive nil t)
+              (let ((timestamp (match-string-no-properties 0)))
+                (org-back-to-heading)
+                (org-entry-put nil "CREATED" timestamp)
+                ;; Move the cursor to the end of the metadata,
+                ;; including the end of the :PROPERTIES block and remove old
+                ;; date stamp
+                (org-end-of-meta-data t)
+                (when (re-search-forward (regexp-quote timestamp) nil t)
+                  (replace-match "")))
+            ;; Otherwise use current date
+            (org-entry-put nil "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
 
         ;; Step 4: Cut the current heading and move it to the 'notes.org' file
         (org-cut-subtree)
@@ -580,7 +574,7 @@ function with a built-in solution."
         (org-paste-subtree)  ; Paste the heading into the 'notes.org' file
 
         ;; Step 5: Reapply tags to the previous heading in the 'notes.org' file
-        (outline-previous-visible-heading 1)
+        (org-back-to-heading t)
         (org-set-tags-command)))))
 
 (bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
