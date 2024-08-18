@@ -540,7 +540,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
           (alltodo "")))))
 
 ;; Always highlight the current agenda line.
-(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+(add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
 
 ;; Autosave buffers.
 (advice-add 'org-agenda-quit :before #'org-save-all-org-buffers)
@@ -1170,10 +1170,43 @@ This function serves multiple purposes:
   (rst-new-adornment-down t)
   :hook ((rst-mode . visual-line-mode)))
 
+(defconst pandoc-executable-path (executable-find "pandoc")
+  "The pandoc executable path on this system.")
+
+(defconst gfm-patterns
+  (rx (or "README" "CONTRIBUTTING" "BACKERS"
+          (: "CHANGELOG" (? "-" (+ (in "." digit))))
+          "CODE_OF_CONDUCT"
+          "PULL_REQUEST_TEMPLATE"
+          "pull_request_template"
+          "bug_report"
+          "feature_request")
+      "."
+      (or "markdown" "md")
+      string-end)
+  "Regexp to match files with GFM format.")
+
 (use-package markdown-mode
   :ensure t
-  :mode (("\\.md\\'" . markdown-mode))
-  :hook ((markdown-mode . visual-line-mode)))
+  :mode "\\.\\(?:m\\(?:arkdown\\|d\\)\\)\\'"
+  :custom
+  (markdown-command pandoc-executable-path)
+  (markdown-enable-wiki-links t)
+  (markdown-enable-math t)
+  (markdown-italic-underscore t)
+  (markdown-asymmetric-header t)
+  (markdown-make-gfm-checkboxes-buttons t)
+  (markdown-gfm-additional-languages
+   '("sh" "python" "js" "lisp" "elisp"))
+  (markdown-gfm-uppercase-checkbox t)
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-hide-urls nil)
+  :hook
+  ((markdown-mode . auto-fill-mode)
+   (markdown-mode . visual-line-mode))
+  :config
+  (add-to-list 'auto-mode-alist
+	       `(,gfm-patterns . gfm-mode)))
 
 (use-package sql
   :mode ("\\.sql\\'" . sql-mode)
