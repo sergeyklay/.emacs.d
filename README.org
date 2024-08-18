@@ -57,14 +57,15 @@ tools:
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
 - [[https://imagemagick.org][Imagemagick (=convert=)]]
 - [[https://hunspell.github.io/][hunspell (=hunspell=)]]
+- [[https://pandoc.org/][Pandoc (=pandoc=)]]
 
 So, I created this configuration with these tools in mind.
 
-Since I speak, write, and read in three languages — English, Polish,
-and Russian — I've configured the spell-checking setup to support
-these languages. I've enabled spellckeck by default for =text-mode= and
-=latex-mode= using =en_US= dictionary. Thus you might want to override
-this configuration to fit your linguistic needs.
+Note: Since I speak, write, and read in three languages — English,
+Polish, and Russian — I've configured the spell-checking setup to
+support these languages. I've enabled spellckeck by default for
+=text-mode= and =latex-mode= using =en_US= dictionary. Thus you might want
+to override this configuration to fit your linguistic needs.
 
 ** License
 
