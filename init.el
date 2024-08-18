@@ -340,8 +340,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (advice-add fn :after #'org-save-all-org-buffers))
 
 (global-set-key (kbd "C-c l") #'org-store-link)
-;;;;; Org Mobile
 
+;;;;; Org Mobile
 ;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
 ;; and create file called 'mobileorg' (w/o extension) finally
 ;; setup sync Beorg to Dropbox 'Notes'.
@@ -383,14 +383,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (my/org-mobile-sync-enable))
 
 ;;;;; Org Contib
-
 (use-package org-cliplink
   :ensure t
   :after org
   :bind ("C-x p i" . org-cliplink))
 
 ;;;;; Org TODO
-
 ;; Define my default keywords as workflow states.
 ;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
 ;; For details see: https://orgmode.org/manual/Workflow-states.html
@@ -890,7 +888,6 @@ related to your current project."
   :bind (("C-x g" . magit-status)))
 
 ;;;; Setup completion
-
 ;; Provide a nicer `completing-read'.
 (use-package vertico
   :ensure t
