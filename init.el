@@ -332,6 +332,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (org-mode . org-display-inline-images)
          (org-agenda-mode . my|org-agenda-refresh-on-idle)))
 
+;; Save all Org buffers after performing specific Org mode actions.
+(dolist (fn '(org-deadline
+              org-schedule
+              org-todo
+              org-store-log-note))
+  (advice-add fn :after #'org-save-all-org-buffers))
+
+(global-set-key (kbd "C-c l") #'org-store-link)
 ;;;;; Org Mobile
 
 ;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
@@ -404,7 +412,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("CANCELLED" :foreground "lime green"   :weight bold)))
 
 ;;;;; Org Capture
-
 (defconst my-org-capture-template-simple
   "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n"
   "A template for a simple heading with keyword TODO in Org files.")
@@ -457,6 +464,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("Bs" "Shorts" entry
          (file+headline ,(concat my-org-dir "business.org") "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)))
+
+(global-set-key (kbd "C-c c") #'org-capture)
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
@@ -516,6 +525,29 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             :and (:todo ("SOMEDAY" "WATCHING") :not (:priority "C") :not (:priority "B"))
             :order 25)))
   :hook (org-agenda-mode . org-super-agenda-mode))
+
+;; TODO: It is early draft. Idefenitely refactor this ASAP
+(setq org-agenda-custom-commands
+      '(("p" "Priority agenda view"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Hight prio unfinished tasks:")))
+          (tags "PRIORITY=\"B\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Medium prio unfinished tasks:")))
+          (tags "PRIORITY=\"C\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Low prio unfinished tasks:")))
+          (agenda "")
+          (alltodo "")))))
+
+;; Always highlight the current agenda line.
+(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+
+;; Autosave buffers.
+(advice-add 'org-agenda-quit :before #'org-save-all-org-buffers)
+
+(global-set-key (kbd "C-c a") #'org-agenda)
 
 ;;;;; Org Bookmarks
 (defun my-org-switch-to-buffer (filename)
@@ -624,11 +656,10 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 (bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
 
-;;;;; Org keys
-;; Global keys
-(global-set-key (kbd "C-c c") #'org-capture)
-(global-set-key (kbd "C-c a") #'org-agenda)
-(global-set-key (kbd "C-c l") #'org-store-link)
+;;;;; Org Refile
+;; Save all buffers after refiling or archiving.
+(dolist (fn '(org-refile org-archive-subtree))
+  (advice-add fn :after #'org-save-all-org-buffers))
 
 ;; Local keys
 (with-eval-after-load 'org
