@@ -403,11 +403,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Define the style of the keywords
 (setq org-todo-keyword-faces
       '(("TODO"     :foreground "firebrick1"   :weight bold)
-        ("NEXT"     :foreground "firebrick1"   :weight bold)
         ("STARTED"  :foreground "red3"         :weight bold)
-        ("DONE"     :foreground "forest green" :weight bold)
         ("WAITING"  :foreground "orange"       :weight bold)
         ("SOMEDAY"  :foreground "magenta"      :weight bold)
+        ("DONE"     :foreground "forest green" :weight bold)
         ("CANCELED" :foreground "lime green"   :weight bold)))
 
 ;;;;; Org Capture
@@ -658,9 +657,7 @@ know so I can address them.
 Steps performed by this function:
 
 1. Remove unwanted keywords from beggining of the heading:
-   - 'NEXT Bookmark'
    - 'TODO Bookmark'
-   - 'NEXT'
    - 'Bookmark'
    - 'BOOKMARK'
    - 'TODO'
@@ -688,8 +685,9 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
         ;; Step 1: Clean up heading by removing unwanted keywords
         (goto-char (point-min))
         (when (re-search-forward
-               (concat "\\*\\s-+\\(\\(\\(NEXT\\|TODO\\)\\s-+\\)?"
-                       "Bookmark\\|BOOKMARK\\|NEXT\\|TODO\\)\\s-+")
+               (concat "\\*\\s-+\\(?:"
+                       "\\(?:TODO\\s-+\\)?Bookmark\\|BOOKMARK\\|TODO"
+                       "\\)\\s-+")
                nil t)
           (replace-match "* " nil nil))
 
