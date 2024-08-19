@@ -705,24 +705,42 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
 
 ;;;;; Org Refile
+(defun my-org-opened-buffer-files ()
+  "Return the list of org files currently opened in emacs."
+  (delq nil
+        (mapcar (lambda (x)
+                  (if (and (buffer-file-name x)
+                           (string-match "\\.org$"
+                                         (buffer-file-name x)))
+                      (buffer-file-name x)))
+                (buffer-list))))
+
 ;; Refile targets include this file and any file contributing
 ;; to the agenda - up to 4 levels deep.
 (setq org-refile-targets
-      '((nil :maxlevel . 4)
+      '((nil :maxlevel . 4)  ; nil means current buffer
+        (my-org-opened-buffer-files :maxlevel . 4)
         (org-agenda-files :maxlevel . 4)))
 
 ;; Targets start with the file name allows creating level 1 tasks.
-(setq org-refile-use-outline-path (quote file))
+(setq org-refile-use-outline-path 'file)
 
 ;; Speed up refiling by caching target locations, a must for large Org files.
 (setq org-refile-use-cache t)
 
-;; Targets complete directly with IDO.
+;; Make `org-refile' outline working IDO/consult/helm/ivy.
 (setq org-outline-path-complete-in-steps nil)
 
 ;; Allow the creation of new nodes as refile targets.
 ;; The new node creation must be confirmed by the user.
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+
+
+;; Set a timer to regenerate refile cache automatically every time
+;; my Emacs has been idled for 10 mins.
+(run-with-idle-timer 600 t (lambda ()
+                             (org-refile-cache-clear)
+                             (org-refile-get-targets)))
 
 ;; Local keys
 (with-eval-after-load 'org
