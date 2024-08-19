@@ -399,7 +399,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq org-todo-keywords
       '((sequence
          ;; Need action
-         "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|"
+         "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "|"
          ;; Done
          "DONE(d!/!)" "CANCELED(c@/!)")))
 
@@ -408,7 +408,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
       '(("TODO"     :foreground "firebrick1"   :weight bold)
         ("STARTED"  :foreground "red3"         :weight bold)
         ("WAITING"  :foreground "orange"       :weight bold)
-        ("SOMEDAY"  :foreground "magenta"      :weight bold)
         ("DONE"     :foreground "forest green" :weight bold)
         ("CANCELED" :foreground "lime green"   :weight bold)))
 
@@ -526,14 +525,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
              :not (:priority "C") :not (:priority "B"))
             :order 10)
      (:todo "WAITING" :order 18)
-
-     ;; TODO: sort out with Someday groups bellow by merging them into one.
      (:name "Someday"
             :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
-            :order 25)
-
-     (:name "Someday"
-            :and (:todo ("SOMEDAY") :not (:priority "C") :not (:priority "B"))
             :order 25)))
   :hook (org-agenda-mode . org-super-agenda-mode))
 
@@ -543,13 +536,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; `org-agenda-custom-commands' to generate HTML reports.
 (use-package htmlize
   :ensure t
-  :defer 110
+  :defer t
   :config
   (require 'htmlize))
 
 (setq org-stuck-projects
-      '(;; Level 2 headlines, excluding DONE, CANCELED, and SOMEDAY
-        "+LEVEL=2/-DONE-CANCELED-SOMEDAY"
+      '(;; Level 2 headlines, excluding DONE, CANCELED
+        "+LEVEL=2/-DONE-CANCELED"
         ;; Unstuck if any task in the project subtree has one of
         ;; these TODO keywords
         ("TODO")
