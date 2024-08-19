@@ -479,7 +479,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     ;; Finances / Legal / Assure / Insure / Regulate
     ,(concat my-org-dir "flair.org")
     ,(concat my-org-dir "housing.org")
-    ,(concat my-org-dir "index.org")
     ,(concat my-org-dir "misc.org")
     ,(concat my-org-dir "notes.org"))
   "The list of my non-work agenda files.")
@@ -556,6 +555,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; TODO: Add `org-store-agenda-view' to cronjob
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
+        ("i" "Mobile Inbox"
+         ((tags ".*"
+                ((org-agenda-files '(,org-mobile-inbox-for-pull))
+                 (org-agenda-overriding-header "Unprocessed Inbox Files")))))
         ;; List of tasks to add missed tags
         ("u" "Untagged tasks" tags-todo "-{.*}")
         ;; Probably need to add :someday: tag
