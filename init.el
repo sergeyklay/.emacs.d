@@ -262,7 +262,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (latex-mode . writegood-mode)))
 
 ;;;; Organization
-(defconst my-org-dir
+(defconst my-org-files-path
   (file-name-as-directory
    (concat (file-name-as-directory (expand-file-name "~")) "org"))
   "Path to the user org files directory.")
@@ -286,9 +286,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Enable shift+arrow for text selection.
   (org-support-shift-select t)
   ;; Set up global org directory.
-  (org-direcory (directory-file-name my-org-dir))
+  (org-direcory (directory-file-name my-org-files-path))
   ;; default target for storing notes.
-  (org-default-notes-file (concat my-org-dir "inbox.org"))
+  (org-default-notes-file (concat my-org-files-path "inbox.org"))
   ;; Undone TODO will block switching the parent to DONE
   (org-enforce-todo-dependencies t)
   ;; I customize this just to redefine 'agenda'
@@ -317,7 +317,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      (shell . t)
      (sql .t)
      (calc . t)))
-  (my-ensure-directory-exists my-org-dir)
+  (my-ensure-directory-exists my-org-files-path)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)))
@@ -334,7 +334,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq org-mobile-force-id-on-agenda-items nil)
 
 ;; Append captured notes and flags to ~/org/index.org
-(setq org-mobile-inbox-for-pull (concat my-org-dir "index.org"))
+(setq org-mobile-inbox-for-pull (concat my-org-files-path "index.org"))
 
 (defvar my-org-mobile-sync-timer nil
   "Timer object for automatic Org Mobile sync on idle.")
@@ -420,50 +420,50 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Define custom Org Capture templates
 (setq org-capture-templates
       `(("s" "Shorts" entry
-         (file+headline ,(concat my-org-dir "misc.org") "Shorts")
+         (file+headline ,(concat my-org-files-path "misc.org") "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)
         ("e" "Event" entry
-         (file+headline ,(concat my-org-dir "misc.org") "Events")
+         (file+headline ,(concat my-org-files-path "misc.org") "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
         ("t" "Trip Checklist" checkitem
-         (file+headline ,(concat my-org-dir "misc.org") "Trip Checklist"))
+         (file+headline ,(concat my-org-files-path "misc.org") "Trip Checklist"))
         ("b" "Bookmark" entry
-         (file+headline ,(concat my-org-dir "notes.org") "Bookmarks")
+         (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
          "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
         ("i" "Blog Idea" entry
-         (file+headline ,(concat my-org-dir "blog.org") "Captured Blog Ideas")
+         (file+headline ,(concat my-org-files-path "blog.org") "Captured Blog Ideas")
          ,my-org-capture-template-blog :empty-lines 1)
         ("n" "Random Note" entry
-          (file+headline ,(concat my-org-dir "notes.org") "Random Notes")
+          (file+headline ,(concat my-org-files-path "notes.org") "Random Notes")
           "** %?\n  %U" :empty-lines 1)
         ("r" "To-Read" entry
-         (file+headline ,(concat my-org-dir "misc.org") "To-Read List")
+         (file+headline ,(concat my-org-files-path "misc.org") "To-Read List")
          "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
         ("w" "To-Watch" entry
-         (file+headline ,(concat my-org-dir "misc.org") "To-Watch List")
+         (file+headline ,(concat my-org-files-path "misc.org") "To-Watch List")
          "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 
         ("B" "Business")
         ("Bs" "Shorts" entry
-         (file+headline ,(concat my-org-dir "business.org") "Shorts")
+         (file+headline ,(concat my-org-files-path "business.org") "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)))
 
 (global-set-key (kbd "C-c c") #'org-capture)
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
-  `(,(concat my-org-dir "business.org")
-    ,(concat my-org-dir "airslate.org"))
+  `(,(concat my-org-files-path "business.org")
+    ,(concat my-org-files-path "airslate.org"))
   "The list of my work agenda files.")
 
 (defconst my-org-agenda-files-life
-  `(,(concat my-org-dir "blog.org")
-    ,(concat my-org-dir "contacts.org")
+  `(,(concat my-org-files-path "blog.org")
+    ,(concat my-org-files-path "contacts.org")
     ;; Finances / Legal / Assure / Insure / Regulate
-    ,(concat my-org-dir "flair.org")
-    ,(concat my-org-dir "housing.org")
-    ,(concat my-org-dir "misc.org")
-    ,(concat my-org-dir "notes.org"))
+    ,(concat my-org-files-path "flair.org")
+    ,(concat my-org-files-path "housing.org")
+    ,(concat my-org-files-path "misc.org")
+    ,(concat my-org-files-path "notes.org"))
   "The list of my non-work agenda files.")
 
 ;; I maintain two categories of agenda files: work and non-work files.
@@ -490,6 +490,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;; Do not initialize agenda Org files when generating (only) agenda.
 (setq org-agenda-inhibit-startup t)
+
+;; Compact the block agenda view
+(setq org-agenda-compact-blocks t)
+
+;; Number of days to include in overview display.
+(setq org-agenda-span 1)
 
 ;; Also include diary on org-agenda.
 (setq org-agenda-include-diary t)
@@ -593,7 +599,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ;; generates and saves the HTML report directly based on the defined
         ;; commands, without needing to first display the agenda view. The
         ;; resulting file will be saved in the directory specified by
-        ;; `my-org-dir' and will be named 'agenda_180d_filtered.html'.
+        ;; `my-org-files-path' and will be named 'agenda_180d_filtered.html'.
         ("n" "No TODO events +180d"
          ((agenda "No TODO events +180d"
                   ((org-agenda-span 180)
@@ -602,14 +608,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'any)))))
          nil
-         (,(concat my-org-dir "agenda_180d_filtered.html")))
+         (,(concat my-org-files-path "agenda_180d_filtered.html")))
         ;; Full agenda for the next 31 days.
         ("D", "Detail agenda +31d"
          ((agenda "Detail agenda"
                   ((org-agenda-span 31)
                    (org-agenda-time-grid nil))))
          nil
-         (,(concat my-org-dir "agenda_details_raw.html")))))
+         (,(concat my-org-files-path "agenda_details_raw.html")))))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
@@ -621,14 +627,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   "Switch to the buffer associated with the given Org FILENAME.
 
 If a buffer visiting FILENAME is already open, switch to it.  If
-the buffer does not exist, open the FILENAME from the 'my-org-dir'
+the buffer does not exist, open the FILENAME from the 'my-org-files-path'
 directory and switch to the newly created buffer.
 
 FILENAME should be the name of the Org file without any directory
-path.  The file is expected to reside in the `my-org-dir' directory."
+path.  The file is expected to reside in the `my-org-files-path' directory."
   (switch-to-buffer
    (or (get-buffer filename)
-       (find-file-noselect (concat my-org-dir filename)))))
+       (find-file-noselect (concat my-org-files-path filename)))))
 
 (defun my/org-move-bookmark-to-notes()
   "Move and format mobile bookmark heading.
