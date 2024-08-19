@@ -559,7 +559,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; TODO: It is early draft. Idefenitely refactor this ASAP
 ;; TODO: Setup buffer title for each selected filter here
 ;; TODO: Add `org-store-agenda-view' to cronjob
-;; TODO: N and P don't take into account :CATEGORY: preoperty
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
         ;; List of tasks to add missed tags
@@ -583,16 +582,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                        (org-agenda-skip-entry-if 'done)))))))
         ;; Non-business tasks that cuurenly in my focus
         ("N", "Non-business: Open focus projects"
-         ((tags "+project+focus"
+         ((tags "+project+focus-CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'done)))))
-         ((org-agenda-files my-org-agenda-files-life)))
+                  '(org-agenda-skip-entry-if 'done))))))
         ;; Business tasks that cuurenly in my focus
-        ("P" ": Open focus projects"
-         ((tags "+project+focus"
+        ("P" "Business: Open focus projects"
+         ((tags "+project+focus+CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'done)))))
-         ((org-agenda-files my-org-agenda-files-work)))
+                  '(org-agenda-skip-entry-if 'done))))))
         ;; It's not perfect and I'll probably redo it as well as
         ;; `org-stuck-projects'.
         ("1" "Stuck projects"
