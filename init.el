@@ -545,9 +545,21 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :config
   (require 'htmlize))
 
+(setq org-stuck-projects
+      '(;; Level 2 headlines, excluding DONE, CANCELED, and SOMEDAY
+        "+LEVEL=2/-DONE-CANCELED-SOMEDAY"
+        ;; Unstuck if any task in the project subtree has one of
+        ;; these TODO keywords
+        ("TODO")
+        ;; No additional tags to unstick projects
+        nil
+        ;; Unstuck if any task in the project subtree is scheduled
+        "SCHEDULED:\\|DEADLINE:"))
+
 ;; TODO: It is early draft. Idefenitely refactor this ASAP
 ;; TODO: Setup buffer title for each selected filter here
 ;; TODO: Add `org-store-agenda-view' to cronjob
+;; TODO: N and P don't take into account :CATEGORY: preoperty
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
         ;; List of tasks to add missed tags
@@ -569,6 +581,22 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                 ((org-agenda-skip-function
                   '(or (org-agenda-skip-entry-if 'scheduled)
                        (org-agenda-skip-entry-if 'done)))))))
+        ;; Non-business tasks that cuurenly in my focus
+        ("N", "Non-business: Open focus projects"
+         ((tags "+project+focus"
+                ((org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'done)))))
+         ((org-agenda-files my-org-agenda-files-life)))
+        ;; Business tasks that cuurenly in my focus
+        ("P" ": Open focus projects"
+         ((tags "+project+focus"
+                ((org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'done)))))
+         ((org-agenda-files my-org-agenda-files-work)))
+        ;; It's not perfect and I'll probably redo it as well as
+        ;; `org-stuck-projects'.
+        ("1" "Stuck projects"
+         ((stuck "")))
         ;; This command creates an agenda view for the next 180 days, excluding
         ;; all TODO items. It displays all scheduled events that are not tasks
         ;; with TODO states, over the specified period. To save the result as an
@@ -578,14 +606,21 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ;; resulting file will be saved in the directory specified by
         ;; `my-org-dir' and will be named 'agenda_180d_filtered.html'.
         ("n" "No TODO events +180d"
-         ((agenda "no TODO events +180d"
+         ((agenda "No TODO events +180d"
                   ((org-agenda-span 180)
                    (org-agenda-time-grid nil)
                    (org-agenda-entry-types '(:timestamp :sexp))
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'any)) )))
          nil
-         (,(concat my-org-dir "agenda_180d_filtered.html")))))
+         (,(concat my-org-dir "agenda_180d_filtered.html")))
+        ;; Full agenda for the next 31 days.
+        ("D", "Detail agenda +31d"
+         ((agenda "Detail agenda"
+                  ((org-agenda-span 31)
+                   (org-agenda-time-grid nil))))
+         nil
+         (,(concat my-org-dir "agenda_details_raw.html")) )))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
