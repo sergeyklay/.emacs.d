@@ -420,12 +420,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Append captured notes and flags to `org-default-notes-file' file.
 (setq org-mobile-inbox-for-pull org-default-notes-file)
 
-(defvar my-org-mobile-sync-timer nil
-  "Timer object for automatic Org Mobile sync on idle.")
-
-(defvar my-org-mobile-sync-idle-secs (* 60 10)
-  "Number of idle seconds before triggering Org Mobile sync.")
-
 (defun my/org-mobile-sync ()
   "Synchronize Org Mobile."
   (interactive)
