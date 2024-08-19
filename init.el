@@ -287,8 +287,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (org-support-shift-select t)
   ;; Set up global org directory.
   (org-direcory (directory-file-name my-org-files-path))
-  ;; default target for storing notes.
-  (org-default-notes-file (concat my-org-files-path "inbox.org"))
   ;; Undone TODO will block switching the parent to DONE
   (org-enforce-todo-dependencies t)
   ;; I customize this just to redefine 'agenda'
@@ -323,50 +321,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (org-mode . org-display-inline-images)))
 
 (global-set-key (kbd "C-c l") #'org-store-link)
-
-;;;;; Org Mobile
-;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
-;; and create file called 'mobileorg' (w/o extension) finally
-;; setup sync Beorg to Dropbox 'Notes'.
-(setq org-mobile-directory (expand-file-name "~/Dropbox/Notes"))
-
-;; Do not generate IDs for all headings
-(setq org-mobile-force-id-on-agenda-items nil)
-
-;; Append captured notes and flags to ~/org/index.org
-(setq org-mobile-inbox-for-pull (concat my-org-files-path "index.org"))
-
-(defvar my-org-mobile-sync-timer nil
-  "Timer object for automatic Org Mobile sync on idle.")
-
-(defvar my-org-mobile-sync-idle-secs (* 60 10)
-  "Number of idle seconds before triggering Org Mobile sync.")
-
-(defun my/org-mobile-sync ()
-  "Synchronize Org Mobile."
-  (interactive)
-  (org-mobile-pull)
-  (org-mobile-push))
-
-(defun my/org-mobile-sync-enable ()
-  "Enable automatic synchronization of Org Mobile on idle."
-  (interactive)
-  (setq my-org-mobile-sync-timer
-        (run-with-idle-timer my-org-mobile-sync-idle-secs t
-                             'my/org-mobile-sync)))
-
-(defun my/org-mobile-sync-disable ()
-  "Disable the automatic Org Mobile synchronization on idle."
-  (interactive)
-  (cancel-timer my-org-mobile-sync-timer))
-
-;; TODO: Disabled for now. Emacs got stuck many times. I'll sort out with this a
-;; bit later.
-;;
-;; (with-eval-after-load 'org
-;;   ;; Automatically enable idle sync.
-;;   ;; Source: https://stackoverflow.com/q/8432108/1661465
-;;   (my/org-mobile-sync-enable))
 
 ;;;;; Org Contib
 (use-package org-cliplink
@@ -417,6 +371,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    "- [ ] Link on tag pages?\n\n")
   "A template for capturing blog-related ideas.")
 
+;; Default target for capturing notes. Also used for mobile sync.
+;; See `org-mobile-inbox-for-pull' bellow.
+(setq org-default-notes-file (concat my-org-files-path "inbox.org"))
+
 ;; Define custom Org Capture templates
 (setq org-capture-templates
       `(("s" "Shorts" entry
@@ -449,6 +407,30 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          ,my-org-capture-template-simple :empty-lines 1)))
 
 (global-set-key (kbd "C-c c") #'org-capture)
+
+;;;;; Org Mobile
+;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
+;; and create file called 'mobileorg' (w/o extension) finally
+;; setup sync Beorg to Dropbox 'Notes'.
+(setq org-mobile-directory (expand-file-name "~/Dropbox/Notes"))
+
+;; Do not generate IDs for all headings
+(setq org-mobile-force-id-on-agenda-items nil)
+
+;; Append captured notes and flags to `org-default-notes-file' file.
+(setq org-mobile-inbox-for-pull org-default-notes-file)
+
+(defvar my-org-mobile-sync-timer nil
+  "Timer object for automatic Org Mobile sync on idle.")
+
+(defvar my-org-mobile-sync-idle-secs (* 60 10)
+  "Number of idle seconds before triggering Org Mobile sync.")
+
+(defun my/org-mobile-sync ()
+  "Synchronize Org Mobile."
+  (interactive)
+  (org-mobile-pull)
+  (org-mobile-push))
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
