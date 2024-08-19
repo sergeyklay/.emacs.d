@@ -487,6 +487,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq org-agenda-files
       (append my-org-agenda-files-work my-org-agenda-files-life))
 
+(defun my-create-missing-org-files ()
+  "Create missing files listed in `org-agenda-files'."
+  (dolist (file org-agenda-files)
+    (unless (file-exists-p file)
+      (with-temp-buffer
+        (write-file file))
+      (message "Created missing org file: %s" file))))
+
+(add-hook 'emacs-startup-hook #'my-create-missing-org-files)
+
 ;; Also include diary on org-agenda.
 (setq org-agenda-include-diary t)
 
