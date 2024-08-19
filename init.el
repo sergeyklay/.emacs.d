@@ -533,7 +533,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             :order 25)
 
      (:name "Someday"
-            :and (:todo ("SOMEDAY" "WATCHING") :not (:priority "C") :not (:priority "B"))
+            :and (:todo ("SOMEDAY") :not (:priority "C") :not (:priority "B"))
             :order 25)))
   :hook (org-agenda-mode . org-super-agenda-mode))
 
