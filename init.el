@@ -322,13 +322,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (org-mode . org-indent-mode)
          (org-mode . org-display-inline-images)))
 
-;; Save all Org buffers after performing specific Org mode actions.
-(dolist (fn '(org-deadline
-              org-schedule
-              org-todo
-              org-store-log-note))
-  (advice-add fn :after #'org-save-all-org-buffers))
-
 (global-set-key (kbd "C-c l") #'org-store-link)
 
 ;;;;; Org Mobile
@@ -621,9 +614,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
 
-;; Autosave buffers.
-(advice-add 'org-agenda-quit :before #'org-save-all-org-buffers)
-
 (global-set-key (kbd "C-c a") #'org-agenda)
 
 ;;;;; Org Bookmarks
@@ -732,10 +722,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
 
 ;;;;; Org Refile
-;; Save all buffers after refiling or archiving.
-(dolist (fn '(org-refile org-archive-subtree))
-  (advice-add fn :after #'org-save-all-org-buffers))
-
 ;; Local keys
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-c r") #'org-refile )
