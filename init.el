@@ -577,12 +577,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                        (org-agenda-skip-entry-if 'done)))))))
         ;; Non-business tasks that cuurenly in my focus
         ("N", "Non-business: Open focus projects"
-         ((tags "+project+focus-CATEGORY={airslate\\|business}"
+         ((tags "+{focus\\|project}-CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'done))))))
         ;; Business tasks that cuurenly in my focus
         ("P" "Business: Open focus projects"
-         ((tags "+project+focus+CATEGORY={airslate\\|business}"
+         ((tags "+{focus\\|project}+CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'done))))))
         ;; It's not perfect and I'll probably redo it as well as
