@@ -275,10 +275,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; be collapsed. Since I use large files with a lot of headers, the default
   ;; value does not work for me
   (org-startup-folded t)
-  ;; Do not initialize agenda Org files when generating (only) agenda.
-  (org-agenda-inhibit-startup t)
   ;; When a TODO is set to a done state, record a timestamp
-  (org-log-done (quote time))
+  (org-log-done '(time))
   ;; Don' clutter the actual entry with notes.
   (org-log-into-drawer t)
   ;; Hide the markers so you just see bold text as BOLD and not *BOLD*
@@ -319,18 +317,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      (shell . t)
      (sql .t)
      (calc . t)))
-
-  (defun my|org-agenda-refresh-on-idle ()
-    "Set up a timer to refresh Org Agenda buffers after 60s of idle time."
-    (run-with-idle-timer 60 nil
-                         (apply-partially #'org-agenda-prepare-buffers
-                                          (org-agenda-files t t))))
-
   (my-ensure-directory-exists my-org-dir)
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
-         (org-mode . org-display-inline-images)
-         (org-agenda-mode . my|org-agenda-refresh-on-idle)))
+         (org-mode . org-display-inline-images)))
 
 ;; Save all Org buffers after performing specific Org mode actions.
 (dolist (fn '(org-deadline
@@ -487,7 +477,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq org-agenda-files
       (append my-org-agenda-files-work my-org-agenda-files-life))
 
-(defun my-create-missing-org-files ()
+(defun my|create-missing-org-files ()
   "Create missing files listed in `org-agenda-files'."
   (dolist (file org-agenda-files)
     (unless (file-exists-p file)
@@ -495,7 +485,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         (write-file file))
       (message "Created missing org file: %s" file))))
 
-(add-hook 'emacs-startup-hook #'my-create-missing-org-files)
+(add-hook 'emacs-startup-hook #'my|create-missing-org-files)
+
+(defun my|org-agenda-refresh-on-idle ()
+    "Set up a timer to refresh Org Agenda buffers after 60s of idle time."
+    (run-with-idle-timer 60 nil
+                         (apply-partially #'org-agenda-prepare-buffers
+                                          (org-agenda-files t t))))
+
+(add-hook 'org-agenda-mode  #'my|org-agenda-refresh-on-idle)
+
+;; Do not initialize agenda Org files when generating (only) agenda.
+(setq org-agenda-inhibit-startup t)
 
 ;; Also include diary on org-agenda.
 (setq org-agenda-include-diary t)
@@ -555,10 +556,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; TODO: Add `org-store-agenda-view' to cronjob
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
+        ;; This file mostly used for `my/org-move-bookmark-to-notes'
         ("i" "Mobile Inbox"
          ((tags ".*"
                 ((org-agenda-files '(,org-mobile-inbox-for-pull))
-                 (org-agenda-overriding-header "Unprocessed Inbox Files")))))
+                 (org-agenda-overriding-header "Unprocessed Inbox Items")))))
         ;; List of tasks to add missed tags
         ("u" "Untagged tasks" tags-todo "-{.*}")
         ;; Probably need to add :someday: tag
