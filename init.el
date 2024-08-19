@@ -705,6 +705,25 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
 
 ;;;;; Org Refile
+;; Refile targets include this file and any file contributing
+;; to the agenda - up to 4 levels deep.
+(setq org-refile-targets
+      '((nil :maxlevel . 4)
+        (org-agenda-files :maxlevel . 4)))
+
+;; Targets start with the file name allows creating level 1 tasks.
+(setq org-refile-use-outline-path (quote file))
+
+;; Speed up refiling by caching target locations, a must for large Org files.
+(setq org-refile-use-cache t)
+
+;; Targets complete directly with IDO.
+(setq org-outline-path-complete-in-steps nil)
+
+;; Allow the creation of new nodes as refile targets.
+;; The new node creation must be confirmed by the user.
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
 ;; Local keys
 (with-eval-after-load 'org
   (define-key org-mode-map (kbd "C-c r") #'org-refile )
