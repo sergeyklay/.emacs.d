@@ -521,54 +521,63 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :config
   (require 'htmlize))
 
-(setq org-stuck-projects
-      '(;; Level 2 headlines, excluding DONE, CANCELED
-        "+LEVEL=2/-DONE-CANCELED"
-        ;; Unstuck if any task in the project subtree has one of
-        ;; these TODO keywords
-        ("TODO")
-        ;; No additional tags to unstick projects
-        nil
-        ;; Unstuck if any task in the project subtree is scheduled
-        "SCHEDULED:\\|DEADLINE:"))
+(defun my-skip-non-stuck-projects ()
+  "Skip projects that are not stuck."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (or (org-entry-is-done-p)  ; Skip if project is done
+            (save-excursion
+              (re-search-forward "^\\*+ \\(TODO\\)" subtree-end t))
+            (save-excursion
+              (re-search-forward
+               "^\\*+.* SCHEDULED:.*\\|^[[:space:]]*SCHEDULED:.*"
+               subtree-end t)))
+        subtree-end  ; Skip if project has TODO or SCHEDULED descendants
+      nil)))         ; Do not skip if the project is stuck
 
-;; TODO: It is early draft. Idefenitely refactor this ASAP
-;; TODO: Setup buffer title for each selected filter here
-;; TODO: Add `org-store-agenda-view' to cronjob
+;; For details see: https://orgmode.org/manual/Special-Agenda-Views.html
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
         ;; List of tasks to add missed tags
-        ("u" "Untagged tasks" tags-todo "-{.*}")
+        ("u" "Untagged tasks" tags-todo "-{.*}"
+         ((org-agenda-overriding-header "Untagged Tasks")))
         ;; Probably need to add :someday: tag
         ("o" "Unfinished, but not scheduled tasks"
          ((tags-todo "-someday-project"
                      ((org-agenda-skip-function
-                       '(org-agenda-skip-entry-if 'scheduled))))))
+                       '(org-agenda-skip-entry-if 'scheduled))
+                      (org-agenda-overriding-header "Unscheduled Tasks")))))
         ;; Probably need to remove the scheduled date
         ("O" "Scheduled, but with :someday: tag"
          ((tags "+someday"
                 ((org-agenda-skip-function
                   '(or (org-agenda-skip-entry-if 'notscheduled)
-                       (org-agenda-skip-entry-if 'done)))))))
+                       (org-agenda-skip-entry-if 'todo 'done)))
+                 (org-agenda-overriding-header "Scheduled Someday Tasks")))))
         ;; Unscheduled with :someday: tag
         ("p" "Pick a task from unscheduled list"
          ((tags "+someday"
                 ((org-agenda-skip-function
                   '(or (org-agenda-skip-entry-if 'scheduled)
-                       (org-agenda-skip-entry-if 'done)))))))
-        ;; Non-business tasks that cuurenly in my focus
-        ("N", "Non-business: Open focus projects"
-         ((tags "+{focus\\|project}-CATEGORY={airslate\\|business}"
+                       (org-agenda-skip-entry-if 'todo 'done)))
+                 (org-agenda-overriding-header "Backlog")))))
+        ;; Non-business tasks that currenly in my focus
+        ("N", "Non-business: Open focus tasks"
+         ((tags "+focus-CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'done))))))
-        ;; Business tasks that cuurenly in my focus
-        ("P" "Business: Open focus projects"
-         ((tags "+{focus\\|project}+CATEGORY={airslate\\|business}"
+                  '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Personal Focus: Open Tasks")))))
+        ;; Business tasks that currenly in my focus
+        ("B" "Business: Open focus tasks"
+         ((tags "+focus+CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
-                  '(org-agenda-skip-entry-if 'done))))))
-        ;; It's not perfect and I'll probably redo it as well as
-        ;; `org-stuck-projects'.
-        ("1" "Stuck projects" ((stuck "")))
+                  '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "Business Focus: Open Tasks")))))
+        ;; Something went wrong with these projects
+        ("P" "Stuck Projects"
+         ((tags "+project-someday-DONE-CANCELED"
+                ((org-agenda-skip-function 'my-skip-non-stuck-projects)
+                 (org-agenda-overriding-header
+                  "Stuck Projects with open but not scheduled sub-tasks")))))
         ;; This command creates an agenda view for the next 180 days, excluding
         ;; all TODO items. It displays all scheduled events that are not tasks
         ;; with TODO states, over the specified period. To save the result as an
