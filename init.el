@@ -987,8 +987,7 @@ related to your current project."
 ;; additional features.
 (use-package consult
   :ensure t
-  :bind (("C-x C-i" . consult-imenu)
-         ("C-x l"   . consult-locate)
+  :bind (("C-x l"   . consult-locate)
          ("C-x b"   . consult-buffer)
          ("C-x B"   . consult-buffer-other-window)
          ("C-c k"   . consult-ripgrep)
@@ -998,6 +997,16 @@ related to your current project."
          ("C-<f5>"  . consult-theme)
          :map minibuffer-local-map
          ("C-r"     . consult-history)))
+
+(defun my/consult-jump-in-buffer ()
+  "Jump in buffer with `consult-imenu' or `consult-org-heading' if in org-mode."
+  (interactive)
+  (call-interactively
+   (cond
+    ((eq major-mode 'org-mode) 'consult-org-heading)
+    (t 'consult-imenu))))
+
+(global-set-key (kbd "C-x <tab>") #'my/consult-jump-in-buffer)
 
 ;; Init flyspell-correct for spell correction
 (use-package flyspell-correct
