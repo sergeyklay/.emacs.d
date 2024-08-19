@@ -394,6 +394,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("n" "Random Note" entry
           (file+headline ,(concat my-org-files-path "notes.org") "Random Notes")
           "** %?\n  %U" :empty-lines 1)
+        ("I" "Inbox, refile later" entry (file ,org-mobile-inbox-for-pull)
+          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 0)
         ("r" "To-Read" entry
          (file+headline ,(concat my-org-files-path "misc.org") "To-Read List")
          "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
@@ -404,7 +406,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         ("B" "Business")
         ("Bs" "Shorts" entry
          (file+headline ,(concat my-org-files-path "business.org") "Shorts")
-         ,my-org-capture-template-simple :empty-lines 1)))
+         ,my-org-capture-template-simple :empty-lines 1)
+        ("Be" "Event" entry
+         (file+headline ,(concat my-org-files-path "business.org") "Events")
+         "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)))
 
 (global-set-key (kbd "C-c c") #'org-capture)
 
@@ -414,7 +419,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; setup sync Beorg to Dropbox 'Notes'.
 (setq org-mobile-directory (expand-file-name "~/Dropbox/Notes"))
 
-;; Do not generate IDs for all headings
+;; Do not generate IDs for all headings.
 (setq org-mobile-force-id-on-agenda-items nil)
 
 ;; Append captured notes and flags to `org-default-notes-file' file.
@@ -438,6 +443,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     ;; Finances / Legal / Assure / Insure / Regulate
     ,(concat my-org-files-path "flair.org")
     ,(concat my-org-files-path "housing.org")
+    ,(concat my-org-files-path "inbox.org")
     ,(concat my-org-files-path "misc.org")
     ,(concat my-org-files-path "notes.org"))
   "The list of my non-work agenda files.")
@@ -531,11 +537,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; TODO: Add `org-store-agenda-view' to cronjob
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
-        ;; This file mostly used for `my/org-move-bookmark-to-notes'
-        ("i" "Mobile Inbox"
-         ((tags ".*"
-                ((org-agenda-files '(,org-mobile-inbox-for-pull))
-                 (org-agenda-overriding-header "Unprocessed Inbox Items")))))
         ;; List of tasks to add missed tags
         ("u" "Untagged tasks" tags-todo "-{.*}")
         ;; Probably need to add :someday: tag
