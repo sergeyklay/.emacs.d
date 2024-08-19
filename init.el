@@ -377,10 +377,13 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (interactive)
   (cancel-timer my-org-mobile-sync-timer))
 
-(with-eval-after-load 'org
-  ;; Automatically enable idle sync.
-  ;; Source: https://stackoverflow.com/q/8432108/1661465
-  (my/org-mobile-sync-enable))
+;; TODO: Disabled for now. Emacs got stuck many times. I'll sort out with this a
+;; bit later.
+;;
+;; (with-eval-after-load 'org
+;;   ;; Automatically enable idle sync.
+;;   ;; Source: https://stackoverflow.com/q/8432108/1661465
+;;   (my/org-mobile-sync-enable))
 
 ;;;;; Org Contib
 (use-package org-cliplink
@@ -591,8 +594,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                   '(org-agenda-skip-entry-if 'done))))))
         ;; It's not perfect and I'll probably redo it as well as
         ;; `org-stuck-projects'.
-        ("1" "Stuck projects"
-         ((stuck "")))
+        ("1" "Stuck projects" ((stuck "")))
         ;; This command creates an agenda view for the next 180 days, excluding
         ;; all TODO items. It displays all scheduled events that are not tasks
         ;; with TODO states, over the specified period. To save the result as an
@@ -607,7 +609,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                    (org-agenda-time-grid nil)
                    (org-agenda-entry-types '(:timestamp :sexp))
                    (org-agenda-skip-function
-                    '(org-agenda-skip-entry-if 'todo 'any)) )))
+                    '(org-agenda-skip-entry-if 'todo 'any)))))
          nil
          (,(concat my-org-dir "agenda_180d_filtered.html")))
         ;; Full agenda for the next 31 days.
@@ -616,7 +618,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                   ((org-agenda-span 31)
                    (org-agenda-time-grid nil))))
          nil
-         (,(concat my-org-dir "agenda_details_raw.html")) )))
+         (,(concat my-org-dir "agenda_details_raw.html")))))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
