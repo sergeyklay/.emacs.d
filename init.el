@@ -475,11 +475,23 @@ informative and unique within a reasonable scope."
 ;; Append captured notes and flags to `org-default-notes-file' file.
 (setq org-mobile-inbox-for-pull org-default-notes-file)
 
-(defun my/org-mobile-sync ()
-  "Synchronize Org Mobile."
+(defun my/mobile-org-import ()
+  "Import content from `org-mobile-capture-file' to `org-mobile-inbox-for-pull'.
+
+This function performs the following steps:
+1. Executes `org-mobile-pull' to synchronize mobile Org data.
+2. Opens the `org-mobile-inbox-for-pull' file.
+3. Removes trailing whitespace from the buffer.
+
+It is intended to be used as part of the mobile Org synchronization
+workflow, ensuring that captured tasks and notes are properly imported
+and cleaned up for further processing."
   (interactive)
   (org-mobile-pull)
-  (org-mobile-push))
+  (find-file org-mobile-inbox-for-pull)
+  (delete-trailing-whitespace))
+
+(bind-key "i" #'my/mobile-org-import my-keyboard-map)
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
@@ -761,7 +773,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
         (org-back-to-heading t)
         (org-set-tags-command)))))
 
-(bind-key "b" 'my/org-move-bookmark-to-notes my-keyboard-map)
+(bind-key "b" #'my/org-move-bookmark-to-notes my-keyboard-map)
 
 ;;;;; Org Refile
 (defun my-org-opened-buffer-files ()
