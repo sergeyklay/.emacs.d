@@ -313,15 +313,16 @@ The function is robust against different date formats by extracting
 the first valid date pattern found in the CREATED property. If no
 valid date is found, it returns nil."
   (let* ((created (org-entry-get nil "CREATED" t))
-         ;; Regex for YYYY-MM-DD format
-         (date-regex "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)")
-         date-match)
-    (when (and created
-               (string-match date-regex created))
-      ;; Extract the date part based on the regex match
-      (setq date-match (match-string 0 created))
-      ;; Return the matched date string
-      date-match)))
+         (parsed-date (and created (org-parse-time-string created))))
+    (when (and parsed-date
+               ;; Ensure that year, month, and day are all present
+               (nth 4 parsed-date)
+               (nth 5 parsed-date)
+               (nth 3 parsed-date))
+      (format "%04d-%02d-%02d"
+              (nth 5 parsed-date)  ;; Year
+              (nth 4 parsed-date)  ;; Month
+              (nth 3 parsed-date)))))
 
 (defun my-org-sanitize-heading-for-id (heading)
   "Sanitize the HEADING text to create a slug suitable for use as an ID.
@@ -393,7 +394,7 @@ informative and unique within a reasonable scope."
   (org-support-shift-select t)
   ;; Set up global org directory.
   (org-direcory (directory-file-name my-org-files-path))
-  ;; Undone TODO will block switching the parent to DONE
+  ;; Undone child's TODO will block switching the parent to DONE.
   (org-enforce-todo-dependencies t)
   ;; I customize this just to redefine 'agenda'
   (org-fold-show-context-detail
