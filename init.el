@@ -267,6 +267,56 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    (concat (file-name-as-directory (expand-file-name "~")) "org"))
   "Path to the user org files directory.")
 
+;;;;; Helpers
+(defun my-org-get-created-date ()
+  "Retrieve the CREATED property if it exists, otherwise return nil.
+
+The function is robust against different date formats by extracting
+the first valid date pattern found in the CREATED property. If no
+valid date is found, it returns nil."
+  (let* ((created (org-entry-get nil "CREATED" t))
+         ;; Regex for YYYY-MM-DD format
+         (date-regex "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)")
+         date-match)
+    (when (and created
+               (string-match date-regex created))
+      ;; Extract the date part based on the regex match
+      (setq date-match (match-string 0 created))
+      ;; Return the matched date string
+      date-match)))
+
+
+(defun my-org-sanitize-heading-for-id (heading)
+  "Sanitize the HEADING text to create a slug suitable for use as an ID.
+Removes non-alphanumeric characters and replaces spaces with hyphens."
+  ;; Remove special characters
+  (let ((slug (replace-regexp-in-string "[^[:alnum:][:space:]-]" "" heading)))
+    ;; Replace spaces with hyphens
+    (replace-regexp-in-string " +" "-" slug)))
+
+(defun my/org-generate-id ()
+  "Generate a human-readable ID for the current Org heading.
+
+The ID is created by sanitizing the heading text to form a slug,
+prepended by the creation date.  This ensures the ID is
+informative and unique within a reasonable scope."
+  (interactive)
+  ;; Check if the ID property already exists
+  (unless (org-id-get)
+    ;; Retrieve the heading text
+    (let* ((heading (nth 4 (org-heading-components)))
+           (clean-heading (my-org-sanitize-heading-for-id heading))
+           ;; Use CREATED property if available
+           (date-prefix (or (my-org-get-created-date)
+                            ;; Fallback to today's date
+                            (format-time-string "%Y-%m-%d")))
+           (new-id (concat date-prefix "-" clean-heading)))
+      (org-set-property "ID" new-id)  ; Set the ID property
+      (kill-new (concat "id:" new-id))  ; Copy the ID to the kill-ring
+      new-id)))  ; Return the new ID
+
+(bind-key (kbd "I") #' my/org-generate-id my-keyboard-map)
+
 (use-package org
   :ensure t
   :mode ("\\.\\(org\\|org_archive\\)\\'" . org-mode)
