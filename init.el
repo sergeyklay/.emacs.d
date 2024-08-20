@@ -305,13 +305,68 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
    (concat (file-name-as-directory (expand-file-name "~")) "org"))
   "Path to the user org files directory.")
 
+(use-package org
+  :ensure t
+  :mode ("\\.\\(org\\|org_archive\\)\\'" . org-mode)
+  :custom
+  ;; When opening an Org file, all top-level headers (first level headers) will
+  ;; be collapsed. Since I use large files with a lot of headers, the default
+  ;; value does not work for me
+  (org-startup-folded t)
+  ;; When a TODO is set to a done state, record a timestamp
+  (org-log-done '(time))
+  ;; Don' clutter the actual entry with notes.
+  (org-log-into-drawer t)
+  ;; Hide the markers so you just see bold text as BOLD and not *BOLD*
+  (org-hide-emphasis-markers t)
+  ;; Resize images to 600px, unless there's an attribute.
+  (org-image-actual-width '(600))
+  ;; Enable shift+arrow for text selection.
+  (org-support-shift-select t)
+  ;; Set up global org directory.
+  (org-direcory (directory-file-name my-org-files-path))
+  ;; Undone child's TODO will block switching the parent to DONE.
+  (org-enforce-todo-dependencies t)
+  ;; I customize this just to redefine 'agenda'
+  (org-fold-show-context-detail
+   '((agenda . lineage)
+     (bookmark-jump . lineage)
+     (isearch . lineage)
+     (default . ancestors)))
+  ;; Allow setting single tags without the menu
+  (org-fast-tag-selection-single-key t)
+  :config
+  ;; Setup languages for org code blocks.  For full list of supported languages
+  ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (emacs-lisp . t)
+     (haskell . t)
+     (js . t)
+     (latex . t)
+     (lisp . t)
+     (makefile . t)
+     (org . t)
+     (python . t)
+     (scheme . t)
+     (shell . t)
+     (sql .t)
+     (calc . t)))
+  (my-ensure-directory-exists my-org-files-path)
+  :hook ((org-mode . visual-line-mode)
+         (org-mode . org-indent-mode)
+         (org-mode . org-display-inline-images)))
+
+(global-set-key (kbd "C-c l") #'org-store-link)
+
 ;;;;; Helpers
 (defun my-org-get-created-date ()
   "Retrieve the CREATED property if it exists, otherwise return nil.
 
-The function is robust against different date formats by extracting
-the first valid date pattern found in the CREATED property. If no
-valid date is found, it returns nil."
+This function utilizes Org-mode's built-in date parsing
+capabilities by using `org-parse-time-string' to handle various
+date formats.  If no valid date is found, it returns nil."
   (let* ((created (org-entry-get nil "CREATED" t))
          (parsed-date (and created (org-parse-time-string created))))
     (when (and parsed-date
@@ -372,62 +427,56 @@ informative and unique within a reasonable scope."
       (kill-new (concat "id:" new-id))  ; Copy the ID to the kill-ring
       new-id)))  ; Return the new ID
 
-(bind-key (kbd "I") #' my/org-generate-id my-keyboard-map)
+(bind-key (kbd "I") #'my/org-generate-id my-keyboard-map)
 
-(use-package org
-  :ensure t
-  :mode ("\\.\\(org\\|org_archive\\)\\'" . org-mode)
-  :custom
-  ;; When opening an Org file, all top-level headers (first level headers) will
-  ;; be collapsed. Since I use large files with a lot of headers, the default
-  ;; value does not work for me
-  (org-startup-folded t)
-  ;; When a TODO is set to a done state, record a timestamp
-  (org-log-done '(time))
-  ;; Don' clutter the actual entry with notes.
-  (org-log-into-drawer t)
-  ;; Hide the markers so you just see bold text as BOLD and not *BOLD*
-  (org-hide-emphasis-markers t)
-  ;; Resize images to 600px, unless there's an attribute.
-  (org-image-actual-width '(600))
-  ;; Enable shift+arrow for text selection.
-  (org-support-shift-select t)
-  ;; Set up global org directory.
-  (org-direcory (directory-file-name my-org-files-path))
-  ;; Undone child's TODO will block switching the parent to DONE.
-  (org-enforce-todo-dependencies t)
-  ;; I customize this just to redefine 'agenda'
-  (org-fold-show-context-detail
-   '((agenda . lineage)
-     (bookmark-jump . lineage)
-     (isearch . lineage)
-     (default . ancestors)))
-  ;; Allow setting single tags without the menu
-  (org-fast-tag-selection-single-key t)
-  :config
-  ;; Setup languages for org code blocks.  For full list of supported languages
-  ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((C . t)
-     (emacs-lisp . t)
-     (haskell . t)
-     (js . t)
-     (latex . t)
-     (lisp . t)
-     (makefile . t)
-     (org . t)
-     (python . t)
-     (scheme . t)
-     (shell . t)
-     (sql .t)
-     (calc . t)))
-  (my-ensure-directory-exists my-org-files-path)
-  :hook ((org-mode . visual-line-mode)
-         (org-mode . org-indent-mode)
-         (org-mode . org-display-inline-images)))
+(defun my/org-mark-as-project ()
+  "Mark the current Org heading as a project.
 
-(global-set-key (kbd "C-c l") #'org-store-link)
+This function ensures that the current heading:
+1. Has the tag ':project:'
+2. Has the property 'COOKIE_DATA' set to 'todo recursive'
+3. Has a 'TODO' keyword
+4. Starts with a progress indicator '[/]'
+
+This setup helps in organizing projects within Org Mode
+and ensures that projects are easily identifiable and managed.
+
+I find this approach particularly appealing, and I first learned
+about it from an article by Karl Voit.  The original function was
+created by Karl, and this version is simply a refined and
+optimized adaptation tailored to my specific needs.  For origin
+see: https://karl-voit.at/2019/11/03/org-projects/"
+  (interactive)
+  ;; Try to move to a heading if not already there
+  (unless (org-at-heading-p)
+    (org-back-to-heading t)
+    (unless (org-at-heading-p)
+      (user-error
+       "No Org heading found. Please place the cursor at or near a heading.")))
+
+  ;; Ensure the :project: tag is added
+  (org-toggle-tag "project" 'on)
+
+  ;; Set the COOKIE_DATA property to 'todo recursive'
+  (org-set-property "COOKIE_DATA" "todo recursive")
+
+  ;; Ensure the :ID: property is added
+  (my/org-generate-id)
+
+  (let* ((title (nth 4 (org-heading-components)))
+         (keyword (nth 2 (org-heading-components))))
+
+    ;; Add 'TODO' keyword if missing
+    (unless keyword (org-todo "TODO"))
+
+    ;; Ensure that the heading starts with a progress indicator '[/]'
+    (unless (string-match-p "\\[.*\\]" title)
+      (org-edit-headline (concat "[/] " title))))
+
+  ;; Inform the user of success
+  (message "Heading marked as a project."))
+
+(bind-key (kbd "P") #'my/org-mark-as-project)
 
 ;;;; Org Crypt
 ;; Check if GPG is available, then require `org-crypt'.
