@@ -285,14 +285,32 @@ valid date is found, it returns nil."
       ;; Return the matched date string
       date-match)))
 
-
 (defun my-org-sanitize-heading-for-id (heading)
   "Sanitize the HEADING text to create a slug suitable for use as an ID.
-Removes non-alphanumeric characters and replaces spaces with hyphens."
-  ;; Remove special characters
-  (let ((slug (replace-regexp-in-string "[^[:alnum:][:space:]-]" "" heading)))
-    ;; Replace spaces with hyphens
-    (replace-regexp-in-string " +" "-" slug)))
+
+Removes progress indicators, priority markers, links, timestamps,
+non-alphanumeric characters and replaces spaces with hyphens."
+  (let ((slug heading))
+    ;; Remove progress indicators like "[25%]" or "[2/7]"
+    (setq slug (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" slug))
+    (setq slug (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" slug))
+    ;; Remove priority indicators like "[#A]"
+    (setq slug (replace-regexp-in-string "\\(\\[#[ABC]\\]\\)" "" slug))
+    ;; Remove links but keep their descriptions
+    (setq slug (replace-regexp-in-string "\\[\\[\\(.+?\\)\\]\\[" "" slug t))
+    ;; Remove timestamps (active and inactive)
+    (setq slug (replace-regexp-in-string
+                "<[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)?>"
+                "" slug t))
+    (setq slug (replace-regexp-in-string
+                "\\[[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)\\]"
+                "" slug t))
+    ;; Replace spaces with hyphens and remove non-alphanumeric characters
+    (setq slug (replace-regexp-in-string "[^[:alnum:][:space:]-]" "" slug))
+    (replace-regexp-in-string " +" "-" slug)
+    (setq slug (replace-regexp-in-string " +" "-" slug))
+    ;; Remove trailing hyphens
+    (replace-regexp-in-string "-+$" "" slug)))
 
 (defun my/org-generate-id ()
   "Generate a human-readable ID for the current Org heading.
