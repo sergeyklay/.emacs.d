@@ -66,6 +66,13 @@ jobs:
       - name: Install packages
         run: make install
 
+      # This step runs only if the previous one fails
+      - name: Debug Install packages
+        run: make install
+        if: failure()
+        env:
+          DEBUG: 1
+
       - name: Check for code style
         run: make checkdoc
 
