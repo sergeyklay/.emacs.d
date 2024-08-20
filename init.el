@@ -1091,51 +1091,48 @@ This function is for interactive use only;"
 (global-set-key (kbd "C-c d") #'my/duplicate-line)
 
 ;;;; Project management
-(use-package project
-  :commands (project-find-file
-             project-switch-to-buffer
-             project-switch-project
-             project-switch-project-open-file)
-  :bind (:map project-prefix-map
-              ("p" . my-project-switch-project)
-              ("s" . my-switch-project-and-kill-buffers)
-              ("C-b" . my-project-list-buffers)
-              ("R" . project-remember-projects-under)
-              ("K" . project-kill-buffers))
-  :config
-  ;; Auto clean up zombie projects from `project-list-file'
-  (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
-  ;; Use ripgrep if installed
-  (when (executable-find "rg")
-    (setq xref-search-program 'ripgrep))
+(require 'project)
 
-  (declare-function project-prompt-project-dir "project")
-  (defun my-project-switch-project (dir)
-    "\"Switch\" to another project by running an Emacs command.
+;; Auto clean up zombie projects from `project-list-file'
+(run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
+
+;; Use ripgrep if installed
+(when (executable-find "rg")
+  (setq xref-search-program 'ripgrep))
+
+(defun my/project-switch-project (dir)
+  "Switch to another project by running an Emacs command.
 Directly use `project-find-file' instead of getting prompted.
 
 When called in a program, it will use the project corresponding
 to directory DIR."
-    (interactive (list (project-prompt-project-dir)))
-    (let ((project-current-directory-override dir))
-      (project-find-file)))
+  (interactive (list (project-prompt-project-dir)))
+  (let ((project-current-directory-override dir))
+    (project-find-file)))
 
-  (defun my-switch-project-and-kill-buffers ()
-    "Kill all buffers of the current project, then switch to a new project."
-    (interactive)
-    (project-kill-buffers t)
-    (call-interactively 'my-project-switch-project))
+(defun my/switch-project-and-kill-buffers ()
+  "Kill all buffers of the current project, then switch to a new project."
+  (interactive)
+  (project-kill-buffers t)
+  (call-interactively 'my-project-switch-project))
 
-  (defun my-project-list-buffers ()
-    "Display a list of buffers associated with the current project.
+(defun my/project-list-buffers ()
+  "Display a list of buffers associated with the current project.
 
 This function filters the list to show only file-visiting buffers.
 After generating the buffer list, it pops up the `*Buffer List*` buffer
 in a new window, allowing you to easily navigate through the buffers
 related to your current project."
-    (interactive)
-    (project-list-buffers t)
-    (pop-to-buffer "*Buffer List*")))
+  (interactive)
+  (project-list-buffers t)
+  (pop-to-buffer "*Buffer List*"))
+
+;; Bind keys to commands within the `project-prefix-map'
+(define-key project-prefix-map (kbd "p") #'my/project-switch-project)
+(define-key project-prefix-map (kbd "s") #'my/switch-project-and-kill-buffers)
+(define-key project-prefix-map (kbd "C-b") #'my/project-list-buffers)
+(define-key project-prefix-map (kbd "R") #'project-remember-projects-under)
+(define-key project-prefix-map (kbd "K") #'project-kill-buffers)
 
 ;;;; VCS
 (use-package git-modes
