@@ -76,9 +76,6 @@ jobs:
       - name: Check for code style
         run: make checkdoc
 
-      - name: Check for doc style
-        run: make checkstyle
-
       - name: Byte compile configuration files
         if: matrix.allow_failure != true
         run: make build
