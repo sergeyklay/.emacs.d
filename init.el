@@ -261,6 +261,44 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   :hook ((text-mode . writegood-mode)
          (latex-mode . writegood-mode)))
 
+;;;; Security
+(defconst my-gpg-program
+  (cond
+   ((executable-find "gpg") "gpg")
+   ((executable-find "gpg2") "gpg2")
+   (t nil))
+  "Path to the GPG program to use.
+If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
+
+;; Check if GPG is available, then set `epg-gpg-program',
+;; otherwise display a warning.
+(if my-gpg-program
+    (setq epg-gpg-program my-gpg-program)
+  (warn (concat "Neither 'gpg' nor 'gpg2' is available. "
+                "Encryption and decryption features will not be available.")))
+
+;; Initialize epa settings
+(unless (eq (window-system) 'w32)
+  ;; Set pinentry mode to 'loopback' for all systems except Windows.
+  ;; For more see "man 1 gpg" for the option "--pinentry-mode".
+  (setq epg-pinentry-mode 'loopback))
+
+;; Specify the key to use for file encryption
+;; Also used for `org-crypt-key' (see bellow).
+(setq epa-file-encrypt-to '("1E0B5331219BEA88"))
+
+;; Enable automatic encryption/decryption of *.gpg files
+(require 'epa-file)
+(epa-file-enable)
+
+;; Set up auth-source for storing authentication data
+(setq auth-sources
+      `(,(concat user-emacs-directory ".authinfo.gpg")
+        "~/.authinfo"
+        "~/.authinfo.gpg"))
+
+(require 'auth-source)
+
 ;;;; Organization
 (defconst my-org-files-path
   (file-name-as-directory
@@ -389,6 +427,27 @@ informative and unique within a reasonable scope."
          (org-mode . org-display-inline-images)))
 
 (global-set-key (kbd "C-c l") #'org-store-link)
+
+;;;; Org Crypt
+;; Check if GPG is available, then require `org-crypt'.
+;; Otherwise, display a warning.
+(if my-gpg-program
+    (require 'org-crypt)
+  (warn "GPG is not available. 'org-crypt' could not be loaded."))
+
+;; Set my encrypt key from `epa-file-encrypt-to' (see above).
+(setq org-crypt-key epa-file-encrypt-to)
+
+;; Do not ask for disabling `auto-save-mode'.
+(setq org-crypt-disable-auto-save nil)
+
+;; Encrypt all entries before saving.
+(org-crypt-use-before-save-magic)
+
+;; Projects are tagged with ':project:' and ':crypt:' is used to mark headings
+;; to be encrypted.  I don't want all subitems to pop up in the corresponding
+;; agenda view.
+(setq org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
 (use-package org-cliplink
@@ -1023,28 +1082,6 @@ related to your current project."
     (interactive)
     (project-list-buffers t)
     (pop-to-buffer "*Buffer List*")))
-
-;;;; Security
-(use-package epg
-  :custom
-  (epg-gpg-program "gpg"))
-
-(use-package epa
-  :after epg
-  :init
-  ;; For more see "man 1 gpg" for the option "--pinentry-mode"
-  (unless (eq (window-system) 'w32)
-    (custom-set-variables '(epg-pinentry-mode 'loopback)))
-  :config
-  ;; Enable automatic encryption/decryption of *.gpg files
-  (unless (memq epa-file-handler file-name-handler-alist)
-    (epa-file-enable)))
-
-(use-package auth-source
-  :custom
-  (auth-sources
-   `(,(concat user-emacs-directory ".authinfo.gpg")
-     "~/.authinfo" "~/.authinfo.gpg")))
 
 ;;;; VCS
 (use-package git-modes
