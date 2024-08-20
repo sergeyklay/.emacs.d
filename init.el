@@ -476,7 +476,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
   ;; Inform the user of success
   (message "Heading marked as a project."))
 
-(bind-key (kbd "P") #'my/org-mark-as-project)
+(bind-key (kbd "P") #'my/org-mark-as-project my-keyboard-map)
 
 ;;;; Org Crypt
 ;; Check if GPG is available, then require `org-crypt'.
