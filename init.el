@@ -771,6 +771,7 @@ and cleaned up for further processing."
                 ((org-agenda-skip-function 'my-skip-non-stuck-projects)
                  (org-agenda-overriding-header
                   "Stuck Projects with open but not scheduled sub-tasks")))))
+
         ;; This command creates an agenda view for the next 180 days, excluding
         ;; all TODO items. It displays all scheduled events that are not tasks
         ;; with TODO states, over the specified period. To save the result as an
@@ -937,12 +938,18 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;; The new node creation must be confirmed by the user.
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-
 ;; Set a timer to regenerate refile cache automatically every time
 ;; my Emacs has been idled for 10 mins.
 (run-with-idle-timer 600 t (lambda ()
                              (org-refile-cache-clear)
                              (org-refile-get-targets)))
+
+(defun my|org-update-statistics-cookies-after-refile ()
+  "Update statistics cookies after refiling a task."
+  (org-update-statistics-cookies nil))
+
+(add-hook 'org-after-refile-insert-hook
+          #'my|org-update-statistics-cookies-after-refile)
 
 ;; Local keys
 (with-eval-after-load 'org
