@@ -289,7 +289,10 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 
 ;; Enable automatic encryption/decryption of *.gpg files
 (require 'epa-file)
-(epa-file-enable)
+
+;; Only enable `epa-file` if it's not already enabled
+(unless (memq epa-file-handler file-name-handler-alist)
+  (epa-file-enable))
 
 ;; Set up auth-source for storing authentication data
 (setq auth-sources
@@ -571,7 +574,8 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         ("n" "Random Note" entry
           (file+headline ,(concat my-org-files-path "notes.org") "Random Notes")
           "** %?\n  %U" :empty-lines 1)
-        ("I" "Inbox, refile later" entry (file ,org-mobile-inbox-for-pull)
+        ("I" "Inbox, refile later" entry
+         (file ,(concat my-org-files-path "inbox.org"))
           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 0)
         ("r" "To-Read" entry
          (file+headline ,(concat my-org-files-path "misc.org") "To-Read List")
