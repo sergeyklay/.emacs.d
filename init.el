@@ -747,6 +747,19 @@ and cleaned up for further processing."
         subtree-end  ; Skip if project has TODO or SCHEDULED descendants
       nil)))         ; Do not skip if the project is stuck
 
+(defun my/org-agenda-skip-if-parent-has-tag (tag)
+  "Skip an entry if any of its parents have the specified TAG.
+
+TAG should be a string without the colons, e.g., 'project'."
+  (let ((parent-skipped nil))
+    (save-excursion
+      (while (and (not parent-skipped) (org-up-heading-safe))
+        (when (member tag (org-get-tags))
+          (setq parent-skipped t))))
+    (when parent-skipped
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+
 ;; For details see: https://orgmode.org/manual/Special-Agenda-Views.html
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
@@ -793,6 +806,14 @@ and cleaned up for further processing."
                 ((org-agenda-skip-function 'my-skip-non-stuck-projects)
                  (org-agenda-overriding-header
                   "Stuck Projects with open but not scheduled sub-tasks")))))
+        ;; Filtered tasks excluding those with :project: tag, their children,
+        ;; and DONE/CANCELED tasks
+        ("-" "Standalone Tasks"
+         ((tags-todo "-project-DONE-CANCELED"
+                     ((org-agenda-skip-function
+                       '(my/org-agenda-skip-if-parent-has-tag "project"))
+                      (org-agenda-overriding-header
+                       "Standalone Tasks: No Projects or DONE Items")))))
         ;; This command creates an agenda view for the next 180 days, excluding
         ;; all TODO items. It displays all scheduled events that are not tasks
         ;; with TODO states, over the specified period. To save the result as an
