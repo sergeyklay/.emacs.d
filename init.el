@@ -430,9 +430,24 @@ informative and unique within a reasonable scope."
                             ;; Fallback to today's date
                             (format-time-string "%Y-%m-%d")))
            (new-id (concat date-prefix "-" clean-heading)))
-      (org-set-property "ID" new-id)  ; Set the ID property
-      (kill-new (concat "id:" new-id))  ; Copy the ID to the kill-ring
+      ;; Set the ID property
+      (org-set-property "ID" new-id)
+
+      ;; Add the ID with location FILE to the database of ID locations.
+      (org-id-add-location new-id (buffer-file-name (buffer-base-buffer)))
+
+      ;; Copy the ID to the kill-ring
+      (kill-new (concat "id:" new-id))
       new-id)))  ; Return the new ID
+
+(defun my/org-id-advice (&rest args)
+  "The advice to update Org ID locations."
+  ;; Create ID if needed
+  (my/org-generate-id)
+  (org-id-update-id-locations)
+  args)
+
+(advice-add 'org-store-link :before #'my/org-id-advice)
 
 (bind-key (kbd "I") #'my/org-generate-id my-keyboard-map)
 
