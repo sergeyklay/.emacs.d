@@ -147,38 +147,67 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
   (my-ensure-directory-exists save-dir))
 
-;; Save point position between sessions
-(use-package saveplace
-  :unless noninteractive
-  :demand 2
-  :init
-  (save-place-mode t)) ; Automatically save place in each file.
+;; Enable `save-place-mode' to save point position in files across sessions.
+;; This feature is extremely useful when working on large projects or when
+;; you frequently switch between different files. It ensures that you return
+;; to the exact spot where you left off, enhancing workflow efficiency.
+
+;; First, ensure that the `saveplace' package is available, as it is required
+;; for this functionality.
+(require 'saveplace)
+
+;; Enable the `save-place-mode' globally, which activates this feature for all
+;; buffers by default. The 't' argument is necessary to enable the mode.
+(save-place-mode t)
 
 ;;;; History
-(use-package savehist
-  :unless noninteractive
-  :demand 2
-  :custom
-  ;; The default value is typically lower, but increasing it allows for a more
-  ;; comprehensive history, which can be beneficial when needing to recall or
-  ;; reuse previous inputs across sessions.
-  (history-length 1000)
-  ;; Enable the automatic deletion of duplicate entries from history.  By
-  ;; default, this is disabled, but enabling it helps in keeping the history
-  ;; clean and more manageable, especially when frequently reusing the same
-  ;; inputs.
-  (history-delete-duplicates t)
-  :init
-  (savehist-mode t))
+;; Enable `savehist-mode' to preserve the minibuffer history across sessions.
+;; This is particularly useful for recalling previous commands, search terms,
+;; or any other input you may want to reuse across Emacs sessions.
 
-(use-package recentf
-  :unless noninteractive
-  :defer 2
-  :custom
-  (recentf-max-saved-items 100)
-  (recentf-keep '(recentf-keep-default-predicate file-remote-p file-readable-p))
-  :config
-  (recentf-mode)
+;; First, ensure that the `savehist' package is available, as it is required
+;; for this functionality.
+(require 'savehist)
+
+;; Set the maximum number of entries to save in the history. A larger value
+;; allows for a more extensive history, which can be handy if you often need
+;; to recall older entries.
+(setq history-length 1000)
+
+;; Enable the removal of duplicate entries in the history. This keeps your
+;; history cleaner and more manageable, avoiding clutter from repeated entries.
+(setq history-delete-duplicates t)
+
+;; Enable `savehist-mode', which automatically saves the minibuffer history
+;; to a file and loads it on startup, preserving your history between sessions.
+(savehist-mode t)
+
+;; Enable `recentf-mode' to keep track of recently opened files.
+;; This is a very useful feature that allows you to quickly access files you
+;; have worked on recently. The list of recent files is updated automatically.
+(when (not noninteractive)
+  ;; First, ensure that the `recentf' package is available, as it is required
+  ;; for this functionality.
+  (require 'recentf)
+
+  ;; Set the maximum number of recent files to save. This limits the list
+  ;; to the most recent 100 files, which is a good balance between utility
+  ;; and performance.
+  (setq recentf-max-saved-items 100)
+
+  ;; Customize the conditions under which files are kept in the recent list.
+  ;; Here, we keep files that match the default predicate, are remote files,
+  ;; or are readable.
+  (setq recentf-keep
+        '(recentf-keep-default-predicate
+          file-remote-p file-readable-p))
+
+  ;; Enable `recentf-mode', which automatically tracks recently opened files.
+  (recentf-mode t)
+
+  ;; To ensure the recentf list is periodically saved during idle time, we
+  ;; check if the `recentf-save-list' function is available and then set up
+  ;; a timer to run it every 3 minutes.
   (when (fboundp 'recentf-save-list)
     (run-with-idle-timer (* 3 60) t #'recentf-save-list)))
 
