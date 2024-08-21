@@ -757,8 +757,8 @@ and cleaned up for further processing."
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
         ;; List of tasks to add missed tags
-        ("u" "Untagged tasks" tags-todo "-{.*}"
-         ((org-agenda-overriding-header "Untagged Tasks")))
+        ("u" "Untagged Headings" tags "-{.*}"
+         ((org-agenda-overriding-header "Untagged Headings")))
         ;; Probably need to add :someday: tag
         ("o" "Unfinished, but not scheduled tasks"
          ((tags-todo "-someday-project"
@@ -780,17 +780,19 @@ and cleaned up for further processing."
                        (org-agenda-skip-entry-if 'todo 'done)))
                  (org-agenda-overriding-header "Backlog")))))
         ;; Non-business tasks that currenly in my focus
-        ("N", "Non-business: Open focus tasks"
-         ((tags "+focus-CATEGORY={airslate\\|business}"
+        ("N", "Non-business: Open focus projects"
+         ((tags "+focus+project-CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Personal Focus: Open Tasks")))))
+                 (org-agenda-overriding-header
+                  "Personal Focus: Open Projects")))))
         ;; Business tasks that currenly in my focus
-        ("B" "Business: Open focus tasks"
-         ((tags "+focus+CATEGORY={airslate\\|business}"
+        ("B" "Business: Open focus projects"
+         ((tags "+focus+project+CATEGORY={airslate\\|business}"
                 ((org-agenda-skip-function
                   '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Business Focus: Open Tasks")))))
+                 (org-agenda-overriding-header
+                  "Business Focus: Open Projects")))))
         ;; Something went wrong with these projects
         ("P" "Stuck Projects"
          ((tags "+project-someday-DONE-CANCELED"
