@@ -1269,6 +1269,10 @@ related to your current project."
    ("C-c C-o" . embark-export)    ;; Export candidates to another buffer
    ("C-c C-c" . embark-collect))) ;; Collect and act on multiple candidates
 
+(use-package embark-consult
+  :ensure t
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
 ;; Prescient for improved sorting and filtering.  Prescient enhances sorting and
 ;; filtering of candidates based on your history and frequently used items.
 (use-package prescient
