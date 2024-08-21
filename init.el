@@ -55,12 +55,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Measure the current start up time.
 (add-hook
  'emacs-startup-hook
- #'(lambda ()
-     (message "Emacs ready in %s with %d garbage collections."
-              (format "%.2f seconds"
-                      (float-time
-                       (time-subtract after-init-time before-init-time)))
-              gcs-done)))
+ (lambda ()
+   (message "Emacs ready in %s with %d garbage collections."
+            (format "%.2f seconds"
+                    (float-time
+                     (time-subtract after-init-time before-init-time)))
+            gcs-done)))
 
 ;;;; Package management
 (custom-set-variables
@@ -212,43 +212,66 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (run-with-idle-timer (* 3 60) t #'recentf-save-list)))
 
 ;;;; Sane defaults
-(use-package emacs
-  :custom
-  ;; Use tab key as completion option.
-  (tab-always-indent 'complete)
-  ;; No scratch message.
-  (initial-scratch-message "")
-  ;; Disable start-up screen.
-  (inhibit-startup-screen t)
-  ;; Configure the Scratch Buffer's Mode.
-  (initial-major-mode 'text-mode)
-  ;; Save custom variables in custom.el.
-  (custom-file (expand-file-name "custom.el" user-emacs-directory))
-  ;; Disable lockfiles on Windows, as they are a hassle.
-  (create-lockfiles (not (member system-type '(windows-nt))))
-  ;; No tabs - except for specific files, which Emacs can identify.
-  (indent-tabs-mode nil)
-  ;; Visually indicate empty lines after the buffer's end.
-  (indicate-empty-lines t)
-  ;; Redefine line and column format. It will looks like " 278:59 ".
-  (mode-line-position '((line-number-mode ("%l" (column-number-mode ":%c")))))
-  :hook
-  ((text-mode prog-mode) . (lambda () (setq show-trailing-whitespace t)))
-  :init
-  ;; Show column number next to line number in mode line.
-  (column-number-mode t)
-  (when (or (file-exists-p custom-file) (file-symlink-p custom-file))
-    (load custom-file t t)))
 
-;; I use C source to understand and debug built-in functions.
-(let ((src "~/src/emacs.git"))
-  (when (or (file-directory-p src)(file-symlink-p src))
-    (setq source-directory (expand-file-name (substitute-in-file-name src)))))
+;; Use the tab key for both indentation and completion. This allows for more
+;; intuitive behavior when working in various modes, especially in text and
+;; programming modes.
+(setq tab-always-indent 'complete)
+
+;; Remove the initial message from the scratch buffer.
+(setq initial-scratch-message "")
+
+;; Disable the startup screen, allowing for a quicker start directly into
+;; your working environment.
+(setq inhibit-startup-screen t)
+
+;; Set the initial major mode of the scratch buffer to text-mode.
+(setq initial-major-mode 'text-mode)
+
+;; Disable the creation of lockfiles on Windows, as they can cause issues
+;; with file systems on that platform.
+(setq create-lockfiles (not (member system-type '(windows-nt))))
+
+;; Use spaces instead of tabs for indentation, except in cases where
+;; Emacs specifically recognizes that tabs are required.
+(setq-default indent-tabs-mode nil)
+
+;; Visually indicate empty lines after the buffer's end. This helps in
+;; identifying where the actual content of the file ends.
+(setq-default indicate-empty-lines t)
+
+;; Customize the format of the mode line to show line and column numbers
+;; in the format "278:59".
+(setq mode-line-position '((line-number-mode ("%l" (column-number-mode ":%c")))))
+
+;; Enable column number mode to display column numbers in the mode line.
+(column-number-mode t)
+
+;; Highlight trailing whitespace in text-mode and prog-mode.
+(add-hook 'text-mode-hook (lambda () (setq show-trailing-whitespace t)))
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+
+;; Set up source-directory for C source files, used to understand and debug
+;; built-in Emacs functions. This is especially useful for my, who need to
+;; dive into the internals of Emacs.
+(let ((src (expand-file-name "~/src/emacs.git")))
+  (when (and (file-directory-p src)
+             (not (file-remote-p src)))
+    (setq source-directory src)))
 
 ;;;; Emacs Server
-(use-package server
-  :config
-  (or (server-running-p) (server-mode)))
+;; Enable Emacs server mode, allowing Emacs to act as a server for external
+;; clients. This is especially useful for quickly opening files from the
+;; command line with 'emacsclient' or integrating with other tools.
+
+;; Ensure the `server' package is available, as it is necessary for running
+;; Emacs in server mode.
+(require 'server)
+
+;; Check if the server is already running. If not, start the server mode.
+;; This prevents errors when trying to start the server multiple times.
+(unless (server-running-p)
+  (server-mode t))
 
 ;;;; Spell
 ;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
@@ -897,7 +920,7 @@ TAG should be a string without the colons, e.g., 'project'."
          (,(concat my-org-files-path "agenda_details_raw.html")))))
 
 ;; Always highlight the current agenda line.
-(add-hook 'org-agenda-mode-hook #'(lambda () (hl-line-mode 1)))
+(add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 
@@ -1093,7 +1116,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   "Run `after-load-theme-hook'."
   (run-hooks 'after-load-theme-hook))
 
-(add-hook 'after-load-theme-hook 'my-set-cursor-color-based-on-theme)
+(add-hook 'after-load-theme-hook #'my-set-cursor-color-based-on-theme)
 
 ;; Modus themes
 (load-theme 'modus-vivendi t)
@@ -1659,6 +1682,16 @@ This function serves multiple purposes:
   :defer 1
   :config
   (which-key-mode 1))
+
+;; Save custom variables in a separate file named custom.el in your
+;; user-emacs-directory. This keeps your main configuration file clean.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+;; Load the custom file if it exists or is a symbolic link. This should be done
+;; at the very end of the configuration to ensure that it does not override any
+;; settings made earlier in this file.
+(when (or (file-exists-p custom-file) (file-symlink-p custom-file))
+  (load custom-file t t))
 
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
