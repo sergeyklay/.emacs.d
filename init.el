@@ -644,6 +644,34 @@ and cleaned up for further processing."
 
 (bind-key "i" #'my/mobile-org-import my-keyboard-map)
 
+(defun my/mobile-org-export ()
+  "Push a custom agenda setup to MobileOrg directory.
+
+This function temporarily modifies `org-agenda-custom-commands' to set up
+an agenda suitable for MobileOrg, including a 1-month agenda view and a filtered
+list of standalone tasks (excluding projects and completed tasks). After pushing
+the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
+  (interactive)
+  (let ((original-org-agenda-custom-commands org-agenda-custom-commands))
+    ;; Temporarily set agenda commands for MobileOrg export.
+    (let ((org-agenda-custom-commands
+           '(("m" "Monthly Overview"
+              ((agenda "1 month"
+                       ((org-agenda-span 31)
+                        (org-agenda-time-grid nil)
+                        (org-agenda-entry-types '(:timestamp :sexp))))))
+             ("s" "Standalone Tasks"
+              ((tags-todo "-project-DONE-CANCELED"
+                          ((org-agenda-skip-function
+                            '(my/org-agenda-skip-if-parent-has-tag
+                              "project")))))))))
+      ;; Generate MobileOrg export.
+      (org-mobile-push))
+    ;; Restore the original agenda commands.
+    (setq org-agenda-custom-commands original-org-agenda-custom-commands)))
+
+(bind-key "e" #'my/mobile-org-export my-keyboard-map)
+
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
   `(,(concat my-org-files-path "business.org")
