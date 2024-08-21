@@ -388,6 +388,10 @@ date formats.  If no valid date is found, it returns nil."
 Removes progress indicators, priority markers, links, timestamps,
 non-alphanumeric characters and replaces spaces with hyphens."
   (let ((slug heading))
+    ;; Replacements for common symbols
+    (setq slug (replace-regexp-in-string "&" "and" slug))
+    (setq slug (replace-regexp-in-string "\\." "dot" slug))
+    (setq slug (replace-regexp-in-string "\\+" "plus" slug))
     ;; Remove progress indicators like "[25%]" or "[2/7]"
     (setq slug (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" slug))
     (setq slug (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" slug))
