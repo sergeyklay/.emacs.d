@@ -476,6 +476,13 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
     (unless (string-match-p "\\[.*\\]" title)
       (org-edit-headline (concat "[/] " title))))
 
+  ;; Update statistics cookies
+  (org-back-to-heading t)
+  (org-update-statistics-cookies nil)
+
+  ;; Save changes
+  (save-buffer)
+
   ;; Inform the user of success
   (message "Heading marked as a project."))
 
@@ -771,7 +778,6 @@ and cleaned up for further processing."
                 ((org-agenda-skip-function 'my-skip-non-stuck-projects)
                  (org-agenda-overriding-header
                   "Stuck Projects with open but not scheduled sub-tasks")))))
-
         ;; This command creates an agenda view for the next 180 days, excluding
         ;; all TODO items. It displays all scheduled events that are not tasks
         ;; with TODO states, over the specified period. To save the result as an
