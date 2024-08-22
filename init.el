@@ -417,16 +417,22 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 
 ;;;;; Helpers
 (defun my-org-get-created-date ()
-  "Retrieve the CREATED property and return it in the Org time stamp format.
+  "Retrieve the CREATED property if it exists, otherwise return nil.
 
-This function fetches the 'CREATED' property from the current
-entry. If the property exists, it returns the date in the format
-specified by `org-time-stamp-format'. If the property does not
-exist, it returns nil."
-  (let ((created (org-entry-get nil "CREATED" t)))
-    (when created
-      (format-time-string (org-time-stamp-format t t)
-                          (org-time-string-to-time created)))))
+This function utilizes Org-mode's built-in date parsing
+capabilities by using `org-parse-time-string' to handle various
+date formats.  If no valid date is found, it returns nil."
+  (let* ((created (org-entry-get nil "CREATED" t))
+         (parsed-date (and created (org-parse-time-string created))))
+    (when (and parsed-date
+               ;; Ensure that year, month, and day are all present
+               (nth 4 parsed-date)
+               (nth 5 parsed-date)
+               (nth 3 parsed-date))
+      (format "%04d-%02d-%02d"
+              (nth 5 parsed-date)  ;; Year
+              (nth 4 parsed-date)  ;; Month
+              (nth 3 parsed-date)))))
 
 (defun my-org-sanitize-heading-for-id (heading)
   "Sanitize the HEADING text to create a slug suitable for use as an ID.
