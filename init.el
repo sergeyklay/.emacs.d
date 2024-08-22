@@ -273,39 +273,48 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (server-mode t))
 
 ;;;; Spell
-;; Note: On macOs brew doesn't provide dictionaries.  So you have to install
-;; them.  For more info on installing dictionaries see
+;; Configuration for `ispell' to use hunspell as the spell checker.
+;; Note: On macOS, Homebrew does not provide dictionaries by default.
+;; You will need to install them manually. For more information on how
+;; to install dictionaries, visit:
 ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
-(use-package ispell
-  :if (executable-find "hunspell")
-  :custom
-  ;; Save personal dictionary without asking for confirmation.
-  (ispell-silently-savep t)
-  ;; Full path to the hunspell executable
-  (ispell-program-name (executable-find "hunspell"))
-  ;; The default dictionary I use.  To see available dictionaries
-  ;; use 'hunspell -D'.
-  (ispell-local-dictionary "en_US")
-  ;; Setting up dictionary definitions
-  (ispell-local-dictionary-alist
-   '(("english" "[[:alpha:]]" "[^[:alpha]]" "[']" t
-      ("-d" "en_US") nil utf-8)
-     ("polish" "[[:alpha:]]" "[^[:alpha]]" "[']" t
-      ("-d" "pl") nil utf-8)
-     ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
-      ("-d" "russian-aot-ieyo") nil utf-8)))
-  :config
-  (setq ispell-really-aspell nil)
-  (setq ispell-really-hunspell t))
 
-(use-package flyspell
-  :if (executable-find "hunspell")
-  :custom
-  ;; Be silent when checking words.
-  (flyspell-issue-message-flag nil)
-  :hook ((text-mode . flyspell-mode)
-         (latex-mode . flyspell-mode))
-  :bind ("C-x t s" . flyspell-mode))
+;; Ensure that hunspell is available before proceeding with the configuration.
+(when (executable-find "hunspell")
+  ;; Set the program name to 'hunspell' which is the spell checker we are using.
+  (setq ispell-program-name (executable-find "hunspell"))
+
+  ;; Automatically save the personal dictionary without asking for confirmation.
+  (setq ispell-silently-savep t)
+
+  ;; Define the default dictionary to be used. You can change "en_US" to any
+  ;; dictionary that is installed and available on your system.
+  (setq ispell-local-dictionary "en_US")
+
+  ;; Configure the list of my dictionaries
+  (setq ispell-local-dictionary-alist
+        '(("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+           ("-d" "en_US") nil utf-8)
+          ("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+           ("-d" "pl") nil utf-8)
+          ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
+           ("-d" "russian-aot-ieyo") nil utf-8)))
+
+  ;; Specify that we are using hunspell, not aspell.
+  (setq ispell-really-aspell nil)
+  (setq ispell-really-hunspell t)
+
+  ;; Configure flyspell to work with hunspell.
+  (require 'flyspell)
+
+  ;; Be silent when checking words to avoid unnecessary messages.
+  (setq flyspell-issue-message-flag nil)
+
+  ;; Enable flyspell-mode automatically in some modes.
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'latex-mode-hook #'flyspell-mode)
+
+  (global-set-key (kbd "C-x t s") 'flyspell-mode))
 
 (use-package writegood-mode
   :ensure t
