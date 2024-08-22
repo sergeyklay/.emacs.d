@@ -365,7 +365,7 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
   :commands (pass pass-view-mode))
 
 (add-to-list 'auto-mode-alist
-             '("\\<password-store\\>/.*\\.gpg\\'" . pass-view-mode)
+             '("\\<password-store\\>/.*\\.gpg\\'" . pass-view-mode))
 
 (require 'auth-source-pass)
 
