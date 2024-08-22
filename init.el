@@ -34,7 +34,7 @@
 ;;; Code:
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
-;; ~/.emacs.d/pre-custom.el
+;; `~/.emacs.d/pre-custom.el'
 ;;
 ;; The purpose of this file is for the user to define their
 ;; preferences BEFORE loading any of the modules.
@@ -89,7 +89,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (package-initialize))
 
 ;; Package management in Emacs can be done in several ways. I personally like
-;; `use-package' together with package.el. Some will prefer straight.el, but I
+;; `use-package' together with `package.el'. Some will prefer straight.el, but I
 ;; haven't found the need for it yet.
 (eval-when-compile
   (setq use-package-enable-imenu-support t)
@@ -157,7 +157,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (require 'saveplace)
 
 ;; Enable the `save-place-mode' globally, which activates this feature for all
-;; buffers by default. The 't' argument is necessary to enable the mode.
+;; buffers by default.
 (save-place-mode t)
 
 ;;;; History
@@ -1701,11 +1701,11 @@ This function serves multiple purposes:
 
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
-;; ~/.emacs.d/post-custom.el
+;; `~/.emacs.d/post-custom.el'
 ;;
 ;; The purpose of the "post customisations" is to make tweaks to what
 ;; I already define, such as to change the default theme.  See above
-;; for the `pre-custom.el' to make changes BEFORE loading any of my
+;; for the 'pre-custom.el' to make changes BEFORE loading any of my
 ;; other configurations.
 (load (locate-user-emacs-file "post-custom.el") :no-error :no-message)
 
