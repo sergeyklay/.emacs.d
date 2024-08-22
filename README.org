@@ -58,6 +58,7 @@ tools:
 - [[https://imagemagick.org][Imagemagick (=convert=)]]
 - [[https://hunspell.github.io/][hunspell (=hunspell=)]]
 - [[https://pandoc.org/][Pandoc (=pandoc=)]]
+- [[https://www.passwordstore.org/][pass (=pass=)]]
 
 So, I created this configuration with these tools in mind.
 

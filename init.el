@@ -346,13 +346,35 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
 
-;; Set up auth-source for storing authentication data
-(setq auth-sources
-      `(,(concat user-emacs-directory ".authinfo.gpg")
-        "~/.authinfo"
-        "~/.authinfo.gpg"))
-
 (require 'auth-source)
+
+;; Cleanup original value of authentication sources to
+;; use only password-store (sell bellow).
+(setq auth-sources '())
+
+(use-package password-store
+  :ensure t
+  :defer 5
+  :commands (password-store-insert
+             password-store-copy
+             password-store-get))
+
+;; See https://www.passwordstore.org/
+(use-package pass
+  :ensure t
+  :after password-store
+  :commands (pass pass-view-mode))
+
+(add-to-list 'auto-mode-alist
+             '("\\<password-store\\>/.*\\.gpg\\'" . pass-view-mode)
+
+(require 'auth-source-pass)
+
+; Enable extra query keywords for auth-source-pass
+(setq auth-source-pass-extra-query-keywords t)
+
+;; Enable `auth-source-pass' to use pass for `auth-sources'.
+(auth-source-pass-enable)
 
 ;;;; Organization
 (defconst my-org-files-path
@@ -1534,6 +1556,14 @@ This function serves multiple purposes:
     (if connected
         (erc-track-switch-buffer 1)
       (when (y-or-n-p "Start ERC? ")
+        ;; No need to manually call `password-store-get' here if you
+        ;; properly setup `auth-source' above.
+        ;;
+        ;; In my case I store only password in:
+        ;;
+        ;;   ~/.password-store/irc/irc.libera.chat/<username>.gpg
+        ;;
+        ;; and this is simple wroks.
         (erc :server "irc.libera.chat" :port 6667)))))
 
 (global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)

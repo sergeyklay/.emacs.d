@@ -47,8 +47,5 @@
 # Some packages uses thid dir to store internall stuff, like cache.
 /var
 
-# Auth info
-.authinfo.gpg
-
 # List of org files with IDs on those files.
 .org-id-locations
