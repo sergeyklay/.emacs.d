@@ -63,19 +63,19 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             gcs-done)))
 
 ;;;; Package management
-(custom-set-variables
- ;; Setting up package archives.
- '(package-archives
+;; Setting up package archives.
+(setq package-archives
    '(("melpa"    . "https://melpa.org/packages/")
      ("m-stable" . "https://stable.melpa.org/packages/")
      ("gnu"      . "https://elpa.gnu.org/packages/")
      ("nongnu"   . "https://elpa.nongnu.org/nongnu/")))
- ;; Priorities. Default priority is 0.
- '(package-archive-priorities
-   '(("gnu"      . 100)
-     ("nongnu"   . 50)
-     ("m-stable" . 20)
-     ("melpa"    . 10))))
+
+;; Priorities. Default priority is 0.
+(setq package-archive-priorities
+      '(("gnu"      . 100)
+        ("nongnu"   . 50)
+        ("m-stable" . 20)
+        ("melpa"    . 10)))
 
 ;; Precompute activation actions to speed up startup.
 (setq package-quickstart t)
@@ -92,7 +92,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; `use-package' together with `package.el'. Some will prefer straight.el, but I
 ;; haven't found the need for it yet.
 (eval-when-compile
-  (setq use-package-enable-imenu-support t)
   (unless (ignore-errors (require 'use-package))
     ;; This is a seldomly-run part of my configuration, as `use-package' is
     ;; installed on Emacs' first run.
