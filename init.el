@@ -34,7 +34,7 @@
 ;;; Code:
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
-;; `~/.emacs.d/pre-custom.el'
+;; '~/.emacs.d/pre-custom.el'
 ;;
 ;; The purpose of this file is for the user to define their
 ;; preferences BEFORE loading any of the modules.
@@ -390,60 +390,70 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
    (concat (file-name-as-directory (expand-file-name "~")) "org"))
   "Path to the user org files directory.")
 
-(use-package org
-  :ensure t
-  :mode ("\\.\\(org\\|org_archive\\)\\'" . org-mode)
-  :custom
-  ;; When opening an Org file, all top-level headers (first level headers) will
-  ;; be collapsed. Since I use large files with a lot of headers, the default
-  ;; value does not work for me
-  (org-startup-folded t)
-  ;; When a TODO is set to a done state, record a timestamp
-  (org-log-done '(time))
-  ;; Don' clutter the actual entry with notes.
-  (org-log-into-drawer t)
-  ;; Hide the markers so you just see bold text as BOLD and not *BOLD*
-  (org-hide-emphasis-markers t)
-  ;; Resize images to 600px, unless there's an attribute.
-  (org-image-actual-width '(600))
-  ;; Enable shift+arrow for text selection.
-  (org-support-shift-select t)
-  ;; Set up global org directory.
-  (org-direcory (directory-file-name my-org-files-path))
-  ;; Undone child's TODO will block switching the parent to DONE.
-  (org-enforce-todo-dependencies t)
-  ;; I customize this just to redefine 'agenda'
-  (org-fold-show-context-detail
-   '((agenda . lineage)
-     (bookmark-jump . lineage)
-     (isearch . lineage)
-     (default . ancestors)))
-  ;; Allow setting single tags without the menu
-  (org-fast-tag-selection-single-key t)
-  :config
-  ;; Setup languages for org code blocks.  For full list of supported languages
-  ;; see: https://orgmode.org/worg/org-contrib/babel/languages/index.html
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((C . t)
-     (emacs-lisp . t)
-     (haskell . t)
-     (js . t)
-     (latex . t)
-     (lisp . t)
-     (makefile . t)
-     (org . t)
-     (python . t)
-     (scheme . t)
-     (shell . t)
-     (sql .t)
-     (calc . t)))
-  (my-ensure-directory-exists my-org-files-path)
-  :hook ((org-mode . visual-line-mode)
-         (org-mode . org-indent-mode)
-         (org-mode . org-display-inline-images)))
+(require 'org)
+
+;; Associate .org and .org_archive files with `org-mode'.
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
+
+;; When opening an Org file, start with all top-level headers collapsed.
+(setq org-startup-folded t)
+
+;; Automatically log the timestamp when a TODO is marked as DONE.
+(setq org-log-done 'time)
+
+;; Store notes and state changes in a drawer instead of cluttering the entry.
+(setq org-log-into-drawer t)
+
+;; Hide emphasis markers (e.g., bold, italics) to see styled text only.
+(setq org-hide-emphasis-markers t)
+
+;; Set the default width for inline images to 600 pixels.
+(setq org-image-actual-width '(600))
+
+;; Enable text selection using Shift + arrow keys in org-mode.
+(setq org-support-shift-select t)
+
+;; Set up the global directory for org files.
+(setq org-directory (directory-file-name my-org-files-path))
+
+;; Enforce TODO dependencies, blocking parent tasks from being marked DONE
+;; if child tasks are still not completed.
+(setq org-enforce-todo-dependencies t)
+
+;; Modify only the 'agenda' context in `org-fold-show-context-detail' without
+;; altering the other default values.
+(setq org-fold-show-context-detail
+      (cons '(agenda . lineage)
+            (assq-delete-all 'agenda org-fold-show-context-detail)))
+
+;; Allow setting single tags without bringing up the tag selection menu.
+(setq org-fast-tag-selection-single-key t)
+
+;; Configure the languages supported in org-babel code blocks.
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((C . t)
+   (emacs-lisp . t)
+   (haskell . t)
+   (js . t)
+   (latex . t)
+   (lisp . t)
+   (makefile . t)
+   (org . t)
+   (python . t)
+   (scheme . t)
+   (shell . t)
+   (sql . t)
+   (calc . t)))
+
+;; Hooks for org-mode.
+(add-hook 'org-mode-hook #'visual-line-mode)
+(add-hook 'org-mode-hook #'org-indent-mode)
+(add-hook 'org-mode-hook #'org-display-inline-images)
 
 (global-set-key (kbd "C-c l") #'org-store-link)
+
+(my-ensure-directory-exists my-org-files-path)
 
 ;;;;; Helpers
 (defun my-org-get-created-date ()
@@ -1116,15 +1126,22 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   (define-key org-mode-map (kbd "C-c C-x C-a") #'org-archive-subtree))
 
 ;;;; Window Handling
-;; Restore old window configurations
-(use-package winner
-  :commands (winner-undo winner-redo)
-  :custom
-  ;; List of buffer names whose windows `winner-undo' will not restore.
-  (winner-boring-buffers
-   '("*Completions*" "*Compile-Log*" "*Apropos*" "*Help*"
-     "*Buffer List*" "*Ibuffer*" "*Messages*"))
-  :hook (after-init . winner-mode))
+;; Winner mode allows you to undo and redo window configurations. This is
+;; extremely useful when working with multiple windows (or "splits") and
+;; you accidentally close or resize them in a way that disrupts your workflow.
+(require 'winner)
+
+;; Enable Winner mode globally after Emacs has initialized. This hook ensures
+;; that the mode is activated only after all other initialization steps have
+;; completed, avoiding potential conflicts or unexpected behavior.
+(add-hook 'after-init-hook #'winner-mode)
+
+;; Define a list of buffer names that Winner mode will ignore when restoring
+;; window configurations. This is useful for excluding temporary or less
+;; important buffers from the restoration process.
+(setq winner-boring-buffers
+      '("*Completions*" "*Compile-Log*" "*Apropos*" "*Help*"
+        "*Buffer List*" "*Ibuffer*" "*Messages*"))
 
 ;;;; Appearance
 ;; I prefer the box cursor.
@@ -1185,24 +1202,38 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
 
-;; Show line numbers
-(use-package display-line-numbers
-  :custom (display-line-numbers-width 4)
-  :hook (prog-mode . display-line-numbers-mode))
+;; Enable line numbers in some modes bellow with a specified width.
+(require 'display-line-numbers)
 
-(use-package elec-pair
-  :hook
-  (after-init . electric-pair-mode)
-  (minibuffer-setup . (lambda () (electric-pair-local-mode 0))))
+;; Set the default width for the line numbers.
+(setq-default display-line-numbers-width 4)
+
+;; Enable line numbers in programming modes.
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+;; Enable `electric-pair-mode', which automatically inserts the closing
+;; parenthesis, bracket, or quote when you type an opening one. This
+;; feature is particularly useful for coding, as it speeds up typing
+;; and reduces errors.
+
+;; Enable electric-pair-mode globally after initialization.
+(add-hook 'after-init-hook #'electric-pair-mode)
+
+(add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode 0)))
 
 ;;;; Editing
-(use-package outline
-  :custom
-  ;; Have a blank line before a heading.
-  (outline-blank-line t)
-  :commands (outline-mode outline-minor-mode)
-  :diminish outline-minor-mode
-  :hook (prog-mode . outline-minor-mode))
+(require 'outline)
+
+;; Customize the behavior of the outline mode.
+;; 'outline-blank-line' ensures that there is a blank line before each heading,
+;; which improves readability and maintains a clean structure in your outlines.
+(setq outline-blank-line t)
+
+(defun my|setup-outline-mode ()
+  "Enable `outline-minor-mode' in programming modes."
+  (outline-minor-mode 1))
+
+(add-hook 'prog-mode-hook #'my|setup-outline-mode)
 
 ;; Delete trailing whitespace on save in all modes.  If there are modes or
 ;; projects where trailing whitespace should be retained, it is suggested to
@@ -1436,92 +1467,124 @@ related to your current project."
   (ctrlf-mode 1))
 
 ;;;; IRC and other communication
-(use-package erc
-  :after auth-source
-  :commands (erc erc-tls)
-  :custom
-  (erc-autojoin-channels-alist '(("Libera.Chat" "#emacs" "#org-mode" "#re2c")))
-  (erc-autojoin-timing 'ident)
-  (erc-user-full-name user-full-name)
-  (erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
-  (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
-  (erc-lurker-threshold-time 43200)
-  (erc-prompt-for-password nil)
-  (erc-fill-function 'erc-fill-static)
-  (erc-fill-static-center 22)
-  :config
-  (defun my|setup-erc-modules ()
-    "Set up modules for ERC."
-    (add-to-list 'erc-modules 'log)
-    (erc-update-modules))
-  :hook ((erc-mode . my|setup-erc-modules)))
+(require 'erc)
+(require 'erc-log)
 
-(use-package erc-log
-  :after erc
-  :custom
-  (erc-log-channels-directory #'my-erc-monthly-log-directory)
-  (erc-generate-log-file-name-function #'my-erc-log-file-name-short)
-  (erc-log-insert-log-on-open t)
-  (erc-save-buffer-on-part nil)
-  (erc-save-queries-on-quit nil)
-  (erc-log-write-after-insert t)
-  (erc-log-write-after-send t)
-  :config
-  (defconst my-erc-base-log-directory
-    (concat (expand-file-name "~") "/logs/erc/")
-    "The base directory where ERC logs will be stored.
+; Autojoin specific channels on Libera.Chat
+(setq erc-autojoin-channels-alist
+      '(("Libera.Chat" "#emacs" "#org-mode" "#re2c")))
+
+;; Set autojoin timing to wait for ident response
+(setq erc-autojoin-timing 'ident)
+
+;; Set the user's full name in ERC
+(setq erc-user-full-name user-full-name)
+
+;; Hide certain messages (JOIN, PART, QUIT, NICK) in chat buffers
+(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
+(setq erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+
+;; Set the lurker threshold time to 12 hours (43200 seconds)
+(setq erc-lurker-threshold-time 43200)
+
+;; Disable prompting for password when connecting to servers
+(setq erc-prompt-for-password nil)
+
+;; Set the fill function to erc-fill-static and center lines
+(setq erc-fill-function 'erc-fill-static)
+(setq erc-fill-static-center 22)
+
+(defun my|setup-erc-modules ()
+  "Set up additional modules for ERC."
+  (add-to-list 'erc-modules 'log)
+  (erc-update-modules))
+
+(add-hook 'erc-mode-hook #'my|setup-erc-modules)
+
+;; Set up logging for ERC
+(defconst my-erc-base-log-directory
+  (concat (expand-file-name "~") "/logs/erc/")
+  "The base directory where ERC logs will be stored.
 
 This directory serves as the root for all ERC logs, with further
 subdirectories being created for specific periods. The log files
 are organized by year and month to ensure easy access and
 management of chat history.")
 
-  (defun my-erc-monthly-log-directory (&rest _ignore)
-    "Return the directory path for storing ERC logs for the current month.
+(defun my-erc-monthly-log-directory (&rest _ignore)
+  "Return the directory path for storing ERC logs for the current month.
 
 This function generates a directory path based on the current
 year and month, ensuring that logs are organized chronologically.
 If the directory does not already exist, it will be created.
 The resulting path is of the form: ~/logs/erc/YYYY/MM/."
-    (let ((directory (concat my-erc-base-log-directory (format-time-string "%Y/%m"))))
-      (my-ensure-directory-exists directory)
-      directory))
+  (let ((directory (concat my-erc-base-log-directory (format-time-string "%Y/%m"))))
+    (unless (file-directory-p directory)
+      (make-directory directory t))
+    directory))
 
-  (defun my-erc-log-file-name-short (buffer target nick server port)
-    "Computes a log file name from the TARGET and SERVER only.
+(defun my-erc-log-file-name-short (buffer target nick server port)
+  "Computes a log file name from the TARGET and SERVER only.
 
 This results in a filename of the form #channel@server.txt, for example:
 #emacs@irc.libera.chat.txt."
-    (let ((file (concat target "@" server ".txt")))
-      (convert-standard-filename file))))
+  (let ((file (concat target "@" server ".txt")))
+    (convert-standard-filename file)))
 
-(use-package erc-services
-  :after erc
-  :custom
-  (erc-prompt-for-nickserv-password nil)
-  (erc-use-auth-source-for-nickserv-password t)
-  :config
-  (erc-services-mode 1))
+;; Organize chat history with timestamped directories.
+(setq erc-log-channels-directory #'my-erc-monthly-log-directory)
 
-(use-package erc-spelling
-  :after erc
-  :config
-  (erc-spelling-mode 1))
+;; Keep logs succinct and identifiable by channel and server.
+(setq erc-generate-log-file-name-function #'my-erc-log-file-name-short)
 
-(use-package erc-track
-  :after erc
-  :custom
-  (erc-track-exclude-types
-   '("JOIN" "MODE" "NICK" "PART" "QUIT"
-     "301" ; away notice
-     "305" ; return from awayness
-     "306" ; set awayness
-     "324" ; modes
-     "329" ; channel creation date
-     "332" ; topic notice
-     "333" ; who set the channel topic
-     "353" ; listing of users on the current channel
-     "477")))
+;; Seamlessly integrate past conversations into current session.
+(setq erc-log-insert-log-on-open t)
+
+;; Leave the chat without baggage—no auto-saving on exit.
+(setq erc-save-buffer-on-part nil)
+
+;; Exit private chats without leaving a paper trail.
+(setq erc-save-queries-on-quit nil)
+
+;; Capture every word as it’s typed—no lag in logging.
+(setq erc-log-write-after-insert t)
+
+;; Ensure every message you send is instantly preserved.
+(setq erc-log-write-after-send t)
+
+;;;;; ERC Services Configuration
+(require 'erc-services)
+
+;; Skip the redundant password prompt—use stored credentials instead.
+(setq erc-prompt-for-nickserv-password nil)
+
+;; Let auth-source handle your NickServ credentials with discretion.
+(setq erc-use-auth-source-for-nickserv-password t)
+
+;; Enable services to handle NickServ and other IRC services.
+(erc-services-mode 1)
+
+;;;;; ERC Spelling Configuration
+(require 'erc-spelling)
+
+;; Ensure your messages are typo-free, because every word counts.
+(erc-spelling-mode 1)
+
+;;;;; ERC Track Configuration
+(require 'erc-track)
+
+;; Ignore the noise—focus only on the messages that matter.
+(setq erc-track-exclude-types
+      '("JOIN" "MODE" "NICK" "PART" "QUIT"
+        "301"  ; away notice
+        "305"  ; return from awayness
+        "306"  ; set awayness
+        "324"  ; modes
+        "329"  ; channel creation date
+        "332"  ; topic notice
+        "333"  ; who set the channel topic
+        "353"  ; listing of users on the current channel
+        "477")) ;; Ignore the noise—focus only on the messages that matter.
 
 (use-package erc-hl-nicks
   :ensure t
@@ -1576,27 +1639,36 @@ This function serves multiple purposes:
 
 (global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)
 
-;;;; Shell
-(use-package eshell
-  :commands (eshell-mode eshell)
-  :custom
-  ;; Always scrolls the window to the end when entering a new command
-  (eshell-scroll-to-bottom-on-input t)
-  ;; Scrolls the window to the end when new output appears
-  (eshell-scroll-to-bottom-on-output 'all)
-  :bind
-  (("M-s e" . eshell)))
+;;;; Shells
 
-;;;; Programming Languages, Markup and Configurations
-(use-package css-mode
-  :mode "\\.css$"
-  :custom
-  (css-indent-offset 2))
+;; Load Eshell when needed. This makes sure that Eshell is only loaded when
+;; 'eshell-mode' or 'eshell' command is invoked, thus optimizing startup time.
+(autoload 'eshell "eshell" "Eshell, the Emacs shell" t)
 
-(use-package js
-  :mode (("\\.js\\'" . js-mode))
-  :custom
-  (js-indent-level 2))
+;; Always scroll the window to the end when entering a new command.
+(setq eshell-scroll-to-bottom-on-input t)
+
+;; Scroll the window to the end when new output appears.
+;; The value 'all' makes sure it scrolls for any kind of output.
+(setq eshell-scroll-to-bottom-on-output 'all)
+
+;; Keybinding to quickly launch Eshell.
+;; Pressing "M-s e" will open Eshell in the current buffer.
+(global-set-key (kbd "M-s e") 'eshell)
+
+;;;; Programming Languages, Markup and Configurations.
+
+;; Associate `css-mode' with .css files.
+(add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+
+;; Set the indentation level for CSS files to 2 spaces.
+(setq css-indent-offset 2)
+
+;; Associate `js-mode' with .js files.
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+
+;; Set the indentation level for JavaScript files to 2 spaces.
+(setq js-indent-level 2)
 
 (use-package rainbow-mode
   :ensure t
@@ -1607,15 +1679,19 @@ This function serves multiple purposes:
   :ensure t
   :mode "\\.ya?ml\\'")
 
-(use-package rst
-  :mode ("\\.rst\\'" . rst-mode)
-  :custom
-  ;; This setting is used to automate the creation of section adornments in rst
-  ;; files.  When a new section is created, `rst-new-adornment-down' ensures the
-  ;; adornment level is one level lower than the previous section, rather than
-  ;; keeping the same level.
-  (rst-new-adornment-down t)
-  :hook ((rst-mode . visual-line-mode)))
+;; Load rst-mode when opening files with the .rst extension.
+(add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
+
+(with-eval-after-load 'rst
+  ;; Customize `rst-new-adornment-down' to automatically lower the adornment
+  ;; level when creating new sections in reStructuredText files. This setting
+  ;; makes it easier to maintain a clear structure in your documentation.
+  (setq rst-new-adornment-down t)
+
+  ;; Enable `visual-line-mode' automatically in `rst-mode` to handle long lines
+  ;; more gracefully by soft-wrapping them at word boundaries, which is often
+  ;; preferred in text-heavy files like reStructuredText.
+  (add-hook 'rst-mode-hook #'visual-line-mode))
 
 (defconst pandoc-executable-path (executable-find "pandoc")
   "The pandoc executable path on this system.")
@@ -1655,19 +1731,30 @@ This function serves multiple purposes:
   (add-to-list 'auto-mode-alist
 	       `(,gfm-patterns . gfm-mode)))
 
-(use-package sql
-  :mode ("\\.sql\\'" . sql-mode)
-  :bind (("M-s s" . sql-sqlite)))
+;; Associate .sql files with `sql-mode'.
+(add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
+
+(defun my|sql-mode-setup ()
+  "Custom keybindings for `sql-mode`."
+  (define-key sql-mode-map (kbd "M-s s") 'sql-sqlite))
+
+(add-hook 'sql-mode-hook #'my|sql-mode-setup)
 
 (use-package sql-indent
   :ensure t
   :hook ((sql-mode . sqlind-minor-mode)))
 
-(use-package sqlite-mode
-  :bind (("M-s q" . sqlite-mode-open-file)
-         :map sqlite-mode-map
-         ("M-K" . sqlite-mode-list-tables)
-         ("TAB" . sqlite-mode-list-data)))
+(require 'sqlite-mode)
+
+;; Define custom keybindings for sqlite-mode, accessible globally.
+(global-set-key (kbd "M-s q") 'sqlite-mode-open-file)
+
+(add-hook 'sqlite-mode-hook
+          (lambda ()
+            ;; Bind "M-K" to 'sqlite-mode-list-ttables within sqlite-mode.
+            (define-key sqlite-mode-map (kbd "M-K") 'sqlite-mode-list-tables)
+            ;; Bind "TAB" to 'sqlite-mode-list-data within sqlite-mode.
+            (define-key sqlite-mode-map (kbd "<tab>") 'sqlite-mode-list-data)))
 
 (use-package csv-mode
   :ensure t
