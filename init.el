@@ -63,6 +63,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             gcs-done)))
 
 ;;;; Package management
+(require 'package)
+
 ;; Setting up package archives.
 (setq package-archives
    '(("melpa"    . "https://melpa.org/packages/")
@@ -80,28 +82,69 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Precompute activation actions to speed up startup.
 (setq package-quickstart t)
 
+;; Function to ensure packages are installed.
+(defun ensure-package-installed (&rest packages)
+  "Ensure that each package in PACKAGES is installed. If not, install it."
+  (mapc (lambda (package)
+          (unless (package-installed-p package)
+            (package-install package)))
+        packages))
+
+;; Package management in Emacs can be done in several ways. I personally like
+;; classic one with `package.el'. Some will prefer straight.el, use-package,
+;; and so on, but I haven't found the need for them.
+(defun my/package-setup ()
+  "Initialize packages and refresh package contents if necessary."
+  (package-initialize) ;; Initialize packages
+
+  ;; Refresh the package list only if it's empty
+  (unless package-archive-contents
+    (message "Package archive contents are empty, refreshing...")
+    (package-refresh-contents)
+    ;; Re-run ensure-package-installed after refreshing
+    (ensure-package-installed
+     'anaconda-mode
+     'consult
+     'consult-flyspell
+     'csv-mode
+     'ctrlf
+     'embark
+     'embark-consult
+     'erc-hl-nicks
+     'flyspell-correct
+     'git-modes
+     'htmlize
+     'magit
+     'marginalia
+     'markdown-mode
+     'orderless
+     'org-cliplink
+     'org-super-agenda
+     'pass
+     'password-store
+     'prescient
+     'rainbow-delimiters
+     'rainbow-mode
+     'sql-indent
+     'vertico
+     'vertico-prescient
+     'which-key
+     'writegood-mode
+     'yaml-mode
+     'use-package))) ;; for bind-key
+
 ;; Manually initialize packages in daemon or noninteractive mode.
-;; `esup' need call `package-initialize'
 ;; For more see URL `https://github.com/jschaf/esup/issues/84'
 (when (or (featurep 'esup-child)
           (daemonp)
           noninteractive)
-  (package-initialize))
+  (my/package-setup))
 
-;; Package management in Emacs can be done in several ways. I personally like
-;; `use-package' together with `package.el'. Some will prefer straight.el, but I
-;; haven't found the need for it yet.
-(eval-when-compile
-  (unless (ignore-errors (require 'use-package))
-    ;; This is a seldomly-run part of my configuration, as `use-package' is
-    ;; installed on Emacs' first run.
-    (require 'package)
-    (package-refresh-contents)
-    (package-install 'use-package)
-    ;; Only on the first run will all packages configured within this file be
-    ;; ensured. This speeds up subsequent startups quite nicely.
-    (setq use-package-always-ensure t)
-    (require 'use-package)))
+;; Ensure packages are installed on startup without unnecessary refreshes
+(add-hook 'emacs-startup-hook #'my/package-setup)
+
+;; Optionally bind package-refresh-contents to package-list-packages
+(advice-add 'package-list-packages :before #'package-refresh-contents)
 
 (require 'bind-key)
 
@@ -316,10 +359,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
   (global-set-key (kbd "C-x t s") 'flyspell-mode))
 
-(use-package writegood-mode
-  :ensure t
-  :hook ((text-mode . writegood-mode)
-         (latex-mode . writegood-mode)))
+;; Load `writegood-mode' and set up hooks.
+(with-eval-after-load 'writegood-mode
+  (add-hook 'text-mode-hook #'writegood-mode)
+  (add-hook 'latex-mode-hook #'writegood-mode))
 
 ;;;; Security
 (defconst my-gpg-program
@@ -360,18 +403,15 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 ;; use only password-store (sell bellow).
 (setq auth-sources '())
 
-(use-package password-store
-  :ensure t
-  :defer 5
-  :commands (password-store-insert
-             password-store-copy
-             password-store-get))
+;; Autoload commands from `password-store'.
+(autoload 'password-store-insert "password-store" nil t)
+(autoload 'password-store-copy "password-store" nil t)
+(autoload 'password-store-get "password-store" nil t)
 
 ;; See https://www.passwordstore.org/
-(use-package pass
-  :ensure t
-  :after password-store
-  :commands (pass pass-view-mode))
+;; Autoload commands from `pass'.
+(autoload 'pass "pass" nil t)
+(autoload 'pass-view-mode "pass" nil t)
 
 (add-to-list 'auto-mode-alist
              '("\\<password-store\\>/.*\\.gpg\\'" . pass-view-mode))
@@ -621,10 +661,9 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (setq org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
-(use-package org-cliplink
-  :ensure t
-  :after org
-  :bind ("C-x p i" . org-cliplink))
+(with-eval-after-load 'org
+  (require 'org-cliplink)
+  (global-set-key (kbd "C-x p i") #'org-cliplink))
 
 ;;;;; Org TODO
 ;; Define my default keywords as workflow states.
@@ -829,36 +868,36 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
 
 ;; Super agenda mode.
 ;; For documentation  see: https://github.com/alphapapa/org-super-agenda
-(use-package org-super-agenda
-  :ensure t
-  :custom
-  (org-super-agenda-hide-empty-groups t)
-  (org-super-agenda-groups
-   '(;; Each group has an implicit boolean OR operator between its selectors.
-     (:name "Today" :scheduled today)
-     (:name "DEADLINES" :deadline t :order 1)
-     (:name "Important" :priority "A" :order 2 :face (:append t :weight bold))
-     (:name "Prio ≤ B" :priority<= "B" :order 30)
-     (:name "Started"
-            :and
-            (:todo "STARTED" :not (:tag "someday")
-             :not (:priority "C") :not (:priority "B"))
-            :order 10)
-     (:todo "WAITING" :order 18)
-     (:name "Someday"
-            :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
-            :order 25)))
-  :hook (org-agenda-mode . org-super-agenda-mode))
+(with-eval-after-load 'org
+  (require 'org-super-agenda)
+
+  (setq org-super-agenda-groups
+      '((:name "Today" :scheduled today)
+        (:name "DEADLINES" :deadline t :order 1)
+        (:name "Important" :priority "A" :order 2 :face (:append t :weight bold))
+        (:name "Prio ≤ B" :priority<= "B" :order 30)
+        (:name "Started"
+               :and
+               (:todo "STARTED" :not (:tag "someday")
+                      :not (:priority "C") :not (:priority "B"))
+               :order 10)
+        (:todo "WAITING" :order 18)
+        (:name "Someday"
+               :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
+               :order 25)))
+
+  ;; Enable `org-super-agenda-mode' in `org-agenda-mode'.
+  (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
 
 ;; HTML export functionality used bellow in `org-agenda-custom-commands'.
 ;; The main purpose of this package in my configuration is to call the
 ;; `org-store-agenda-view' function, which uses certain commands defined in
 ;; `org-agenda-custom-commands' to generate HTML reports.
-(use-package htmlize
-  :ensure t
-  :defer t
-  :config
-  (require 'htmlize))
+(with-eval-after-load 'org-agenda
+  ;; Explicitly load `htmlize' when `org-agenda' is used.
+  (autoload 'htmlize-buffer "htmlize" "Convert buffer to HTML." t)
+  (autoload 'htmlize-region "htmlize" "Convert region to HTML." t)
+  (autoload 'htmlize-file "htmlize" "Convert file to HTML." t))
 
 (defun my-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
@@ -1193,9 +1232,8 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (add-hook 'after-init-hook #'show-paren-mode)
 
 ;; Highlight brackets according to their depth.
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
+;; Add `rainbow-delimiters-mode' to `prog-mode-hook'.
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 ;; I prefer not to have any of the GUI elements.  This keeps the window clean
 ;; and speeds up loading a bit.
@@ -1332,45 +1370,48 @@ related to your current project."
 (define-key project-prefix-map (kbd "K") #'project-kill-buffers)
 
 ;;;; VCS
-(use-package git-modes
-  :ensure t
-  :mode (("/\\.gitattributes\\'" . gitattributes-mode)
-         ("/\\.git\\(config\\|modules\\)\\'" . gitconfig-mode)
-         ("/\\.\\(git\\|docker\\|elpa\\)ignore\\'" . gitignore-mode)))
+;; Associate files with the appropriate git modes.
+(add-to-list 'auto-mode-alist
+             '("/\\.gitattributes\\'" . gitattributes-mode))
 
-(use-package magit
-  :ensure t
-  :after transient
-  :commands (magit magit-status)
-  :bind (("C-x g" . magit-status)))
+(add-to-list 'auto-mode-alist
+             '("/\\.git\\(config\\|modules\\)\\'" . gitconfig-mode))
+
+(add-to-list 'auto-mode-alist
+             '("/\\.\\(git\\|docker\\|elpa\\)ignore\\'" . gitignore-mode))
+
+;; Load `magit' after `transient' to ensure dependency order.
+(with-eval-after-load 'transient
+  (require 'magit)
+
+  (global-set-key (kbd "C-x g") 'magit-status))
 
 ;;;; Setup completion
 ;; Provide a nicer `completing-read'.
-(use-package vertico
-  :ensure t
-  :custom
-  ;; Show more candidates in the minibuffer
-  (vertico-count 12)
-  ;; Enable cycling through candidates
-  (vertico-cycle t)
-  :init
-  (vertico-mode))
+(require 'vertico)
+
+;; Set custom variables before enabling the mode.
+(setq vertico-count 12         ;; Show more candidates in the minibuffer.
+      vertico-cycle t)         ;; Enable cycling through candidates.
+
+;; Enable `vertico-mode` globally.
+(vertico-mode)
 
 ;; Enable Consult for enhanced command completion.  Consult provides
 ;; replacements for many standard commands, offering better interface and
 ;; additional features.
-(use-package consult
-  :ensure t
-  :bind (("C-x l"   . consult-locate)
-         ("C-x b"   . consult-buffer)
-         ("C-x B"   . consult-buffer-other-window)
-         ("C-c k"   . consult-ripgrep)
-         ("C-c f"   . consult-recent-file)
-         ("C-r"     . consult-history)
-         ("C-S-s"   . consult-line)
-         ("C-<f5>"  . consult-theme)
-         :map minibuffer-local-map
-         ("C-r"     . consult-history)))
+(with-eval-after-load 'consult
+  (global-set-key (kbd "C-x l")   #'consult-locate)
+  (global-set-key (kbd "C-x b")   #'consult-buffer)
+  (global-set-key (kbd "C-x B")   #'consult-buffer-other-window)
+  (global-set-key (kbd "C-c k")   #'consult-ripgrep)
+  (global-set-key (kbd "C-c f")   #'consult-recent-file)
+  (global-set-key (kbd "C-r")     #'consult-history)
+  (global-set-key (kbd "C-S-s")   #'consult-line)
+  (global-set-key (kbd "C-<f5>")  #'consult-theme)
+
+  ;; Bind `consult-history` in minibuffer local map.
+  (define-key minibuffer-local-map (kbd "C-r") #'consult-history))
 
 (defun my/consult-jump-in-buffer ()
   "Jump in buffer with `consult-imenu' or `consult-org-heading' if in org-mode."
@@ -1382,89 +1423,80 @@ related to your current project."
 
 (global-set-key (kbd "C-x <tab>") #'my/consult-jump-in-buffer)
 
-;; Init flyspell-correct for spell correction
-(use-package flyspell-correct
-  :ensure t
-  :defer t
-  :after flyspell)
+;; Load `flyspell-correct' after `flyspell' is loaded.
+(with-eval-after-load 'flyspell
+  (require 'flyspell-correct))
 
 ;; Completion of misspelled words in buffer.
-(use-package consult-flyspell
-  :ensure t
-  :after (consult flyspell-correct)
-  :bind (:map flyspell-mode-map
-              ("C-;" . consult-flyspell))
-  :config
-  (setq consult-flyspell-select-function 'flyspell-correct-at-point))
+(with-eval-after-load 'flyspell
+  (define-key flyspell-mode-map (kbd "C-;") #'consult-flyspell)
+
+  ;; Set custom function for selecting corrections.
+  (setq consult-flyspell-select-function #'flyspell-correct-at-point))
 
 ;; Add additional context and annotations to completion UI.  Marginalia enriches
 ;; the completion interface with more information, such as documentation
 ;; strings, file sizes, etc.
-(use-package marginalia
-  :ensure t
-  :after vertico
-  :init
-  (marginalia-mode))
+(with-eval-after-load 'vertico
+  (require 'marginalia)
+  (marginalia-mode 1))
 
 ;; Enable Orderless for flexible matching style.  Orderless provides advanced
 ;; matching capabilities that allow you to combine multiple search patterns.
-(use-package orderless
-  :ensure t
-  :custom
-  ;; Use orderless as the default completion style
-  (completion-styles '(orderless))
-  (completion-category-defaults nil)
-  ;; Adjust completion for specific contexts, e.g., file paths
-  (completion-category-overrides '((file (styles basic partial-completion))))
-  :config
-  ;; Ensure case-insensitive matching for all completions
-  (setq completion-ignore-case t))
+(require 'orderless)
+
+;; Set up Orderless as the default completion style.
+(setq completion-styles '(orderless)
+      completion-category-defaults nil)
+
+;; Adjust completion for specific contexts, e.g., file paths
+(setq completion-category-overrides '((file (styles basic partial-completion))))
+
+;; Ensure case-insensitive matching for all completions.
+(setq completion-ignore-case t)
 
 ;; Enable Embark for additional actions within completion UI.  Embark adds the
 ;; ability to perform actions directly from completion buffers (e.g.,
 ;; minibuffer, `completing-read').
-(use-package embark
-  :ensure t
-  :bind
-  (("C-." . embark-act)           ;; Act on selected completion item
-   ("C-;" . embark-dwim)          ;; Do-What-I-Mean (e.g., open or describe)
-   :map minibuffer-local-map
-   ("C-c C-o" . embark-export)    ;; Export candidates to another buffer
-   ("C-c C-c" . embark-collect))) ;; Collect and act on multiple candidates
+(require 'embark)
 
-(use-package embark-consult
-  :ensure t
-  :hook (embark-collect-mode . consult-preview-at-point-mode))
+;; Act on selected completion item
+(global-set-key (kbd "C-.") 'embark-act)
+
+;; Do-What-I-Mean (e.g., open or describe)
+(global-set-key (kbd "C-;") 'embark-dwim)
+
+(with-eval-after-load 'embark
+  ;; Export candidates to another buffer
+  (define-key minibuffer-local-map (kbd "C-c C-o") 'embark-export)
+  ;; Collect and act on multiple candidates
+  (define-key minibuffer-local-map (kbd "C-c C-c") 'embark-collect))
+
+(require 'embark-consult)
+(with-eval-after-load 'embark-consult
+  (add-hook 'embark-collect-mode-hook 'consult-preview-at-point-mode))
 
 ;; Prescient for improved sorting and filtering.  Prescient enhances sorting and
 ;; filtering of candidates based on your history and frequently used items.
-(use-package prescient
-  :ensure t
-  :custom
-  ;; The default settings seem a little forgetful to me. Let's try
-  ;; this out.
-  (prescient-history-length 1000)
-  ;; Common sense.
-  (prescient-sort-full-matches-first t)
-  :config
-  ;; Remember usage statistics across Emacs sessions.
-  (prescient-persist-mode +1))
+(require 'prescient)
+
+;; The default settings seem a little forgetful to me. Let's try this out.
+(setq prescient-history-length 1000)
+
+;; Common sense.
+(setq prescient-sort-full-matches-first t)
+
+(prescient-persist-mode 1)
 
 ;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
 ;; combine powerful sorting and filtering with the Vertico completion system.
-(use-package vertico-prescient
-  :ensure t
-  :after (vertico prescient)
-  :init (vertico-prescient-mode 1)
-  :config (prescient-persist-mode 1))
+(require 'vertico-prescient)
 
 ;; Enable CTRLF as a modern replacement for Isearch and Swiper.  CTRLF provides
 ;; a modernized interface for incremental search, offering more intuitive
 ;; navigation and search options.
-(use-package ctrlf
-  :ensure t
-  :init
-  (ctrlf-mode 1))
+(require 'ctrlf)
+(ctrlf-mode 1)
 
 ;;;; IRC and other communication
 (require 'erc)
@@ -1586,9 +1618,9 @@ This results in a filename of the form #channel@server.txt, for example:
         "353"  ; listing of users on the current channel
         "477")) ;; Ignore the noise—focus only on the messages that matter.
 
-(use-package erc-hl-nicks
-  :ensure t
-  :after erc)
+;; Load `erc-hl-nicks' after `erc' is loaded.
+(with-eval-after-load 'erc
+  (require 'erc-hl-nicks))
 
 (defun my/erc-buffer-connected-p (buffer)
   "Check if ERC BUFFER is connected."
@@ -1670,16 +1702,15 @@ This function serves multiple purposes:
 ;; Set the indentation level for JavaScript files to 2 spaces.
 (setq js-indent-level 2)
 
-(use-package rainbow-mode
-  :ensure t
-  :defer t
-  :hook css-mode)
+;; Defer loading `rainbow-mode' until `css-mode' is activated.
+(add-hook 'css-mode-hook #'rainbow-mode)
 
-(use-package yaml-mode
-  :ensure t
-  :mode "\\.ya?ml\\'")
+;; Associate .yml and .yaml files with `yaml-mode'.
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 
-;; Load rst-mode when opening files with the .rst extension.
+;; Load `rst-mode' when opening files with the .rst extension.
+(autoload 'rst-mode "rst-mode" "mode for editing reStructuredText documents" t)
 (add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
 
 (with-eval-after-load 'rst
@@ -1688,7 +1719,7 @@ This function serves multiple purposes:
   ;; makes it easier to maintain a clear structure in your documentation.
   (setq rst-new-adornment-down t)
 
-  ;; Enable `visual-line-mode' automatically in `rst-mode` to handle long lines
+  ;; Enable `visual-line-mode' automatically in `rst-mode' to handle long lines
   ;; more gracefully by soft-wrapping them at word boundaries, which is often
   ;; preferred in text-heavy files like reStructuredText.
   (add-hook 'rst-mode-hook #'visual-line-mode))
@@ -1709,27 +1740,46 @@ This function serves multiple purposes:
       string-end)
   "Regexp to match files with GFM format.")
 
-(use-package markdown-mode
-  :ensure t
-  :mode "\\.\\(?:m\\(?:arkdown\\|d\\)\\)\\'"
-  :custom
-  (markdown-command pandoc-executable-path)
-  (markdown-enable-wiki-links t)
-  (markdown-enable-math t)
-  (markdown-italic-underscore t)
-  (markdown-asymmetric-header t)
-  (markdown-make-gfm-checkboxes-buttons t)
-  (markdown-gfm-additional-languages
-   '("sh" "python" "js" "lisp" "elisp"))
-  (markdown-gfm-uppercase-checkbox t)
-  (markdown-fontify-code-blocks-natively t)
-  (markdown-hide-urls nil)
-  :hook
-  ((markdown-mode . auto-fill-mode)
-   (markdown-mode . visual-line-mode))
-  :config
-  (add-to-list 'auto-mode-alist
-	       `(,gfm-patterns . gfm-mode)))
+;; Associate '.markdown' and '.md' files with `markdown-mode'.
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:m\\(?:arkdown\\|d\\)\\)\\'" . markdown-mode))
+
+;; Associate GitHub Flavored Markdown patterns with `gfm-mode'.
+(add-to-list 'auto-mode-alist `(,gfm-patterns . gfm-mode))
+
+;; Configure markdown command to use Pandoc.
+(setq markdown-command pandoc-executable-path)
+
+;; Enable wiki links in Markdown.
+(setq markdown-enable-wiki-links t)
+
+;; Enable LaTeX math support in Markdown.
+(setq markdown-enable-math t)
+
+;; Allow underscores for italic text.
+(setq markdown-italic-underscore t)
+
+;; Use asymmetric headers for different levels.
+(setq markdown-asymmetric-header t)
+
+;; Enable GitHub-style checkboxes as buttons.
+(setq markdown-make-gfm-checkboxes-buttons t)
+
+;; Add additional languages for GitHub Flavored Markdown code blocks.
+(setq markdown-gfm-additional-languages '("sh" "python" "js" "lisp" "elisp"))
+
+;; Use uppercase checkboxes in GitHub Flavored Markdown.
+(setq markdown-gfm-uppercase-checkbox t)
+
+;; Fontify code blocks natively.
+(setq markdown-fontify-code-blocks-natively t)
+
+;; Show full URLs instead of hiding them.
+(setq markdown-hide-urls nil)
+
+;; Add hooks for `markdown-mode'.
+(add-hook 'markdown-mode-hook #'auto-fill-mode)
+(add-hook 'markdown-mode-hook #'visual-line-mode)
 
 ;; Associate .sql files with `sql-mode'.
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
@@ -1740,9 +1790,9 @@ This function serves multiple purposes:
 
 (add-hook 'sql-mode-hook #'my|sql-mode-setup)
 
-(use-package sql-indent
-  :ensure t
-  :hook ((sql-mode . sqlind-minor-mode)))
+;; Configure `sql-indent' to activate `sqlind-minor-mode' in `sql-mode'.
+(with-eval-after-load 'sql
+  (add-hook 'sql-mode-hook #'sqlind-minor-mode))
 
 (require 'sqlite-mode)
 
@@ -1756,22 +1806,24 @@ This function serves multiple purposes:
             ;; Bind "TAB" to 'sqlite-mode-list-data within sqlite-mode.
             (define-key sqlite-mode-map (kbd "<tab>") 'sqlite-mode-list-data)))
 
-(use-package csv-mode
-  :ensure t
-  :mode (("\\.csv\\'" . csv-mode))
-  :hook ((csv-mode . csv-align-mode)))
+;; Associate `.csv` files with `csv-mode'.
+(add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
 
-(use-package python
-  :defer t
-  :custom
-  (python-shell-interpreter "python3")
-  (python-shell-interpreter-args "-i --simple-prompt --pprint"))
+;; Enable `csv-align-mode' automatically when `csv-mode is activated.
+(add-hook 'csv-mode-hook #'csv-align-mode)
 
-(use-package anaconda-mode
-  :ensure t
-  :after python
-  :hook ((python-mode . anaconda-mode)
-         (python-mode . anaconda-eldoc-mode)))
+;; Ensure `python' mode is loaded when opening Python files.
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+
+;; Set custom Python shell interpreter settings.
+(setq python-shell-interpreter "python3")
+(setq python-shell-interpreter-args "-i --simple-prompt --pprint")
+
+;; Load `anaconda-mode' annd configure hooks after `python-mode` is loaded.
+(with-eval-after-load 'python
+  ;; Enable `anaconda-mode' and `anaconda-eldoc-mode' in Python buffers.
+  (add-hook 'python-mode-hook #'anaconda-mode)
+  (add-hook 'python-mode-hook #'anaconda-eldoc-mode))
 
 ;;;;; Lisp and company
 (defun my|lisp-modes-setup ()
@@ -1808,11 +1860,9 @@ This function serves multiple purposes:
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
 
 ;;;; Helpers
-(use-package which-key
-  :ensure t
-  :defer 1
-  :config
-  (which-key-mode 1))
+;; Load `which-key' and enable `which-key-mode'.
+(require 'which-key)
+(which-key-mode 1)
 
 ;; Save custom variables in a separate file named custom.el in your
 ;; user-emacs-directory. This keeps your main configuration file clean.
