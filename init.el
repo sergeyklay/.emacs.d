@@ -40,6 +40,7 @@
 ;; preferences BEFORE loading any of the modules.
 (load (locate-user-emacs-file "pre-custom.el") :no-error :no-message)
 
+
 ;;;; Profiling and Debug
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
   "If non-nil, Emacs will be verbose.
@@ -62,7 +63,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
                      (time-subtract after-init-time before-init-time)))
             gcs-done)))
 
-;;;; Package management
+
+;;;; Packages management
+;; Package management in Emacs can be done in several ways. I personally like
+;; classic one with `package.el'. Some will prefer straight.el, use-package,
+;; and so on, but I haven't found the need for them.
 (require 'package)
 
 ;; Setting up package archives.
@@ -82,26 +87,19 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Precompute activation actions to speed up startup.
 (setq package-quickstart t)
 
-;; Function to ensure packages are installed.
 (defun ensure-package-installed (&rest packages)
-  "Ensure that each package in PACKAGES is installed. If not, install it."
-  (mapc (lambda (package)
-          (unless (package-installed-p package)
-            (package-install package)))
-        packages))
+  "Ensure that each package in PACKAGES is installed."
+  (dolist (package packages)
+    (unless (package-installed-p package)
+      (condition-case _err
+          (package-install package)
+        (error
+         (package-refresh-contents)
+         (package-install package))))))
 
-;; Package management in Emacs can be done in several ways. I personally like
-;; classic one with `package.el'. Some will prefer straight.el, use-package,
-;; and so on, but I haven't found the need for them.
-(defun my/package-setup ()
-  "Refresh package contents if necessary and ensure packages are installed."
-
-  ;; Refresh the package list if necessary
-  (unless package-archive-contents
-    (message "Package archive contents are empty or outdated, refreshing...")
-    (package-refresh-contents))
-
-  ;; Re-run ensure-package-installed after refreshing
+;; Install packages as soon as possible.
+(unless (or (daemonp)
+            noninteractive)
   (ensure-package-installed
    'anaconda-mode
    'consult
@@ -132,12 +130,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    'writegood-mode
    'yaml-mode))
 
-;; Initialize packages as soon as possible in all modes.
-(unless (or (featurep 'esup-child)
-            (daemonp)
-            noninteractive)
-  (my/package-setup))
-
+
 ;;;; Setup keymap
 ;; Create and setup my own keyboard map.
 ;; For details see:
@@ -150,12 +143,14 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; because "+" needs "S-=" and I might forget to press shift
   "=" #'text-scale-increase)
 
+
 ;;;; Common functions
 (defun my-ensure-directory-exists (dir)
   "Ensure that the directory DIR exists, create it if it doesn't."
   (unless (file-exists-p dir)
     (make-directory dir t)))
 
+
 ;;;; Backup
 ;; Silently deletes excess backup versions.
 (setq delete-old-versions t)
@@ -172,6 +167,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
         `(("." . ,(file-name-as-directory my-backup-dir))))
   (my-ensure-directory-exists my-backup-dir))
 
+
 ;;;; Auto-Saving
 (let ((save-dir (concat user-emacs-directory "auto-save-list/")))
   (setq
@@ -193,6 +189,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; buffers by default.
 (save-place-mode t)
 
+
 ;;;; History
 ;; Enable `savehist-mode' to preserve the minibuffer history across sessions.
 ;; This is particularly useful for recalling previous commands, search terms,
@@ -244,8 +241,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (when (fboundp 'recentf-save-list)
     (run-with-idle-timer (* 3 60) t #'recentf-save-list)))
 
+
 ;;;; Sane defaults
-
 ;; Use the tab key for both indentation and completion. This allows for more
 ;; intuitive behavior when working in various modes, especially in text and
 ;; programming modes.
@@ -292,6 +289,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
              (not (file-remote-p src)))
     (setq source-directory src)))
 
+
 ;;;; Emacs Server
 ;; Enable Emacs server mode, allowing Emacs to act as a server for external
 ;; clients. This is especially useful for quickly opening files from the
@@ -306,6 +304,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (unless (server-running-p)
   (server-mode t))
 
+
 ;;;; Spell
 ;; Configuration for `ispell' to use hunspell as the spell checker.
 ;; Note: On macOS, Homebrew does not provide dictionaries by default.
@@ -355,6 +354,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (add-hook 'text-mode-hook #'writegood-mode)
   (add-hook 'latex-mode-hook #'writegood-mode))
 
+
 ;;;; Security
 (defconst my-gpg-program
   (cond
@@ -415,6 +415,7 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 ;; Enable `auth-source-pass' to use pass for `auth-sources'.
 (auth-source-pass-enable)
 
+
 ;;;; Organization
 (defconst my-org-files-path
   (file-name-as-directory
@@ -630,7 +631,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 (define-key my-keyboard-map (kbd "P") #'my/org-mark-as-project)
 
-;;;; Org Crypt
+;;;;; Org Crypt
 ;; Check if GPG is available, then require `org-crypt'.
 ;; Otherwise, display a warning.
 (if my-gpg-program
@@ -1155,6 +1156,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   (define-key org-mode-map (kbd "C-c r") #'org-refile )
   (define-key org-mode-map (kbd "C-c C-x C-a") #'org-archive-subtree))
 
+
 ;;;; Window Handling
 ;; Winner mode allows you to undo and redo window configurations. This is
 ;; extremely useful when working with multiple windows (or "splits") and
@@ -1173,6 +1175,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
       '("*Completions*" "*Compile-Log*" "*Apropos*" "*Help*"
         "*Buffer List*" "*Ibuffer*" "*Messages*"))
 
+
 ;;;; Appearance
 ;; I prefer the box cursor.
 (setq-default cursor-type 'box)
@@ -1250,6 +1253,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 (add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode 0)))
 
+
 ;;;; Editing
 (require 'outline)
 
@@ -1316,6 +1320,7 @@ This function is for interactive use only;"
 
 (global-set-key (kbd "C-c d") #'my/duplicate-line)
 
+
 ;;;; Project management
 (require 'project)
 
@@ -1360,6 +1365,7 @@ related to your current project."
 (define-key project-prefix-map (kbd "R") #'project-remember-projects-under)
 (define-key project-prefix-map (kbd "K") #'project-kill-buffers)
 
+
 ;;;; VCS
 ;; Associate files with the appropriate git modes.
 (add-to-list 'auto-mode-alist
@@ -1377,6 +1383,7 @@ related to your current project."
 
   (global-set-key (kbd "C-x g") 'magit-status))
 
+
 ;;;; Setup completion
 ;; Provide a nicer `completing-read'.
 (require 'vertico)
@@ -1389,6 +1396,7 @@ related to your current project."
 
 ;; Enable `vertico-mode` globally.
 (vertico-mode)
+;; (add-hook 'after-init-hook 'vertico-mode) ???
 
 ;; Enable Consult for enhanced command completion.  Consult provides
 ;; replacements for many standard commands, offering better interface and
@@ -1491,6 +1499,7 @@ related to your current project."
 (require 'ctrlf)
 (ctrlf-mode 1)
 
+
 ;;;; IRC and other communication
 (require 'erc)
 (require 'erc-log)
@@ -1664,8 +1673,8 @@ This function serves multiple purposes:
 
 (global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)
 
+
 ;;;; Shells
-
 ;; Load Eshell when needed. This makes sure that Eshell is only loaded when
 ;; 'eshell-mode' or 'eshell' command is invoked, thus optimizing startup time.
 (autoload 'eshell "eshell" "Eshell, the Emacs shell" t)
@@ -1681,8 +1690,8 @@ This function serves multiple purposes:
 ;; Pressing "M-s e" will open Eshell in the current buffer.
 (global-set-key (kbd "M-s e") 'eshell)
 
+
 ;;;; Programming Languages, Markup and Configurations.
-
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
@@ -1852,6 +1861,7 @@ This function serves multiple purposes:
 
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
 
+
 ;;;; Helpers
 ;; Load `which-key' and enable `which-key-mode'.
 (require 'which-key)
