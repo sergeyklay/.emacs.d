@@ -95,7 +95,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; and so on, but I haven't found the need for them.
 (defun my/package-setup ()
   "Initialize packages and refresh package contents if necessary."
-  (package-initialize) ;; Initialize packages
+  (package-initialize) ; Initialize packages
 
   ;; Refresh the package list only if it's empty
   (unless package-archive-contents
@@ -130,8 +130,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
      'vertico-prescient
      'which-key
      'writegood-mode
-     'yaml-mode
-     'use-package))) ;; for bind-key
+     'yaml-mode)))
 
 ;; Manually initialize packages in daemon or noninteractive mode.
 ;; For more see URL `https://github.com/jschaf/esup/issues/84'
@@ -140,24 +139,22 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
           noninteractive)
   (my/package-setup))
 
-;; Ensure packages are installed on startup without unnecessary refreshes
-(add-hook 'emacs-startup-hook #'my/package-setup)
+;; Initialize packages as soon as possible
+(my/package-setup)
 
-;; Optionally bind package-refresh-contents to package-list-packages
+;; Bind package-refresh-contents to package-list-packages
 (advice-add 'package-list-packages :before #'package-refresh-contents)
 
-(require 'bind-key)
-
 ;; Create and setup my own keyboard map.
-;; For details see: https://elpa.gnu.org/packages/bind-key.html
-(bind-keys
- :prefix-map my-keyboard-map
- :prefix-docstring "My own keyboard map"
- :prefix "C-c C-/"
- ("-" . text-scale-decrease)
- ("+" . text-scale-increase)
- ;; because "+" needs "S-=" and I might forget to press shift
- ("=" . text-scale-increase))
+;; For details see:
+;; https://www.masteringemacs.org/article/mastering-key-bindings-emacs
+(defvar-keymap my-keyboard-map
+  :doc "My own keyboard map"
+  "C-c C-/" (make-sparse-keymap)
+  "-" #'text-scale-decrease
+  "+" #'text-scale-increase
+  ;; because "+" needs "S-=" and I might forget to press shift
+  "=" #'text-scale-increase)
 
 ;;;; Common functions
 (defun my-ensure-directory-exists (dir)
@@ -581,7 +578,7 @@ informative and unique within a reasonable scope."
 
 (advice-add 'org-store-link :before #'my/org-id-advice)
 
-(bind-key (kbd "I") #'my/org-generate-id my-keyboard-map)
+(define-key my-keyboard-map (kbd "I") #'my/org-generate-id)
 
 (defun my/org-mark-as-project ()
   "Mark the current Org heading as a project.
@@ -637,7 +634,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
   ;; Inform the user of success
   (message "Heading marked as a project."))
 
-(bind-key (kbd "P") #'my/org-mark-as-project my-keyboard-map)
+(define-key my-keyboard-map (kbd "P") #'my/org-mark-as-project)
 
 ;;;; Org Crypt
 ;; Check if GPG is available, then require `org-crypt'.
@@ -779,7 +776,7 @@ and cleaned up for further processing."
   (find-file org-mobile-inbox-for-pull)
   (delete-trailing-whitespace))
 
-(bind-key "i" #'my/mobile-org-import my-keyboard-map)
+(define-key my-keyboard-map (kbd "i") #'my/mobile-org-import)
 
 (defun my/mobile-org-export ()
   "Push a custom agenda setup to MobileOrg directory.
@@ -807,7 +804,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
     ;; Restore the original agenda commands.
     (setq org-agenda-custom-commands original-org-agenda-custom-commands)))
 
-(bind-key "e" #'my/mobile-org-export my-keyboard-map)
+(define-key my-keyboard-map (kbd "e") #'my/mobile-org-export)
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
@@ -1113,7 +1110,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
         (org-back-to-heading t)
         (org-set-tags-command)))))
 
-(bind-key "b" #'my/org-move-bookmark-to-notes my-keyboard-map)
+(define-key my-keyboard-map (kbd "b") #'my/org-move-bookmark-to-notes)
 
 ;;;;; Org Refile
 (defun my-org-opened-buffer-files ()
@@ -1390,9 +1387,11 @@ related to your current project."
 ;; Provide a nicer `completing-read'.
 (require 'vertico)
 
-;; Set custom variables before enabling the mode.
-(setq vertico-count 12         ;; Show more candidates in the minibuffer.
-      vertico-cycle t)         ;; Enable cycling through candidates.
+;; Show more candidates in the minibuffer.
+(setq vertico-count 12)
+
+;; Enable cycling through candidates.
+(setq vertico-cycle t)
 
 ;; Enable `vertico-mode` globally.
 (vertico-mode)
