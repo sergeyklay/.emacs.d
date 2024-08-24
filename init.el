@@ -94,57 +94,51 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; classic one with `package.el'. Some will prefer straight.el, use-package,
 ;; and so on, but I haven't found the need for them.
 (defun my/package-setup ()
-  "Initialize packages and refresh package contents if necessary."
-  (package-initialize) ; Initialize packages
+  "Refresh package contents if necessary and ensure packages are installed."
 
-  ;; Refresh the package list only if it's empty
+  ;; Refresh the package list if necessary
   (unless package-archive-contents
-    (message "Package archive contents are empty, refreshing...")
-    (package-refresh-contents)
-    ;; Re-run ensure-package-installed after refreshing
-    (ensure-package-installed
-     'anaconda-mode
-     'consult
-     'consult-flyspell
-     'csv-mode
-     'ctrlf
-     'embark
-     'embark-consult
-     'erc-hl-nicks
-     'flyspell-correct
-     'git-modes
-     'htmlize
-     'magit
-     'marginalia
-     'markdown-mode
-     'orderless
-     'org-cliplink
-     'org-super-agenda
-     'pass
-     'password-store
-     'prescient
-     'rainbow-delimiters
-     'rainbow-mode
-     'sql-indent
-     'vertico
-     'vertico-prescient
-     'which-key
-     'writegood-mode
-     'yaml-mode)))
+    (message "Package archive contents are empty or outdated, refreshing...")
+    (package-refresh-contents))
 
-;; Manually initialize packages in daemon or noninteractive mode.
-;; For more see URL `https://github.com/jschaf/esup/issues/84'
-(when (or (featurep 'esup-child)
-          (daemonp)
-          noninteractive)
+  ;; Re-run ensure-package-installed after refreshing
+  (ensure-package-installed
+   'anaconda-mode
+   'consult
+   'consult-flyspell
+   'csv-mode
+   'ctrlf
+   'embark
+   'embark-consult
+   'erc-hl-nicks
+   'flyspell-correct
+   'git-modes
+   'htmlize
+   'magit
+   'marginalia
+   'markdown-mode
+   'orderless
+   'org-cliplink
+   'org-super-agenda
+   'pass
+   'password-store
+   'prescient
+   'rainbow-delimiters
+   'rainbow-mode
+   'sql-indent
+   'vertico
+   'vertico-prescient
+   'which-key
+   'writegood-mode
+   'yaml-mode))
+
+;; Initialize packages as soon as possible in all modes.
+(unless (or (featurep 'esup-child)
+            (daemonp)
+            noninteractive)
   (my/package-setup))
 
-;; Initialize packages as soon as possible
-(my/package-setup)
-
-;; Bind package-refresh-contents to package-list-packages
-(advice-add 'package-list-packages :before #'package-refresh-contents)
-
+;;;; Setup keymap
 ;; Create and setup my own keyboard map.
 ;; For details see:
 ;; https://www.masteringemacs.org/article/mastering-key-bindings-emacs
