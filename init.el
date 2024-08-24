@@ -1394,24 +1394,26 @@ related to your current project."
 ;; Enable cycling through candidates.
 (setq vertico-cycle t)
 
-;; Enable `vertico-mode` globally.
-(vertico-mode)
-;; (add-hook 'after-init-hook 'vertico-mode) ???
-
 ;; Enable Consult for enhanced command completion.  Consult provides
 ;; replacements for many standard commands, offering better interface and
 ;; additional features.
-(with-eval-after-load 'consult
-  (global-set-key (kbd "C-x l")   #'consult-locate)
-  (global-set-key (kbd "C-x b")   #'consult-buffer)
-  (global-set-key (kbd "C-x B")   #'consult-buffer-other-window)
-  (global-set-key (kbd "C-c k")   #'consult-ripgrep)
-  (global-set-key (kbd "C-c f")   #'consult-recent-file)
-  (global-set-key (kbd "C-r")     #'consult-history)
-  (global-set-key (kbd "C-S-s")   #'consult-line)
-  (global-set-key (kbd "C-<f5>")  #'consult-theme)
+(global-set-key [remap switch-to-buffer]
+                #'consult-buffer)
+(global-set-key [remap switch-to-buffer-other-window]
+                #'consult-buffer-other-window)
+(global-set-key [remap switch-to-buffer-other-frame]
+                #'consult-buffer-other-frame)
+(global-set-key [remap goto-line]
+                #'consult-goto-line)
 
-  ;; Bind `consult-history` in minibuffer local map.
+(with-eval-after-load 'consult
+  (global-set-key (kbd "C-x l")  #'consult-locate)
+  (global-set-key (kbd "C-c k")  #'consult-ripgrep)
+  (global-set-key (kbd "C-c f")  #'consult-recent-file)
+  (global-set-key (kbd "C-r")    #'consult-history)
+  (global-set-key (kbd "C-S-s")  #'consult-line)
+  (global-set-key (kbd "C-<f5>") #'consult-theme)
+
   (define-key minibuffer-local-map (kbd "C-r") #'consult-history))
 
 (defun my/consult-jump-in-buffer ()
@@ -1438,44 +1440,46 @@ related to your current project."
 ;; Add additional context and annotations to completion UI.  Marginalia enriches
 ;; the completion interface with more information, such as documentation
 ;; strings, file sizes, etc.
-(with-eval-after-load 'vertico
-  (require 'marginalia)
-  (marginalia-mode 1))
+(add-hook 'after-init-hook 'marginalia-mode)
 
 ;; Enable Orderless for flexible matching style.  Orderless provides advanced
 ;; matching capabilities that allow you to combine multiple search patterns.
-(require 'orderless)
+(with-eval-after-load 'vertico
+  (require 'orderless)
 
-;; Set up Orderless as the default completion style.
-(setq completion-styles '(orderless)
-      completion-category-defaults nil)
+  ;; Set up Orderless as the default completion style.
+  (setq completion-styles '(orderless))
+  (setq completion-category-defaults nil)
 
-;; Adjust completion for specific contexts, e.g., file paths
-(setq completion-category-overrides '((file (styles basic partial-completion))))
+  ;; Adjust completion for specific contexts, e.g., file paths
+  (setq completion-category-overrides
+        '((file (styles basic partial-completion))))
 
-;; Ensure case-insensitive matching for all completions.
-(setq completion-ignore-case t)
+  ;; Ensure case-insensitive matching for all completions.
+  (setq completion-ignore-case t)
 
-;; Enable Embark for additional actions within completion UI.  Embark adds the
-;; ability to perform actions directly from completion buffers (e.g.,
-;; minibuffer, `completing-read').
-(require 'embark)
+  ;; Enable Embark for additional actions within completion UI.  Embark adds the
+  ;; ability to perform actions directly from completion buffers (e.g.,
+  ;; minibuffer, `completing-read').
 
-;; Act on selected completion item
+  ;; Create a type-specific buffer to manage current candidates.
+  (define-key vertico-map (kbd "C-c C-o") 'embark-export)
+
+  ;; Prompt the user for an action and perform it
+  (define-key vertico-map (kbd "C-c C-c") 'embark-act))
+
+;; Explore current command key bindings with `completing-read'.
+(global-set-key (kbd "C-h B") 'embark-bindings)
+
+;; Prompt the user for an action and perform it
 (global-set-key (kbd "C-.") 'embark-act)
 
 ;; Do-What-I-Mean (e.g., open or describe)
 (global-set-key (kbd "C-;") 'embark-dwim)
 
 (with-eval-after-load 'embark
-  ;; Export candidates to another buffer
-  (define-key minibuffer-local-map (kbd "C-c C-o") 'embark-export)
-  ;; Collect and act on multiple candidates
-  (define-key minibuffer-local-map (kbd "C-c C-c") 'embark-collect))
-
-(require 'embark-consult)
-(with-eval-after-load 'embark-consult
-  (add-hook 'embark-collect-mode-hook 'consult-preview-at-point-mode))
+  (require 'embark-consult)
+  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
 
 ;; Prescient for improved sorting and filtering.  Prescient enhances sorting and
 ;; filtering of candidates based on your history and frequently used items.
