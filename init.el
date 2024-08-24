@@ -1386,7 +1386,7 @@ related to your current project."
 
 ;;;; Setup completion
 ;; Provide a nicer `completing-read'.
-(require 'vertico)
+(add-hook 'after-init-hook 'vertico-mode)
 
 ;; Show more candidates in the minibuffer.
 (setq vertico-count 12)
