@@ -135,13 +135,21 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Create and setup my own keyboard map.
 ;; For details see:
 ;; https://www.masteringemacs.org/article/mastering-key-bindings-emacs
-(defvar-keymap my-keyboard-map
-  :doc "My own keyboard map"
-  "C-c C-/" (make-sparse-keymap)
-  "-" #'text-scale-decrease
-  "+" #'text-scale-increase
-  ;; because "+" needs "S-=" and I might forget to press shift
-  "=" #'text-scale-increase)
+(defvar my-keyboard-map (make-sparse-keymap)
+  "My own keyboard map.")
+
+(keymap-global-set "C-c C-/" my-keyboard-map)
+
+(define-key my-keyboard-map (kbd "-") #'text-scale-decrease)
+(define-key my-keyboard-map (kbd "-") #'text-scale-increase)
+;; because "+" needs "S-=" and I might forget to press shift
+(define-key my-keyboard-map (kbd "=") #'text-scale-increase)
+
+;; Load `which-key' and enable `which-key-mode'.
+(add-hook 'after-init-hook 'which-key-mode)
+
+;; Increase the delay for which-key buffer to popup.
+(setq-default which-key-idle-delay 1.5)
 
 
 ;;;; Common functions
@@ -1873,11 +1881,6 @@ This function serves multiple purposes:
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
 
 
-;;;; Helpers
-;; Load `which-key' and enable `which-key-mode'.
-(require 'which-key)
-(which-key-mode 1)
-
 ;; Save custom variables in a separate file named custom.el in your
 ;; user-emacs-directory. This keeps your main configuration file clean.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
