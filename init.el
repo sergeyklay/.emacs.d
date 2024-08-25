@@ -1442,9 +1442,9 @@ related to your current project."
 ;; strings, file sizes, etc.
 (add-hook 'after-init-hook 'marginalia-mode)
 
-;; Enable Orderless for flexible matching style.  Orderless provides advanced
-;; matching capabilities that allow you to combine multiple search patterns.
 (with-eval-after-load 'vertico
+  ;; Enable Orderless for flexible matching style.  Orderless provides advanced
+  ;; matching capabilities that allow you to combine multiple search patterns.
   (require 'orderless)
 
   ;; Set up Orderless as the default completion style.
@@ -1481,21 +1481,28 @@ related to your current project."
   (require 'embark-consult)
   (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
 
-;; Prescient for improved sorting and filtering.  Prescient enhances sorting and
-;; filtering of candidates based on your history and frequently used items.
-(require 'prescient)
+(with-eval-after-load 'vertico
+  (require 'prescient)
+  (require 'vertico-prescient)
 
-;; The default settings seem a little forgetful to me. Let's try this out.
-(setq prescient-history-length 1000)
+  ;; The default settings seem a little forgetful to me. Let's try this out.
+  (setq prescient-history-length 200)
 
-;; Common sense.
-(setq prescient-sort-full-matches-first t)
+  ;; Common sense.
+  (setq prescient-sort-full-matches-first t)
 
-(prescient-persist-mode 1)
+  ;; Disable filtering in Prescient, leaving only sorting. I use `orderless' for
+  ;; filtering (see abowe).
+  (setq vertico-prescient-enable-filtering nil)
 
-;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
-;; combine powerful sorting and filtering with the Vertico completion system.
-(require 'vertico-prescient)
+  ;; Prescient for improved sorting and filtering.  Prescient enhances sorting
+  ;; and filtering of candidates based on your history and frequently used
+  ;; items.
+  (prescient-persist-mode 1)
+
+  ;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
+  ;; combine powerful sorting and filtering with the Vertico completion system.
+  (vertico-prescient-mode 1))
 
 ;; Enable CTRLF as a modern replacement for Isearch and Swiper.  CTRLF provides
 ;; a modernized interface for incremental search, offering more intuitive
