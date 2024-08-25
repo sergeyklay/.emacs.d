@@ -135,15 +135,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Create and setup my own keyboard map.
 ;; For details see:
 ;; https://www.masteringemacs.org/article/mastering-key-bindings-emacs
-(defvar my-keyboard-map (make-sparse-keymap)
+(defvar my-keyboard-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "-") #'text-scale-decrease)
+    (define-key map (kbd "+") #'text-scale-increase)
+    ;; because "+" needs "S-=" and I might forget to press shift
+    (define-key map (kbd "=") #'text-scale-increase)
+    map)
   "My own keyboard map.")
 
 (keymap-global-set "C-c C-/" my-keyboard-map)
-
-(define-key my-keyboard-map (kbd "-") #'text-scale-decrease)
-(define-key my-keyboard-map (kbd "-") #'text-scale-increase)
-;; because "+" needs "S-=" and I might forget to press shift
-(define-key my-keyboard-map (kbd "=") #'text-scale-increase)
 
 ;; Load `which-key' and enable `which-key-mode'.
 (add-hook 'after-init-hook 'which-key-mode)
