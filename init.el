@@ -186,13 +186,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
   (my-ensure-directory-exists save-dir))
 
-;; Enable `save-place-mode' to save point position in files across sessions.
-;; This feature is extremely useful when working on large projects or when
-;; you frequently switch between different files. It ensures that you return
-;; to the exact spot where you left off, enhancing workflow efficiency.
-
-;; First, ensure that the `saveplace' package is available, as it is required
-;; for this functionality.
+;; Enable `save-place-mode' to save point position in files across sessions.  It
+;; ensures that you return to the exact spot where you left off, enhancing
+;; workflow efficiency.
 (require 'saveplace)
 
 ;; Enable the `save-place-mode' globally, which activates this feature for all
@@ -202,11 +198,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; History
 ;; Enable `savehist-mode' to preserve the minibuffer history across sessions.
-;; This is particularly useful for recalling previous commands, search terms,
-;; or any other input you may want to reuse across Emacs sessions.
-
-;; First, ensure that the `savehist' package is available, as it is required
-;; for this functionality.
 (require 'savehist)
 
 ;; Set the maximum number of entries to save in the history. A larger value
@@ -214,8 +205,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; to recall older entries.
 (setq history-length 1000)
 
-;; Enable the removal of duplicate entries in the history. This keeps your
-;; history cleaner and more manageable, avoiding clutter from repeated entries.
+;; Enable the removal of duplicate entries in the history.
 (setq history-delete-duplicates t)
 
 ;; Enable `savehist-mode', which automatically saves the minibuffer history
@@ -223,16 +213,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (savehist-mode t)
 
 ;; Enable `recentf-mode' to keep track of recently opened files.
-;; This is a very useful feature that allows you to quickly access files you
-;; have worked on recently. The list of recent files is updated automatically.
 (when (not noninteractive)
   ;; First, ensure that the `recentf' package is available, as it is required
   ;; for this functionality.
   (require 'recentf)
 
-  ;; Set the maximum number of recent files to save. This limits the list
-  ;; to the most recent 100 files, which is a good balance between utility
-  ;; and performance.
+  ;; Set the maximum number of recent files to save.
   (setq recentf-max-saved-items 100)
 
   ;; Customize the conditions under which files are kept in the recent list.
@@ -253,36 +239,34 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 
 ;;;; Sane defaults
-;; Use the tab key for both indentation and completion. This allows for more
-;; intuitive behavior when working in various modes, especially in text and
-;; programming modes.
-(setq tab-always-indent 'complete)
+;; Use the tab key for both indentation and completion.
+(setq-default tab-always-indent 'complete)
 
 ;; Remove the initial message from the scratch buffer.
-(setq initial-scratch-message "")
+(setq-default initial-scratch-message "")
 
 ;; Disable the startup screen, allowing for a quicker start directly into
 ;; your working environment.
-(setq inhibit-startup-screen t)
+(setq-default inhibit-startup-screen t)
 
 ;; Set the initial major mode of the scratch buffer to text-mode.
-(setq initial-major-mode 'text-mode)
+(setq-default initial-major-mode 'text-mode)
 
 ;; Disable the creation of lockfiles on Windows, as they can cause issues
 ;; with file systems on that platform.
-(setq create-lockfiles (not (member system-type '(windows-nt))))
+(setq-default create-lockfiles (not (member system-type '(windows-nt))))
 
 ;; Use spaces instead of tabs for indentation, except in cases where
 ;; Emacs specifically recognizes that tabs are required.
 (setq-default indent-tabs-mode nil)
 
-;; Visually indicate empty lines after the buffer's end. This helps in
-;; identifying where the actual content of the file ends.
+;; Visually indicate empty lines after the buffer's end.
 (setq-default indicate-empty-lines t)
 
 ;; Customize the format of the mode line to show line and column numbers
 ;; in the format "278:59".
-(setq mode-line-position '((line-number-mode ("%l" (column-number-mode ":%c")))))
+(setq-default mode-line-position
+              '((line-number-mode ("%l" (column-number-mode ":%c")))))
 
 ;; Enable column number mode to display column numbers in the mode line.
 (column-number-mode t)
@@ -292,8 +276,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
 ;; Set up source-directory for C source files, used to understand and debug
-;; built-in Emacs functions. This is especially useful for my, who need to
-;; dive into the internals of Emacs.
+;; built-in Emacs functions.
 (let ((src (expand-file-name "~/src/emacs.git")))
   (when (and (file-directory-p src)
              (not (file-remote-p src)))
@@ -302,15 +285,10 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 ;;;; Emacs Server
 ;; Enable Emacs server mode, allowing Emacs to act as a server for external
-;; clients. This is especially useful for quickly opening files from the
-;; command line with 'emacsclient' or integrating with other tools.
-
-;; Ensure the `server' package is available, as it is necessary for running
-;; Emacs in server mode.
+;; clients.
 (require 'server)
 
 ;; Check if the server is already running. If not, start the server mode.
-;; This prevents errors when trying to start the server multiple times.
 (unless (server-running-p)
   (server-mode t))
 
@@ -1937,7 +1915,7 @@ This function serves multiple purposes:
 
 
 ;; Save custom variables in a separate file named custom.el in your
-;; user-emacs-directory. This keeps your main configuration file clean.
+;; user-emacs-directory.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 ;; Load the custom file if it exists or is a symbolic link. This should be done
