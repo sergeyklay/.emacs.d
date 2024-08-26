@@ -401,6 +401,27 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
                      'pass-view-mode)))
 
 
+;;;; Calendar
+;; Week starts on Monday.
+(setq-default calendar-week-start-day 1)
+
+;; I prefer read dates in 'year/month/day' format.
+(setq-default calendar-date-style 'iso)
+
+;; Set the default latitude and longitude for calendar calculations.  These
+;; values are used to determine local sunrise/sunset times, moon phases, and
+;; other location-dependent calendar features in Emacs.
+(setq-default calendar-latitude 51.1)
+(setq-default calendar-longitude 17.03)
+
+;; Alist of time zones and places for `world-clock' to display.
+(setq-default world-clock-list '(("Canada/Pacific" "Vancouver")
+                                 ("America/New_York" "New York")
+                                 ("Europe/London" "London")
+                                 ("Europe/Warsaw" "Warsaw")
+                                 ("Europe/Kyiv" "Kyiv")))
+
+
 ;;;; Organization
 (defconst my-org-files-path
   (file-name-as-directory
