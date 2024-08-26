@@ -1695,9 +1695,12 @@ This function serves multiple purposes:
 
 
 ;;;; Shells
-;; Load Eshell when needed. This makes sure that Eshell is only loaded when
-;; 'eshell-mode' or 'eshell' command is invoked, thus optimizing startup time.
-(autoload 'eshell "eshell" "Eshell, the Emacs shell" t)
+;;;;; Eshell
+;; The default settings seem a little forgetful to me. Let's try this out.
+(setq eshell-history-size 1000)
+
+;; Prevent duplicate entries in the Eshell history.
+(setq eshell-hist-ignoredups t)
 
 ;; Always scroll the window to the end when entering a new command.
 (setq eshell-scroll-to-bottom-on-input t)
@@ -1705,6 +1708,25 @@ This function serves multiple purposes:
 ;; Scroll the window to the end when new output appears.
 ;; The value 'all' makes sure it scrolls for any kind of output.
 (setq eshell-scroll-to-bottom-on-output 'all)
+
+(defun my-eshell-shorten-path (path)
+  "Replace the home directory in PATH with ~."
+  (let ((home (getenv "HOME")))
+    (if (string-prefix-p home path)
+        (concat "~" (substring path (length home)))
+      path)))
+
+;; Making the eshell prompt behave more like my Zsh prompt.
+(setq eshell-prompt-regexp "^[^@\n]+@[^ ]+ [^\n]+[\n][#%] ")
+(setq eshell-prompt-function
+      (lambda nil
+        (concat
+	 (user-login-name) "@" (system-name) " "
+	 (if (string= (eshell/pwd) (getenv "HOME"))
+	     "~"
+           (my-eshell-shorten-path (eshell/pwd)))
+	 "\n"
+	 (if (= (user-uid) 0) "# " "% "))))
 
 ;; Keybinding to quickly launch Eshell.
 ;; Pressing "M-s e" will open Eshell in the current buffer.
