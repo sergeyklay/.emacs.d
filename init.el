@@ -1754,7 +1754,6 @@ This function serves multiple purposes:
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 
 ;; Load `rst-mode' when opening files with the .rst extension.
-(autoload 'rst-mode "rst-mode" "mode for editing reStructuredText documents" t)
 (add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
 
 (with-eval-after-load 'rst
