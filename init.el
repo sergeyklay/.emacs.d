@@ -858,6 +858,13 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
 (setq org-agenda-files
       (append my-org-agenda-files-work my-org-agenda-files-life))
 
+(defun my/org-search-agenda ()
+  "Search (i.e. ripgrep) stuff in my agenda files"
+  (interactive)
+  (consult-ripgrep my-org-files-path))
+
+(define-key my-keyboard-map (kbd "s") #'my/org-search-agenda)
+
 (defun my|create-missing-org-files ()
   "Create missing files listed in `org-agenda-files'."
   (dolist (file org-agenda-files)
