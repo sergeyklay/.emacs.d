@@ -117,6 +117,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    'markdown-mode
    'orderless
    'org-cliplink
+   'org-contacts
    'org-super-agenda
    'pass
    'password-store
@@ -660,8 +661,25 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 ;;;;; Org Contib
 (with-eval-after-load 'org
+  ;; Take a URL from the clipboard and inserts an org-mode link.
   (require 'org-cliplink)
-  (global-set-key (kbd "C-x p i") #'org-cliplink))
+  (global-set-key (kbd "C-x p i") #'org-cliplink)
+
+  ;; Managing contacts into org-mode.
+  (require 'org-contacts)
+  (setq org-contacts-files
+        `(,(concat my-org-files-path "contacts.org"))))
+
+(defun my/org-contacts-search ()
+  "Search and select a contact"
+  (interactive)
+  (let ((starting-point (current-buffer)))
+    (condition-case _err
+        (progn (find-file (car org-contacts-files))
+               (consult-org-heading))
+      (t (switch-to-buffer starting-point)))))
+
+(define-key my-keyboard-map (kbd "k") #'my/org-contacts-search)
 
 ;;;;; Org TODO
 ;; Define my default keywords as workflow states.
@@ -706,6 +724,14 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
    "- [ ] Link on tag pages?\n\n")
   "A template for capturing blog-related ideas.")
 
+(defconst my-org-contacts-template
+  (concat
+   "* %(org-contacts-template-name)\n"
+   ":PROPERTIES:\n:EMAIL: %(org-contacts-template-email)\n"
+   ":PHONE: %^{Phone}\n:STREET:\n:POSTALCODE:\n:CITY:\n:COUNTRY:\n"
+   ":URL:\n:NOTE: %^{NOTE}\n:CREATED: %U\n:END:")
+  "A template for capturing contact records.")
+
 ;; Default target for capturing notes. Also used for mobile sync.
 ;; See `org-mobile-inbox-for-pull' bellow.
 (setq org-default-notes-file (concat my-org-files-path "inbox.org"))
@@ -718,6 +744,10 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         ("e" "Event" entry
          (file+headline ,(concat my-org-files-path "misc.org") "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+        ;; I prefer refile this later and  manually into proper group
+        ("k", "Contact" entry
+         (file+headline ,(concat my-org-files-path "misc.org"), "Contacts")
+         ,my-org-contacts-template :empty-lines 1)
         ("t" "Trip Checklist" checkitem
          (file+headline ,(concat my-org-files-path "misc.org") "Trip Checklist"))
         ("b" "Bookmark" entry
