@@ -744,9 +744,8 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         ("e" "Event" entry
          (file+headline ,(concat my-org-files-path "misc.org") "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-        ;; I prefer refile this later and  manually into proper group
-        ("k", "Contact" entry
-         (file+headline ,(concat my-org-files-path "misc.org"), "Contacts")
+        ;; I prefer refile this later manually into proper group
+        ("k", "Contact" entry (file ,(concat my-org-files-path "inbox.org"))
          ,my-org-contacts-template :empty-lines 1)
         ("t" "Trip Checklist" checkitem
          (file+headline ,(concat my-org-files-path "misc.org") "Trip Checklist"))
@@ -768,7 +767,6 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         ("w" "To-Watch" entry
          (file+headline ,(concat my-org-files-path "misc.org") "To-Watch List")
          "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-
         ("B" "Business")
         ("Bs" "Shorts" entry
          (file+headline ,(concat my-org-files-path "business.org") "Shorts")
