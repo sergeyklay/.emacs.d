@@ -393,36 +393,33 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 ;; Enable automatic encryption/decryption of *.gpg files
 (require 'epa-file)
 
-;; Only enable `epa-file` if it's not already enabled
+;; Only enable `epa-file' if it's not already enabled
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
 
 (require 'auth-source)
-
-;; Cleanup original value of authentication sources to
-;; use only password-store (sell bellow).
-(setq auth-sources '())
-
-;; Autoload commands from `password-store'.
-(autoload 'password-store-insert "password-store" nil t)
-(autoload 'password-store-copy "password-store" nil t)
-(autoload 'password-store-get "password-store" nil t)
-
-;; See https://www.passwordstore.org/
-;; Autoload commands from `pass'.
-(autoload 'pass "pass" nil t)
-(autoload 'pass-view-mode "pass" nil t)
-
-(add-to-list 'auto-mode-alist
-             '("\\<password-store\\>/.*\\.gpg\\'" . pass-view-mode))
-
 (require 'auth-source-pass)
 
-; Enable extra query keywords for auth-source-pass
-(setq auth-source-pass-extra-query-keywords t)
+;; Cleanup original value of authentication sources to
+;; use only `password-store' (sell bellow).
+(setq auth-sources '())
 
-;; Enable `auth-source-pass' to use pass for `auth-sources'.
-(auth-source-pass-enable)
+(with-eval-after-load 'auth-source-pass
+  ;; Enable extra query keywords for auth-source-pass
+  (setq auth-source-pass-extra-query-keywords t)
+
+  ;; Enable `auth-source-pass' to use pass for `auth-sources'.
+  (auth-source-pass-enable))
+
+(require 'pass)
+(with-eval-after-load 'pass
+  ;; Dynamically associate .gpg files in the password-store directory with
+  ;; pass-view-mode, using the current value of `auth-source-pass-filename'.
+  (add-to-list 'auto-mode-alist
+               (cons (format "%s/.*\\.gpg\\'"
+                             (regexp-quote
+                              (expand-file-name auth-source-pass-filename)))
+                     'pass-view-mode)))
 
 
 ;;;; Organization
