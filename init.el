@@ -848,6 +848,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
     ,(concat my-org-files-path "contacts.org")
     ;; Finances / Legal / Assure / Insure / Regulate
     ,(concat my-org-files-path "flair.org")
+    ,(concat my-org-files-path "hardware.org")
     ,(concat my-org-files-path "housing.org")
     ,(concat my-org-files-path "inbox.org")
     ,(concat my-org-files-path "misc.org")
