@@ -1749,8 +1749,7 @@ This function serves multiple purposes:
 ;; Defer loading `rainbow-mode' until `css-mode' is activated.
 (add-hook 'css-mode-hook #'rainbow-mode)
 
-;; Associate .yml and .yaml files with `yaml-mode'.
-(require 'yaml-mode)
+;; Load `yaml-mode' when opening files with the '.yml' and '.yaml' extensions.
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 
 ;; Load `rst-mode' when opening files with the .rst extension.
