@@ -1163,22 +1163,23 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 
 ;;;; Window Handling
-;; Winner mode allows you to undo and redo window configurations. This is
+;; `winner-mode' allows you to undo and redo window configurations. This is
 ;; extremely useful when working with multiple windows (or "splits") and
 ;; you accidentally close or resize them in a way that disrupts your workflow.
-(require 'winner)
-
-;; Enable Winner mode globally after Emacs has initialized. This hook ensures
-;; that the mode is activated only after all other initialization steps have
-;; completed, avoiding potential conflicts or unexpected behavior.
 (add-hook 'after-init-hook #'winner-mode)
 
-;; Define a list of buffer names that Winner mode will ignore when restoring
-;; window configurations. This is useful for excluding temporary or less
-;; important buffers from the restoration process.
-(setq winner-boring-buffers
-      '("*Completions*" "*Compile-Log*" "*Apropos*" "*Help*"
-        "*Buffer List*" "*Ibuffer*" "*Messages*"))
+(with-eval-after-load 'winner
+  ;; Define a list of buffer names that Winner mode will ignore when restoring
+  ;; window configurations.
+  (setq winner-boring-buffers
+        '("*Apropos*"
+          "*Buffer List*"
+          "*Compile-Log*"
+          "*Completions*"
+          "*Help*"
+          "*Ibuffer*"
+          "*inferior-lisp*"
+          "*Messages*")))
 
 
 ;;;; Appearance
