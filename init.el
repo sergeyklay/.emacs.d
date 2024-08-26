@@ -892,10 +892,9 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
 ;; `org-store-agenda-view' function, which uses certain commands defined in
 ;; `org-agenda-custom-commands' to generate HTML reports.
 (with-eval-after-load 'org-agenda
-  ;; Explicitly load `htmlize' when `org-agenda' is used.
-  (autoload 'htmlize-buffer "htmlize" "Convert buffer to HTML." t)
-  (autoload 'htmlize-region "htmlize" "Convert region to HTML." t)
-  (autoload 'htmlize-file "htmlize" "Convert file to HTML." t))
+  ;; This is needed to be able export agenda as HTML report.
+  ;; See `org-agenda-custom-commands' bellow.
+  (require 'htmlize))
 
 (defun my-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
