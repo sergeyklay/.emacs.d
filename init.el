@@ -727,9 +727,10 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (defconst my-org-contacts-template
   (concat
    "* %(org-contacts-template-name)\n"
-   ":PROPERTIES:\n:EMAIL: %(org-contacts-template-email)\n"
+   ":PROPERTIES:\n:TYPE: %^{PROMPT|person|person|company|other}\n"
+   ":EMAIL: %(org-contacts-template-email)\n"
    ":PHONE: %^{Phone}\n:STREET:\n:POSTALCODE:\n:CITY:\n:COUNTRY:\n"
-   ":URL:\n:NOTE: %^{NOTE}\n:CREATED: %U\n:END:")
+   ":BIRTHDAY: %^{Birthday}t\n:URL:\n:NOTE: %^{NOTE}\n:CREATED: %U\n:END:")
   "A template for capturing contact records.")
 
 ;; Default target for capturing notes. Also used for mobile sync.
