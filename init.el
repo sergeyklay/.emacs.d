@@ -931,15 +931,6 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
   ;; Enable `org-super-agenda-mode' in `org-agenda-mode'.
   (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
 
-;; HTML export functionality used bellow in `org-agenda-custom-commands'.
-;; The main purpose of this package in my configuration is to call the
-;; `org-store-agenda-view' function, which uses certain commands defined in
-;; `org-agenda-custom-commands' to generate HTML reports.
-(with-eval-after-load 'org-agenda
-  ;; This is needed to be able export agenda as HTML report.
-  ;; See `org-agenda-custom-commands' bellow.
-  (require 'htmlize))
-
 (defun my-org-agenda-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
