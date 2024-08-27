@@ -1259,9 +1259,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 
 ;;;; Window Handling
-;; `winner-mode' allows you to undo and redo window configurations. This is
-;; extremely useful when working with multiple windows (or "splits") and
-;; you accidentally close or resize them in a way that disrupts your workflow.
+;; `winner-mode' allows you to undo and redo window configurations.
 (add-hook 'after-init-hook #'winner-mode)
 
 (with-eval-after-load 'winner
@@ -1276,6 +1274,15 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
           "*Ibuffer*"
           "*inferior-lisp*"
           "*Messages*")))
+
+;; `windmove-mode' enables navigation between windows using user-defined keys.
+(add-hook 'after-init-hook #'windmove-mode)
+
+(with-eval-after-load 'windmove
+  (global-set-key (kbd "C-x w <up>") 'windmove-up)
+  (global-set-key (kbd "C-x w <down>") 'windmove-down)
+  (global-set-key (kbd "C-x w <right>") 'windmove-right)
+  (global-set-key (kbd "C-x w <left>") 'windmove-left))
 
 
 ;;;; Appearance
