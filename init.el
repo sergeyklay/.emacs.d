@@ -765,7 +765,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
          ,my-org-capture-template-blog :empty-lines 1)
         ("n" "Random Note" entry
           (file+headline ,(concat my-org-files-path "notes.org") "Random Notes")
-          "** %?\n  %U" :empty-lines 1)
+          ,my-org-capture-template-simple :empty-lines 1)
         ("I" "Inbox, refile later" entry
          (file ,(concat my-org-files-path "inbox.org"))
           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 0)
