@@ -376,7 +376,6 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
 
-(require 'auth-source)
 (require 'auth-source-pass)
 
 ;; Cleanup original value of authentication sources to
@@ -412,7 +411,7 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 ;; values are used to determine local sunrise/sunset times, moon phases, and
 ;; other location-dependent calendar features in Emacs.
 (setq-default calendar-latitude 51.1)
-(setq-default calendar-longitude 17.03)
+(setq-default calendar-longitude 17.0)
 
 ;; Alist of time zones and places for `world-clock' to display.
 (setq-default world-clock-list '(("Canada/Pacific" "Vancouver")
@@ -725,11 +724,20 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 (defconst my-org-contacts-template
   (concat
-   "* %(org-contacts-template-name)\n"
-   ":PROPERTIES:\n:TYPE: %^{PROMPT|person|person|company|other}\n"
+   "* %(org-contacts-template-name) %^g\n"
+   ":PROPERTIES:\n"
+   ":TYPE: %^{PROMPT|person|person|company|list|other}\n"
    ":EMAIL: %(org-contacts-template-email)\n"
-   ":PHONE: %^{Phone}\n:STREET:\n:POSTALCODE:\n:CITY:\n:COUNTRY:\n"
-   ":BIRTHDAY: %^{Birthday}t\n:URL:\n:NOTE: %^{NOTE}\n:CREATED: %U\n:END:")
+   ":PHONE: %^{Phone}\n"
+   ":STREET:\n"
+   ":POSTALCODE:\n"
+   ":CITY:\n"
+   ":COUNTRY:\n"
+   ":BIRTHDAY: %^{Birthday}t\n"
+   ":URL:\n"
+   ":NOTE: %^{NOTE}\n"
+   ":CREATED: %U\n"
+   ":END:\n\n")
   "A template for capturing contact records.")
 
 ;; Default target for capturing notes. Also used for mobile sync.
