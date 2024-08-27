@@ -1528,7 +1528,7 @@ related to your current project."
   (require 'orderless)
 
   ;; Set up Orderless as the default completion style.
-  (setq completion-styles '(orderless))
+  (setq completion-styles '(orderless basic))
   (setq completion-category-defaults nil)
 
   ;; Adjust completion for specific contexts, e.g., file paths
