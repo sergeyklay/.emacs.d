@@ -987,6 +987,23 @@ more recently than A, and nil if they have the same CLOSED time."
           ((time-less-p a-closed-time b-closed-time) -1)
           (t nil))))
 
+(defun my-get-week-start-date ()
+  "Return the date and time of the start of the current week."
+  (let* ((current-time (current-time))
+         ;; %u gives the day of the week where Monday is 1 and Sunday is 7
+         (day-of-week (string-to-number (format-time-string "%u" current-time)))
+         ;; Calculate the offset from the current day to the start of the week.
+         ;; If `day-of-week' is before `calendar-week-start-day', `mod' ensures
+         ;; that the result is always non-negative.
+         (days-from-start (mod (- day-of-week calendar-week-start-day) 7))
+         (week-start-time (time-subtract current-time
+                                         (days-to-time days-from-start))))
+    (format-time-string "%Y-%m-%d 00:00" week-start-time)))
+
+(defun my-get-month-start-date ()
+  "Return the date and time of the start of the current month."
+  (format-time-string "%Y-%m-01 00:00"))
+
 ;; For details see: https://orgmode.org/manual/Special-Agenda-Views.html
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
@@ -1034,14 +1051,28 @@ more recently than A, and nil if they have the same CLOSED time."
                   'my-org-agenda-skip-non-stuck-projects)
                  (org-agenda-overriding-header
                   "Stuck Projects with open but not scheduled sub-tasks")))))
+        ;; All tasks marked as DONE within the current week for weekly reviews
+        ;; or status updates.
         ("w" "Tasks done this week"
-         ((tags "TODO=\"DONE\"&CLOSED>=\"<-1w>\"" ))
+         ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\""
+                        (my-get-week-start-date))
+                ((org-agenda-overriding-header
+                  "Tasks done this week"))))
          ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
-          (org-agenda-sorting-strategy '(user-defined-down))))
+          (org-agenda-sorting-strategy '(user-defined-down))
+          ;; Disable org-super-agenda-mode for this view
+          (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1)))))
+        ;; All tasks marked as DONE within the current month for montly reviews
+        ;; or status updates.
         ("W" "Tasks done this month"
-         ((tags "TODO=\"DONE\"&CLOSED>=\"<-1m>\""))
+         ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\""
+                        (my-get-month-start-date))
+                ((org-agenda-overriding-header
+                  "Tasks done this month"))))
          ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
-          (org-agenda-sorting-strategy '(user-defined-down))))
+          (org-agenda-sorting-strategy '(user-defined-down))
+          ;; Disable org-super-agenda-mode for this view
+          (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1)))))
         ;; Filtered tasks excluding those with :project: tag, their children,
         ;; and DONE/CANCELED tasks
         ("-" "Standalone Tasks"
