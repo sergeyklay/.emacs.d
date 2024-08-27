@@ -447,9 +447,6 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 ;; Set the default width for inline images to 600 pixels.
 (setq org-image-actual-width '(600))
 
-;; Enable text selection using Shift + arrow keys in org-mode.
-(setq org-support-shift-select t)
-
 ;; Set up the global directory for org files.
 (setq org-directory (directory-file-name my-org-files-path))
 
