@@ -1811,19 +1811,22 @@ This function serves multiple purposes:
 ;; Set the indentation level for CSS files to 2 spaces.
 (setq css-indent-offset 2)
 
+;; Defer loading `rainbow-mode' until `css-mode' is activated.
+(add-hook 'css-mode-hook #'rainbow-mode)
+
 ;; Associate `js-mode' with .js files.
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
 
 ;; Set the indentation level for JavaScript files to 2 spaces.
 (setq js-indent-level 2)
 
-;; Defer loading `rainbow-mode' until `css-mode' is activated.
-(add-hook 'css-mode-hook #'rainbow-mode)
+;; Associate `xml-mode' with .plist files.
+(add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
-;; Load `yaml-mode' when opening files with the '.yml' and '.yaml' extensions.
+;; Associate `yaml-mode' whith .yml and .yaml files.
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
 
-;; Load `rst-mode' when opening files with the .rst extension.
+;; Associate `rst-mode' whith .rst files.
 (add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
 
 (with-eval-after-load 'rst
