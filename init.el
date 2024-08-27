@@ -1623,7 +1623,7 @@ related to your current project."
 
 ; Autojoin specific channels on Libera.Chat
 (setq erc-autojoin-channels-alist
-      '(("Libera.Chat" "#emacs" "#org-mode" "#re2c")))
+      '(("Libera.Chat" "#emacs" "#org-mode" "#re2c" "#systemcrafters")))
 
 ;; Set autojoin timing to wait for ident response
 (setq erc-autojoin-timing 'ident)
