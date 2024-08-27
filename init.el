@@ -826,7 +826,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
              ("s" "Standalone Tasks"
               ((tags-todo "-project-DONE-CANCELED"
                           ((org-agenda-skip-function
-                            '(my/org-agenda-skip-if-parent-has-tag
+                            '(my-org-agenda-skip-if-parent-has-tag
                               "project")))))))))
       ;; Generate MobileOrg export.
       (org-mobile-push))
@@ -932,7 +932,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
   ;; See `org-agenda-custom-commands' bellow.
   (require 'htmlize))
 
-(defun my-skip-non-stuck-projects ()
+(defun my-org-agenda-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     (if (or (org-entry-is-done-p)  ; Skip if project is done
@@ -945,7 +945,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
         subtree-end  ; Skip if project has TODO or SCHEDULED descendants
       nil)))         ; Do not skip if the project is stuck
 
-(defun my/org-agenda-skip-if-parent-has-tag (tag)
+(defun my-org-agenda-skip-if-parent-has-tag (tag)
   "Skip an entry if any of its parents have the specified TAG.
 
 TAG should be a string without the colons, e.g., 'project'."
@@ -957,6 +957,27 @@ TAG should be a string without the colons, e.g., 'project'."
     (when parent-skipped
       (or (outline-next-heading)
           (goto-char (point-max))))))
+
+(defun my-org-cmp-closed (a b)
+  "Compare Org agenda entries A and B by their CLOSED timestamp.
+Return +1 if A is closed more recently than B, -1 if B is closed
+more recently than A, and nil if they have the same CLOSED time."
+  (let* ((a-marker (get-text-property 0 'org-marker a))
+         (b-marker (get-text-property 0 'org-marker b))
+         (now (current-time))
+         (a-closed-ts (org-timestamp-from-string
+                       (org-entry-get a-marker "CLOSED")))
+         (b-closed-ts (org-timestamp-from-string
+                       (org-entry-get b-marker "CLOSED")))
+         (a-closed-time (or (and a-closed-ts
+                                 (org-timestamp-to-time a-closed-ts))
+                            now))
+         (b-closed-time (or (and b-closed-ts
+                                 (org-timestamp-to-time b-closed-ts))
+                            now)))
+    (cond ((time-less-p b-closed-time a-closed-time) +1)
+          ((time-less-p a-closed-time b-closed-time) -1)
+          (t nil))))
 
 ;; For details see: https://orgmode.org/manual/Special-Agenda-Views.html
 (setq org-agenda-custom-commands
@@ -1001,15 +1022,24 @@ TAG should be a string without the colons, e.g., 'project'."
         ;; Something went wrong with these projects
         ("P" "Stuck Projects"
          ((tags "+project-someday-DONE-CANCELED"
-                ((org-agenda-skip-function 'my-skip-non-stuck-projects)
+                ((org-agenda-skip-function
+                  'my-org-agenda-skip-non-stuck-projects)
                  (org-agenda-overriding-header
                   "Stuck Projects with open but not scheduled sub-tasks")))))
+        ("w" "Tasks done this week"
+         ((tags "TODO=\"DONE\"&CLOSED>=\"<-1w>\"" ))
+         ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
+          (org-agenda-sorting-strategy '(user-defined-down))))
+        ("W" "Tasks done this month"
+         ((tags "TODO=\"DONE\"&CLOSED>=\"<-1m>\""))
+         ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
+          (org-agenda-sorting-strategy '(user-defined-down))))
         ;; Filtered tasks excluding those with :project: tag, their children,
         ;; and DONE/CANCELED tasks
         ("-" "Standalone Tasks"
          ((tags-todo "-project-DONE-CANCELED"
                      ((org-agenda-skip-function
-                       '(my/org-agenda-skip-if-parent-has-tag "project"))
+                       '(my-org-agenda-skip-if-parent-has-tag "project"))
                       (org-agenda-overriding-header
                        "Standalone Tasks: No Projects or DONE Items")))))
         ;; This command creates an agenda view for the next 180 days, excluding
