@@ -62,7 +62,10 @@ jobs:
           version: ${{ matrix.emacs_version }}
 
       - name: Prepare home dir
-        run: ln -sf $GITHUB_WORKSPACE /home/runner/.emacs.d
+        run: |
+          echo $GITHUB_WORKSPACE
+          ls -al $GITHUB_WORKSPACE
+          ln -sf $GITHUB_WORKSPACE /home/runner/.emacs.d
 
       - name: Install packages
         run: make install
