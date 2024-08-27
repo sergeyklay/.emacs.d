@@ -49,6 +49,8 @@ jobs:
       - name: Setup Prerequisites
         run: |
           sudo snap install ripgrep --classic
+          sudo apt-get update
+          sudo apt-get -y install pass
 
       - name: Checkout Code
         uses: actions/checkout@v4
