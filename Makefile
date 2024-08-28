@@ -15,6 +15,11 @@
 
 include default.mk
 
+%.elc: %.el
+	@printf "Compiling $<\n"
+	@$(RUNEMACS) --eval '(setq byte-compile-error-on-warn t)' \
+		-f batch-byte-compile $<
+
 .PHONY: clean
 clean:
 	$(RM) *.elc
@@ -31,8 +36,7 @@ install: init.el
 	$(RUNEMACS) --load $(TOP)/$<
 
 .PHONY: build
-build: init.el test/bc.el
-	$(RUNEMACS) --eval $(INIT_CODE) $(patsubst %,--load $(TOP)/%, $^)
+build: $(OBJS)
 
 .PHONY: checkdoc
 checkdoc: test/checkdoc.el
