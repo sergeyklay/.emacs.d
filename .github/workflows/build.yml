@@ -49,7 +49,6 @@ jobs:
       - name: Setup Prerequisites
         run: |
           sudo snap install ripgrep --classic
-          echo $HOME
 
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -62,10 +61,7 @@ jobs:
           version: ${{ matrix.emacs_version }}
 
       - name: Prepare home dir
-        run: |
-          echo $GITHUB_WORKSPACE
-          ls -al $GITHUB_WORKSPACE
-          ln -sf $GITHUB_WORKSPACE /home/runner/.emacs.d
+        run: ln -sf $GITHUB_WORKSPACE /home/runner/.emacs.d
 
       - name: Install packages
         run: make install

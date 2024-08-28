@@ -98,9 +98,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
          (package-install package))))))
 
 ;; Install packages as soon as possible.
-(unless (or (daemonp)
-            noninteractive)
-  (ensure-package-installed
+(ensure-package-installed
    'anaconda-mode
    'consult
    'consult-flyspell
@@ -129,7 +127,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    'vertico-prescient
    'which-key
    'writegood-mode
-   'yaml-mode))
+   'yaml-mode)
 
 
 ;;;; Setup keymap
