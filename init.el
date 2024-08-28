@@ -374,45 +374,30 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
 
-(defconst pass-executable (executable-find "pass")
-  "The path of the 'pass' executable in the system.")
-
-(defvar my-password-store-dir nil
-  "The path to the password store directory.")
-
 ;; Require `auth-source-pass' only if pass executable is available.
-(when pass-executable
+(when (executable-find "pass")
   (require 'auth-source-pass)
-  (setq my-password-store-dir (expand-file-name auth-source-pass-filename)))
+  (my-ensure-directory-exists (expand-file-name auth-source-pass-filename))
 
-;; Check if 'pass' is available and the password store directory exists
-(if (and pass-executable (file-directory-p my-password-store-dir))
-    (progn
-      ;; Reset the original value of `auth-sources'
-      ;; to use only `password-store'
-      (setq auth-sources nil)
+  ;; Reset the original value of `auth-sources' to use only `password-store'.
+  (setq auth-sources nil)
 
-      (with-eval-after-load 'auth-source-pass
-        ;; Enable extra query keywords for auth-source-pass
-        (setq auth-source-pass-extra-query-keywords t)
+  (with-eval-after-load 'auth-source-pass
+    ;; Enable extra query keywords for `auth-source-pass'.
+    (setq auth-source-pass-extra-query-keywords t)
 
-        ;; Enable `auth-source-pass` to use pass for `auth-sources`
-        (auth-source-pass-enable))
+    ;; Enable `auth-source-pass' to use pass for `auth-sources'.
+    (auth-source-pass-enable))
 
-      (require 'pass)
-      (with-eval-after-load 'pass
-        ;; Dynamically associate .gpg files in the password-store
-        ;; directory with `pass-view-mode', using the current value of
-        ;; `auth-source-pass-filename'.
-        (add-to-list 'auto-mode-alist
-                     (cons (format "%s/.*\\.gpg\\'"
-                                   (regexp-quote my-password-store-dir))
-                           'pass-view-mode))))
-  (message "%s; unable to enable `auth-source-pass' functionality."
-           (if pass-executable
-               (format "Password store directory not found: %s"
-                       my-password-store-dir)
-             "pass executable not found")))
+  (require 'pass)
+  (with-eval-after-load 'pass
+    ;; Dynamically associate .gpg files in the pass directory with
+    ;; `pass-view-mode', using the current value of `auth-source-pass-filename'.
+    (add-to-list
+     'auto-mode-alist
+     (cons (format "%s/.*\\.gpg\\'"
+                   (regexp-quote (expand-file-name auth-source-pass-filename)))
+           'pass-view-mode))))
 
 
 ;;;; Calendar
