@@ -285,55 +285,49 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Enable Emacs server mode, allowing Emacs to act as a server for external
 ;; clients.
 (require 'server)
-
-;; Check if the server is already running. If not, start the server mode.
 (unless (server-running-p)
   (server-mode t))
 
 
 ;;;; Spell
 ;; Configuration for `ispell' to use hunspell as the spell checker.
+(require 'ispell)
+
+;; Set the program name to 'hunspell' which is the spell checker we are using.
+(setq ispell-program-name (executable-find "hunspell"))
+
+;; Automatically save the personal dictionary without asking for confirmation.
+(setq ispell-silently-savep t)
+
+;; Define the default dictionary to be used. You can change "en_US" to any
+;; dictionary that is installed and available on your system.
+(setq ispell-local-dictionary "en_US")
+
+;; Configure the list of my dictionaries.
 ;; Note: On macOS, Homebrew does not provide dictionaries by default.
 ;; You will need to install them manually. For more information on how
 ;; to install dictionaries, visit:
 ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
+(setq ispell-local-dictionary-alist
+      '(("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+         ("-d" "en_US") nil utf-8)
+        ("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+         ("-d" "pl") nil utf-8)
+        ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
+         ("-d" "russian-aot-ieyo") nil utf-8)))
 
-;; Ensure that hunspell is available before proceeding with the configuration.
-(when (executable-find "hunspell")
-  ;; Set the program name to 'hunspell' which is the spell checker we are using.
-  (setq ispell-program-name (executable-find "hunspell"))
+;; Specify that we are using hunspell, not aspell.
+(setq ispell-really-aspell nil)
+(setq ispell-really-hunspell t)
 
-  ;; Automatically save the personal dictionary without asking for confirmation.
-  (setq ispell-silently-savep t)
+;; Configure flyspell to work with hunspell.
+(when (executable-find ispell-program-name)
+  ;; Add spell-checking in comments for all programming language modes
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-  ;; Define the default dictionary to be used. You can change "en_US" to any
-  ;; dictionary that is installed and available on your system.
-  (setq ispell-local-dictionary "en_US")
-
-  ;; Configure the list of my dictionaries
-  (setq ispell-local-dictionary-alist
-        '(("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
-           ("-d" "en_US") nil utf-8)
-          ("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
-           ("-d" "pl") nil utf-8)
-          ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
-           ("-d" "russian-aot-ieyo") nil utf-8)))
-
-  ;; Specify that we are using hunspell, not aspell.
-  (setq ispell-really-aspell nil)
-  (setq ispell-really-hunspell t)
-
-  ;; Configure flyspell to work with hunspell.
-  (require 'flyspell)
-
-  ;; Be silent when checking words to avoid unnecessary messages.
-  (setq flyspell-issue-message-flag nil)
-
-  ;; Enable flyspell-mode automatically in some modes.
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'latex-mode-hook #'flyspell-mode)
-
-  (global-set-key (kbd "C-x t s") 'flyspell-mode))
+  (with-eval-after-load 'flyspell
+    ;; Be silent when checking words to avoid unnecessary messages.
+    (setq flyspell-issue-message-flag nil)))
 
 ;; Load `writegood-mode' and set up hooks.
 (with-eval-after-load 'writegood-mode
