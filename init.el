@@ -858,6 +858,12 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
     ,(concat my-org-files-path "notes.org"))
   "The list of my non-work agenda files.")
 
+;; Re-align tags when window shape changes
+(with-eval-after-load 'org-agenda
+  (add-hook 'org-agenda-mode-hook
+            (lambda () (add-hook 'window-configuration-change-hook
+                                 'org-agenda-align-tags nil t))))
+
 ;; I maintain two categories of agenda files: work and non-work files.
 (setq org-agenda-files
       (append my-org-agenda-files-work my-org-agenda-files-life))
