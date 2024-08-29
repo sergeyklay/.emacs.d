@@ -75,6 +75,8 @@ jobs:
 
       - name: Check for code style
         run: make checkdoc
+        env:
+          EMACSFLAGS: ""
 
       - name: Byte compile configuration files
         if: matrix.allow_failure != true

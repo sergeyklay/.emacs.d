@@ -657,7 +657,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 ;; Check if GPG is available, then require `org-crypt'.
 ;; Otherwise, display a warning.
 (if my-gpg-program
-    (require 'org-crypt
+    (require 'org-crypt)
   (warn "GPG is not available. `org-crypt' could not be loaded."))
 
 ;; Load `org-crypt' at compile-time to ensure its variables are available during
