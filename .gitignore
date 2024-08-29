@@ -13,9 +13,7 @@
 /eshell
 /snippets
 /transient
-
-# Use this as your own wish list or a temporary buffer.
-/LATER
+/.cask
 
 # Byte compiled elisp files.
 *.elc
