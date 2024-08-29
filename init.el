@@ -429,8 +429,9 @@ If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
 
 (require 'org)
 
-;; Associate .org and .org_archive files with `org-mode'.
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\)\\'" . org-mode))
+;; Associate .org, .org_archive and .txt files with `org-mode'.
+(add-to-list 'auto-mode-alist
+             '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
 
 ;; When opening an Org file, start with all top-level headers collapsed.
 (setq org-startup-folded t)
