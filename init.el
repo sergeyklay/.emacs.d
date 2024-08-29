@@ -146,6 +146,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 (keymap-global-set "C-c C-/" my-keyboard-map)
 
+;; Declare `which-key-mode' to avoid compilation warnings.
+(declare-function which-key-mode "which-key" (&optional arg))
+
 ;; Load `which-key' and enable `which-key-mode'.
 (add-hook 'after-init-hook #'which-key-mode)
 
@@ -323,16 +326,16 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Configure flyspell to work with hunspell.
 (when (executable-find ispell-program-name)
   ;; Add spell-checking in comments for all programming language modes
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
-  ;; Load `flyspell' at compile-time to ensure its variables and functions
-  ;; are available during compilation, avoiding any free variable warnings.
-  (eval-when-compile
-    (require 'flyspell))
+;; Load `flyspell' at compile-time to ensure its variables and functions
+;; are available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'flyspell))
 
-  (with-eval-after-load 'flyspell
-    ;; Be silent when checking words to avoid unnecessary messages.
-    (setq flyspell-issue-message-flag nil)))
+(with-eval-after-load 'flyspell
+  ;; Be silent when checking words to avoid unnecessary messages.
+  (setq flyspell-issue-message-flag nil))
 
 ;; Declare `writegood-mode' to avoid compilation warnings.
 (declare-function writegood-mode "writegood-mode" (&optional arg))
@@ -1569,13 +1572,16 @@ related to your current project."
 
 
 ;;;; Setup completion
-;; Provide a nicer `completing-read'.
-(add-hook 'after-init-hook #'vertico-mode)
-
 ;; Load `vertico' at compile-time to ensure its variables and functions are
 ;; available during compilation, avoiding any free variable warnings.
 (eval-when-compile
   (require 'vertico))
+
+;; Declare `vertico-mode' to avoid compilation warnings.
+(declare-function vertico-mode "vertico" (&optional arg))
+
+;; Provide a nicer `completing-read'.
+(add-hook 'after-init-hook #'vertico-mode)
 
 ;; Show more candidates in the minibuffer.
 (setq vertico-count 12)
@@ -1649,6 +1655,9 @@ related to your current project."
 
   ;; Set custom function for selecting corrections.
   (setq consult-flyspell-select-function #'flyspell-correct-at-point))
+
+;; Declare `marginalia-mode' to avoid compilation warnings.
+(declare-function marginalia-mode "marginalia" (&optional arg))
 
 ;; Add additional context and annotations to completion UI.  Marginalia enriches
 ;; the completion interface with more information, such as documentation
