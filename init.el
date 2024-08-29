@@ -749,8 +749,9 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         ("e" "Event" entry
          (file+headline ,(concat my-org-files-path "misc.org") "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-        ;; I prefer refile this later manually into proper group
-        ("k", "Contact" entry (file ,(concat my-org-files-path "inbox.org"))
+        ;; I prefer refile this later manually into proper group.
+        ;; "" means `org-default-notes-file'.
+        ("k", "Contact" entry (file "")
          ,my-org-contacts-template :empty-lines 1)
         ("t" "Trip Checklist" checkitem
          (file+headline ,(concat my-org-files-path "misc.org") "Trip Checklist"))
@@ -763,8 +764,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         ("n" "Random Note" entry
           (file+headline ,(concat my-org-files-path "notes.org") "Random Notes")
           ,my-org-capture-template-simple :empty-lines 1)
-        ("I" "Inbox, refile later" entry
-         (file ,(concat my-org-files-path "inbox.org"))
+        ("I" "Inbox, refile later" entry (file "")
           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 0)
         ("r" "To-Read" entry
          (file+headline ,(concat my-org-files-path "misc.org") "To-Read List")
