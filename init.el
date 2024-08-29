@@ -147,7 +147,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (keymap-global-set "C-c C-/" my-keyboard-map)
 
 ;; Load `which-key' and enable `which-key-mode'.
-(add-hook 'after-init-hook 'which-key-mode)
+(add-hook 'after-init-hook #'which-key-mode)
 
 ;; Increase the delay for which-key buffer to popup.
 (setq-default which-key-idle-delay 1.5)
@@ -199,18 +199,18 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; ensures that you return to the exact spot where you left off, enhancing
 ;; workflow efficiency. Only enable in interactive mode.
 (when (not noninteractive)
-  (add-hook 'after-init-hook 'save-place-mode))
+  (add-hook 'after-init-hook #'save-place-mode))
 
 ;; Enable `savehist-mode', which automatically saves the minibuffer history
 ;; to a file and loads it on startup, preserving your history between sessions.
 ;; Only enable in interactive mode.
 (when (not noninteractive)
-  (add-hook 'after-init-hook 'savehist-mode))
+  (add-hook 'after-init-hook #'savehist-mode))
 
 ;; Enable `recentf-mode' to keep track of recently opened files.
 ;; Only enable in interactive mode.
 (when (not noninteractive)
-  (add-hook 'after-init-hook 'recentf-mode))
+  (add-hook 'after-init-hook #'recentf-mode))
 
 ;; Load `recentf' at compile-time to ensure its variables and functions
 ;; are available during compilation, avoiding any free variable warnings.
@@ -323,7 +323,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Configure flyspell to work with hunspell.
 (when (executable-find ispell-program-name)
   ;; Add spell-checking in comments for all programming language modes
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
   ;; Load `flyspell' at compile-time to ensure its variables and functions
   ;; are available during compilation, avoiding any free variable warnings.
@@ -1570,7 +1570,7 @@ related to your current project."
 
 ;;;; Setup completion
 ;; Provide a nicer `completing-read'.
-(add-hook 'after-init-hook 'vertico-mode)
+(add-hook 'after-init-hook #'vertico-mode)
 
 ;; Load `vertico' at compile-time to ensure its variables and functions are
 ;; available during compilation, avoiding any free variable warnings.
@@ -1653,7 +1653,7 @@ related to your current project."
 ;; Add additional context and annotations to completion UI.  Marginalia enriches
 ;; the completion interface with more information, such as documentation
 ;; strings, file sizes, etc.
-(add-hook 'after-init-hook 'marginalia-mode)
+(add-hook 'after-init-hook #'marginalia-mode)
 
 (with-eval-after-load 'vertico
   ;; Enable Orderless for flexible matching style.  Orderless provides advanced
