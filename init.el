@@ -1254,6 +1254,13 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   (define-key org-mode-map (kbd "C-c r") #'org-refile )
   (define-key org-mode-map (kbd "C-c C-x C-a") #'org-archive-subtree))
 
+(defun my-org-refile-target-verify ()
+  "Exclude todo keywords with a done state from refile targets."
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+;; Exclude DONE state tasks from refile targets
+(setq org-refile-target-verify-function 'my-org-refile-target-verify)
+
 
 ;;;; Window Handling
 ;; `winner-mode' allows you to undo and redo window configurations.
@@ -2030,6 +2037,3 @@ This function serves multiple purposes:
 ;; End:
 
 ;;; init.el ends here
-
-;; TODO: org-linker
-;; TODO: org-linker-edna
