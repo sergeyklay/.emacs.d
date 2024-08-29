@@ -136,6 +136,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; https://www.masteringemacs.org/article/mastering-key-bindings-emacs
 (defvar my-keyboard-map
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd ";") #'comment-or-uncomment-region)
     (define-key map (kbd "-") #'text-scale-decrease)
     (define-key map (kbd "+") #'text-scale-increase)
     ;; because "+" needs "S-=" and I might forget to press shift
@@ -211,29 +212,27 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (savehist-mode t)
 
 ;; Enable `recentf-mode' to keep track of recently opened files.
-(when (not noninteractive)
-  ;; First, ensure that the `recentf' package is available, as it is required
-  ;; for this functionality.
-  (require 'recentf)
+(add-hook 'after-init-hook 'recentf-mode)
 
+;; Load `recentf' at compile-time to ensure its variables and functions
+;; are available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'recentf))
+
+(with-eval-after-load 'recentf
   ;; Set the maximum number of recent files to save.
-  (setq recentf-max-saved-items 100)
+  (setq recentf-max-saved-items 1000)
 
-  ;; Customize the conditions under which files are kept in the recent list.
-  ;; Here, we keep files that match the default predicate, are remote files,
-  ;; or are readable.
-  (setq recentf-keep
-        '(recentf-keep-default-predicate
-          file-remote-p file-readable-p))
+  ;; Update `recentf-exclude' to exclude specific paths and files
+  ;; I din't need in the list.
+  (setq recentf-exclude
+        (append recentf-exclude
+                `("/tmp"
+                  ,(expand-file-name "~/tmp")
+                  ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
 
-  ;; Enable `recentf-mode', which automatically tracks recently opened files.
-  (recentf-mode t)
-
-  ;; To ensure the recentf list is periodically saved during idle time, we
-  ;; check if the `recentf-save-list' function is available and then set up
-  ;; a timer to run it every 3 minutes.
-  (when (fboundp 'recentf-save-list)
-    (run-with-idle-timer (* 3 60) t #'recentf-save-list)))
+  ;; Set up an idle timer to save the recent list every 3 minutes
+  (run-with-idle-timer (* 3 60) t #'recentf-save-list))
 
 
 ;;;; Sane defaults
