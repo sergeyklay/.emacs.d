@@ -185,20 +185,8 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
   (my-ensure-directory-exists save-dir))
 
-;; Enable `save-place-mode' to save point position in files across sessions.  It
-;; ensures that you return to the exact spot where you left off, enhancing
-;; workflow efficiency.
-(require 'saveplace)
-
-;; Enable the `save-place-mode' globally, which activates this feature for all
-;; buffers by default.
-(save-place-mode t)
-
 
 ;;;; History
-;; Enable `savehist-mode' to preserve the minibuffer history across sessions.
-(require 'savehist)
-
 ;; Set the maximum number of entries to save in the history. A larger value
 ;; allows for a more extensive history, which can be handy if you often need
 ;; to recall older entries.
@@ -207,9 +195,17 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Enable the removal of duplicate entries in the history.
 (setq history-delete-duplicates t)
 
+;; Enable `save-place-mode' to save point position in files across sessions.  It
+;; ensures that you return to the exact spot where you left off, enhancing
+;; workflow efficiency. Only enable in interactive mode.
+(when (not noninteractive)
+  (add-hook 'after-init-hook 'save-place-mode))
+
 ;; Enable `savehist-mode', which automatically saves the minibuffer history
 ;; to a file and loads it on startup, preserving your history between sessions.
-(savehist-mode t)
+;; Only enable in interactive mode.
+(when (not noninteractive)
+  (add-hook 'after-init-hook 'savehist-mode))
 
 ;; Enable `recentf-mode' to keep track of recently opened files.
 ;; Only enable in interactive mode.
