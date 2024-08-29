@@ -326,6 +326,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   ;; Add spell-checking in comments for all programming language modes
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
+  ;; Load `flyspell' at compile-time to ensure its variables and functions
+  ;; are available during compilation, avoiding any free variable warnings.
+  (eval-when-compile
+    (require 'flyspell))
+
   (with-eval-after-load 'flyspell
     ;; Be silent when checking words to avoid unnecessary messages.
     (setq flyspell-issue-message-flag nil)))
@@ -343,7 +348,12 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
    ((executable-find "gpg2") "gpg2")
    (t nil))
   "Path to the GPG program to use.
-If neither 'gpg' nor 'gpg2' is found, this is set to nil.")
+If neither gpg nor gpg2 is found, this is set to nil.")
+
+;; Load `epg-config' at compile-time to ensure its variables are available
+;; during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'epg-config))
 
 ;; Check if GPG is available, then set `epg-gpg-program',
 ;; otherwise display a warning.
