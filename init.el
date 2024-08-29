@@ -534,6 +534,17 @@ If neither gpg nor gpg2 is found, this is set to nil.")
    (concat (file-name-as-directory (expand-file-name "~")) "org"))
   "Path to the user org files directory.")
 
+(defconst my-org-webdaw-path
+  (expand-file-name
+   "Notes"
+   (expand-file-name
+    "Dropbox"
+    (expand-file-name "~")))
+  "Common directory for exaport Org files and agendas.")
+
+(defconst my-org-reports-path (expand-file-name "Reports" my-org-webdaw-path)
+  "Common directory for exaport Org files and agendas.")
+
 (require 'org)
 
 ;; Associate .org, .org_archive and .txt files with `org-mode'.
@@ -596,6 +607,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (global-set-key (kbd "C-c l") #'org-store-link)
 
 (my-ensure-directory-exists my-org-files-path)
+(my-ensure-directory-exists my-org-reports-path)
 
 ;;;;; Helpers
 (defun my-org-get-created-date ()
@@ -913,10 +925,13 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (eval-when-compile
   (require 'org-mobile))
 
-;; Setting up Beorg sync path.  Open Files in Beog mobile app
-;; and create file called mobileorg (w/o extension) finally
-;; setup sync Beorg to Dropbox Notes.
-(setq org-mobile-directory (expand-file-name "~/Dropbox/Notes"))
+;; Setup path for export Org files.
+;;
+;; To use it with Beorg you have to:
+;; 1. Open Files in Beog mobile app
+;; 2. Ceate file called "mobileorg" (w/o extension)
+;; 3. Setup sync Beorg with Dropbox "Notes" directoy
+(setq org-mobile-directory my-org-webdaw-path)
 
 ;; Do not generate IDs for all headings.
 (setq org-mobile-force-id-on-agenda-items nil)
@@ -1223,16 +1238,22 @@ more recently than A, and nil if they have the same CLOSED time."
                    (org-agenda-entry-types '(:timestamp :sexp))
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'any)))))
-         nil
-         (,(concat my-org-files-path "agenda_180d_filtered.html")))
+         ;; Disable `org-super-agenda-mode' for this view.
+         ((org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
+         (,(expand-file-name "agenda_180d_filtered.html"
+                             my-org-reports-path)))
         ;; Full agenda for the next 31 days. Will used to export HTML file.  See
         ;; `org-agenda-exporter-settings' comment bellow.
         ("D", "Detail agenda +31d"
          ((agenda "Detail agenda"
                   ((org-agenda-span 31)
-                   (org-agenda-time-grid nil))))
-         nil
-         (,(concat my-org-files-path "agenda_details_raw.html")))))
+                   (org-agenda-time-grid nil)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'todo 'done)))))
+         ;; Disable `org-super-agenda-mode' for this view.
+         ((org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
+         (,(expand-file-name "agenda_details_raw.html"
+                             my-org-reports-path)))))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
@@ -1242,7 +1263,7 @@ more recently than A, and nil if they have the same CLOSED time."
 ;; reports directly based on the commands defined in
 ;; `org-agenda-custom-commands', without needing to first display the agenda
 ;; view. The resulting file will be saved in the directory specified by
-;; `my-org-files-path'.
+;; `my-org-reports-path'.
 ;;
 ;; I export my agendas using a daily cronjob with command that looks like:
 ;;
