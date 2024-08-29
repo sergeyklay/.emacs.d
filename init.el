@@ -1123,14 +1123,8 @@ more recently than A, and nil if they have the same CLOSED time."
                        '(my-org-agenda-skip-if-parent-has-tag "project"))
                       (org-agenda-overriding-header
                        "Standalone Tasks: No Projects or DONE Items")))))
-        ;; This command creates an agenda view for the next 180 days, excluding
-        ;; all TODO items. It displays all scheduled events that are not tasks
-        ;; with TODO states, over the specified period. To save the result as an
-        ;; HTML file, you must manually call the `org-store-agenda-view' which
-        ;; generates and saves the HTML report directly based on the defined
-        ;; commands, without needing to first display the agenda view. The
-        ;; resulting file will be saved in the directory specified by
-        ;; `my-org-files-path' and will be named 'agenda_180d_filtered.html'.
+        ;; The next 180 days, excluding all TODO items.  Will used to export
+        ;; HTML file.  See `org-agenda-exporter-settings' comment bellow.
         ("n" "No TODO events +180d"
          ((agenda "No TODO events +180d"
                   ((org-agenda-span 180)
@@ -1140,7 +1134,8 @@ more recently than A, and nil if they have the same CLOSED time."
                     '(org-agenda-skip-entry-if 'todo 'any)))))
          nil
          (,(concat my-org-files-path "agenda_180d_filtered.html")))
-        ;; Full agenda for the next 31 days.
+        ;; Full agenda for the next 31 days. Will used to export HTML file.  See
+        ;; `org-agenda-exporter-settings' comment bellow.
         ("D", "Detail agenda +31d"
          ((agenda "Detail agenda"
                   ((org-agenda-span 31)
@@ -1150,6 +1145,27 @@ more recently than A, and nil if they have the same CLOSED time."
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
+
+;; Export agenda settings.  To save the result as an HTML file, you must
+;; manually call the `org-store-agenda-view' which generates and saves HTML
+;; reports directly based on the commands defined in
+;; `org-agenda-custom-commands', without needing to first display the agenda
+;; view. The resulting file will be saved in the directory specified by
+;; `my-org-files-path'.
+;;
+;; I export my agendas using a daily cronjob with command that looks like:
+;;
+;;   emacsclient --no-wait --eval '(org-store-agenda-views)'
+;;
+;; Note: In my cron job, I don't override `org-agenda-files' as it is already
+;; set up correctly and does not include any unnecessary files. However, your
+;; setup may vary, and you might need to adjust your cron job to customize
+;; `org-agenda-files' to suit your own needs.  Be mindful of your specific file
+;; organization and how it might impact your agenda generation.
+(setq org-agenda-exporter-settings
+      '((ps-number-of-columns 2)
+        (ps-landscape-mode t)
+        (htmlize-output-type 'css)))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 
