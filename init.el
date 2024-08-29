@@ -334,6 +334,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (require 'flyspell))
 
 (with-eval-after-load 'flyspell
+  (define-key flyspell-mode-map (kbd "C-;") nil)
   ;; Be silent when checking words to avoid unnecessary messages.
   (setq flyspell-issue-message-flag nil))
 
