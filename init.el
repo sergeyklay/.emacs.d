@@ -217,6 +217,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (eval-when-compile
   (require 'recentf))
 
+;; Declare `recentf-save-list' to avoid compilation warnings.
+(declare-function recentf-save-list "recentf" ())
+
 (with-eval-after-load 'recentf
   ;; Set the maximum number of recent files to save.
   (setq recentf-max-saved-items 1000)
@@ -331,6 +334,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     ;; Be silent when checking words to avoid unnecessary messages.
     (setq flyspell-issue-message-flag nil)))
 
+;; Declare `writegood-mode' to avoid compilation warnings.
+(declare-function writegood-mode "writegood-mode" (&optional arg))
+
 ;; Load `writegood-mode' and set up hooks.
 (with-eval-after-load 'writegood-mode
   (add-hook 'text-mode-hook #'writegood-mode)
@@ -374,6 +380,12 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; Only enable `epa-file' if it's not already enabled
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
+
+;; Load `auth-source-pass' at compile-time to ensure its variables and
+;; functions are available during compilation, avoiding any free variable
+;; warnings.
+(eval-when-compile
+  (require 'auth-source-pass))
 
 ;; Require `auth-source-pass' only if pass executable is available.
 (when (executable-find "pass")
@@ -541,6 +553,9 @@ non-alphanumeric characters and replaces spaces with hyphens."
     ;; Remove trailing hyphens
     (replace-regexp-in-string "-+$" "" slug)))
 
+;; Declare `org-id-add-location' to avoid compilation warnings.
+(declare-function org-id-add-location "org-id" (id file))
+
 (defun my/org-generate-id ()
   "Generate a human-readable ID for the current Org heading.
 
@@ -583,10 +598,10 @@ informative and unique within a reasonable scope."
   "Mark the current Org heading as a project.
 
 This function ensures that the current heading:
-1. Has the tag ':project:'
-2. Has the property 'COOKIE_DATA' set to 'todo recursive'
-3. Has a 'TODO' keyword
-4. Starts with a progress indicator '[/]'
+1. Has the tag :project:
+2. Has the property COOKIE_DATA set to todo recursive
+3. Has a TODO keyword
+4. Starts with a progress indicator [/]
 
 This setup helps in organizing projects within Org Mode
 and ensures that projects are easily identifiable and managed.
@@ -642,6 +657,11 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
     (require 'org-crypt)
   (warn "GPG is not available. 'org-crypt' could not be loaded."))
 
+;; Load `org-crypt' at compile-time to ensure its variables are available during
+;; compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'org-crypt))
+
 ;; Set my encrypt key from `epa-file-encrypt-to' (see above).
 (setq org-crypt-key epa-file-encrypt-to)
 
@@ -651,15 +671,24 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 ;; Encrypt all entries before saving.
 (org-crypt-use-before-save-magic)
 
-;; Projects are tagged with ':project:' and ':crypt:' is used to mark headings
+;; Projects are tagged with :project: and :crypt: is used to mark headings
 ;; to be encrypted.  I don't want all subitems to pop up in the corresponding
 ;; agenda view.
 (setq org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
+;; Load `org-contacts' at compile-time to ensure its variables are available during
+;; compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'org-contacts))
+
 (with-eval-after-load 'org
   ;; Take a URL from the clipboard and inserts an org-mode link.
   (require 'org-cliplink)
+
+  ;; Declare `org-cliplink' to avoid compilation warnings.
+  (declare-function org-cliplink "org-cliplink" ())
+
   (global-set-key (kbd "C-x p i") #'org-cliplink)
 
   ;; Managing contacts into org-mode.
@@ -785,6 +814,11 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (global-set-key (kbd "C-c c") #'org-capture)
 
 ;;;;; Org Mobile
+;; Load `org-mobile' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'org-mobile))
+
 ;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
 ;; and create file called 'mobileorg' (w/o extension) finally
 ;; setup sync Beorg to Dropbox 'Notes'.
@@ -914,6 +948,11 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
 (setq org-agenda-window-setup 'current-window)
 
 ;; Super agenda mode.
+;; load `org-super-agenda' at compile-time to ensure its variables and functions
+;; are available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'org-super-agenda))
+
 ;; For documentation  see: https://github.com/alphapapa/org-super-agenda
 (with-eval-after-load 'org
   (require 'org-super-agenda)
@@ -932,6 +971,10 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
         (:name "Someday"
                :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
                :order 25)))
+
+  ;; Declare `org-refileorg-super-agenda-mode' to avoid compilation warnings.
+  (declare-function org-super-agenda-mode "org-refileorg-super-agenda"
+                    (&optional arg))
 
   ;; Enable `org-super-agenda-mode' in `org-agenda-mode'.
   (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
@@ -952,7 +995,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
 (defun my-org-agenda-skip-if-parent-has-tag (tag)
   "Skip an entry if any of its parents have the specified TAG.
 
-TAG should be a string without the colons, e.g., 'project'."
+TAG should be a string without the colons, e.g., project."
   (let ((parent-skipped nil))
     (save-excursion
       (while (and (not parent-skipped) (org-up-heading-safe))
@@ -1112,7 +1155,7 @@ more recently than A, and nil if they have the same CLOSED time."
   "Switch to the buffer associated with the given Org FILENAME.
 
 If a buffer visiting FILENAME is already open, switch to it.  If
-the buffer does not exist, open the FILENAME from the 'my-org-files-path'
+the buffer does not exist, open the FILENAME from the `'my-org-files-path'
 directory and switch to the newly created buffer.
 
 FILENAME should be the name of the Org file without any directory
@@ -1129,7 +1172,7 @@ use a mobile app for capturing notes. These notes are
 synchronized into a file specified by `org-mobile-inbox-for-pull'
 using `org-mobile-pull'. The primary purpose of this function is
 to move bookmarks, which you add on your mobile device and which
-end up in the `org-mobile-inbox-for-pull' file, into 'notes.org'
+end up in the `org-mobile-inbox-for-pull' file, into notes.org
 while formatting them according to my preferred style. I have
 accounted for the specific formats used by MobileOrg and Beorg in
 this implementation, but if you encounter issues, please let me
@@ -1138,14 +1181,14 @@ know so I can address them.
 Steps performed by this function:
 
 1. Remove unwanted keywords from beggining of the heading:
-   - 'TODO Bookmark'
-   - 'Bookmark'
-   - 'BOOKMARK'
-   - 'TODO'
+   - TODO Bookmark
+   - Bookmark
+   - BOOKMARK
+   - TODO
 2. Convert the heading to a second-level heading if needed.
 3. Insert a creation date property under the heading.
-4. Move the cleaned and formatted bookmark to the end of 'notes.org'.
-5. Reapply tags to the previous heading in 'notes.org'.
+4. Move the cleaned and formatted bookmark to the end of notes.org.
+5. Reapply tags to the previous heading in notes.org.
 
 This function is adapted from an implementation by Karl Voit, and
 has been reworked to enhance its readability, maintainability,
@@ -1200,14 +1243,14 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
             (org-entry-put nil "CREATED"
                            (format-time-string (org-time-stamp-format t t)))))
 
-        ;; Step 4: Cut the current heading and move it to the 'notes.org' file
+        ;; Step 4: Cut the current heading and move it to the notes.org file
         (org-cut-subtree)
         (my-org-switch-to-buffer "notes.org")
-        (end-of-buffer)
+        (goto-char (point-max))
         (newline)
-        (org-paste-subtree)  ; Paste the heading into the 'notes.org' file
+        (org-paste-subtree)  ; Paste the heading into the notes.org file
 
-        ;; Step 5: Reapply tags to the previous heading in the 'notes.org' file
+        ;; Step 5: Reapply tags to the previous heading in the notes.org file
         (org-back-to-heading t)
         (org-set-tags-command)))))
 
@@ -1244,6 +1287,10 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;; The new node creation must be confirmed by the user.
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
+;; Declare `org-refile' functions to avoid compilation warnings.
+(declare-function org-refile-get-targets "org-refile" (&optional default-buff))
+(declare-function org-refile-cache-clear "org-refile" ())
+
 ;; Set a timer to regenerate refile cache automatically every time
 ;; my Emacs has been idled for 10 mins.
 (run-with-idle-timer 600 t (lambda ()
@@ -1273,6 +1320,11 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;;;; Window Handling
 ;; `winner-mode' allows you to undo and redo window configurations.
 (add-hook 'after-init-hook #'winner-mode)
+
+;; Load `winner' at compile-time to ensure its variables and functions
+;; are available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'winner))
 
 (with-eval-after-load 'winner
   ;; Define a list of buffer names that Winner mode will ignore when restoring
@@ -1329,6 +1381,9 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (load-theme 'modus-vivendi t)
 (my-set-cursor-color-based-on-theme)
 
+;; Declare `modus-themes-toggle' to avoid compilation warnings.
+(declare-function modus-themes-toggle "modus-themes" ())
+
 (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
 ;; Nicer scrolling
@@ -1345,6 +1400,9 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook #'show-paren-mode)
+
+;; Declare `rainbow-delimiters-mode' to avoid compilation warnings.
+(declare-function rainbow-delimiters-mode "rainbow-delimiters" (&optional arg))
 
 ;; Highlight brackets according to their depth.
 ;; Add `rainbow-delimiters-mode' to `prog-mode-hook'.
@@ -1448,6 +1506,11 @@ This function is for interactive use only;"
 ;; Auto clean up zombie projects from `project-list-file'
 (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
 
+;; Load `xref' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'xref))
+
 ;; Use ripgrep if installed
 (when (executable-find "rg")
   (setq xref-search-program 'ripgrep))
@@ -1509,6 +1572,11 @@ related to your current project."
 ;; Provide a nicer `completing-read'.
 (add-hook 'after-init-hook 'vertico-mode)
 
+;; Load `vertico' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'vertico))
+
 ;; Show more candidates in the minibuffer.
 (setq vertico-count 12)
 
@@ -1526,6 +1594,19 @@ related to your current project."
                 #'consult-buffer-other-frame)
 (global-set-key [remap goto-line]
                 #'consult-goto-line)
+
+;; Declare `consult' functions to avoid compilation warnings.
+(declare-function consult-theme "consult" (theme))
+(declare-function consult-line "consult" (&optional initial start))
+(declare-function consult-history "consult" (&optional history index bol))
+(declare-function consult-recent-file "consult" ())
+(declare-function consult-locate "consult" (&optional initial))
+(declare-function consult-goto-line "consult" (&optional arg))
+(declare-function consult-buffer-other-frame "consult" ())
+(declare-function consult-buffer-other-window "consult" ())
+(declare-function consult-buffer "consult" (&optional sources))
+(declare-function consult-ripgrep "consult" (&optional dir initial))
+(declare-function consult-org-heading "consult-org" (&optional match score))
 
 (with-eval-after-load 'consult
   (global-set-key (kbd "C-x l")  #'consult-locate)
@@ -1551,9 +1632,20 @@ related to your current project."
 (with-eval-after-load 'flyspell
   (require 'flyspell-correct))
 
+;; Load `consult-flyspell' at compile-time to ensure its variables and functions
+;; are available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'consult-flyspell))
+
 ;; Completion of misspelled words in buffer.
 (with-eval-after-load 'flyspell
+  ;; Declare `consult-flyspell' to avoid compilation warnings.
+  (declare-function consult-flyspell "consult-flyspell" (&optional u))
+
   (define-key flyspell-mode-map (kbd "C-;") #'consult-flyspell)
+
+  ;; Declare `flyspell-correct-at-point' to avoid compilation warnings.
+  (declare-function flyspell-correct-at-point "flyspell-correct" ())
 
   ;; Set custom function for selecting corrections.
   (setq consult-flyspell-select-function #'flyspell-correct-at-point))
@@ -1598,9 +1690,25 @@ related to your current project."
 ;; Do-What-I-Mean (e.g., open or describe)
 (global-set-key (kbd "C-;") 'embark-dwim)
 
+;; Declare `consult-preview-at-point-mode' to avoid compilation warnings.
+(declare-function consult-preview-at-point-mode "consult" (&optional arg))
+
 (with-eval-after-load 'embark
   (require 'embark-consult)
   (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+
+;; Load `prescient' and `vertico-prescient' at compile-time to ensure their
+;; variables and functions are available during compilation, avoiding any free
+;; variable warnings.
+(eval-when-compile
+  (require 'prescient)
+  (require 'vertico-prescient))
+
+;; Declare `vertico-prescient-mode' to avoid compilation warnings.
+(declare-function vertico-prescient-mode "vertico-prescient" (&rest args))
+
+;; Declare `prescient-persist-mode' to avoid compilation warnings.
+(declare-function prescient-persist-mode "prescient" (&optional arg))
 
 (with-eval-after-load 'vertico
   (require 'prescient)
@@ -1635,6 +1743,7 @@ related to your current project."
 ;;;; IRC and other communication
 (require 'erc)
 (require 'erc-log)
+(require 'erc-join)
 
 ; Autojoin specific channels on Libera.Chat
 (setq erc-autojoin-channels-alist
@@ -1655,6 +1764,8 @@ related to your current project."
 
 ;; Disable prompting for password when connecting to servers
 (setq erc-prompt-for-password nil)
+
+(require 'erc-fill)
 
 ;; Set the fill function to erc-fill-static and center lines
 (setq erc-fill-function 'erc-fill-static)
@@ -1689,7 +1800,7 @@ The resulting path is of the form: ~/logs/erc/YYYY/MM/."
       (make-directory directory t))
     directory))
 
-(defun my-erc-log-file-name-short (buffer target nick server port)
+(defun my-erc-log-file-name-short (_buffer target _nick server _port)
   "Computes a log file name from the TARGET and SERVER only.
 
 This results in a filename of the form #channel@server.txt, for example:
@@ -1808,6 +1919,13 @@ This function serves multiple purposes:
 
 ;;;; Shells
 ;;;;; Eshell
+;; Load `em-prompt' and `em-hist' at compile-time to ensure their variables and
+;; functions are available during compilation, avoiding any free variable
+;; warnings.
+(eval-when-compile
+  (require 'em-prompt)
+  (require 'em-hist))
+
 ;; The default settings seem a little forgetful to me. Let's try this out.
 (setq eshell-history-size 1000)
 
@@ -1827,6 +1945,9 @@ This function serves multiple purposes:
     (if (string-prefix-p home path)
         (concat "~" (substring path (length home)))
       path)))
+
+;; Declare `eshell/pwd' to avoid compilation warnings.
+(declare-function eshell/pwd "em-dirs" ())
 
 ;; Making the eshell prompt behave more like my Zsh prompt.
 (setq eshell-prompt-regexp "^[^@\n]+@[^ ]+ [^\n]+[\n][#%] ")
@@ -1849,14 +1970,27 @@ This function serves multiple purposes:
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
+;; Load `css-mode' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'css-mode))
+
 ;; Set the indentation level for CSS files to 2 spaces.
 (setq css-indent-offset 2)
+
+;; Declare `rainbow-mode' to avoid compilation warnings.
+(declare-function rainbow-mode "rainbow-mode" ())
 
 ;; Defer loading `rainbow-mode' until `css-mode' is activated.
 (add-hook 'css-mode-hook #'rainbow-mode)
 
 ;; Associate `js-mode' with .js files.
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+
+;; Load `js' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'js))
 
 ;; Set the indentation level for JavaScript files to 2 spaces.
 (setq js-indent-level 2)
@@ -1869,6 +2003,11 @@ This function serves multiple purposes:
 
 ;; Associate `rst-mode' whith .rst files.
 (add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
+
+;; Load `rst' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'rst))
 
 (with-eval-after-load 'rst
   ;; Customize `rst-new-adornment-down' to automatically lower the adornment
@@ -1903,6 +2042,11 @@ This function serves multiple purposes:
 
 ;; Associate GitHub Flavored Markdown patterns with `gfm-mode'.
 (add-to-list 'auto-mode-alist `(,gfm-patterns . gfm-mode))
+
+;; Load `markdown-mode' at compile-time to ensure its variables and functions
+;; are available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'markdown-mode))
 
 ;; Configure markdown command to use Pandoc.
 (setq markdown-command pandoc-executable-path)
@@ -1941,11 +2085,19 @@ This function serves multiple purposes:
 ;; Associate .sql files with `sql-mode'.
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
 
+;; Load `sql' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'sql))
+
 (defun my|sql-mode-setup ()
   "Custom keybindings for `sql-mode`."
   (define-key sql-mode-map (kbd "M-s s") 'sql-sqlite))
 
 (add-hook 'sql-mode-hook #'my|sql-mode-setup)
+
+;; Declare `sqlind-minor-mode' to avoid compilation warnings.
+(declare-function sqlind-minor-mode "sql-indent" ())
 
 ;; Configure `sql-indent' to activate `sqlind-minor-mode' in `sql-mode'.
 (with-eval-after-load 'sql
@@ -1966,8 +2118,16 @@ This function serves multiple purposes:
 ;; Associate `.csv` files with `csv-mode'.
 (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
 
+;; Declare `csv-align-mode' to avoid compilation warnings.
+(declare-function csv-align-mode "csv-mode" ())
+
 ;; Enable `csv-align-mode' automatically when `csv-mode is activated.
 (add-hook 'csv-mode-hook #'csv-align-mode)
+
+;; Load `python' at compile-time to ensure its variables and functions are
+;; available during compilation, avoiding any free variable warnings.
+(eval-when-compile
+  (require 'python))
 
 ;; Ensure `python' mode is loaded when opening Python files.
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
@@ -1975,6 +2135,11 @@ This function serves multiple purposes:
 ;; Set custom Python shell interpreter settings.
 (setq python-shell-interpreter "python3")
 (setq python-shell-interpreter-args "-i --simple-prompt --pprint")
+
+;; Declare `anaconda-eldoc-mode' and `anaconda-mode' to avoid compilation
+;; warnings.
+(declare-function anaconda-mode "anaconda-mode" ())
+(declare-function anaconda-eldoc-mode "anaconda-mode" ())
 
 ;; Load `anaconda-mode' annd configure hooks after `python-mode` is loaded.
 (with-eval-after-load 'python
