@@ -34,7 +34,7 @@
 ;;; Code:
 ;; For those who use my dotfiles and need an easy way to write their
 ;; own extras on top of what I already load.  The file must exist at
-;; '~/.emacs.d/pre-custom.el'
+;; ~/.emacs.d/pre-custom.el
 ;;
 ;; The purpose of this file is for the user to define their
 ;; preferences BEFORE loading any of the modules.
@@ -296,7 +296,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 ;; Configuration for `ispell' to use hunspell as the spell checker.
 (require 'ispell)
 
-;; Set the program name to 'hunspell' which is the spell checker we are using.
+;; Set the program name to hunspell which is the spell checker we are using.
 (setq ispell-program-name (executable-find "hunspell"))
 
 ;; Automatically save the personal dictionary without asking for confirmation.
@@ -364,12 +364,12 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; otherwise display a warning.
 (if my-gpg-program
     (setq epg-gpg-program my-gpg-program)
-  (warn (concat "Neither 'gpg' nor 'gpg2' is available. "
+  (warn (concat "Neither gpg nor gpg2 is available. "
                 "Encryption and decryption features will not be available.")))
 
 ;; Initialize epa settings
 (unless (eq (window-system) 'w32)
-  ;; Set pinentry mode to 'loopback' for all systems except Windows.
+  ;; Set pinentry mode to loopback for all systems except Windows.
   ;; For more see "man 1 gpg" for the option "--pinentry-mode".
   (setq epg-pinentry-mode 'loopback))
 
@@ -471,7 +471,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; if child tasks are still not completed.
 (setq org-enforce-todo-dependencies t)
 
-;; Modify only the 'agenda' context in `org-fold-show-context-detail' without
+;; Modify only the agenda context in `org-fold-show-context-detail' without
 ;; altering the other default values.
 (setq org-fold-show-context-detail
       (cons '(agenda . lineage)
@@ -521,8 +521,8 @@ date formats.  If no valid date is found, it returns nil."
                (nth 5 parsed-date)
                (nth 3 parsed-date))
       (format "%04d-%02d-%02d"
-              (nth 5 parsed-date)  ;; Year
-              (nth 4 parsed-date)  ;; Month
+              (nth 5 parsed-date)  ; Year
+              (nth 4 parsed-date)  ; Month
               (nth 3 parsed-date)))))
 
 (defun my-org-sanitize-heading-for-id (heading)
@@ -634,7 +634,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
   (let* ((title (nth 4 (org-heading-components)))
          (keyword (nth 2 (org-heading-components))))
 
-    ;; Add 'TODO' keyword if missing
+    ;; Add TODO keyword if missing
     (unless keyword (org-todo "TODO"))
 
     ;; Ensure that the heading starts with a progress indicator '[/]'
@@ -657,8 +657,8 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 ;; Check if GPG is available, then require `org-crypt'.
 ;; Otherwise, display a warning.
 (if my-gpg-program
-    (require 'org-crypt)
-  (warn "GPG is not available. 'org-crypt' could not be loaded."))
+    (require 'org-crypt
+  (warn "GPG is not available. `org-crypt' could not be loaded."))
 
 ;; Load `org-crypt' at compile-time to ensure its variables are available during
 ;; compilation, avoiding any free variable warnings.
@@ -712,7 +712,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 ;;;;; Org TODO
 ;; Define my default keywords as workflow states.
-;; The command C-c C-t cycles an entry from 'TODO' to 'CANCELED'.
+;; The command C-c C-t cycles an entry from TODO to CANCELED.
 ;; For details see: https://orgmode.org/manual/Workflow-states.html
 (setq org-done-keywords '("DONE" "CANCELED"))
 (setq org-todo-keywords
@@ -822,9 +822,9 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (eval-when-compile
   (require 'org-mobile))
 
-;; Setting up Beorg sync path.  Open 'Files' in Beog mobile app
-;; and create file called 'mobileorg' (w/o extension) finally
-;; setup sync Beorg to Dropbox 'Notes'.
+;; Setting up Beorg sync path.  Open Files in Beog mobile app
+;; and create file called mobileorg (w/o extension) finally
+;; setup sync Beorg to Dropbox Notes.
 (setq org-mobile-directory (expand-file-name "~/Dropbox/Notes"))
 
 ;; Do not generate IDs for all headings.
@@ -1158,7 +1158,7 @@ more recently than A, and nil if they have the same CLOSED time."
   "Switch to the buffer associated with the given Org FILENAME.
 
 If a buffer visiting FILENAME is already open, switch to it.  If
-the buffer does not exist, open the FILENAME from the `'my-org-files-path'
+the buffer does not exist, open the FILENAME from the `my-org-files-path'
 directory and switch to the newly created buffer.
 
 FILENAME should be the name of the Org file without any directory
@@ -1367,9 +1367,9 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   "Set cursor color based on whether the theme is dark or light."
   (if (my-theme-dark-p)
       (custom-set-faces
-       '(cursor ((t (:background "#F6CB47")))))  ;; Orange
+       '(cursor ((t (:background "#F6CB47")))))  ; Orange
     (custom-set-faces
-     '(cursor ((t (:background "#000000")))))))  ;; Black
+     '(cursor ((t (:background "#000000")))))))  ; Black
 
 (defvar after-load-theme-hook nil
   "Hook run after a color theme is loaded using `load-theme'.")
@@ -1439,8 +1439,8 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;;;; Editing
 (require 'outline)
 
-;; Customize the behavior of the outline mode.
-;; 'outline-blank-line' ensures that there is a blank line before each heading,
+;; Customize the behavior of the `outline-mode'.
+;; `outline-blank-line' ensures that there is a blank line before each heading,
 ;; which improves readability and maintains a clean structure in your outlines.
 (setq outline-blank-line t)
 
@@ -1490,7 +1490,7 @@ This function is for interactive use only;"
             (count arg))
         ;; insert the line arg times
         (while (> count 0)
-          (newline)         ;; because there is no newline in 'line'
+          (newline)         ; because there is no newline in line
           (insert line)
           (setq count (1- count))))
 
@@ -1862,15 +1862,15 @@ This results in a filename of the form #channel@server.txt, for example:
 ;; Ignore the noise—focus only on the messages that matter.
 (setq erc-track-exclude-types
       '("JOIN" "MODE" "NICK" "PART" "QUIT"
-        "301"  ; away notice
-        "305"  ; return from awayness
-        "306"  ; set awayness
-        "324"  ; modes
-        "329"  ; channel creation date
-        "332"  ; topic notice
-        "333"  ; who set the channel topic
-        "353"  ; listing of users on the current channel
-        "477")) ;; Ignore the noise—focus only on the messages that matter.
+        "301"   ; away notice
+        "305"   ; return from awayness
+        "306"   ; set awayness
+        "324"   ; modes
+        "329"   ; channel creation date
+        "332"   ; topic notice
+        "333"   ; who set the channel topic
+        "353"   ; listing of users on the current channel
+        "477")) ; ignore the noise—focus only on the messages that matter.
 
 ;; Load `erc-hl-nicks' after `erc' is loaded.
 (with-eval-after-load 'erc
@@ -1945,7 +1945,7 @@ This function serves multiple purposes:
 (setq eshell-scroll-to-bottom-on-input t)
 
 ;; Scroll the window to the end when new output appears.
-;; The value 'all' makes sure it scrolls for any kind of output.
+;; The value all makes sure it scrolls for any kind of output.
 (setq eshell-scroll-to-bottom-on-output 'all)
 
 (defun my-eshell-shorten-path (path)
