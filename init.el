@@ -212,7 +212,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (savehist-mode t)
 
 ;; Enable `recentf-mode' to keep track of recently opened files.
-(add-hook 'after-init-hook 'recentf-mode)
+;; Only enable in interactive mode.
+(when (not noninteractive)
+  (add-hook 'after-init-hook 'recentf-mode))
 
 ;; Load `recentf' at compile-time to ensure its variables and functions
 ;; are available during compilation, avoiding any free variable warnings.
