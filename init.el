@@ -2205,9 +2205,6 @@ This function serves multiple purposes:
 ;; Enable GitHub-style checkboxes as buttons.
 (setq markdown-make-gfm-checkboxes-buttons t)
 
-;; Add additional languages for GitHub Flavored Markdown code blocks.
-(setq markdown-gfm-additional-languages '("sh" "python" "js" "lisp" "elisp"))
-
 ;; Use uppercase checkboxes in GitHub Flavored Markdown.
 (setq markdown-gfm-uppercase-checkbox t)
 
@@ -2229,30 +2226,19 @@ This function serves multiple purposes:
 (eval-when-compile
   (require 'sql))
 
-(defun my|sql-mode-setup ()
-  "Custom keybindings for `sql-mode`."
-  (define-key sql-mode-map (kbd "M-s s") 'sql-sqlite))
-
-(add-hook 'sql-mode-hook #'my|sql-mode-setup)
-
 ;; Declare `sqlind-minor-mode' to avoid compilation warnings.
 (declare-function sqlind-minor-mode "sql-indent" ())
 
 ;; Configure `sql-indent' to activate `sqlind-minor-mode' in `sql-mode'.
 (with-eval-after-load 'sql
-  (add-hook 'sql-mode-hook #'sqlind-minor-mode))
+  (add-hook 'sql-mode-hook #'sqlind-minor-mode)
+  (define-key sql-mode-map (kbd "M-s s") 'sql-sqlite))
 
 (require 'sqlite-mode)
-
-;; Define custom keybindings for sqlite-mode, accessible globally.
-(global-set-key (kbd "M-s q") 'sqlite-mode-open-file)
-
-(add-hook 'sqlite-mode-hook
-          (lambda ()
-            ;; Bind "M-K" to 'sqlite-mode-list-ttables within sqlite-mode.
-            (define-key sqlite-mode-map (kbd "M-K") 'sqlite-mode-list-tables)
-            ;; Bind "TAB" to 'sqlite-mode-list-data within sqlite-mode.
-            (define-key sqlite-mode-map (kbd "<tab>") 'sqlite-mode-list-data)))
+(with-eval-after-load 'sqlite-mode
+  (define-key sqlite-mode-map (kbd "M-s q") 'sqlite-mode-open-file)
+  (define-key sqlite-mode-map (kbd "M-s t") 'sqlite-mode-list-tables)
+  (define-key sqlite-mode-map (kbd "<tab>") 'sqlite-mode-list-data))
 
 ;; Associate `.csv` files with `csv-mode'.
 (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
