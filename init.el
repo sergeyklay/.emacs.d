@@ -324,7 +324,7 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (setq ispell-really-hunspell t)
 
 ;; Configure flyspell to work with hunspell.
-(when (executable-find ispell-program-name)
+(when (and ispell-program-name (executable-find ispell-program-name))
   ;; Add spell-checking in comments for all programming language modes
   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
