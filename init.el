@@ -1253,6 +1253,8 @@ more recently than A, and nil if they have the same CLOSED time."
 ;; setup may vary, and you might need to adjust your cron job to customize
 ;; `org-agenda-files' to suit your own needs.  Be mindful of your specific file
 ;; organization and how it might impact your agenda generation.
+;;
+;; For details see: https://orgmode.org/manual/Exporting-Agenda-Views.html
 (setq org-agenda-exporter-settings
       '((ps-number-of-columns 2)
         (ps-landscape-mode t)
