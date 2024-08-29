@@ -418,11 +418,101 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 
 ;;;; Calendar
+;; Disable not used holidays
+(setq-default holiday-hebrew-holidays nil)
+(setq-default holiday-islamic-holidays nil)
+(setq-default holiday-bahai-holidays nil)
+(setq-default holiday-oriental-holidays nil)
+(setq-default holiday-solar-holidays nil)
+(setq-default holiday-christian-holidays nil)
+
+(defconst my-polish-holidays
+  '((holiday-fixed 1 1 "Nowy Rok (Poland)")
+    (holiday-fixed 5 1 "Święto Pracy (Poland)")
+    (holiday-fixed 5 3 "Święto Konstytucji 3 Maja (Poland)")
+    (holiday-fixed 8 15 "Wniebowzięcie Najświętszej Maryi Panny (Poland)")
+    (holiday-fixed 11 1 "Wszystkich Świętych (Poland)")
+    (holiday-fixed 11 11 "Święto Niepodległości (Poland)")
+    (holiday-fixed 12 25 "Boże Narodzenie (Poland)")
+    (Holiday-fixed 12 26 "Drugi dzień Bożego Narodzenia (Poland)"))
+  "Polish public holidays")
+
+(defvar my-ukrainian-holidays
+  '((holiday-fixed 1 1 "Новий рік (Ukraine)")
+    (holiday-fixed 1 7 "Різдво Христове (Ukraine)")
+    (holiday-fixed 3 8 "Міжнародний жіночий день (Ukraine)")
+    (holiday-fixed 4 1 "День гумору (Ukraine)")
+    (holiday-fixed 5 1 "День праці (Ukraine)")
+    (holiday-fixed 5 9 "День перемоги (Ukraine)")
+    (holiday-fixed 6 28 "День Конституції України (Ukraine)")
+    (holiday-fixed 8 24 "День Незалежності України (Ukraine)")
+    (holiday-fixed 10 14 "День захисника України (Ukraine)")
+    (holiday-fixed 12 25 "Різдво Христове (Ukraine)"))
+  "Ukrainian public holidays")
+
+(defvar my-canadian-holidays
+  '((holiday-fixed 1 1 "New Year's Day (Canada)")
+    (holiday-fixed 7 1 "Canada Day (Canada)")
+    (holiday-float 9 1 1 "Labour Day (Canada)")
+    (holiday-float 10 1 2 "Thanksgiving Day (Canada)")
+    (holiday-fixed 12 25 "Christmas (Canada)")
+    (holiday-fixed 12 26 "Boxing Day (Canada)"))
+  "Canadian public holidays")
+
+(defvar my-us-holidays
+  '((holiday-fixed 1 1 "New Year's Day (US)")
+    (holiday-float 1 1 3 "Martin Luther King Jr. Day (US)")
+    (holiday-float 2 1 3 "Presidents' Day (US)")
+    (holiday-fixed 7 4 "Independence Day (US)")
+    (holiday-float 11 4 4 "Thanksgiving (US)")
+    (holiday-fixed 12 25 "Christmas (US)"))
+  "US public holidays")
+
+;; Define local holidays to be tracked
+(setq holiday-local-holidays
+      '((holiday-fixed 10 24 "Programmers' Day")
+        (holiday-fixed 3 8  "Women's Day")
+        (holiday-fixed 6 1  "Children's Day")
+        (holiday-fixed 9 10 "Teachers' Day")
+        (holiday-fixed 3 12 "Arbor Day")))
+
+;; Add Polish, Ukrainian, Canadian, and US public holidays.
+(setq-default holiday-other-holidays
+              '((holiday-fixed 4 23 "World Book Day")
+                (holiday-fixed 2 14 "Valentine's Day")
+                (holiday-fixed 4 1 "April Fools' Day")
+                (holiday-fixed 10 31 "Halloween")
+                (holiday-sexp '(if (or (zerop (% year 400))
+                                       (and (% year 100) (zerop (% year 4))))
+                                   (list 9 12 year)
+                                 (list 9 13 year))
+                              "World Programmers' Day")))
+
+;; Customize `calendar-holidays' to include public holidays from various
+;; countries.  I work in a multinational company with teams based in different
+;; regions, so it's useful to know when my colleagues have days off.
+(setq-default calendar-holidays
+              `(,@my-polish-holidays
+                ,@my-ukrainian-holidays
+                ,@my-canadian-holidays
+                ,@my-us-holidays
+                ,@holiday-local-holidays
+                ,@holiday-other-holidays))
+
 ;; Week starts on Monday.
 (setq-default calendar-week-start-day 1)
 
 ;; I prefer read dates in 'year/month/day' format.
 (setq-default calendar-date-style 'iso)
+
+;; Prefer +0800 over CST.
+(setq-default calendar-time-zone-style 'numeric)
+
+;; Mark dates of holidays in the calendar window.
+(setq-default calendar-mark-holidays-flag t)
+
+;; Mark dates with diary entries, in the calendar window.
+(setq-default calendar-mark-diary-entries-flag t)
 
 ;; Set the default latitude and longitude for calendar calculations.  These
 ;; values are used to determine local sunrise/sunset times, moon phases, and
@@ -430,10 +520,10 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (setq-default calendar-latitude 51.1)
 (setq-default calendar-longitude 17.0)
 
-;; Alist of time zones and places for `world-clock' to display.
+;; Alist of time zones and places for `world-clock' to display for the same
+;; reason as for `calendar-holidays' above.
 (setq-default world-clock-list '(("Canada/Pacific" "Vancouver")
                                  ("America/New_York" "New York")
-                                 ("Europe/London" "London")
                                  ("Europe/Warsaw" "Warsaw")
                                  ("Europe/Kyiv" "Kyiv")))
 
