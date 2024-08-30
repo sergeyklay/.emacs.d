@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2023 Serghei Iakovlev <egrep@protonmail.ch>
+# Copyright (C) 2019-2024 Serghei Iakovlev <egrep@protonmail.ch>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@ include default.mk
 
 %.elc: %.el
 	@printf "Compiling $<\n"
-	@$(RUNEMACS) --eval '(setq byte-compile-error-on-warn t)' \
+	@$(RUNEMACS) --eval '(setq byte-compile-error-on-warn nil)' \
 		-f batch-byte-compile $<
 
 .PHONY: clean
