@@ -1721,13 +1721,11 @@ related to your current project."
 
 (global-set-key (kbd "C-x <tab>") #'my/consult-jump-in-buffer)
 
-;; Load `flyspell-correct' after `flyspell' is loaded.
-(with-eval-after-load 'flyspell
-  (require 'flyspell-correct))
-
 ;; Completion of misspelled words in buffer.
 (with-eval-after-load 'flyspell
-  (define-key flyspell-mode-map (kbd "C-;") #'consult-flyspell)
+  (require 'flyspell-correct)
+
+  (define-key flyspell-mode-map (kbd "C-c s") #'consult-flyspell)
 
   ;; Set custom function for selecting corrections.
   (setq consult-flyspell-select-function #'flyspell-correct-at-point))
