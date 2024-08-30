@@ -584,7 +584,9 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-mode-hook #'org-display-inline-images)
 
+;; Standard key bindings
 (global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c b") #'org-switchb)
 
 (my-ensure-directory-exists my-org-files-path)
 (my-ensure-directory-exists my-org-reports-path)
@@ -1278,6 +1280,7 @@ the date of the week's end (Sunday)."
 (setq org-agenda-exporter-settings
       '((htmlize-output-type 'css)))
 
+;; Standard key binding
 (global-set-key (kbd "C-c a") #'org-agenda)
 
 ;;;;; Org Bookmarks
