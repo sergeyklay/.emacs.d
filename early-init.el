@@ -77,6 +77,11 @@
 (unless (eq system-type 'gnu/linux)
   (setq command-line-x-option-alist nil))
 
+;; Prevent Emacs from automatically initializing packages at startup.  This
+;; allows the main init file to handle package initialization manually,
+;; providing more control over when and how packages are loaded.
+(setq package-enable-at-startup nil)
+
 (provide 'early-init)
 
 ;; Local Variables:

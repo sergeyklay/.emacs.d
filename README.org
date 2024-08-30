@@ -29,10 +29,9 @@ I adhere to the following guiding principles in this configuration:
   necessary, I prefer GNU alternatives over third-party options from
   MELPA, ensuring that the setup remains streamlined and
   understandable.
-- My setup is designed to work seamlessly across different operating
-  systems, providing a consistent experience. These days it's somewhat
-  geared towards OS X, but it is known to also work on Linux and
-  I hope Windows.
+- My setup should work seamlessly across different operating systems,
+  providing a consistent experience. These days it's somewhat geared
+  towards macOS, but it also should work on Linux and I hope Windows.
 - The goal is to maintain a setup that is functional and easy to
   manage, without pushing Emacs to its limits or adding features for
   the sake of novelty.
@@ -49,7 +48,7 @@ I adhere to the following guiding principles in this configuration:
 Currently, I use GNU Emacs 29.x, and I recommend others do the same by
 using this configuration to ensure everything works smoothly.
 
-This configuration is built with the following tools in mind:
+I have built this configuration with the following tools in mind:
 
 - [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 - [[https://git-scm.com][Git (=git=)]]

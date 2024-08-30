@@ -20,15 +20,7 @@ TOP := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 EMACS      ?= emacs
 
-# Add only necessary ELPA directories to load-path (those containing .el files)
-ELPA_DIR := $(TOP)/elpa
-ELPA_SUBDIRS := $(shell find $(ELPA_DIR) -type d -maxdepth 1 -mindepth 1)
-LOAD_PATH_DIRS := $(foreach dir,$(ELPA_SUBDIRS),$(if $(wildcard $(dir)/*.el),$(dir)))
-LOAD_PATH_EXPR := $(foreach dir,$(LOAD_PATH_DIRS),--eval "(add-to-list 'load-path \"$(dir)\")")
-
-
-INIT_CODE   = '(let ((debug-on-error t)(user-emacs-directory default-directory))(run-hooks (quote after-init-hook)))'
-EMACSFLAGS ?= $(LOAD_PATH_EXPR)
+EMACSFLAGS ?=
 EMACSBATCH  = $(EMACS) -Q --batch $(EMACSFLAGS)
 RUNEMACS    =
 

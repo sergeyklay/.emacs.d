@@ -39,15 +39,25 @@ install: init.el
 build: $(OBJS)
 
 .PHONY: checkdoc
-checkdoc: test/checkdoc.el
-	$(RUNEMACS) --load $(TOP)/$<
+checkdoc:
+	@for f in $(SRCS) ; do                                  \
+		echo "Checking documentation for$$f ...";       \
+		$(EMACSBATCH) --eval "(checkdoc-file \"$$f\")"; \
+	done && echo "Done."
+	@echo ""
 
 .PHONY: checkstyle
 checkstyle: test/passive-voice-check.el
 	$(RUNEMACS) --load $(TOP)/$<
 
+.PHONY: checkstartup
+checkstartup: $(SRCS)
+	$(RUNEMACS) --eval '(progn (defvar url-show-status) (let ((debug-on-error t) (url-show-status nil) (user-emacs-directory default-directory) (user-init-file (expand-file-name "init.el"))(load-path (delq default-directory load-path))) (setq package-check-signature nil) (load-file user-init-file) (run-hooks (quote after-init-hook))))'
+	@echo "Startup successful"
+	@echo ""
+
 .PHONY: test
-test: checkdoc checkstyle
+test: checkstartup checkdoc checkstyle
 
 .PHONY: help
 help:
@@ -55,13 +65,14 @@ help:
 	@echo 'Run "make install" first to install dependencies.'
 	@echo ''
 	@echo 'Available targets:'
-	@echo '  help:       Show this help and exit'
-	@echo '  install:    Install dependencies'
-	@echo '  checkdoc:   Check doc for errors'
-	@echo '  checkstyle: Check for passive voice in documentation'
-	@echo '  build:      Byte compile configuration files'
-	@echo '  test:       Run the non-interactive test suite'
-	@echo '  clean:      Remove byte compiled files and artifacts'
+	@echo '  help:          Show this help and exit'
+	@echo '  install:       Install dependencies'
+	@echo '  checkdoc:      Check doc for errors'
+	@echo '  checkstyle:    Check for passive voice in documentation'
+	@echo '  checkstartup:  Run Emacs startup to validate configuration and hooks'
+	@echo '  build:         Byte compile configuration files'
+	@echo '  test:          Run checks for startup, documentation, and style compliance'
+	@echo '  clean:         Remove byte compiled files and artifacts'
 	@echo ''
 
 # Local Variables:

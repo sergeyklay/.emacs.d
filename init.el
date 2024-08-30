@@ -26,10 +26,12 @@
 ;;; Commentary:
 
 ;; Welcome to my GNU Emacs haven.  This configuration is a reflection of my
-;; desire for a minimalist yet powerful editing environment.
+;; desire for a "minimalist" yet powerful editing environment.
 ;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
+
+;;; Code:
 
 
 ;;;; Profiling and Debug
@@ -62,63 +64,89 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (require 'package)
 
 ;; Setting up package archives.
-(setq package-archives
-   '(("melpa"    . "https://melpa.org/packages/")
-     ("m-stable" . "https://stable.melpa.org/packages/")
-     ("gnu"      . "https://elpa.gnu.org/packages/")
-     ("nongnu"   . "https://elpa.nongnu.org/nongnu/")))
+(add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/") t)
 
 ;; Priorities. Default priority is 0.
 (setq package-archive-priorities
       '(("gnu"      . 100)
         ("nongnu"   . 50)
-        ("m-stable" . 20)
         ("melpa"    . 10)))
 
 ;; Precompute activation actions to speed up startup.
 (setq package-quickstart t)
 
-(defun ensure-package-installed (&rest packages)
-  "Ensure that each package in PACKAGES is installed."
-  (dolist (package packages)
-    (unless (package-installed-p package)
+;; Enable native compilation of packages upon their first load,
+;; leveraging Emacs's native compilation feature for performance.
+(setq package-native-compile t)
+
+(package-initialize)
+
+(defun ensure-package-installed (package)
+  "Ensure that PACKAGE is installed."
+  (unless (package-installed-p package)
       (condition-case _err
           (package-install package)
         (error
          (package-refresh-contents)
-         (package-install package))))))
+         (package-install package))))
+  (package-installed-p package))
+
+;; package.el updates the saved version of `package-selected-packages' correctly
+;; only after `custom-file' has been loaded, which is a bug. We work around this
+;; by adding the required packages to `package-selected-packages' after startup
+;; is complete. This code borrowed from Steve Purcell configuration.
+
+(defvar my-required-packages nil
+  "List of packages that were successfully installed.")
+
+(defun my-note-selected-package (oldfun package &rest args)
+  "If OLDFUN reports PACKAGE was successfully installed, note that fact.
+The package name is noted by adding it to
+`my-required-packages'.  This function is used as an
+advice for `require-package', to which ARGS are passed."
+  (let ((available (apply oldfun package args)))
+    (prog1
+        available
+      (when available
+        (add-to-list 'my-required-packages package)))))
+
+(advice-add 'ensure-package-installed :around 'my-note-selected-package)
+
+(defconst my-selected-packages
+   '(anaconda-mode         ; Python IDE support
+     consult               ; Incremental narrowing framework
+     consult-flyspell      ; Flyspell integration with Consult
+     csv-mode              ; CSV file editing mode
+     ctrlf                 ; Minimalistic incremental search
+     embark                ; Contextual actions in buffers
+     embark-consult        ; Embark integration with Consult
+     erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
+     flyspell-correct      ; Correct spelling with popup menus
+     git-modes             ; Modes for Git-related files
+     htmlize               ; Convert buffer text to HTML
+     magit                 ; The Git porcelain inside Emacs
+     marginalia            ; Annotations for completions
+     markdown-mode         ; Major mode for Markdown files
+     orderless             ; Flexible completion style
+     org-cliplink          ; Capture clipboard URLs to Org mode
+     org-contacts          ; Contacts management with Org mode
+     org-super-agenda      ; Advanced agenda views for Org mode
+     pass                  ; Interface to the Password Store
+     password-store        ; Emacs interface for password-store
+     prescient             ; Predictive sorting and filtering
+     rainbow-delimiters    ; Color nested parentheses
+     rainbow-mode          ; Colorize color values in buffers
+     sql-indent            ; Indentation support for SQL
+     vertico               ; Vertical interactive completion
+     vertico-prescient     ; Prescient integration with Vertico
+     which-key             ; Display available keybindings
+     writegood-mode        ; Improve writing style
+     yaml-mode)            ; Major mode for YAML files
+   "A list of packages that are selected for installation.")
 
 ;; Install packages as soon as possible.
-(ensure-package-installed
-   'anaconda-mode
-   'consult
-   'consult-flyspell
-   'csv-mode
-   'ctrlf
-   'embark
-   'embark-consult
-   'erc-hl-nicks
-   'flyspell-correct
-   'git-modes
-   'htmlize
-   'magit
-   'marginalia
-   'markdown-mode
-   'orderless
-   'org-cliplink
-   'org-contacts
-   'org-super-agenda
-   'pass
-   'password-store
-   'prescient
-   'rainbow-delimiters
-   'rainbow-mode
-   'sql-indent
-   'vertico
-   'vertico-prescient
-   'which-key
-   'writegood-mode
-   'yaml-mode)
+(dolist (package my-selected-packages)
+    (ensure-package-installed package))
 
 
 ;;;; Setup keymap
@@ -418,7 +446,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 11 11 "Święto Niepodległości (Poland)")
     (holiday-fixed 12 25 "Boże Narodzenie (Poland)")
     (holiday-fixed 12 26 "Drugi dzień Bożego Narodzenia (Poland)"))
-  "Polish public holidays")
+  "Polish public holidays.")
 
 (defvar my-ukrainian-holidays
   '((holiday-fixed 1 1 "Новий рік (Ukraine)")
@@ -431,7 +459,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 8 24 "День Незалежності України (Ukraine)")
     (holiday-fixed 10 14 "День захисника України (Ukraine)")
     (holiday-fixed 12 25 "Різдво Христове (Ukraine)"))
-  "Ukrainian public holidays")
+  "Ukrainian public holidays.")
 
 (defvar my-canadian-holidays
   '((holiday-fixed 1 1 "New Year's Day (Canada)")
@@ -440,7 +468,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-float 10 1 2 "Thanksgiving Day (Canada)")
     (holiday-fixed 12 25 "Christmas (Canada)")
     (holiday-fixed 12 26 "Boxing Day (Canada)"))
-  "Canadian public holidays")
+  "Canadian public holidays.")
 
 (defvar my-us-holidays
   '((holiday-fixed 1 1 "New Year's Day (US)")
@@ -449,7 +477,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 7 4 "Independence Day (US)")
     (holiday-float 11 4 4 "Thanksgiving (US)")
     (holiday-fixed 12 25 "Christmas (US)"))
-  "US public holidays")
+  "US public holidays.")
 
 ;; Define local holidays to be tracked.
 (setq holiday-local-holidays
@@ -637,7 +665,6 @@ non-alphanumeric characters and replaces spaces with hyphens."
                 "" slug t))
     ;; Replace spaces with hyphens and remove non-alphanumeric characters
     (setq slug (replace-regexp-in-string "[^[:alnum:][:space:]-]" "" slug))
-    (replace-regexp-in-string " +" "-" slug)
     (setq slug (replace-regexp-in-string " +" "-" slug))
     ;; Remove trailing hyphens
     (replace-regexp-in-string "-+$" "" slug)))
@@ -673,8 +700,10 @@ informative and unique within a reasonable scope."
       new-id)))  ; Return the new ID
 
 (defun my/org-id-advice (&rest args)
-  "The advice to update Org ID locations."
-  ;; Create ID if needed
+  "The advice to update Org ID locations.
+
+This function accepts ARGS but does not use them directly.
+It generates an Org ID if needed and updates the ID locations."
   (my/org-generate-id)
   (org-id-update-id-locations)
   args)
@@ -706,7 +735,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
     (org-back-to-heading t)
     (unless (org-at-heading-p)
       (user-error
-       "No Org heading found. Please place the cursor at or near a heading.")))
+       "No Org heading found.  Please place the cursor at or near a heading")))
 
   ;; Ensure the :project: tag is added
   (org-toggle-tag "project" 'on)
@@ -766,8 +795,8 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (setq org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
-;; Load `org-contacts' at compile-time to ensure its variables are available during
-;; compilation, avoiding any free variable warnings.
+;; Load `org-contacts' at compile-time to ensure its variables are available
+;; during compilation, avoiding any free variable warnings.
 (eval-when-compile
   (require 'org-contacts))
 
@@ -786,7 +815,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         `(,(concat my-org-files-path "contacts.org"))))
 
 (defun my/org-contacts-search ()
-  "Search and select a contact"
+  "Search and select a contact."
   (interactive)
   (let ((starting-point (current-buffer)))
     (condition-case _err
@@ -943,10 +972,11 @@ and cleaned up for further processing."
 (defun my/mobile-org-export ()
   "Push a custom agenda setup to MobileOrg directory.
 
-This function temporarily modifies `org-agenda-custom-commands' to set up
-an agenda suitable for MobileOrg, including a 1-month agenda view and a filtered
-list of standalone tasks (excluding projects and completed tasks). After pushing
-the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
+This function temporarily modifies `org-agenda-custom-commands'
+to set up an agenda suitable for MobileOrg, including a 1-month
+agenda view and a filtered list of standalone tasks (excluding
+projects and completed tasks).  After pushing the agenda to
+MobileOrg, the original `org-agenda-custom-commands' is restored."
   (interactive)
   (let ((original-org-agenda-custom-commands org-agenda-custom-commands))
     ;; Temporarily set agenda commands for MobileOrg export.
@@ -997,7 +1027,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
       (append my-org-agenda-files-work my-org-agenda-files-life))
 
 (defun my/org-search-agenda ()
-  "Search (i.e. ripgrep) stuff in my agenda files"
+  "Search (i.e. ripgrep) stuff in my agenda files."
   (interactive)
   (consult-ripgrep my-org-files-path))
 
@@ -1139,7 +1169,7 @@ more recently than A, and nil if they have the same CLOSED time."
   "Return the start and end dates of the current week as a list.
 
 The start date is determined by `my-get-week-start-date', which is
-assumed to return the current week's Monday. The end date is calculated
+assumed to return the current week's Monday.  The end date is calculated
 by adding six days to the start date, yielding the upcoming Sunday.
 Dates are formatted as YYYY.MM.DD."
   (let* ((week-start (my-get-week-start-date))
@@ -1150,10 +1180,10 @@ Dates are formatted as YYYY.MM.DD."
 (defun my-weekly-agenda-export-name ()
   "Generate an export file name for the weekly agenda review.
 
-The file name format is '<USER>_work_review_<START>-<END>.txt', where
-<USER> is the current `user-login-name', <START> is the date of the
-current week's start (Monday), and <END> is the date of the week's end
-(Sunday)."
+The file name format is '<USER>_work_review_<START>-<END>.txt',
+where <USER> is the current variable `user-login-name', <START>
+is the date of the current week's start (Monday), and <END> is
+the date of the week's end (Sunday)."
   (let* ((date (string-join (my-weekly-agenda-export-range) "-")))
     (concat user-login-name "_work_review_" date ".txt")))
 
@@ -1248,8 +1278,8 @@ current week's start (Monday), and <END> is the date of the week's end
          ((org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
          (,(expand-file-name "agenda_180d_filtered.html"
                              my-org-reports-path)))
-        ;; Full agenda for the next 31 days. Will used to export HTML file.  See
-        ;; `org-agenda-exporter-settings' comment bellow.
+        ;; Full agenda for the next 31 days.  Will used to export HTML file.
+        ;; See `org-agenda-exporter-settings' comment bellow.
         ("Ra", "Detail agenda +31d"
          ((agenda "Detail agenda"
                   ((org-agenda-span 31)
@@ -1300,7 +1330,7 @@ current week's start (Monday), and <END> is the date of the week's end
 ;;   emacsclient --no-wait --eval '(org-store-agenda-views)'
 ;;
 ;; Note: In my cron job, I don't override `org-agenda-files' as it is already
-;; set up correctly and does not include any unnecessary files. However, your
+;; set up correctly and does not include any unnecessary files.  However, your
 ;; setup may vary, and you might need to adjust your cron job to customize
 ;; `org-agenda-files' to suit your own needs.  Be mindful of your specific file
 ;; organization and how it might impact your agenda generation.
@@ -1329,12 +1359,12 @@ path.  The file is expected to reside in the `my-org-files-path' directory."
   "Move and format mobile bookmark heading.
 
 This function is designed to integrate with workflows where you
-use a mobile app for capturing notes. These notes are
+use a mobile app for capturing notes.  These notes are
 synchronized into a file specified by `org-mobile-inbox-for-pull'
-using `org-mobile-pull'. The primary purpose of this function is
+using `org-mobile-pull'.  The primary purpose of this function is
 to move bookmarks, which you add on your mobile device and which
 end up in the `org-mobile-inbox-for-pull' file, into notes.org
-while formatting them according to my preferred style. I have
+while formatting them according to my preferred style.  I have
 accounted for the specific formats used by MobileOrg and Beorg in
 this implementation, but if you encounter issues, please let me
 know so I can address them.
@@ -1353,7 +1383,7 @@ Steps performed by this function:
 
 This function is adapted from an implementation by Karl Voit, and
 has been reworked to enhance its readability, maintainability,
-and alignment with my specific workflow. For origin see:
+and alignment with my specific workflow.  For origin see:
 https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
   (interactive)
   (save-excursion
@@ -1419,7 +1449,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;;;;; Org Refile
 (defun my-org-opened-buffer-files ()
-  "Return the list of org files currently opened in emacs."
+  "Return the list of org files currently opened in Emacs."
   (delq nil
         (mapcar (lambda (x)
                   (if (and (buffer-file-name x)
@@ -1783,7 +1813,7 @@ related to your current project."
   (define-key minibuffer-local-map (kbd "C-r") #'consult-history))
 
 (defun my/consult-jump-in-buffer ()
-  "Jump in buffer with `consult-imenu' or `consult-org-heading' if in org-mode."
+  "Jump in buffer with `consult-imenu' or `consult-org-heading'."
   (interactive)
   (call-interactively
    (cond
@@ -1951,7 +1981,7 @@ related to your current project."
   "The base directory where ERC logs will be stored.
 
 This directory serves as the root for all ERC logs, with further
-subdirectories being created for specific periods. The log files
+subdirectories being created for specific periods.  The log files
 are organized by year and month to ensure easy access and
 management of chat history.")
 
@@ -2046,21 +2076,25 @@ This results in a filename of the form #channel@server.txt, for example:
 
 This function serves multiple purposes:
 
-1. Check Active Buffers: It iterates through a predefined list of ERC buffers
-   to determine if any of them are actively connected to an IRC server.
+1. Check Active Buffers: It iterates through a predefined list of
+   ERC buffers to determine if any of them are actively connected
+   to an IRC server.
 
-2. Verify Connection Status: For each buffer, it checks whether the associated
-   ERC process is alive and whether there is an established network connection
-   to the server. This is done using the `erc-server-process-alive' function and
-   the `erc-server-connected' variable.
+2. Verify Connection Status: For each buffer, it checks whether
+   the associated ERC process is alive and whether there is an
+   established network connection to the server.  This is done
+   using the `erc-server-process-alive' function and the
+   `erc-server-connected' variable.
 
-3. Switch to Active Buffer: If any buffer is found to be actively connected,
-   the function switches to that buffer using `erc-track-switch-buffer'.
+3. Switch to Active Buffer: If any buffer is found to be actively
+   connected, the function switches to that buffer using
+   `erc-track-switch-buffer'.
 
-4. Reconnect if Disconnected: If none of the checked buffers are connected,
-   the function prompts the user to reconnect to the IRC server. If the user
-   confirms, a new connection is initiated using the `erc' command with the
-   server and port specified (`irc.libera.chat` on port 6667)."
+4. Reconnect if Disconnected: If none of the checked buffers are
+   connected, the function prompts the user to reconnect to the
+   IRC server.  If the user confirms, a new connection is
+   initiated using the `erc' command with the server and port
+   specified (`irc.libera.chat` on port 6667)."
   (interactive)
   (let ((erc-buffers '("Libera.Chat" "irc.libera.chat" "irc.libera.chat:6667"))
         (connected nil))
