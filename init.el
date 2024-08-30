@@ -31,6 +31,8 @@
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
+;;; Code:
+
 
 ;;;; Profiling and Debug
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
@@ -444,7 +446,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 11 11 "Święto Niepodległości (Poland)")
     (holiday-fixed 12 25 "Boże Narodzenie (Poland)")
     (holiday-fixed 12 26 "Drugi dzień Bożego Narodzenia (Poland)"))
-  "Polish public holidays")
+  "Polish public holidays.")
 
 (defvar my-ukrainian-holidays
   '((holiday-fixed 1 1 "Новий рік (Ukraine)")
@@ -457,7 +459,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 8 24 "День Незалежності України (Ukraine)")
     (holiday-fixed 10 14 "День захисника України (Ukraine)")
     (holiday-fixed 12 25 "Різдво Христове (Ukraine)"))
-  "Ukrainian public holidays")
+  "Ukrainian public holidays.")
 
 (defvar my-canadian-holidays
   '((holiday-fixed 1 1 "New Year's Day (Canada)")
@@ -466,7 +468,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-float 10 1 2 "Thanksgiving Day (Canada)")
     (holiday-fixed 12 25 "Christmas (Canada)")
     (holiday-fixed 12 26 "Boxing Day (Canada)"))
-  "Canadian public holidays")
+  "Canadian public holidays.")
 
 (defvar my-us-holidays
   '((holiday-fixed 1 1 "New Year's Day (US)")
@@ -475,7 +477,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 7 4 "Independence Day (US)")
     (holiday-float 11 4 4 "Thanksgiving (US)")
     (holiday-fixed 12 25 "Christmas (US)"))
-  "US public holidays")
+  "US public holidays.")
 
 ;; Define local holidays to be tracked.
 (setq holiday-local-holidays
@@ -698,8 +700,10 @@ informative and unique within a reasonable scope."
       new-id)))  ; Return the new ID
 
 (defun my/org-id-advice (&rest args)
-  "The advice to update Org ID locations."
-  ;; Create ID if needed
+  "The advice to update Org ID locations.
+
+This function accepts ARGS but does not use them directly.
+It generates an Org ID if needed and updates the ID locations."
   (my/org-generate-id)
   (org-id-update-id-locations)
   args)
@@ -791,8 +795,8 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (setq org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
-;; Load `org-contacts' at compile-time to ensure its variables are available during
-;; compilation, avoiding any free variable warnings.
+;; Load `org-contacts' at compile-time to ensure its variables are available
+;; during compilation, avoiding any free variable warnings.
 (eval-when-compile
   (require 'org-contacts))
 
@@ -811,7 +815,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
         `(,(concat my-org-files-path "contacts.org"))))
 
 (defun my/org-contacts-search ()
-  "Search and select a contact"
+  "Search and select a contact."
   (interactive)
   (let ((starting-point (current-buffer)))
     (condition-case _err
@@ -968,10 +972,11 @@ and cleaned up for further processing."
 (defun my/mobile-org-export ()
   "Push a custom agenda setup to MobileOrg directory.
 
-This function temporarily modifies `org-agenda-custom-commands' to set up
-an agenda suitable for MobileOrg, including a 1-month agenda view and a filtered
-list of standalone tasks (excluding projects and completed tasks). After pushing
-the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
+This function temporarily modifies `org-agenda-custom-commands'
+to set up an agenda suitable for MobileOrg, including a 1-month
+agenda view and a filtered list of standalone tasks (excluding
+projects and completed tasks).  After pushing the agenda to
+MobileOrg, the original `org-agenda-custom-commands' is restored."
   (interactive)
   (let ((original-org-agenda-custom-commands org-agenda-custom-commands))
     ;; Temporarily set agenda commands for MobileOrg export.
@@ -1022,7 +1027,7 @@ the agenda to MobileOrg, the original `org-agenda-custom-commands' is restored."
       (append my-org-agenda-files-work my-org-agenda-files-life))
 
 (defun my/org-search-agenda ()
-  "Search (i.e. ripgrep) stuff in my agenda files"
+  "Search (i.e. ripgrep) stuff in my agenda files."
   (interactive)
   (consult-ripgrep my-org-files-path))
 
