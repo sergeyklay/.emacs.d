@@ -275,14 +275,6 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
     (setq source-directory src)))
 
 
-;;;; Emacs Server
-;; Enable Emacs server mode, allowing Emacs to act as a server for external
-;; clients.
-(require 'server)
-(unless (server-running-p)
-  (server-mode t))
-
-
 ;;;; Spell
 ;; Configuration for `ispell' to use hunspell as the spell checker.
 (require 'ispell)
@@ -1290,7 +1282,7 @@ current week's start (Monday), and <END> is the date of the week's end
          ;; This can be a list of files, for example ("~/a.pdf" "~/b.txt").
          ;; Reworked to get plain txt format due to this issue:
          ;; https://www.reddit.com/r/orgmode/comments/1f4t3ga/help_with_exporting_org_agenda_to_pdf_with/
-         (,@(Expand-file-name (my-weekly-agenda-export-name)
+         (,@(expand-file-name (my-weekly-agenda-export-name)
                               my-org-reports-path)))))
 
 ;; Always highlight the current agenda line.
@@ -2341,6 +2333,16 @@ This function serves multiple purposes:
 (add-hook 'lisp-interaction-mode-hook #'my|lisp-modes-setup)
 
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
+
+
+;;;; Emacs Server
+;; Enable Emacs server mode, allowing Emacs to act as a server for external
+;; clients.
+(add-hook 'after-init-hook
+          (lambda ()
+            (require 'server)
+            (unless (server-running-p)
+              (server-start))))
 
 
 ;; Save custom variables in a separate file named custom.el in your
