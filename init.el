@@ -117,7 +117,6 @@ advice for `require-package', to which ARGS are passed."
      consult               ; Incremental narrowing framework
      consult-flyspell      ; Flyspell integration with Consult
      csv-mode              ; CSV file editing mode
-     ctrlf                 ; Minimalistic incremental search
      embark                ; Contextual actions in buffers
      embark-consult        ; Embark integration with Consult
      erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
@@ -1929,12 +1928,6 @@ related to your current project."
   ;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
   ;; combine powerful sorting and filtering with the Vertico completion system.
   (vertico-prescient-mode 1))
-
-;; Enable CTRLF as a modern replacement for Isearch and Swiper.  CTRLF provides
-;; a modernized interface for incremental search, offering more intuitive
-;; navigation and search options.
-(require 'ctrlf)
-(ctrlf-mode 1)
 
 
 ;;;; IRC and other communication
