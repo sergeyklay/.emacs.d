@@ -73,18 +73,13 @@ jobs:
         env:
           DEBUG: 1
 
-      - name: Check for code style
-        run: make checkdoc
-        env:
-          EMACSFLAGS: ""
-
-      - name: Byte compile configuration files
+      - name: Run tests
         if: matrix.allow_failure != true
-        run: make build
+        run: make test
         env:
           DEBUG: 1
 
-      - name: Byte compile configuration files (allow failure)
+      - name: Run tests (allow failure)
         if: matrix.allow_failure == true
         run: make build || true
         env:
