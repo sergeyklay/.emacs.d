@@ -247,9 +247,6 @@ advice for `require-package', to which ARGS are passed."
 
 
 ;;;; Sane defaults
-;; Use the tab key for both indentation and completion.
-(setq-default tab-always-indent 'complete)
-
 ;; Remove the initial message from the scratch buffer.
 (setq-default initial-scratch-message "")
 
@@ -263,10 +260,6 @@ advice for `require-package', to which ARGS are passed."
 ;; Disable the creation of lockfiles on Windows, as they can cause issues
 ;; with file systems on that platform.
 (setq-default create-lockfiles (not (member system-type '(windows-nt))))
-
-;; Use spaces instead of tabs for indentation, except in cases where
-;; Emacs specifically recognizes that tabs are required.
-(setq-default indent-tabs-mode nil)
 
 ;; Visually indicate empty lines after the buffer's end.
 (setq-default indicate-empty-lines t)
@@ -1552,18 +1545,22 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 
 ;;;; Editing
-(require 'outline)
+;; TAB behaviour (indentation and completion)
 
-;; Customize the behavior of the `outline-mode'.
-;; `outline-blank-line' ensures that there is a blank line before each heading,
-;; which improves readability and maintains a clean structure in your outlines.
-(setq outline-blank-line t)
+;; Use the tab key for both indentation and completion.
+(setq-default tab-always-indent 'complete)
 
-(defun my|setup-outline-mode ()
-  "Enable `outline-minor-mode' in programming modes."
-  (outline-minor-mode 1))
+;; Set the preferred, conservative completion behavior when pressing tab
+;; for various contexts, prioritizing safe and predictable actions.
+(setq-default tab-first-completion 'word-or-paren-or-punct)
 
-(add-hook 'prog-mode-hook #'my|setup-outline-mode)
+;; Use spaces instead of tabs for indentation, except in cases where
+;; Emacs specifically recognizes that tabs are required.
+(setq-default indent-tabs-mode nil)
+
+;; Hide all body lines in buffers with `outline-minor-mode' enabled,
+;; leaving all headings visible.
+(add-hook 'outline-minor-mode-hook #'outline-hide-body)
 
 ;; Delete trailing whitespace on save in all modes.  If there are modes or
 ;; projects where trailing whitespace should be retained, it is suggested to
@@ -2149,7 +2146,12 @@ This function serves multiple purposes:
 (defun my|lisp-modes-setup ()
   "Custom configurations for Lisp modes."
   (turn-on-eldoc-mode)
-  (rainbow-delimiters-mode)
+
+  ;; Make parenthesis depth easier to distinguish at a glance.
+  (rainbow-delimiters-mode 1)
+
+  ;; ;; Allow folding of outlines in comments.
+  (outline-minor-mode 1)
 
   ;; Automatically rescan imenu on each call
   (setq-local imenu-auto-rescan t)
