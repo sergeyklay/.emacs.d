@@ -1779,14 +1779,20 @@ related to your current project."
 ;; Enable Consult for enhanced command completion.  Consult provides
 ;; replacements for many standard commands, offering better interface and
 ;; additional features.
-(global-set-key [remap switch-to-buffer]
-                #'consult-buffer)
+(global-set-key [remap switch-to-buffer]   #'consult-buffer)
+(global-set-key [remap goto-line]          #'consult-goto-line)
+(global-set-key [remap isearch-forward]    #'consult-line)
+(global-set-key [remap locate]             #'consult-locate)
+(global-set-key [remap man]                #'consult-man)
+(global-set-key [remap load-theme]         #'consult-theme)
+(global-set-key [remap recentf-open-files] #'consult-recent-file)
+
 (global-set-key [remap switch-to-buffer-other-window]
                 #'consult-buffer-other-window)
+
 (global-set-key [remap switch-to-buffer-other-frame]
                 #'consult-buffer-other-frame)
-(global-set-key [remap goto-line]
-                #'consult-goto-line)
+
 
 ;; Declare `consult' functions to avoid compilation warnings.
 (declare-function consult-theme "consult" (theme))
@@ -1802,12 +1808,8 @@ related to your current project."
 (declare-function consult-org-heading "consult-org" (&optional match score))
 
 (with-eval-after-load 'consult
-  (global-set-key (kbd "C-x l")  #'consult-locate)
   (global-set-key (kbd "C-c k")  #'consult-ripgrep)
-  (global-set-key (kbd "C-c f")  #'consult-recent-file)
   (global-set-key (kbd "C-c r")  #'consult-history)
-  (global-set-key (kbd "C-S-s")  #'consult-line)
-  (global-set-key (kbd "C-<f5>") #'consult-theme)
 
   (define-key minibuffer-local-map (kbd "C-r") #'consult-history))
 
