@@ -56,11 +56,15 @@ tools:
 - [[https://git-scm.com][Git (=git=)]]
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
 - [[https://imagemagick.org][Imagemagick (=convert=)]]
+- [[https://www.ghostscript.com/][Ghostscript (=gs=)]]
 - [[https://hunspell.github.io/][hunspell (=hunspell=)]]
 - [[https://pandoc.org/][Pandoc (=pandoc=)]]
 - [[https://www.passwordstore.org/][The standard Unix password manager (=pass=)]]
 
-So, I created this configuration with these tools in mind.
+So, I created this configuration with these tools in mind. This means
+that if any of these tools are not installed on your system, some
+features in my configuration might not work as expected. Make sure to
+have them installed to fully benefit from the setup.
 
 Note: Since I speak, write, and read in three languages — English,
 Polish, and Russian — I've configured the spell-checking setup to
