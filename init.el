@@ -26,7 +26,7 @@
 ;;; Commentary:
 
 ;; Welcome to my GNU Emacs haven.  This configuration is a reflection of my
-;; desire for a minimalist yet powerful editing environment.
+;; desire for a "minimalist" yet powerful editing environment.
 ;;
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
@@ -62,63 +62,89 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 (require 'package)
 
 ;; Setting up package archives.
-(setq package-archives
-   '(("melpa"    . "https://melpa.org/packages/")
-     ("m-stable" . "https://stable.melpa.org/packages/")
-     ("gnu"      . "https://elpa.gnu.org/packages/")
-     ("nongnu"   . "https://elpa.nongnu.org/nongnu/")))
+(add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/") t)
 
 ;; Priorities. Default priority is 0.
 (setq package-archive-priorities
       '(("gnu"      . 100)
         ("nongnu"   . 50)
-        ("m-stable" . 20)
         ("melpa"    . 10)))
 
 ;; Precompute activation actions to speed up startup.
 (setq package-quickstart t)
 
-(defun ensure-package-installed (&rest packages)
-  "Ensure that each package in PACKAGES is installed."
-  (dolist (package packages)
-    (unless (package-installed-p package)
+;; Enable native compilation of packages upon their first load,
+;; leveraging Emacs's native compilation feature for performance.
+(setq package-native-compile t)
+
+(package-initialize)
+
+(defun ensure-package-installed (package)
+  "Ensure that PACKAGE is installed."
+  (unless (package-installed-p package)
       (condition-case _err
           (package-install package)
         (error
          (package-refresh-contents)
-         (package-install package))))))
+         (package-install package))))
+  (package-installed-p package))
+
+;; package.el updates the saved version of `package-selected-packages' correctly
+;; only after `custom-file' has been loaded, which is a bug. We work around this
+;; by adding the required packages to `package-selected-packages' after startup
+;; is complete. This code borrowed from Steve Purcell configuration.
+
+(defvar my-required-packages nil
+  "List of packages that were successfully installed.")
+
+(defun my-note-selected-package (oldfun package &rest args)
+  "If OLDFUN reports PACKAGE was successfully installed, note that fact.
+The package name is noted by adding it to
+`my-required-packages'.  This function is used as an
+advice for `require-package', to which ARGS are passed."
+  (let ((available (apply oldfun package args)))
+    (prog1
+        available
+      (when available
+        (add-to-list 'my-required-packages package)))))
+
+(advice-add 'ensure-package-installed :around 'my-note-selected-package)
+
+(defconst my-selected-packages
+   '(anaconda-mode         ; Python IDE support
+     consult               ; Incremental narrowing framework
+     consult-flyspell      ; Flyspell integration with Consult
+     csv-mode              ; CSV file editing mode
+     ctrlf                 ; Minimalistic incremental search
+     embark                ; Contextual actions in buffers
+     embark-consult        ; Embark integration with Consult
+     erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
+     flyspell-correct      ; Correct spelling with popup menus
+     git-modes             ; Modes for Git-related files
+     htmlize               ; Convert buffer text to HTML
+     magit                 ; The Git porcelain inside Emacs
+     marginalia            ; Annotations for completions
+     markdown-mode         ; Major mode for Markdown files
+     orderless             ; Flexible completion style
+     org-cliplink          ; Capture clipboard URLs to Org mode
+     org-contacts          ; Contacts management with Org mode
+     org-super-agenda      ; Advanced agenda views for Org mode
+     pass                  ; Interface to the Password Store
+     password-store        ; Emacs interface for password-store
+     prescient             ; Predictive sorting and filtering
+     rainbow-delimiters    ; Color nested parentheses
+     rainbow-mode          ; Colorize color values in buffers
+     sql-indent            ; Indentation support for SQL
+     vertico               ; Vertical interactive completion
+     vertico-prescient     ; Prescient integration with Vertico
+     which-key             ; Display available keybindings
+     writegood-mode        ; Improve writing style
+     yaml-mode)            ; Major mode for YAML files
+   "A list of packages that are selected for installation.")
 
 ;; Install packages as soon as possible.
-(ensure-package-installed
-   'anaconda-mode
-   'consult
-   'consult-flyspell
-   'csv-mode
-   'ctrlf
-   'embark
-   'embark-consult
-   'erc-hl-nicks
-   'flyspell-correct
-   'git-modes
-   'htmlize
-   'magit
-   'marginalia
-   'markdown-mode
-   'orderless
-   'org-cliplink
-   'org-contacts
-   'org-super-agenda
-   'pass
-   'password-store
-   'prescient
-   'rainbow-delimiters
-   'rainbow-mode
-   'sql-indent
-   'vertico
-   'vertico-prescient
-   'which-key
-   'writegood-mode
-   'yaml-mode)
+(dolist (package my-selected-packages)
+    (ensure-package-installed package))
 
 
 ;;;; Setup keymap
