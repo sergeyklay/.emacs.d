@@ -1748,7 +1748,7 @@ related to your current project."
   (global-set-key (kbd "C-x l")  #'consult-locate)
   (global-set-key (kbd "C-c k")  #'consult-ripgrep)
   (global-set-key (kbd "C-c f")  #'consult-recent-file)
-  (global-set-key (kbd "C-r")    #'consult-history)
+  (global-set-key (kbd "C-c r")  #'consult-history)
   (global-set-key (kbd "C-S-s")  #'consult-line)
   (global-set-key (kbd "C-<f5>") #'consult-theme)
 
