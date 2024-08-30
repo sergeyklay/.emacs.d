@@ -663,7 +663,6 @@ non-alphanumeric characters and replaces spaces with hyphens."
                 "" slug t))
     ;; Replace spaces with hyphens and remove non-alphanumeric characters
     (setq slug (replace-regexp-in-string "[^[:alnum:][:space:]-]" "" slug))
-    (replace-regexp-in-string " +" "-" slug)
     (setq slug (replace-regexp-in-string " +" "-" slug))
     ;; Remove trailing hyphens
     (replace-regexp-in-string "-+$" "" slug)))
