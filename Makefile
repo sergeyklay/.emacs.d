@@ -39,8 +39,11 @@ install: init.el
 build: $(OBJS)
 
 .PHONY: checkdoc
-checkdoc: test/checkdoc.el
-	$(RUNEMACS) --load $(TOP)/$<
+checkdoc:
+	@for f in $(SRCS) ; do                                  \
+		echo "Checking $$f ...";                        \
+		$(EMACSBATCH) --eval "(checkdoc-file \"$$f\")"; \
+	done && echo "Done."
 
 .PHONY: checkstyle
 checkstyle: test/passive-voice-check.el
