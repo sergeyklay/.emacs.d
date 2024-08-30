@@ -1688,9 +1688,7 @@ related to your current project."
 ;; Enable cycling through candidates.
 (setq vertico-cycle t)
 
-;; Enable Consult for enhanced command completion.  Consult provides
-;; replacements for many standard commands, offering better interface and
-;; additional features.
+;; Enable Consult for enhanced command completion.
 (global-set-key [remap switch-to-buffer]   #'consult-buffer)
 (global-set-key [remap goto-line]          #'consult-goto-line)
 (global-set-key [remap isearch-forward]    #'consult-line)
@@ -1756,13 +1754,17 @@ related to your current project."
   ;; minibuffer, `completing-read').
 
   ;; Create a type-specific buffer to manage current candidates.
-  (define-key vertico-map (kbd "C-c C-o") 'embark-export)
+  (define-key vertico-map (kbd "C-c C-e") #'embark-export)
 
-  ;; Prompt the user for an action and perform it
-  (define-key vertico-map (kbd "C-c C-c") 'embark-act))
+  ;; Collect current candidates into a live, interactive buffer for further
+  ;; processing.
+  (define-key vertico-map (kbd "C-c C-l") #'embark-collect)
+
+  ;; Prompt the user for an action and perform it.
+  (define-key vertico-map (kbd "C-c .") #'embark-act))
 
 ;; Explore current command key bindings with `completing-read'.
-(global-set-key (kbd "C-h B") 'embark-bindings)
+(global-set-key [remap describe-bindings] #'embark-bindings)
 
 ;; Prompt the user for an action and perform it
 (global-set-key (kbd "C-.") 'embark-act)
