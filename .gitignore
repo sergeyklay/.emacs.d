@@ -45,5 +45,8 @@
 # Some packages uses thid dir to store internall stuff, like cache.
 /var
 
+# Well, sometimes I revisit it again.
+/tutorial
+
 # List of org files with IDs on those files.
 .org-id-locations
