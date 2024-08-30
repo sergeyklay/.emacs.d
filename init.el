@@ -117,7 +117,6 @@ advice for `require-package', to which ARGS are passed."
      consult               ; Incremental narrowing framework
      consult-flyspell      ; Flyspell integration with Consult
      csv-mode              ; CSV file editing mode
-     ctrlf                 ; Minimalistic incremental search
      embark                ; Contextual actions in buffers
      embark-consult        ; Embark integration with Consult
      erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
@@ -164,9 +163,6 @@ advice for `require-package', to which ARGS are passed."
   "My own keyboard map.")
 
 (keymap-global-set "C-c C-/" my-keyboard-map)
-
-;; Declare `which-key-mode' to avoid compilation warnings.
-(declare-function which-key-mode "which-key" (&optional arg))
 
 ;; Load `which-key' and enable `which-key-mode'.
 (add-hook 'after-init-hook #'which-key-mode)
@@ -233,14 +229,6 @@ advice for `require-package', to which ARGS are passed."
 ;; Only enable in interactive mode.
 (when (not noninteractive)
   (add-hook 'after-init-hook #'recentf-mode))
-
-;; Load `recentf' at compile-time to ensure its variables and functions
-;; are available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'recentf))
-
-;; Declare `recentf-save-list' to avoid compilation warnings.
-(declare-function recentf-save-list "recentf" ())
 
 (with-eval-after-load 'recentf
   ;; Set the maximum number of recent files to save.
@@ -339,18 +327,10 @@ advice for `require-package', to which ARGS are passed."
   ;; Add spell-checking in comments for all programming language modes
   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
-;; Load `flyspell' at compile-time to ensure its variables and functions
-;; are available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'flyspell))
-
 (with-eval-after-load 'flyspell
   (define-key flyspell-mode-map (kbd "C-;") nil)
   ;; Be silent when checking words to avoid unnecessary messages.
   (setq flyspell-issue-message-flag nil))
-
-;; Declare `writegood-mode' to avoid compilation warnings.
-(declare-function writegood-mode "writegood-mode" (&optional arg))
 
 ;; Load `writegood-mode' and set up hooks.
 (with-eval-after-load 'writegood-mode
@@ -366,11 +346,6 @@ advice for `require-package', to which ARGS are passed."
    (t nil))
   "Path to the GPG program to use.
 If neither gpg nor gpg2 is found, this is set to nil.")
-
-;; Load `epg-config' at compile-time to ensure its variables are available
-;; during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'epg-config))
 
 ;; Check if GPG is available, then set `epg-gpg-program',
 ;; otherwise display a warning.
@@ -395,12 +370,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; Only enable `epa-file' if it's not already enabled
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
-
-;; Load `auth-source-pass' at compile-time to ensure its variables and
-;; functions are available during compilation, avoiding any free variable
-;; warnings.
-(eval-when-compile
-  (require 'auth-source-pass))
 
 ;; Require `auth-source-pass' only if pass executable is available.
 (when (executable-find "pass")
@@ -669,9 +638,6 @@ non-alphanumeric characters and replaces spaces with hyphens."
     ;; Remove trailing hyphens
     (replace-regexp-in-string "-+$" "" slug)))
 
-;; Declare `org-id-add-location' to avoid compilation warnings.
-(declare-function org-id-add-location "org-id" (id file))
-
 (defun my/org-generate-id ()
   "Generate a human-readable ID for the current Org heading.
 
@@ -775,11 +741,6 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
     (require 'org-crypt)
   (warn "GPG is not available. `org-crypt' could not be loaded."))
 
-;; Load `org-crypt' at compile-time to ensure its variables are available during
-;; compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'org-crypt))
-
 ;; Set my encrypt key from `epa-file-encrypt-to' (see above).
 (setq org-crypt-key epa-file-encrypt-to)
 
@@ -795,17 +756,9 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (setq org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
-;; Load `org-contacts' at compile-time to ensure its variables are available
-;; during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'org-contacts))
-
 (with-eval-after-load 'org
   ;; Take a URL from the clipboard and inserts an org-mode link.
   (require 'org-cliplink)
-
-  ;; Declare `org-cliplink' to avoid compilation warnings.
-  (declare-function org-cliplink "org-cliplink" ())
 
   (global-set-key (kbd "C-x p i") #'org-cliplink)
 
@@ -932,11 +885,6 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (global-set-key (kbd "C-c c") #'org-capture)
 
 ;;;;; Org Mobile
-;; Load `org-mobile' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'org-mobile))
-
 ;; Setup path for export Org files.
 ;;
 ;; To use it with Beorg you have to:
@@ -1070,11 +1018,6 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 (setq org-agenda-window-setup 'current-window)
 
 ;; Super agenda mode.
-;; load `org-super-agenda' at compile-time to ensure its variables and functions
-;; are available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'org-super-agenda))
-
 ;; For documentation  see: https://github.com/alphapapa/org-super-agenda
 (with-eval-after-load 'org
   (require 'org-super-agenda)
@@ -1093,10 +1036,6 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
         (:name "Someday"
                :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
                :order 25)))
-
-  ;; Declare `org-refileorg-super-agenda-mode' to avoid compilation warnings.
-  (declare-function org-super-agenda-mode "org-refileorg-super-agenda"
-                    (&optional arg))
 
   ;; Enable `org-super-agenda-mode' in `org-agenda-mode'.
   (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
@@ -1478,10 +1417,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;; The new node creation must be confirmed by the user.
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-;; Declare `org-refile' functions to avoid compilation warnings.
-(declare-function org-refile-get-targets "org-refile" (&optional default-buff))
-(declare-function org-refile-cache-clear "org-refile" ())
-
 ;; Set a timer to regenerate refile cache automatically every time
 ;; my Emacs has been idled for 10 mins.
 (run-with-idle-timer 600 t (lambda ()
@@ -1511,11 +1446,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;;;; Window Handling
 ;; `winner-mode' allows you to undo and redo window configurations.
 (add-hook 'after-init-hook #'winner-mode)
-
-;; Load `winner' at compile-time to ensure its variables and functions
-;; are available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'winner))
 
 (with-eval-after-load 'winner
   ;; Define a list of buffer names that Winner mode will ignore when restoring
@@ -1572,9 +1502,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (load-theme 'modus-vivendi t)
 (my-set-cursor-color-based-on-theme)
 
-;; Declare `modus-themes-toggle' to avoid compilation warnings.
-(declare-function modus-themes-toggle "modus-themes" ())
-
 (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
 ;; Nicer scrolling
@@ -1591,9 +1518,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; Highlight matching parentheses when the point is on them.
 (add-hook 'after-init-hook #'show-paren-mode)
-
-;; Declare `rainbow-delimiters-mode' to avoid compilation warnings.
-(declare-function rainbow-delimiters-mode "rainbow-delimiters" (&optional arg))
 
 ;; Highlight brackets according to their depth.
 ;; Add `rainbow-delimiters-mode' to `prog-mode-hook'.
@@ -1697,11 +1621,6 @@ This function is for interactive use only;"
 ;; Auto clean up zombie projects from `project-list-file'
 (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
 
-;; Load `xref' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'xref))
-
 ;; Use ripgrep if installed
 (when (executable-find "rg")
   (setq xref-search-program 'ripgrep))
@@ -1760,14 +1679,6 @@ related to your current project."
 
 
 ;;;; Setup completion
-;; Load `vertico' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'vertico))
-
-;; Declare `vertico-mode' to avoid compilation warnings.
-(declare-function vertico-mode "vertico" (&optional arg))
-
 ;; Provide a nicer `completing-read'.
 (add-hook 'after-init-hook #'vertico-mode)
 
@@ -1780,35 +1691,23 @@ related to your current project."
 ;; Enable Consult for enhanced command completion.  Consult provides
 ;; replacements for many standard commands, offering better interface and
 ;; additional features.
-(global-set-key [remap switch-to-buffer]
-                #'consult-buffer)
+(global-set-key [remap switch-to-buffer]   #'consult-buffer)
+(global-set-key [remap goto-line]          #'consult-goto-line)
+(global-set-key [remap isearch-forward]    #'consult-line)
+(global-set-key [remap locate]             #'consult-locate)
+(global-set-key [remap man]                #'consult-man)
+(global-set-key [remap load-theme]         #'consult-theme)
+(global-set-key [remap recentf-open-files] #'consult-recent-file)
+
 (global-set-key [remap switch-to-buffer-other-window]
                 #'consult-buffer-other-window)
+
 (global-set-key [remap switch-to-buffer-other-frame]
                 #'consult-buffer-other-frame)
-(global-set-key [remap goto-line]
-                #'consult-goto-line)
-
-;; Declare `consult' functions to avoid compilation warnings.
-(declare-function consult-theme "consult" (theme))
-(declare-function consult-line "consult" (&optional initial start))
-(declare-function consult-history "consult" (&optional history index bol))
-(declare-function consult-recent-file "consult" ())
-(declare-function consult-locate "consult" (&optional initial))
-(declare-function consult-goto-line "consult" (&optional arg))
-(declare-function consult-buffer-other-frame "consult" ())
-(declare-function consult-buffer-other-window "consult" ())
-(declare-function consult-buffer "consult" (&optional sources))
-(declare-function consult-ripgrep "consult" (&optional dir initial))
-(declare-function consult-org-heading "consult-org" (&optional match score))
 
 (with-eval-after-load 'consult
-  (global-set-key (kbd "C-x l")  #'consult-locate)
   (global-set-key (kbd "C-c k")  #'consult-ripgrep)
-  (global-set-key (kbd "C-c f")  #'consult-recent-file)
   (global-set-key (kbd "C-c r")  #'consult-history)
-  (global-set-key (kbd "C-S-s")  #'consult-line)
-  (global-set-key (kbd "C-<f5>") #'consult-theme)
 
   (define-key minibuffer-local-map (kbd "C-r") #'consult-history))
 
@@ -1826,26 +1725,12 @@ related to your current project."
 (with-eval-after-load 'flyspell
   (require 'flyspell-correct))
 
-;; Load `consult-flyspell' at compile-time to ensure its variables and functions
-;; are available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'consult-flyspell))
-
 ;; Completion of misspelled words in buffer.
 (with-eval-after-load 'flyspell
-  ;; Declare `consult-flyspell' to avoid compilation warnings.
-  (declare-function consult-flyspell "consult-flyspell" (&optional u))
-
   (define-key flyspell-mode-map (kbd "C-;") #'consult-flyspell)
-
-  ;; Declare `flyspell-correct-at-point' to avoid compilation warnings.
-  (declare-function flyspell-correct-at-point "flyspell-correct" ())
 
   ;; Set custom function for selecting corrections.
   (setq consult-flyspell-select-function #'flyspell-correct-at-point))
-
-;; Declare `marginalia-mode' to avoid compilation warnings.
-(declare-function marginalia-mode "marginalia" (&optional arg))
 
 ;; Add additional context and annotations to completion UI.  Marginalia enriches
 ;; the completion interface with more information, such as documentation
@@ -1887,25 +1772,9 @@ related to your current project."
 ;; Do-What-I-Mean (e.g., open or describe)
 (global-set-key (kbd "C-;") 'embark-dwim)
 
-;; Declare `consult-preview-at-point-mode' to avoid compilation warnings.
-(declare-function consult-preview-at-point-mode "consult" (&optional arg))
-
 (with-eval-after-load 'embark
   (require 'embark-consult)
   (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
-
-;; Load `prescient' and `vertico-prescient' at compile-time to ensure their
-;; variables and functions are available during compilation, avoiding any free
-;; variable warnings.
-(eval-when-compile
-  (require 'prescient)
-  (require 'vertico-prescient))
-
-;; Declare `vertico-prescient-mode' to avoid compilation warnings.
-(declare-function vertico-prescient-mode "vertico-prescient" (&rest args))
-
-;; Declare `prescient-persist-mode' to avoid compilation warnings.
-(declare-function prescient-persist-mode "prescient" (&optional arg))
 
 (with-eval-after-load 'vertico
   (require 'prescient)
@@ -1929,12 +1798,6 @@ related to your current project."
   ;; Enable Vertico Prescient integration.  Integrate Prescient with Vertico to
   ;; combine powerful sorting and filtering with the Vertico completion system.
   (vertico-prescient-mode 1))
-
-;; Enable CTRLF as a modern replacement for Isearch and Swiper.  CTRLF provides
-;; a modernized interface for incremental search, offering more intuitive
-;; navigation and search options.
-(require 'ctrlf)
-(ctrlf-mode 1)
 
 
 ;;;; IRC and other communication
@@ -2070,7 +1933,6 @@ This results in a filename of the form #channel@server.txt, for example:
     (and (erc-server-process-alive)
          erc-server-connected)))
 
-(declare-function erc-track-switch-buffer (arg))
 (defun my/erc-start-or-switch ()
   "Connects to ERC, or switch to last active buffer.
 
@@ -2120,13 +1982,6 @@ This function serves multiple purposes:
 
 ;;;; Shells
 ;;;;; Eshell
-;; Load `em-prompt' and `em-hist' at compile-time to ensure their variables and
-;; functions are available during compilation, avoiding any free variable
-;; warnings.
-(eval-when-compile
-  (require 'em-prompt)
-  (require 'em-hist))
-
 ;; The default settings seem a little forgetful to me. Let's try this out.
 (setq eshell-history-size 1000)
 
@@ -2146,9 +2001,6 @@ This function serves multiple purposes:
     (if (string-prefix-p home path)
         (concat "~" (substring path (length home)))
       path)))
-
-;; Declare `eshell/pwd' to avoid compilation warnings.
-(declare-function eshell/pwd "em-dirs" ())
 
 ;; Making the eshell prompt behave more like my Zsh prompt.
 (setq eshell-prompt-regexp "^[^@\n]+@[^ ]+ [^\n]+[\n][#%] ")
@@ -2171,27 +2023,14 @@ This function serves multiple purposes:
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
-;; Load `css-mode' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'css-mode))
-
 ;; Set the indentation level for CSS files to 2 spaces.
 (setq css-indent-offset 2)
-
-;; Declare `rainbow-mode' to avoid compilation warnings.
-(declare-function rainbow-mode "rainbow-mode" ())
 
 ;; Defer loading `rainbow-mode' until `css-mode' is activated.
 (add-hook 'css-mode-hook #'rainbow-mode)
 
 ;; Associate `js-mode' with .js files.
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
-
-;; Load `js' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'js))
 
 ;; Set the indentation level for JavaScript files to 2 spaces.
 (setq js-indent-level 2)
@@ -2204,11 +2043,6 @@ This function serves multiple purposes:
 
 ;; Associate `rst-mode' whith .rst files.
 (add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
-
-;; Load `rst' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'rst))
 
 (with-eval-after-load 'rst
   ;; Customize `rst-new-adornment-down' to automatically lower the adornment
@@ -2244,11 +2078,6 @@ This function serves multiple purposes:
 ;; Associate GitHub Flavored Markdown patterns with `gfm-mode'.
 (add-to-list 'auto-mode-alist `(,gfm-patterns . gfm-mode))
 
-;; Load `markdown-mode' at compile-time to ensure its variables and functions
-;; are available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'markdown-mode))
-
 ;; Configure markdown command to use Pandoc.
 (setq markdown-command pandoc-executable-path)
 
@@ -2283,14 +2112,6 @@ This function serves multiple purposes:
 ;; Associate .sql files with `sql-mode'.
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
 
-;; Load `sql' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'sql))
-
-;; Declare `sqlind-minor-mode' to avoid compilation warnings.
-(declare-function sqlind-minor-mode "sql-indent" ())
-
 ;; Configure `sql-indent' to activate `sqlind-minor-mode' in `sql-mode'.
 (with-eval-after-load 'sql
   (add-hook 'sql-mode-hook #'sqlind-minor-mode)
@@ -2305,16 +2126,8 @@ This function serves multiple purposes:
 ;; Associate `.csv` files with `csv-mode'.
 (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
 
-;; Declare `csv-align-mode' to avoid compilation warnings.
-(declare-function csv-align-mode "csv-mode" ())
-
 ;; Enable `csv-align-mode' automatically when `csv-mode is activated.
 (add-hook 'csv-mode-hook #'csv-align-mode)
-
-;; Load `python' at compile-time to ensure its variables and functions are
-;; available during compilation, avoiding any free variable warnings.
-(eval-when-compile
-  (require 'python))
 
 ;; Ensure `python' mode is loaded when opening Python files.
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
@@ -2322,11 +2135,6 @@ This function serves multiple purposes:
 ;; Set custom Python shell interpreter settings.
 (setq python-shell-interpreter "python3")
 (setq python-shell-interpreter-args "-i --simple-prompt --pprint")
-
-;; Declare `anaconda-eldoc-mode' and `anaconda-mode' to avoid compilation
-;; warnings.
-(declare-function anaconda-mode "anaconda-mode" ())
-(declare-function anaconda-eldoc-mode "anaconda-mode" ())
 
 ;; Load `anaconda-mode' annd configure hooks after `python-mode` is loaded.
 (with-eval-after-load 'python
