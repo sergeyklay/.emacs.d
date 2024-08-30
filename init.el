@@ -31,15 +31,6 @@
 ;; I started this project on 4 March 2019 from this commit:
 ;; eb11ce25b0866508e023db4b8be6cca536cd3044
 
-;;; Code:
-;; For those who use my dotfiles and need an easy way to write their
-;; own extras on top of what I already load.  The file must exist at
-;; ~/.emacs.d/pre-custom.el
-;;
-;; The purpose of this file is for the user to define their
-;; preferences BEFORE loading any of the modules.
-(load (locate-user-emacs-file "pre-custom.el") :no-error :no-message)
-
 
 ;;;; Profiling and Debug
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
@@ -2361,16 +2352,6 @@ This function serves multiple purposes:
 ;; settings made earlier in this file.
 (when (or (file-exists-p custom-file) (file-symlink-p custom-file))
   (load custom-file t t))
-
-;; For those who use my dotfiles and need an easy way to write their
-;; own extras on top of what I already load.  The file must exist at
-;; `~/.emacs.d/post-custom.el'
-;;
-;; The purpose of the "post customisations" is to make tweaks to what
-;; I already define, such as to change the default theme.  See above
-;; for the 'pre-custom.el' to make changes BEFORE loading any of my
-;; other configurations.
-(load (locate-user-emacs-file "post-custom.el") :no-error :no-message)
 
 ;; Local Variables:
 ;; fill-column: 80
