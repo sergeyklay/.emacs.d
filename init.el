@@ -1152,18 +1152,27 @@ more recently than A, and nil if they have the same CLOSED time."
   "Return the date and time of the start of the current month."
   (format-time-string "%Y-%m-01 00:00"))
 
-(defun my-get-pdf-agenda-export-weekly-name ()
-  "Generate a PDF export file name for the weekly agenda review.
+(defun my-weekly-agenda-export-range ()
+  "Return the start and end dates of the current week as a list.
 
-The file name format is '<USER>_work_review_<START>-<END>.pdf', where
+The start date is determined by `my-get-week-start-date', which is
+assumed to return the current week's Monday. The end date is calculated
+by adding six days to the start date, yielding the upcoming Sunday.
+Dates are formatted as YYYY.MM.DD."
+  (let* ((week-start (my-get-week-start-date))
+         (week-end (time-add (date-to-time week-start) (days-to-time 6))))
+    `(,(format-time-string "%Y.%m.%d" (date-to-time week-start))
+      ,(format-time-string "%Y.%m.%d" week-end))))
+
+(defun my-weekly-agenda-export-name ()
+  "Generate an export file name for the weekly agenda review.
+
+The file name format is '<USER>_work_review_<START>-<END>.txt', where
 <USER> is the current `user-login-name', <START> is the date of the
 current week's start (Monday), and <END> is the date of the week's end
 (Sunday)."
-  (let* ((week-start (my-get-week-start-date))
-         (week-end (time-add (date-to-time week-start) (days-to-time 6)))
-         (start (format-time-string "%Y.%m.%d" (date-to-time week-start)))
-         (end (format-time-string "%Y.%m.%d" week-end)))
-    (concat user-login-name "_work_review_" start "-" end ".pdf")))
+  (let* ((date (string-join (my-weekly-agenda-export-range) "-")))
+    (concat user-login-name "_work_review_" date ".txt")))
 
 ;; For details see: https://orgmode.org/manual/Special-Agenda-Views.html
 (setq org-agenda-custom-commands
@@ -1272,7 +1281,9 @@ current week's start (Monday), and <END> is the date of the week's end
          ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\"|TODO=\"STARTED\""
                         (my-get-week-start-date))
                 ((org-agenda-overriding-header
-                  "Tasks I worked on this week"))))
+                  (concat
+                   "Tasks I worked on this week ("
+                   (string-join (my-weekly-agenda-export-range) " - ") ")")))))
          ;; Files in `org-agenda-files' can be relative to `org-directory'.
          ((org-agenda-files '("airslate.org"))
           (org-agenda-cmp-user-defined 'my-org-cmp-closed)
@@ -1285,7 +1296,10 @@ current week's start (Monday), and <END> is the date of the week's end
           (org-agenda-todo-keyword-format "%-10s")
           ;; Disable org-super-agenda-mode for this view
           (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
-         (,@(expand-file-name (my-get-pdf-agenda-export-weekly-name)
+         ;; This can be a list of files, for example ("~/a.pdf" "~/b.txt").
+         ;; Reworked to get plain txt format due to this issue:
+         ;; https://www.reddit.com/r/orgmode/comments/1f4t3ga/help_with_exporting_org_agenda_to_pdf_with/
+         (,@(Expand-file-name (my-weekly-agenda-export-name)
                               my-org-reports-path)))))
 
 ;; Always highlight the current agenda line.
@@ -1310,8 +1324,7 @@ current week's start (Monday), and <END> is the date of the week's end
 ;;
 ;; For details see: https://orgmode.org/manual/Exporting-Agenda-Views.html
 (setq org-agenda-exporter-settings
-      '((org-export-coding-system 'utf-8)
-        (htmlize-output-type 'css)))
+      '((htmlize-output-type 'css)))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 
