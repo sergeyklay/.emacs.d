@@ -1152,6 +1152,19 @@ more recently than A, and nil if they have the same CLOSED time."
   "Return the date and time of the start of the current month."
   (format-time-string "%Y-%m-01 00:00"))
 
+(defun my-get-pdf-agenda-export-weekly-name ()
+  "Generate a PDF export file name for the weekly agenda review.
+
+The file name format is '<USER>_work_review_<START>-<END>.pdf', where
+<USER> is the current `user-login-name', <START> is the date of the
+current week's start (Monday), and <END> is the date of the week's end
+(Sunday)."
+  (let* ((week-start (my-get-week-start-date))
+         (week-end (time-add (date-to-time week-start) (days-to-time 6)))
+         (start (format-time-string "%Y.%m.%d" (date-to-time week-start)))
+         (end (format-time-string "%Y.%m.%d" week-end)))
+    (concat user-login-name "_work_review_" start "-" end ".pdf")))
+
 ;; For details see: https://orgmode.org/manual/Special-Agenda-Views.html
 (setq org-agenda-custom-commands
       `(("g" "Agenda" agenda "")
@@ -1229,9 +1242,10 @@ more recently than A, and nil if they have the same CLOSED time."
                        '(my-org-agenda-skip-if-parent-has-tag "project"))
                       (org-agenda-overriding-header
                        "Standalone Tasks: No Projects or DONE Items")))))
+        ("R" . "Reports")
         ;; The next 180 days, excluding all TODO items.  Will used to export
         ;; HTML file.  See `org-agenda-exporter-settings' comment bellow.
-        ("n" "No TODO events +180d"
+        ("Rn" "No TODO events +180d"
          ((agenda "No TODO events +180d"
                   ((org-agenda-span 180)
                    (org-agenda-time-grid nil)
@@ -1244,7 +1258,7 @@ more recently than A, and nil if they have the same CLOSED time."
                              my-org-reports-path)))
         ;; Full agenda for the next 31 days. Will used to export HTML file.  See
         ;; `org-agenda-exporter-settings' comment bellow.
-        ("D", "Detail agenda +31d"
+        ("Ra", "Detail agenda +31d"
          ((agenda "Detail agenda"
                   ((org-agenda-span 31)
                    (org-agenda-time-grid nil)
@@ -1253,7 +1267,26 @@ more recently than A, and nil if they have the same CLOSED time."
          ;; Disable `org-super-agenda-mode' for this view.
          ((org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
          (,(expand-file-name "agenda_details_raw.html"
-                             my-org-reports-path)))))
+                             my-org-reports-path)))
+        ("Rw", "Company work done this week"
+         ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\"|TODO=\"STARTED\""
+                        (my-get-week-start-date))
+                ((org-agenda-overriding-header
+                  "Tasks I worked on this week"))))
+         ;; Files in `org-agenda-files' can be relative to `org-directory'.
+         ((org-agenda-files '("airslate.org"))
+          (org-agenda-cmp-user-defined 'my-org-cmp-closed)
+          (org-agenda-sorting-strategy '(user-defined-down))
+          ;; Hide tags in this agenda view. This is a report after all.
+          (org-agenda-hide-tags-regexp ".")
+          ;; I don't need category/filename in this agenda view.
+          (org-agenda-prefix-format "  %?-12t% s")
+          ;; All TODO keywords occupy a fixed space in the agenda display.
+          (org-agenda-todo-keyword-format "%-10s")
+          ;; Disable org-super-agenda-mode for this view
+          (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
+         (,@(expand-file-name (my-get-pdf-agenda-export-weekly-name)
+                              my-org-reports-path)))))
 
 ;; Always highlight the current agenda line.
 (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
@@ -1277,8 +1310,7 @@ more recently than A, and nil if they have the same CLOSED time."
 ;;
 ;; For details see: https://orgmode.org/manual/Exporting-Agenda-Views.html
 (setq org-agenda-exporter-settings
-      '((ps-number-of-columns 2)
-        (ps-landscape-mode t)
+      '((org-export-coding-system 'utf-8)
         (htmlize-output-type 'css)))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
