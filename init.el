@@ -434,7 +434,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 11 1 "Wszystkich Świętych (Poland)")
     (holiday-fixed 11 11 "Święto Niepodległości (Poland)")
     (holiday-fixed 12 25 "Boże Narodzenie (Poland)")
-    (Holiday-fixed 12 26 "Drugi dzień Bożego Narodzenia (Poland)"))
+    (holiday-fixed 12 26 "Drugi dzień Bożego Narodzenia (Poland)"))
   "Polish public holidays")
 
 (defvar my-ukrainian-holidays
@@ -468,7 +468,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 12 25 "Christmas (US)"))
   "US public holidays")
 
-;; Define local holidays to be tracked
+;; Define local holidays to be tracked.
 (setq holiday-local-holidays
       '((holiday-fixed 10 24 "Programmers' Day")
         (holiday-fixed 3 8  "Women's Day")
@@ -476,7 +476,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
         (holiday-fixed 9 10 "Teachers' Day")
         (holiday-fixed 3 12 "Arbor Day")))
 
-;; Add Polish, Ukrainian, Canadian, and US public holidays.
+;; Define localother holidays to be tracked.
 (setq-default holiday-other-holidays
               '((holiday-fixed 4 23 "World Book Day")
                 (holiday-fixed 2 14 "Valentine's Day")
