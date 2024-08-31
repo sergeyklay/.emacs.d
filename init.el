@@ -511,14 +511,10 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; `org-agenda-diary-file' to something meaningful because my approach to
 ;; storing recurring tasks is different — I don't keep all recurring events for
 ;; every imaginable aspect of my life in one file.  As a workaround, I create
-;; this file to keep Org-agenda happy, and I put a special sexp "%%(org-diary)"
-;; inside which I might use for notifications later.
+;; this file to keep Org-agenda happy.
 (setq diary-file (expand-file-name "diary" (expand-file-name "~")))
 (unless (file-exists-p diary-file)
-  (find-file diary-file)
-  (insert "%%(org-diary)")
-  (save-buffer)
-  (kill-buffer))
+  (make-empty-file diary-file))
 
 
 ;;;; Organization
