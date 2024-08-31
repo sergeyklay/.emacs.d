@@ -511,7 +511,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; `org-agenda-diary-file' to something meaningful because my approach to
 ;; storing recurring tasks is different — I don't keep all recurring events for
 ;; every imaginable aspect of my life in one file.  As a workaround, I create
-;; this file to keep Org-agenda happy, and I put a special macro "%%(org-diary)"
+;; this file to keep Org-agenda happy, and I put a special sexp "%%(org-diary)"
 ;; inside which I might use for notifications later.
 (setq diary-file (expand-file-name "diary" (expand-file-name "~")))
 (unless (file-exists-p diary-file)
@@ -666,9 +666,10 @@ informative and unique within a reasonable scope."
     (let* ((heading (nth 4 (org-heading-components)))
            (clean-heading (my-org-sanitize-heading-for-id heading))
            ;; Use CREATED property if available
-           (date-prefix (or (my-org-get-created-date)
-                            ;; Fallback to today's date
-                            (format-time-string (org-time-stamp-format t t))))
+           (date-prefix
+            (or (my-org-get-created-date)
+                ;; Fallback to today's date
+                (format-time-string (org-time-stamp-format t 'no-brackets))))
            (new-id (concat date-prefix "-" clean-heading)))
       ;; Set the ID property
       (org-set-property "ID" new-id)
