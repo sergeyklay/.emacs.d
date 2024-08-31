@@ -1,9 +1,9 @@
 
 * Serghei's GNU Emacs Configuration
 
-This repository contains my personal GNU Emacs setup, continually used
-and tweaked since 2019 and it crafted to be an integral part of my
-daily workflow. It’s the second repository I clone after [[https://github.com/sergeyklay/dotfiles][my dotfiles]],
+This repository contains my personal GNU Emacs setup, crafted to be an
+integral part of my daily workflow and continually tweaked
+since 2019. It’s the second repository I clone after [[https://github.com/sergeyklay/dotfiles][my dotfiles]],
 ensuring I have a consistent development environment wherever I go.
 
 ** The Philosophy
