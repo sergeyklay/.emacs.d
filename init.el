@@ -500,6 +500,20 @@ If neither gpg nor gpg2 is found, this is set to nil.")
                                  ("Europe/Warsaw" "Warsaw")
                                  ("Europe/Kyiv" "Kyiv")))
 
+;; I don't actively use `diary-file', but Org-agenda checks this file's
+;; existence when verifying `org-agenda-diary-file'.  I prefer not to set
+;; `org-agenda-diary-file' to something meaningful because my approach to
+;; storing recurring tasks is different — I don't keep all recurring events for
+;; every imaginable aspect of my life in one file.  As a workaround, I create
+;; this file to keep Org-agenda happy, and I put a special macro "%%(org-diary)"
+;; inside which I might use for notifications later.
+(setq diary-file (expand-file-name "diary" (expand-file-name "~")))
+(unless (file-exists-p diary-file)
+  (find-file diary-file)
+  (insert "%%(org-diary)")
+  (save-buffer)
+  (kill-buffer))
+
 
 ;;;; Organization
 (defconst my-org-files-path
