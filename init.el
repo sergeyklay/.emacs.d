@@ -774,22 +774,36 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (with-eval-after-load 'org
   ;; Take a URL from the clipboard and inserts an org-mode link.
   (require 'org-cliplink)
-
   (global-set-key (kbd "C-x p i") #'org-cliplink)
 
   ;; Managing contacts into org-mode.
-  (require 'org-contacts)
-  (setq org-contacts-files
-        `(,(concat my-org-files-path "contacts.org"))))
+  (with-eval-after-load 'org-contacts
+    (setq org-contacts-files
+          `(,(concat my-org-files-path "contacts.org")))))
 
 (defun my/org-contacts-search ()
-  "Search and select a contact."
+  "Search and select a contact.
+
+This function searches and select a contact with tags starting
+with @, excluding inherited tags and TODO headings."
   (interactive)
-  (let ((starting-point (current-buffer)))
-    (condition-case _err
-        (progn (find-file (car org-contacts-files))
-               (consult-org-heading))
-      (t (switch-to-buffer starting-point)))))
+  (unless (boundp 'org-contacts-files)
+    (require 'org-contacts))
+  (let ((contact-file (car org-contacts-files))
+        (starting-point (current-buffer)))
+    (if (and contact-file (file-exists-p contact-file))
+        (condition-case _err
+            (progn
+              (find-file contact-file)
+              ;; Disable tag inheritance temporarily.
+              (let ((org-use-tag-inheritance nil))
+                ;; Run `consult-org-heading' with the match pattern to filter
+                ;; desired headings with direct tags starting with '@'.
+                (consult-org-heading "+{@*}-TODO")))
+          ;; On error, switch back to the starting buffer.
+          (error (switch-to-buffer starting-point)))
+      ;; Display an error message if the contacts file is not found.
+      (message "Org contacts file not found."))))
 
 (define-key my-keyboard-map (kbd "k") #'my/org-contacts-search)
 
@@ -838,10 +852,10 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 (defconst my-org-contacts-template
   (concat
-   "* %(org-contacts-template-name) %^g\n"
+   "* %^{Name} %^g\n"
    ":PROPERTIES:\n"
    ":TYPE: %^{PROMPT|person|person|company|list|other}\n"
-   ":EMAIL: %(org-contacts-template-email)\n"
+   ":EMAIL: %^{Email}\n"
    ":PHONE: %^{Phone}\n"
    ":STREET:\n"
    ":POSTALCODE:\n"
@@ -898,6 +912,11 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)))
 
 (global-set-key (kbd "C-c c") #'org-capture)
+
+;; Load `org-contacts' as late as possible to optimize Emacs startup speed.
+;; Profiling showed that loading `org-contacts' and its dependencies takes
+;; over 500 ms, so delaying it helps reduce initial startup time.
+(add-hook 'org-capture-mode-hook (lambda () (require 'org-contacts)))
 
 ;;;;; Org Mobile
 ;; Setup path for export Org files.
