@@ -2182,6 +2182,18 @@ This function serves multiple purposes:
   (add-hook 'python-mode-hook #'anaconda-eldoc-mode))
 
 ;;;;; Lisp and company
+(defun my-elisp-outline-level ()
+  "Calculate the outline level based on the number of leading semicolons.
+
+Three semicolons represent level 1, four semicolons represent
+level 2, and so on."
+  (save-excursion
+    (beginning-of-line)
+    ;; Count the number of leading semicolons.
+    (let ((count (length (match-string 0 (or (thing-at-point 'line t) "")))))
+      ;; Adjust the count to match the desired outline levels.
+      (- count 2))))
+
 (defun my|lisp-modes-setup ()
   "Custom configurations for Lisp modes."
   (turn-on-eldoc-mode)
@@ -2189,7 +2201,16 @@ This function serves multiple purposes:
   ;; Make parenthesis depth easier to distinguish at a glance.
   (rainbow-delimiters-mode 1)
 
-  ;; ;; Allow folding of outlines in comments.
+  ;; Comments that start with three semicolons, ";;;", are considered top-level
+  ;; headings by `outline-minor-mode'.  Four or more semicolons can be used as
+  ;; subheadings in hierarchical fashion.
+  (setq-local outline-regexp ";;;+[\t ]+")
+
+  ;; Use `my-elisp-outline-level' to compute a header’s nesting level in an
+  ;; outline.
+  (setq-local outline-level #'my-elisp-outline-level)
+
+  ;; Allow folding of outlines in comments.
   (outline-minor-mode 1)
 
   ;; Automatically rescan imenu on each call
