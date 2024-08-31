@@ -628,7 +628,7 @@ date formats.  If no valid date is found, it returns nil."
 
 Removes progress indicators, priority markers, links, timestamps,
 non-alphanumeric characters and replaces spaces with hyphens."
-  (let ((slug heading))
+  (let ((slug (substring-no-properties heading)))
     ;; Replacements for common symbols
     (setq slug (replace-regexp-in-string "&" "and" slug))
     (setq slug (replace-regexp-in-string "\\." "dot" slug))
@@ -650,8 +650,8 @@ non-alphanumeric characters and replaces spaces with hyphens."
     ;; Replace spaces with hyphens and remove non-alphanumeric characters
     (setq slug (replace-regexp-in-string "[^[:alnum:][:space:]-]" "" slug))
     (setq slug (replace-regexp-in-string " +" "-" slug))
-    ;; Remove trailing hyphens
-    (replace-regexp-in-string "-+$" "" slug)))
+    ;; Remove trailing hyphens, donwcase and trim length to 60 chars
+    (string-limit (downcase (replace-regexp-in-string "-+$" "" slug)) 60)))
 
 (defun my/org-generate-id ()
   "Generate a human-readable ID for the current Org heading.
