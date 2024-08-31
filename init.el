@@ -113,39 +113,45 @@ advice for `require-package', to which ARGS are passed."
 (advice-add 'ensure-package-installed :around 'my-note-selected-package)
 
 (defconst my-selected-packages
-   '(anaconda-mode         ; Python IDE support
-     consult               ; Incremental narrowing framework
-     consult-flyspell      ; Flyspell integration with Consult
-     csv-mode              ; CSV file editing mode
-     embark                ; Contextual actions in buffers
-     embark-consult        ; Embark integration with Consult
-     erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
-     flyspell-correct      ; Correct spelling with popup menus
-     git-modes             ; Modes for Git-related files
-     htmlize               ; Convert buffer text to HTML
-     magit                 ; The Git porcelain inside Emacs
-     marginalia            ; Annotations for completions
-     markdown-mode         ; Major mode for Markdown files
-     orderless             ; Flexible completion style
-     org-cliplink          ; Capture clipboard URLs to Org mode
-     org-contacts          ; Contacts management with Org mode
-     org-super-agenda      ; Advanced agenda views for Org mode
-     pass                  ; Interface to the Password Store
-     password-store        ; Emacs interface for password-store
-     prescient             ; Predictive sorting and filtering
-     rainbow-delimiters    ; Color nested parentheses
-     rainbow-mode          ; Colorize color values in buffers
-     sql-indent            ; Indentation support for SQL
-     vertico               ; Vertical interactive completion
-     vertico-prescient     ; Prescient integration with Vertico
-     which-key             ; Display available keybindings
-     writegood-mode        ; Improve writing style
-     yaml-mode)            ; Major mode for YAML files
+  '(anaconda-mode         ; Python IDE support
+    benchmark-init        ; Benchmarks for require and load calls
+    consult               ; Incremental narrowing framework
+    consult-flyspell      ; Flyspell integration with Consult
+    csv-mode              ; CSV file editing mode
+    embark                ; Contextual actions in buffers
+    embark-consult        ; Embark integration with Consult
+    erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
+    flyspell-correct      ; Correct spelling with popup menus
+    git-modes             ; Modes for Git-related files
+    htmlize               ; Convert buffer text to HTML
+    magit                 ; The Git porcelain inside Emacs
+    marginalia            ; Annotations for completions
+    markdown-mode         ; Major mode for Markdown files
+    orderless             ; Flexible completion style
+    org-cliplink          ; Capture clipboard URLs to Org mode
+    org-contacts          ; Contacts management with Org mode
+    org-super-agenda      ; Advanced agenda views for Org mode
+    pass                  ; Interface to the Password Store
+    password-store        ; Emacs interface for password-store
+    prescient             ; Predictive sorting and filtering
+    rainbow-delimiters    ; Color nested parentheses
+    rainbow-mode          ; Colorize color values in buffers
+    sql-indent            ; Indentation support for SQL
+    vertico               ; Vertical interactive completion
+    vertico-prescient     ; Prescient integration with Vertico
+    which-key             ; Display available keybindings
+    writegood-mode        ; Improve writing style
+    yaml-mode)            ; Major mode for YAML files
    "A list of packages that are selected for installation.")
 
 ;; Install packages as soon as possible.
 (dolist (package my-selected-packages)
-    (ensure-package-installed package))
+  (ensure-package-installed package))
+
+
+;;;; Benchmark
+(require 'benchmark-init)
+(add-hook 'after-init-hook 'benchmark-init/deactivate)
 
 
 ;;;; Setup keymap
