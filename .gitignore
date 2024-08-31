@@ -48,5 +48,8 @@
 # Well, sometimes I revisit it again.
 /tutorial
 
+# Internal www browser cache.
+/url
+
 # List of org files with IDs on those files.
 .org-id-locations
