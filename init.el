@@ -889,41 +889,31 @@ with @, excluding inherited tags and TODO headings."
 
 ;; Define custom Org Capture templates
 (setq org-capture-templates
-      `(("s" "Shorts" entry
-         (file+headline ,(concat my-org-files-path "misc.org") "Shorts")
+      `(("s" "Shorts" entry (file+headline "misc.org" "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)
-        ("e" "Event" entry
-         (file+headline ,(concat my-org-files-path "misc.org") "Events")
+        ("e" "Event" entry (file+headline "misc.org" "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
         ;; I prefer refile this later manually into proper group.
         ;; "" means `org-default-notes-file'.
-        ("k", "Contact" entry (file "")
-         ,my-org-contacts-template :empty-lines 1)
+        ("k" "Contact" entry (file "") ,my-org-contacts-template :empty-lines 1)
         ("t" "Trip Checklist" checkitem
-         (file+headline ,(concat my-org-files-path "misc.org") "Trip Checklist"))
-        ("b" "Bookmark" entry
-         (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
+         (file+headline "misc.org" "Trip Checklist"))
+        ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
          "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-        ("i" "Blog Idea" entry
-         (file+headline ,(concat my-org-files-path "blog.org") "Captured Blog Ideas")
+        ("i" "Blog Idea" entry (file+headline "blog.org" "Captured Blog Ideas")
          ,my-org-capture-template-blog :empty-lines 1)
-        ("n" "Random Note" entry
-          (file+headline ,(concat my-org-files-path "notes.org") "Random Notes")
+        ("n" "Thought or Note" entry (file+headline "notes.org" "Random Notes")
           ,my-org-capture-template-simple :empty-lines 1)
         ("I" "Inbox, refile later" entry (file "")
           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 0)
-        ("r" "To-Read" entry
-         (file+headline ,(concat my-org-files-path "misc.org") "To-Read List")
+        ("r" "To-Read" entry (file+headline "misc.org" "To-Read List")
          "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-        ("w" "To-Watch" entry
-         (file+headline ,(concat my-org-files-path "misc.org") "To-Watch List")
+        ("w" "To-Watch" entry (file+headline "misc.org" "To-Watch List")
          "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
         ("B" "Business")
-        ("Bs" "Shorts" entry
-         (file+headline ,(concat my-org-files-path "business.org") "Shorts")
+        ("Bs" "Shorts" entry (file+headline "business.org" "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)
-        ("Be" "Event" entry
-         (file+headline ,(concat my-org-files-path "business.org") "Events")
+        ("Be" "Event" entry (file+headline "business.org" "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)))
 
 (global-set-key (kbd "C-c c") #'org-capture)
