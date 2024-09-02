@@ -525,13 +525,17 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 (require 'org)
 
-;; I don't actively use `diary-file', but Org-agenda checks this file's
-;; existence when verifying `org-agenda-diary-file'.  It happens even I set
-;; `org-agenda-include-diary' to nil.  I prefer not to set
-;; `org-agenda-diary-file' to something meaningful because my approach to
-;; storing recurring tasks is different — I don't keep all recurring events for
-;; every imaginable aspect of my life in one file.  As a workaround, I create
-;; this file to keep Org-agenda happy.
+;; Although I don't use `diary-file', Org-agenda still checks for its existence
+;; even when `org-agenda-include-diary' is set to nil.  This happens due to
+;; internal checks tied to `org-agenda-diary-file'.  Since I handle recurring
+;; tasks differently within my Org files and don't need an additional diary, I
+;; don't want to set `org-agenda-diary-file' to anything meaningful.  As a
+;; simple workaround, I just create an empty `diary-file' to bypass these checks
+;; and keep Org-agenda running smoothly.
+(with-eval-after-load 'org
+  (unless (file-exists-p diary-file)
+    (make-empty-file diary-file)))
+
 (with-eval-after-load 'org
   (unless (file-exists-p diary-file)
     (make-empty-file diary-file)))
