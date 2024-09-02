@@ -675,6 +675,8 @@ The function returns the generated ID, or if an existing ID is
 found, it returns the existing ID after copying it to the
 `kill-ring'."
   (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "This function is intended to be used in Org-mode only"))
   (let ((prop-id (org-id-get)))
     ;; Check if the ID property already exists
     (unless prop-id
