@@ -913,6 +913,8 @@ with @, excluding inherited tags and TODO headings."
         ("B" "Business")
         ("Bs" "Shorts" entry (file+headline "business.org" "Shorts")
          ,my-org-capture-template-simple :empty-lines 1)
+        ("Bm" "Meeting Note" entry (file+headline "airslate.org" "Meeting Notes")
+         ,my-org-capture-template-simple :empty-lines 1)
         ("Be" "Event" entry (file+headline "business.org" "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)))
 
