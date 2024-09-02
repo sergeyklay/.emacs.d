@@ -536,10 +536,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
   (unless (file-exists-p diary-file)
     (make-empty-file diary-file)))
 
-(with-eval-after-load 'org
-  (unless (file-exists-p diary-file)
-    (make-empty-file diary-file)))
-
 ;; Associate .org, .org_archive and .txt files with `org-mode'.
 (add-to-list 'auto-mode-alist
              '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
