@@ -776,7 +776,6 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
       ;; "contact:" instead of "org-contact:" provided by `org-contacts'.
       `(("contact" . ,(concat (expand-file-name "contacts.org" org-directory)
                               "::"))))
-
 ;;;;; Org Crypt
 ;; Check if GPG is available, then require `org-crypt'.
 ;; Otherwise, display a warning.
@@ -1014,10 +1013,9 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 (defconst my-org-agenda-files-life
   `(,(concat my-org-files-path "blog.org")
     ,(concat my-org-files-path "contacts.org")
-    ;; Finances / Legal / Assure / Insure / Regulate
+    ;; Finances / Legal / Authorities / Insure / Regulate
     ,(concat my-org-files-path "flair.org")
     ,(concat my-org-files-path "hardware.org")
-    ,(concat my-org-files-path "housing.org")
     ,(concat my-org-files-path "inbox.org")
     ,(concat my-org-files-path "misc.org")
     ,(concat my-org-files-path "notes.org"))
