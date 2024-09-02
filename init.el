@@ -505,16 +505,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
                                  ("Europe/Warsaw" "Warsaw")
                                  ("Europe/Kyiv" "Kyiv")))
 
-;; I don't actively use `diary-file', but Org-agenda checks this file's
-;; existence when verifying `org-agenda-diary-file'.  I prefer not to set
-;; `org-agenda-diary-file' to something meaningful because my approach to
-;; storing recurring tasks is different — I don't keep all recurring events for
-;; every imaginable aspect of my life in one file.  As a workaround, I create
-;; this file to keep Org-agenda happy.
-(setq diary-file (expand-file-name "diary" (expand-file-name "~")))
-(unless (file-exists-p diary-file)
-  (make-empty-file diary-file))
-
 
 ;;;; Organization
 (defconst my-org-files-path
@@ -534,6 +524,16 @@ If neither gpg nor gpg2 is found, this is set to nil.")
   "Common directory for exaport Org files and agendas.")
 
 (require 'org)
+
+;; I don't actively use `diary-file', but Org-agenda checks this file's
+;; existence when verifying `org-agenda-diary-file'.  I prefer not to set
+;; `org-agenda-diary-file' to something meaningful because my approach to
+;; storing recurring tasks is different — I don't keep all recurring events for
+;; every imaginable aspect of my life in one file.  As a workaround, I create
+;; this file to keep Org-agenda happy.
+(with-eval-after-load 'org
+  (unless (file-exists-p diary-file)
+    (make-empty-file diary-file)))
 
 ;; Associate .org, .org_archive and .txt files with `org-mode'.
 (add-to-list 'auto-mode-alist
