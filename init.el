@@ -885,7 +885,7 @@ with @, excluding inherited tags and TODO headings."
 
 ;; Default target for capturing notes. Also used for mobile sync.
 ;; See `org-mobile-inbox-for-pull' bellow.
-(setq org-default-notes-file (concat my-org-files-path "inbox.org"))
+(setq org-default-notes-file (expand-file-name "inbox.org" my-org-files-path))
 
 ;; Define custom Org Capture templates
 (setq org-capture-templates
