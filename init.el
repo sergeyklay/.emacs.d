@@ -764,6 +764,17 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 (define-key my-keyboard-map (kbd "P") #'my/org-mark-as-project)
 
+;;;;; Org Links
+
+;; Alist of link abbreviations to link certain kind of data.
+(setq org-link-abbrev-alist
+      ;; `org-contacts-link-open' from `org-contacts' has very unusual and not
+      ;; acceptable behavior for me.  Maybe I will write a bug report or submit
+      ;; a patch at some point, but as a temporary solution - I am using
+      ;; "contact:" instead of "org-contact:" provided by `org-contacts'.
+      `(("contact" . ,(concat (expand-file-name "contacts.org" org-directory)
+                              "::"))))
+
 ;;;;; Org Crypt
 ;; Check if GPG is available, then require `org-crypt'.
 ;; Otherwise, display a warning.
