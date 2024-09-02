@@ -454,7 +454,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
         (holiday-fixed 9 10 "Teachers' Day")
         (holiday-fixed 3 12 "Arbor Day")))
 
-;; Define localother holidays to be tracked.
+;; Define other holidays to be tracked.
 (setq-default holiday-other-holidays
               '((holiday-fixed 4 23 "World Book Day")
                 (holiday-fixed 2 14 "Valentine's Day")
@@ -984,23 +984,20 @@ agenda view and a filtered list of standalone tasks (excluding
 projects and completed tasks).  After pushing the agenda to
 MobileOrg, the original `org-agenda-custom-commands' is restored."
   (interactive)
-  (let ((original-org-agenda-custom-commands org-agenda-custom-commands))
-    ;; Temporarily set agenda commands for MobileOrg export.
-    (let ((org-agenda-custom-commands
-           '(("m" "Monthly Overview"
-              ((agenda "1 month"
-                       ((org-agenda-span 31)
-                        (org-agenda-time-grid nil)
-                        (org-agenda-entry-types '(:timestamp :sexp))))))
-             ("s" "Standalone Tasks"
-              ((tags-todo "-project-DONE-CANCELED"
-                          ((org-agenda-skip-function
-                            '(my-org-agenda-skip-if-parent-has-tag
-                              "project")))))))))
-      ;; Generate MobileOrg export.
-      (org-mobile-push))
-    ;; Restore the original agenda commands.
-    (setq org-agenda-custom-commands original-org-agenda-custom-commands)))
+  (let* ((original-org-agenda-custom-commands org-agenda-custom-commands)
+         (org-agenda-custom-commands
+          '(("m" "Monthly Overview"
+             ((agenda "1 month"
+                      ((org-agenda-span 31)
+                       (org-agenda-time-grid nil)
+                       (org-agenda-entry-types '(:timestamp :sexp))))))
+            ("s" "Standalone Tasks"
+             ((tags-todo "-project-DONE-CANCELED"
+                         ((org-agenda-skip-function
+                           '(my-org-agenda-skip-if-parent-has-tag
+                             "project")))))))))
+    ;; Generate MobileOrg export.
+    (org-mobile-push)))
 
 (define-key my-keyboard-map (kbd "e") #'my/mobile-org-export)
 
