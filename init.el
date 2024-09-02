@@ -929,7 +929,12 @@ with @, excluding inherited tags and TODO headings."
 ;; To use it with Beorg you have to:
 ;; 1. Open Files in Beog mobile app
 ;; 2. Ceate file called "mobileorg" (w/o extension)
-;; 3. Setup sync Beorg with Dropbox "Notes" directoy
+;; 3. Setup sync Beorg with Dropbox "Notes" directory
+;;
+;; To use it with Plain Org you have to
+;; 1. Open menu in Plain Org mobile app
+;; 2. Select "Open file"
+;; 3. Open this file located in your Dropbox "Notes" directory
 (setq org-mobile-directory my-org-webdaw-path)
 
 ;; Do not generate IDs for all headings.
@@ -1344,9 +1349,9 @@ using `org-mobile-pull'.  The primary purpose of this function is
 to move bookmarks, which you add on your mobile device and which
 end up in the `org-mobile-inbox-for-pull' file, into notes.org
 while formatting them according to my preferred style.  I have
-accounted for the specific formats used by MobileOrg and Beorg in
-this implementation, but if you encounter issues, please let me
-know so I can address them.
+accounted for the specific formats used by MobileOrg, Beorg and
+Plain Org in this implementation, but if you encounter issues,
+please let me know so I can address them.
 
 Steps performed by this function:
 
