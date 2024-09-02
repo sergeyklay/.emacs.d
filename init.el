@@ -1495,8 +1495,16 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 
 ;;;; Appearance
-;; I prefer the box cursor.
-(setq-default cursor-type 'box)
+
+;; The blinking cursor is distracting and interferes with cursor setting in some
+;; minor modes that try to change buffer-locally.  Additionally, it can cause
+;; freezing, especially on macOS, for users with customized and colored cursors.
+(blink-cursor-mode -1)
+
+;; Keep cursor outside of any `cursor-intangible' text property.
+(setq minibuffer-prompt-properties
+      '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 (defun my-theme-dark-p ()
   "Return t if the current Emacs theme is dark."

@@ -65,6 +65,10 @@
 (when (and (not (display-graphic-p)) (fboundp 'menu-bar-mode))
   (menu-bar-mode -1))
 
+;; Reduce rendering/line scan work by not rendering cursors or regions in
+;; non-focused windows.
+(setq-default cursor-in-non-selected-windows nil)
+
 ;; Resizing the Emacs frame can be a terribly expensive part of changing the
 ;; font.  By inhibiting this, the startup time is significantly reduced,
 ;; especially with fonts larger than the system default.
