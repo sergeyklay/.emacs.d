@@ -1560,24 +1560,16 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (setq-default use-file-dialog nil)
 (setq-default use-dialog-box nil)
 
-;; Enable line numbers in some modes bellow with a specified width.
-(require 'display-line-numbers)
-
-;; Set the default width for the line numbers.
-(setq-default display-line-numbers-width 4)
-
-;; Enable line numbers in programming modes.
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+;; Can be activated with `display-line-numbers-mode'
+(setq-default display-line-numbers-width 3)
+(setq-default display-line-numbers-widen t)
 
 ;; Enable `electric-pair-mode', which automatically inserts the closing
-;; parenthesis, bracket, or quote when you type an opening one. This
-;; feature is particularly useful for coding, as it speeds up typing
-;; and reduces errors.
-
-;; Enable electric-pair-mode globally after initialization.
+;; parenthesis, bracket, or quote when you type an opening one.
 (add-hook 'after-init-hook #'electric-pair-mode)
 
-(add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode 0)))
+;; Disable `electric-pair-mode' in minibuffer.
+(add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode -1)))
 
 
 ;;;; Editing
