@@ -130,7 +130,6 @@ advice for `require-package', to which ARGS are passed."
     orderless             ; Flexible completion style
     org-cliplink          ; Capture clipboard URLs to Org mode
     org-contacts          ; Contacts management with Org mode
-    org-super-agenda      ; Advanced agenda views for Org mode
     pass                  ; Interface to the Password Store
     password-store        ; Emacs interface for password-store
     prescient             ; Predictive sorting and filtering
@@ -1074,29 +1073,6 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 ;; Open agenda in the current window.
 (setq org-agenda-window-setup 'current-window)
 
-;; Super agenda mode.
-;; For documentation  see: https://github.com/alphapapa/org-super-agenda
-(with-eval-after-load 'org
-  (require 'org-super-agenda)
-
-  (setq org-super-agenda-groups
-      '((:name "Today" :scheduled today)
-        (:name "DEADLINES" :deadline t :order 1)
-        (:name "Important" :priority "A" :order 2 :face (:append t :weight bold))
-        (:name "Prio ≤ B" :priority<= "B" :order 30)
-        (:name "Started"
-               :and
-               (:todo "STARTED" :not (:tag "someday")
-                      :not (:priority "C") :not (:priority "B"))
-               :order 10)
-        (:todo "WAITING" :order 18)
-        (:name "Someday"
-               :and (:tag "someday" :not (:priority "C") :not (:priority "B"))
-               :order 25)))
-
-  ;; Enable `org-super-agenda-mode' in `org-agenda-mode'.
-  (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
-
 (defun my-org-agenda-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -1238,9 +1214,7 @@ the date of the week's end (Sunday)."
                 ((org-agenda-overriding-header
                   "Tasks done this week"))))
          ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
-          (org-agenda-sorting-strategy '(user-defined-down))
-          ;; Disable org-super-agenda-mode for this view
-          (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1)))))
+          (org-agenda-sorting-strategy '(user-defined-down))))
         ;; All tasks marked as DONE within the current month for montly reviews
         ;; or status updates.
         ("W" "Tasks done this month"
@@ -1249,9 +1223,7 @@ the date of the week's end (Sunday)."
                 ((org-agenda-overriding-header
                   "Tasks done this month"))))
          ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
-          (org-agenda-sorting-strategy '(user-defined-down))
-          ;; Disable org-super-agenda-mode for this view
-          (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1)))))
+          (org-agenda-sorting-strategy '(user-defined-down))))
         ;; Filtered tasks excluding those with :project: tag, their children,
         ;; and DONE/CANCELED tasks
         ("-" "Standalone Tasks"
@@ -1270,8 +1242,7 @@ the date of the week's end (Sunday)."
                    (org-agenda-entry-types '(:timestamp :sexp))
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'any)))))
-         ;; Disable `org-super-agenda-mode' for this view.
-         ((org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
+         nil
          (,(expand-file-name "agenda_180d_filtered.html"
                              my-org-reports-path)))
         ;; Full agenda for the next 31 days.  Will used to export HTML file.
@@ -1282,8 +1253,7 @@ the date of the week's end (Sunday)."
                    (org-agenda-time-grid nil)
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'done)))))
-         ;; Disable `org-super-agenda-mode' for this view.
-         ((org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
+         nil
          (,(expand-file-name "agenda_details_raw.html"
                              my-org-reports-path)))
         ("Rw", "Company work done this week"
@@ -1302,9 +1272,7 @@ the date of the week's end (Sunday)."
           ;; I don't need category/filename in this agenda view.
           (org-agenda-prefix-format "  %?-12t% s")
           ;; All TODO keywords occupy a fixed space in the agenda display.
-          (org-agenda-todo-keyword-format "%-10s")
-          ;; Disable org-super-agenda-mode for this view
-          (org-agenda-mode-hook (lambda () (org-super-agenda-mode -1))))
+          (org-agenda-todo-keyword-format "%-10s"))
          ;; This can be a list of files, for example ("~/a.pdf" "~/b.txt").
          ;; Reworked to get plain txt format due to this issue:
          ;; https://www.reddit.com/r/orgmode/comments/1f4t3ga/help_with_exporting_org_agenda_to_pdf_with/
