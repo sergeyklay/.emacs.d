@@ -650,11 +650,11 @@ non-alphanumeric characters and replaces spaces with hyphens."
     (string-limit (downcase (replace-regexp-in-string "-+$" "" slug)) 60)))
 
 (defun my/org-generate-id ()
-  "Generate a human-readable ID for the current Org heading.
+  "Create a human-readable ID for the current entry and return it.
 
-If the current heading already has an ID, it copies the existing
-ID to the `kill-ring' and returns it.  If no ID is present, the
-function generates a new ID by performing the following steps:
+If the entry already has an ID, just return it. In any case
+copies resulted ID to the `kill-ring'.  The function generates a
+new ID by performing the following steps:
 
 1. Retrieves the heading text of the current Org heading.
 2. Sanitizes the heading text to form a slug suitable for an ID.
@@ -677,25 +677,29 @@ found, it returns the existing ID after copying it to the
   (interactive)
   (unless (derived-mode-p 'org-mode)
     (user-error "This function is intended to be used in Org-mode only"))
-  (let ((prop-id (org-id-get)))
-    ;; Check if the ID property already exists
-    (unless prop-id
-      ;; If not - retrieve the heading text and create a new ID
-      (let* ((heading (nth 4 (org-heading-components)))
-             (clean-heading (my-org-sanitize-heading-for-id heading))
-             ;; Use CREATED property if available, otherwise today's date
-             (date-prefix (or (my-org-get-created-date)
-                              (format-time-string "%Y-%m-%d")))
-             (new-id (concat date-prefix "-" clean-heading)))
-        ;; Set the ID property
-        (org-set-property "ID" new-id)
-        ;; Add the ID with location FILE to the database of ID locations.
-        (org-id-add-location new-id (buffer-file-name (buffer-base-buffer)))
-        ;; Copy the ID to the `kill-ring'
-        (kill-new (concat "id:" new-id))
-        new-id))
-    (kill-new (concat "id:" prop-id))
-    prop-id))
+  (org-with-point-at nil  ; with nil refer to the entry at point
+    (let ((id (org-id-get)))
+      (cond
+       ;; Check if the ID property already exists
+       ((and id (stringp id) (string-match "\\S-" id))
+        (org-kill-new (concat "id:" id))
+        id)
+       ;; If not - retrieve the heading text and create a new ID
+       (t
+        (let* ((heading (nth 4 (org-heading-components)))
+               (clean-heading (my-org-sanitize-heading-for-id heading))
+               ;; Use CREATED property if available, otherwise today's date
+               (date-prefix (or (my-org-get-created-date)
+                                (format-time-string "%Y-%m-%d")))
+               (id (concat date-prefix "-" clean-heading)))
+          ;; Set the ID property
+          (org-set-property "ID" id)
+          ;; Add the ID with location FILE to the database of ID locations.
+          (org-id-add-location id (or org-id-overriding-file-name
+				      (buffer-file-name (buffer-base-buffer))))
+          ;; Copy the ID to the `kill-ring'
+          (org-kill-new (concat "id:" id))
+          id))))))
 
 (defun my/org-id-advice (&rest args)
   "The advice to update Org ID locations.
