@@ -1625,43 +1625,13 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;; behavior as needed.
 (setq-default require-final-newline t)
 
-(defun my/duplicate-line (arg)
-  "Duplicate current line, ARG times leaving point in lower line.
-This function is for interactive use only;"
-  (interactive "*p")
-  ;; save the point for undo
-  (setq buffer-undo-list (cons (point) buffer-undo-list))
+;; When duplicating line/region, move the point to the first line of the
+;; duplicate line/region.  Used for `duplicate-dwim' bellow.
+(setq duplicate-line-final-position 1)
 
-  ;; local variables for start and end of line
-  (let ((bol
-         (save-excursion
-           (beginning-of-line)
-           (point)))
-        eol)
-
-    (save-excursion
-      ;; don't use forward-line for this, because you would have
-      ;; to check whether you are at the end of the buffer
-      (end-of-line)
-      (setq eol (point))
-
-      ;; store the line and disable the recording of undo information
-      (let ((line (buffer-substring bol eol))
-            (buffer-undo-list t)
-            (count arg))
-        ;; insert the line arg times
-        (while (> count 0)
-          (newline)         ; because there is no newline in line
-          (insert line)
-          (setq count (1- count))))
-
-      ;; create the undo information
-      (setq buffer-undo-list (cons (cons eol (point)) buffer-undo-list))))
-
-  ;; put the point in the lowest line and return
-  (forward-line arg))
-
-(global-set-key (kbd "C-c d") #'my/duplicate-line)
+;; C-c d will duplicate line (see `duplicate-line') if the region is inactive,
+;; otherwise will duplicate region.  With C-u N C-c d will duplicate N times.
+(global-set-key (kbd "C-c d") #'duplicate-dwim)
 
 
 ;;;; Project management
