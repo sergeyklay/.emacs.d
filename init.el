@@ -526,7 +526,8 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (require 'org)
 
 ;; I don't actively use `diary-file', but Org-agenda checks this file's
-;; existence when verifying `org-agenda-diary-file'.  I prefer not to set
+;; existence when verifying `org-agenda-diary-file'.  It happens even I set
+;; `org-agenda-include-diary' to nil.  I prefer not to set
 ;; `org-agenda-diary-file' to something meaningful because my approach to
 ;; storing recurring tasks is different — I don't keep all recurring events for
 ;; every imaginable aspect of my life in one file.  As a workaround, I create
@@ -1063,9 +1064,6 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 
 ;; Number of days to include in overview display.
 (setq org-agenda-span 1)
-
-;; Also include diary on org-agenda.
-(setq org-agenda-include-diary t)
 
 ;; Restore windows layout after quit agenda.
 (setq org-agenda-restore-windows-after-quit t)
