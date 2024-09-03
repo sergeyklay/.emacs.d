@@ -1979,6 +1979,19 @@ This function serves multiple purposes:
 
 
 ;;;; Shells
+;; Setting up the switch used to have the shell execute its command line
+;; argument.
+;;
+;; -i is for interactive (I don't use it)
+;; -c tells bash to read whatever commands follow
+;; -l means invoke login shells, so that .profile or .bash_profile is read
+;;
+;; For more see:
+;;
+;; - `https://github.com/bbatsov/projectile/issues/1097'
+;; - `https://emacs.stackexchange.com/q/3447/16592'
+(setq shell-command-switch "-lc")
+
 ;;;;; Eshell
 ;; The default settings seem a little forgetful to me. Let's try this out.
 (setq eshell-history-size 1000)
