@@ -374,9 +374,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
   (require 'auth-source-pass)
   (my-ensure-directory-exists (expand-file-name auth-source-pass-filename))
 
-  ;; Reset the original value of `auth-sources' to use only `password-store'.
-  (setq auth-sources nil)
-
   (with-eval-after-load 'auth-source-pass
     ;; Enable extra query keywords for `auth-source-pass'.
     (setq auth-source-pass-extra-query-keywords t)
