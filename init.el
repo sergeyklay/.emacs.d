@@ -2017,6 +2017,40 @@ This function serves multiple purposes:
 (global-set-key (kbd "M-s e") 'eshell)
 
 
+;;;; Gnus
+(defun my-auth-source-search-user (host port)
+  "Get user from authentication backends using the HOST and PORT."
+  (let ((account (car (auth-source-search :port port :host host :max 1))))
+    (when (not (null account))
+      (plist-get account :user))))
+
+(with-eval-after-load 'gnus
+  ;; Setup primary IMAP
+  (setq gnus-select-method
+        `(nnimap "localhost"
+                 (nnimap-stream plain)
+                 (nnimap-address "127.0.0.1")
+                 (nnimap-server-port 1143)
+                 ;; This should be set to be able integrate `gnus' with
+                 ;; `auth-source-pass'.
+                 (nnimap-user
+                  ,(my-auth-source-search-user "127.0.0.1" 1143))))
+
+  ;; Do not use entire Emacs screen.
+  ;; I'm OK to have Gnus on half of my work area.
+  (setq gnus-use-full-window nil)
+
+  ;;; Setup SMTP
+  (setq smtpmail-default-smtp-server "127.0.0.1")
+  (setq smtpmail-smtp-service 587)
+  (setq smtpmail-stream-type 'starttls)
+
+  ;; Setup signing
+  (setq mml-secure-openpgp-signers epa-file-encrypt-to)
+  ;; I want to be able to read the emails I wrote.
+  (setq mml-secure-openpgp-encrypt-to-self t))
+
+
 ;;;; Programming Languages, Markup and Configurations.
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
