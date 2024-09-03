@@ -35,9 +35,6 @@ distclean: clean
 install: init.el
 	$(RUNEMACS) --load $(TOP)/$<
 
-.PHONY: build
-build: $(OBJS)
-
 .PHONY: checkdoc
 checkdoc:
 	@for f in $(SRCS) ; do                                  \
@@ -70,7 +67,6 @@ help:
 	@echo '  checkdoc:      Check doc for errors'
 	@echo '  checkstyle:    Check for passive voice in documentation'
 	@echo '  checkstartup:  Run Emacs startup to validate configuration and hooks'
-	@echo '  build:         Byte compile configuration files'
 	@echo '  test:          Run checks for startup, documentation, and style compliance'
 	@echo '  clean:         Remove byte compiled files and artifacts'
 	@echo ''

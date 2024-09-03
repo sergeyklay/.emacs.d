@@ -33,7 +33,6 @@ RUNEMACS = $(CASK) exec $(EMACSBATCH)
 endif
 
 SRCS = init.el
-OBJS = $(SRCS:.el=.elc)
 
 # Local Variables:
 # fill-column: 80
