@@ -167,7 +167,7 @@ advice for `require-package', to which ARGS are passed."
     map)
   "My own keyboard map.")
 
-(keymap-global-set "C-c C-/" my-keyboard-map)
+(keymap-global-set "<f9>" my-keyboard-map)
 
 ;; Load `which-key' and enable `which-key-mode'.
 (add-hook 'after-init-hook #'which-key-mode)
