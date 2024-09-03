@@ -2017,38 +2017,69 @@ This function serves multiple purposes:
 (global-set-key (kbd "M-s e") 'eshell)
 
 
-;;;; Gnus
+;;;; News, Feeds and Mail
 (defun my-auth-source-search-user (host port)
-  "Get user from authentication backends using the HOST and PORT."
+  "Retrieve the user associated with HOST and PORT from authentication sources.
+
+Utilizes `auth-source-search' to fetch user credentials from
+supported backends (e.g., authinfo, gpg, pass). Returns the first
+matching user or nil if no match is found."
   (let ((account (car (auth-source-search :port port :host host :max 1))))
     (when (not (null account))
       (plist-get account :user))))
 
+;;;;; Gnus
 (with-eval-after-load 'gnus
-  ;; Setup primary IMAP
-  (setq gnus-select-method
-        `(nnimap "localhost"
-                 (nnimap-stream plain)
-                 (nnimap-address "127.0.0.1")
-                 (nnimap-server-port 1143)
-                 ;; This should be set to be able integrate `gnus' with
-                 ;; `auth-source-pass'.
-                 (nnimap-user
-                  ,(my-auth-source-search-user "127.0.0.1" 1143))))
+  ;; No primary server setup; Gnus runs without any default server.
+  (setq gnus-select-method '(nnnil ""))
 
-  ;; Do not use entire Emacs screen.
-  ;; I'm OK to have Gnus on half of my work area.
-  (setq gnus-use-full-window nil)
+  ;; Configure all used IMAP servers for Gnus. Each server is defined in
+  ;; `gnus-secondary-select-methods'. Make sure authentication is set up
+  ;; correctly to allow smooth integration with `auth-source-pass'.
+  (setq gnus-secondary-select-methods
+        `((nnimap "main"
+                  (nnimap-stream plain)
+                  (nnimap-address "127.0.0.1")
+                  (nnimap-server-port 1143)
+                  ;; Use `auth-source' to get the username dynamically.
+                  (nnimap-user
+                   ,(my-auth-source-search-user "127.0.0.1" 1143)))
+          (nnimap "gmail"
+                  (nnimap-address "imap.gmail.com")
+                  (nnimap-server-port 993)
+                  (nnimap-stream ssl)
+                  (nnimap-user
+                   ,(my-auth-source-search-user "imap.gmail.com" 993)))))
 
-  ;;; Setup SMTP
-  (setq smtpmail-default-smtp-server "127.0.0.1")
-  (setq smtpmail-smtp-service 587)
-  (setq smtpmail-stream-type 'starttls)
+  ;; Fetch old headers when needed to reconstruct the full thread context.
+  ;; Setting this to `some' balances performance with the need for context.
+  (setq gnus-fetch-old-headers 'some)
 
-  ;; Setup signing
-  (setq mml-secure-openpgp-signers epa-file-encrypt-to)
-  ;; I want to be able to read the emails I wrote.
-  (setq mml-secure-openpgp-encrypt-to-self t))
+  ;; Do not use the entire Emacs window for Gnus; better for split workflows.
+  (setq gnus-use-full-window nil))
+
+;;;;; MML documents
+;; Reuse the encryption keys specified for `epa-file-encrypt-to' when signing.
+(setq mml-secure-openpgp-signers epa-file-encrypt-to)
+
+;; Ensure emails sent are readable by the sender; self-encrypt by default.
+(setq mml-secure-openpgp-encrypt-to-self t)
+
+(setq message-send-mail-function 'message-smtpmail-send-it)
+(setq send-mail-function #'smtpmail-send-it)
+
+(with-eval-after-load 'mm-decode
+  ;; Avoid rendering certain MIME types by default. Prefer text-based parts when
+  ;; available.  Useful for maintaining a cleaner reading experience in Gnus.
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext")
+  (add-to-list 'mm-discouraged-alternatives "application/msword"))
+
+;;;;; Setup SMTP
+;; Default SMTP server settings.
+(setq smtpmail-smtp-server "127.0.0.1")
+(setq smtpmail-smtp-service 1025)
+(setq smtpmail-stream-type 'ssl)
 
 
 ;;;; Programming Languages, Markup and Configurations.
