@@ -2247,9 +2247,6 @@ level 2, and so on."
   ;; outline.
   (setq-local outline-level #'my-elisp-outline-level)
 
-  ;; Allow folding of outlines in comments.
-  (outline-minor-mode 1)
-
   ;; Automatically rescan imenu on each call
   (setq-local imenu-auto-rescan t)
 
