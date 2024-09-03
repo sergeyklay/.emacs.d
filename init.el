@@ -652,7 +652,7 @@ non-alphanumeric characters and replaces spaces with hyphens."
 (defun my/org-generate-id ()
   "Create a human-readable ID for the current entry and return it.
 
-If the entry already has an ID, just return it. In any case
+If the entry already has an ID, just return it.  In any case
 copies resulted ID to the `kill-ring'.  The function generates a
 new ID by performing the following steps:
 
@@ -1443,8 +1443,9 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; Set a timer to regenerate refile cache automatically every time
-;; my Emacs has been idled for 10 mins.
+;; my Emacs has been idled for 10 minutes.
 (run-with-idle-timer 600 t (lambda ()
+                             (require 'org-refile)
                              (org-refile-cache-clear)
                              (org-refile-get-targets)))
 
@@ -1811,7 +1812,8 @@ related to your current project."
 ;; Set autojoin timing to wait for ident response
 (setq erc-autojoin-timing 'ident)
 
-;; Set the user's full name in ERC
+;; Set the user's full name in ERC.  You can set `user-full-name' by setting
+;; NAME environment variable in your system.
 (setq erc-user-full-name user-full-name)
 
 ;; Hide certain messages (JOIN, PART, QUIT, NICK) in chat buffers
