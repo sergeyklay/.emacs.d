@@ -600,18 +600,10 @@ enabling modes and features that enhance the editing experience:
 - Activates `org-indent-mode' to visually align text according to the
   structure of the outline, improving readability.
 - Displays inline images directly within the buffer when they are linked
-  in Org files, providing immediate visual feedback.
-
-Lastly, a convenient key binding is set up within `org-mode-map' for users
-of the `which-key' package (me). Pressing s-/ will display the entire
-`org-mode-map' in the minibuffer, aiding in discovering key bindings
-available in Org-mode."
+  in Org files, providing immediate visual feedback."
   (visual-line-mode 1)
   (org-indent-mode 1)
-  (org-display-inline-images 1)
-
-  ;; Bind "s-/" to display the full `org-mode-map' in the minibuffer.
-  (define-key org-mode-map (kbd "s-/") org-mode-map))
+  (org-display-inline-images 1))
 
 ;; Attach the environment setup to Org-mode.
 (add-hook 'org-mode-hook #'my|org-setup-environment)
