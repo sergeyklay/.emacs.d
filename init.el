@@ -2050,7 +2050,7 @@ This function serves multiple purposes:
   "Retrieve the user associated with HOST and PORT from authentication sources.
 
 Utilizes `auth-source-search' to fetch user credentials from
-supported backends (e.g., authinfo, gpg, pass). Returns the first
+supported backends (e.g., authinfo, gpg, pass).  Returns the first
 matching user or nil if no match is found."
   (let ((account (car (auth-source-search :port port :host host :max 1))))
     (when (not (null account))
@@ -2123,7 +2123,7 @@ matching user or nil if no match is found."
   "Configure the environment for composing messages in Gnus.
 
 This hook sets up various editing modes and formatting options
-commonly used when composing emails in Gnus. Specifically:
+commonly used when composing emails in Gnus.  Specifically:
 
 - `fill-column' is set to 69, aligning with traditional email
   formatting standards.
@@ -2150,7 +2150,7 @@ when composing new messages."
 (setq message-send-mail-function 'message-smtpmail-send-it)
 (setq send-mail-function #'smtpmail-send-it)
 
-;; Default SMTP server settings.
+;; SMTP server settings.
 (setq smtpmail-smtp-server "127.0.0.1")
 (setq smtpmail-smtp-service 1025)
 (setq smtpmail-stream-type 'ssl)
