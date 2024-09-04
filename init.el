@@ -2042,10 +2042,17 @@ matching user or nil if no match is found."
       (plist-get account :user))))
 
 ;;;;; Gnus
-(with-eval-after-load 'gnus
-  ;; No primary server setup; Gnus runs without any default server.
-  (setq gnus-select-method '(nnnil ""))
+;; No primary server setup; Gnus runs without any default server.
+(setq gnus-select-method '(nnnil ""))
 
+;; Fetch old headers when needed to reconstruct the full thread context.
+;; Setting this to `some' balances performance with the need for context.
+(setq gnus-fetch-old-headers 'some)
+
+;; Do not use the entire Emacs window for Gnus; better for split workflows.
+(setq gnus-use-full-window nil)
+
+(with-eval-after-load 'gnus
   ;; Configure all used IMAP servers for Gnus. Each server is defined in
   ;; `gnus-secondary-select-methods'. Make sure authentication is set up
   ;; correctly to allow smooth integration with `auth-source-pass'.
@@ -2062,14 +2069,16 @@ matching user or nil if no match is found."
                   (nnimap-server-port 993)
                   (nnimap-stream ssl)
                   (nnimap-user
-                   ,(my-auth-source-search-user "imap.gmail.com" 993)))))
+                   ,(my-auth-source-search-user "imap.gmail.com" 993))))))
 
-  ;; Fetch old headers when needed to reconstruct the full thread context.
-  ;; Setting this to `some' balances performance with the need for context.
-  (setq gnus-fetch-old-headers 'some)
+(defun my/gnus-group-list-subscribed ()
+  "List all subscribed groups with or without un-read messages."
+  (interactive)
+  (gnus-group-list-all-groups gnus-level-subscribed))
 
-  ;; Do not use the entire Emacs window for Gnus; better for split workflows.
-  (setq gnus-use-full-window nil))
+(with-eval-after-load 'gnus-group
+  ;; List all subscribed groups with or without un-read messages.
+  (define-key gnus-group-mode-map (kbd "o") #'my/gnus-group-list-subscribed))
 
 ;;;;; MML documents
 ;; Reuse the encryption keys specified for `epa-file-encrypt-to' when signing.
@@ -2078,9 +2087,6 @@ matching user or nil if no match is found."
 ;; Ensure emails sent are readable by the sender; self-encrypt by default.
 (setq mml-secure-openpgp-encrypt-to-self t)
 
-(setq message-send-mail-function 'message-smtpmail-send-it)
-(setq send-mail-function #'smtpmail-send-it)
-
 (with-eval-after-load 'mm-decode
   ;; Avoid rendering certain MIME types by default. Prefer text-based parts when
   ;; available.  Useful for maintaining a cleaner reading experience in Gnus.
@@ -2088,7 +2094,38 @@ matching user or nil if no match is found."
   (add-to-list 'mm-discouraged-alternatives "text/richtext")
   (add-to-list 'mm-discouraged-alternatives "application/msword"))
 
+;;;;; Composing
+(defun my|gnus-setup-message-environment ()
+  "Configure the environment for composing messages in Gnus.
+
+This hook sets up various editing modes and formatting options
+commonly used when composing emails in Gnus. Specifically:
+
+- `fill-column' is set to 69, aligning with traditional email
+  formatting standards.
+- `auto-fill-mode' is enabled to automatically wrap lines at the
+  fill column.
+- `font-lock-mode' ensures syntax highlighting is active.
+- `abbrev-mode' expands abbreviations during text entry.
+- `flyspell-mode' is activated for on-the-fly spell checking.
+- `writegood-mode' helps improve writing quality with stylistic
+  suggestions.
+
+Add this function to `message-mode-hook' to apply these settings
+when composing new messages."
+  (setq-local fill-column 69)
+  (auto-fill-mode 1)
+  (font-lock-mode 1)
+  (abbrev-mode 1)
+  (flyspell-mode 1)
+  (writegood-mode 1))
+
+(add-hook 'message-mode-hook #'my|gnus-setup-message-environment)
+
 ;;;;; Setup SMTP
+(setq message-send-mail-function 'message-smtpmail-send-it)
+(setq send-mail-function #'smtpmail-send-it)
+
 ;; Default SMTP server settings.
 (setq smtpmail-smtp-server "127.0.0.1")
 (setq smtpmail-smtp-service 1025)
