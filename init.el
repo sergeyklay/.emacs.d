@@ -522,14 +522,19 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 (require 'org)
 
-;; Although I don't use `diary-file', Org-agenda still checks for its existence
-;; even when `org-agenda-include-diary' is set to nil.  This happens due to
-;; internal checks tied to `org-agenda-diary-file'.  Since I handle recurring
-;; tasks differently within my Org files and don't need an additional diary, I
-;; don't want to set `org-agenda-diary-file' to anything meaningful.  As a
-;; simple workaround, I just create an empty `diary-file' to bypass these checks
-;; and keep Org-agenda running smoothly.
+
 (with-eval-after-load 'org
+  ;; Ensure directories for Org files and reports exist.
+  (my-ensure-directory-exists my-org-files-path)
+  (my-ensure-directory-exists my-org-reports-path)
+
+  ;; Although I don't use `diary-file', Org-agenda still checks for its
+  ;; existence even when `org-agenda-include-diary' is set to nil.  This happens
+  ;; due to internal checks tied to `org-agenda-diary-file'.  Since I handle
+  ;; recurring tasks differently within my Org files and don't need an
+  ;; additional diary, I don't want to set `org-agenda-diary-file' to anything
+  ;; meaningful.  As a simple workaround, I just create an empty `diary-file' to
+  ;; bypass these checks and keep Org-agenda running smoothly.
   (unless (file-exists-p diary-file)
     (make-empty-file diary-file)))
 
@@ -585,17 +590,36 @@ If neither gpg nor gpg2 is found, this is set to nil.")
    (sql . t)
    (calc . t)))
 
-;; Hooks for org-mode.
-(add-hook 'org-mode-hook #'visual-line-mode)
-(add-hook 'org-mode-hook #'org-indent-mode)
-(add-hook 'org-mode-hook #'org-display-inline-images)
+(defun my|org-setup-environment ()
+  "Set up a tailored environment for editing Org-mode buffers.
+
+This function customizes the appearance and behavior of `org-mode' by
+enabling modes and features that enhance the editing experience:
+
+- Enables `visual-line-mode' for soft line wrapping, providing a more
+  natural reading and writing flow for long lines of text.
+- Activates `org-indent-mode' to visually align text according to the
+  structure of the outline, improving readability.
+- Displays inline images directly within the buffer when they are linked
+  in Org files, providing immediate visual feedback.
+
+Lastly, a convenient key binding is set up within `org-mode-map' for users
+of the `which-key' package (me). Pressing s-/ will display the entire
+`org-mode-map' in the minibuffer, aiding in discovering key bindings
+available in Org-mode."
+  (visual-line-mode 1)
+  (org-indent-mode 1)
+  (org-display-inline-images 1)
+
+  ;; Bind "s-/" to display the full `org-mode-map' in the minibuffer.
+  (define-key org-mode-map (kbd "s-/") org-mode-map))
+
+;; Attach the environment setup to Org-mode.
+(add-hook 'org-mode-hook #'my|org-setup-environment)
 
 ;; Standard key bindings
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c b") #'org-switchb)
-
-(my-ensure-directory-exists my-org-files-path)
-(my-ensure-directory-exists my-org-reports-path)
 
 ;;;;; Helpers
 (defun my-org-get-created-date ()
