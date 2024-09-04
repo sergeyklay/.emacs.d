@@ -2075,15 +2075,18 @@ matching user or nil if no match is found."
 ;; Do not use the entire Emacs window for Gnus; better for split workflows.
 (setq gnus-use-full-window nil)
 
+;; Read the dribble file on startup without querying.
+(setq gnus-always-read-dribble-file t)
+
 (with-eval-after-load 'gnus
   ;; Configure all used IMAP servers for Gnus. Each server is defined in
   ;; `gnus-secondary-select-methods'. Make sure authentication is set up
   ;; correctly to allow smooth integration with `auth-source-pass'.
   (setq gnus-secondary-select-methods
         `((nnimap "main"
-                  (nnimap-stream starttls)
                   (nnimap-address "127.0.0.1")
                   (nnimap-server-port 1143)
+                  (nnimap-stream starttls)
                   ;; Use `auth-source' to get the username dynamically.
                   (nnimap-user
                    ,(my-auth-source-search-user "127.0.0.1" 1143)))
@@ -2091,6 +2094,12 @@ matching user or nil if no match is found."
                   (nnimap-address "imap.gmail.com")
                   (nnimap-server-port 993)
                   (nnimap-stream ssl)
+                  (nnimap-inbox "INBOX")
+                  (nnimap-expunge t)
+                  (nnmail-expiry-wait 30)
+                  (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash")
+                  (nnir-search-engine imap)
+                  ;; Use `auth-source' to get the username dynamically.
                   (nnimap-user
                    ,(my-auth-source-search-user "imap.gmail.com" 993))))))
 
