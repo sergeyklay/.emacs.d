@@ -150,7 +150,7 @@ advice for `require-package', to which ARGS are passed."
 
 ;;;; Benchmark
 (require 'benchmark-init)
-(add-hook 'after-init-hook 'benchmark-init/deactivate)
+(add-hook 'after-init-hook #'benchmark-init/deactivate)
 
 
 ;;;; Setup keymap
@@ -1023,7 +1023,7 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 (with-eval-after-load 'org-agenda
   (add-hook 'org-agenda-mode-hook
             (lambda () (add-hook 'window-configuration-change-hook
-                                 'org-agenda-align-tags nil t))))
+                                 #'org-agenda-align-tags nil t))))
 
 ;; I maintain two categories of agenda files: work and non-work files.
 (setq org-agenda-files
@@ -2228,13 +2228,13 @@ when composing new messages."
 ;; Configure `sql-indent' to activate `sqlind-minor-mode' in `sql-mode'.
 (with-eval-after-load 'sql
   (add-hook 'sql-mode-hook #'sqlind-minor-mode)
-  (define-key sql-mode-map (kbd "M-s s") 'sql-sqlite))
+  (define-key sql-mode-map (kbd "M-s s") #'sql-sqlite))
 
 (require 'sqlite-mode)
 (with-eval-after-load 'sqlite-mode
-  (define-key sqlite-mode-map (kbd "M-s q") 'sqlite-mode-open-file)
-  (define-key sqlite-mode-map (kbd "M-s t") 'sqlite-mode-list-tables)
-  (define-key sqlite-mode-map (kbd "<tab>") 'sqlite-mode-list-data))
+  (define-key sqlite-mode-map (kbd "M-s q") #'sqlite-mode-open-file)
+  (define-key sqlite-mode-map (kbd "M-s t") #'sqlite-mode-list-tables)
+  (define-key sqlite-mode-map (kbd "<tab>") #'sqlite-mode-list-data))
 
 ;; Associate `.csv` files with `csv-mode'.
 (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
@@ -2323,11 +2323,12 @@ level 2, and so on."
               (server-start))))
 
 
-;; Save custom variables in a separate file named custom.el in your
-;; user-emacs-directory.
+;;;;; Customizations.
+;; Save custom variables in a separate file named custom.el
+;; `user-emacs-directory'.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-;; Load the custom file if it exists or is a symbolic link. This should be done
+;; Load `custom-file' if it exists or is a symbolic link. This should be done
 ;; at the very end of the configuration to ensure that it does not override any
 ;; settings made earlier in this file.
 (when (or (file-exists-p custom-file) (file-symlink-p custom-file))
