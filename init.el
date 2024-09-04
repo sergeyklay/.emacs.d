@@ -522,7 +522,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 (require 'org)
 
-
 (with-eval-after-load 'org
   ;; Ensure directories for Org files and reports exist.
   (my-ensure-directory-exists my-org-files-path)
@@ -2082,7 +2081,7 @@ matching user or nil if no match is found."
   ;; correctly to allow smooth integration with `auth-source-pass'.
   (setq gnus-secondary-select-methods
         `((nnimap "main"
-                  (nnimap-stream plain)
+                  (nnimap-stream starttls)
                   (nnimap-address "127.0.0.1")
                   (nnimap-server-port 1143)
                   ;; Use `auth-source' to get the username dynamically.
