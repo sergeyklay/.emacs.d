@@ -2067,34 +2067,58 @@ matching user or nil if no match is found."
 ;; Do not use the entire Emacs window for Gnus; better for split workflows.
 (setq gnus-use-full-window nil)
 
-;; Read the dribble file on startup without querying.
-(setq gnus-always-read-dribble-file t)
+;; Prevents Gnus from saving the .newsrc file, which speeds up exiting Gnus and
+;; reduces disk usage. This setting is useful if Gnus is the only newsreader in
+;; use, as it avoids the need to keep .newsrc updated.
+(setq gnus-save-newsrc-file nil)
 
-(with-eval-after-load 'gnus
-  ;; Configure all used IMAP servers for Gnus. Each server is defined in
-  ;; `gnus-secondary-select-methods'. Make sure authentication is set up
-  ;; correctly to allow smooth integration with `auth-source-pass'.
-  (setq gnus-secondary-select-methods
-        `((nnimap "main"
-                  (nnimap-address "127.0.0.1")
-                  (nnimap-server-port 1143)
-                  (nnimap-stream starttls)
-                  ;; Use `auth-source' to get the username dynamically.
-                  (nnimap-user
-                   ,(my-auth-source-search-user "127.0.0.1" 1143)))
-          (nnimap "gmail"
-                  (nnimap-address "imap.gmail.com")
-                  (nnimap-server-port 993)
-                  (nnimap-stream ssl)
-                  (nnimap-inbox "INBOX")
-                  (nnimap-expunge t)
-                  (nnmail-expiry-wait 30)
-                  (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash")
-                  (nnir-search-engine imap)
-                  ;; Use `auth-source' to get the username dynamically.
-                  (nnimap-user
-                   ,(my-auth-source-search-user "imap.gmail.com" 993))))))
+;; Disables reading of the .newsrc and .newsrc-SERVER files on startup, allowing
+;; Gnus to rely solely on its own configuration (.newsrc.eld).  This streamlines
+;; the initialization process and eliminates the overhead associated with
+;; managing legacy files, making Gnus faster and more efficient.
+(setq gnus-read-newsrc-file nil)
 
+;; Configure all used IMAP servers for Gnus. Each server is defined in
+;; `gnus-secondary-select-methods'
+(setq gnus-secondary-select-methods
+      '((nnimap "main"
+                (nnimap-address "127.0.0.1")
+                (nnimap-server-port 1143)
+                (nnimap-stream starttls)
+                (nnimap-inbox "INBOX")
+                ;; ProtonMail's IMAP server does not support the UID EXPUNGE
+                ;; command.  Let's just mark messages with the \Deleted flag.
+                (nnimap-expunge 'never)
+                ;; I decide for myself what is expirable.
+                (nnmail-expiry-wait 'never))
+        (nnimap "gmail"
+                (nnimap-address "imap.gmail.com")
+                (nnimap-server-port "imaps")
+                (nnimap-stream ssl)
+                (nnimap-inbox "INBOX")
+                (nnir-search-engine imap)
+                ;; Gmail's IMAP server does not support the UID EXPUNGE command.
+                ;; Let's just mark messages with the \Deleted flag.
+                (nnimap-expunge 'never)
+                ;; I decide for myself what is expirable.
+                (nnmail-expiry-wait 'never))))
+
+(defun my/gnus-summary-move-to-trash ()
+  "Move the current article to the trash folder based on the newsgroup."
+  (interactive)
+  (cond ((string-match "nnimap\\+main" gnus-newsgroup-name)
+         (gnus-summary-move-article nil "nnimap+main:Trash"))
+        ((string-match "nnimap\\+gmail" gnus-newsgroup-name)
+         (gnus-summary-move-article nil "nnimap+gmail:[Gmail]/Trash"))
+        (t (gnus-summary-delete-article nil))))
+
+(defun my|gnus-summary-setup-keybindings ()
+  "Configure keybindings in Gnus summary mode."
+  (local-set-key (kbd "<f8>") #'my/gnus-summary-move-to-trash))
+
+(add-hook 'gnus-summary-mode-hook #'my|gnus-summary-setup-keybindings)
+
+;;;;; Groups and Topics
 (defun my/gnus-group-list-subscribed ()
   "List all subscribed groups with or without un-read messages."
   (interactive)
@@ -2103,6 +2127,8 @@ matching user or nil if no match is found."
 (with-eval-after-load 'gnus-group
   ;; List all subscribed groups with or without un-read messages.
   (define-key gnus-group-mode-map (kbd "o") #'my/gnus-group-list-subscribed))
+
+(add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
 
 ;;;;; MML documents
 ;; Reuse the encryption keys specified for `epa-file-encrypt-to' when signing.
