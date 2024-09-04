@@ -2302,7 +2302,7 @@ level 2, and so on."
   ;; Comments that start with three semicolons, ";;;", are considered top-level
   ;; headings by `outline-minor-mode'.  Four or more semicolons can be used as
   ;; subheadings in hierarchical fashion.
-  (setq-local outline-regexp ";;;+[\t ]+")
+  (setq-local outline-regexp "^;;;+[\t ]+")
 
   ;; Use `my-elisp-outline-level' to compute a header’s nesting level in an
   ;; outline.

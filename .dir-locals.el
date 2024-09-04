@@ -5,13 +5,12 @@
   (sentence-end-double-space . t))
  (emacs-lisp-mode
   (indent-tabs-mode . nil)
-  (outline-regexp . ";;;+[\t ]+"))
+  (outline-regexp . "^;;;+[\t ]+"))
  (makefile-gmake-mode
   (outline-regexp . "##")))
 
 ;; Local Variables:
 ;; fill-column: 80
-;; eval: (outline-minor-mode)
 ;; eval: (display-fill-column-indicator-mode)
 ;; coding: utf-8-unix
 ;; End:
