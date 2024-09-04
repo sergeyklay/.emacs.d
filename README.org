@@ -58,6 +58,7 @@ I have built this configuration with the following tools in mind:
 - [[https://hunspell.github.io/][hunspell (=hunspell=)]]
 - [[https://pandoc.org/][Pandoc (=pandoc=)]]
 - [[https://www.passwordstore.org/][The standard Unix password manager (=pass=)]]
+- [[https://gnutls.org/][GnuTLS]]
 
 These tools enhance the functionality of my daily workflows, so it's
 recommended to have them installed for full compatibility.
