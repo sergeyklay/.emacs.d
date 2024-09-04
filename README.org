@@ -35,6 +35,9 @@ I adhere to the following guiding principles in this configuration:
 - The goal is to maintain a setup that is functional and easy to
   manage, without pushing Emacs to its limits or adding features for
   the sake of novelty.
+
+** Additional Preferences
+
 - I intentionally avoid using ~use-package~ because I do not see a clear
   benefit for my use case, and I can manage perfectly well without it.
 - I also don't use ~evil-mode~; if I want to work in Vim, I simply use
@@ -46,7 +49,9 @@ I adhere to the following guiding principles in this configuration:
 ** Requirements
 
 Currently, I use GNU Emacs 29.x, and I recommend others do the same by
-using this configuration to ensure everything works smoothly.
+using this configuration to ensure everything works smoothly.  I have
+not tested this configuration with versions of Emacs prior to 29.1,
+and I have no insight into how it behaves on older versions.
 
 I have built this configuration with the following tools in mind:
 
