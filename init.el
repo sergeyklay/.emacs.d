@@ -2114,9 +2114,15 @@ This function serves multiple purposes:
 ;; For details see:
 ;; https://www.gnu.org/software/emacs/manual/html_node/gnus/Posting-Styles.html
 (setq gnus-posting-styles
-      '((".*"
-         (signature-file "~/.signature")
-         (name "Serghei Iakovlev"))))
+      `((".*"
+         (signature ,user-full-name)
+         (address "egrep@protonmail.ch")
+         ("GCC" "nnimap+main:Sent")
+         ("X-Message-SMTP-Method" "smtp 127.0.0.1 1025"))
+        ("nnimap\\+gmail:.*"
+         (address "sadhooklay@gmail.com")
+         ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
+         ("X-Message-SMTP-Method" "smtp smtp.gmail.com 587"))))
 
 (defun my|gnus-setup-message-environment ()
   "Configure the environment for composing messages in Gnus.
@@ -2150,9 +2156,14 @@ when composing new messages."
 (setq send-mail-function #'smtpmail-send-it)
 
 ;; SMTP server settings.
-(setq smtpmail-smtp-server "127.0.0.1")
-(setq smtpmail-smtp-service 1025)
-(setq smtpmail-stream-type 'ssl)
+(defun my-configure-smtp-stream-type ()
+  "Configure the SMTP stream type based on the current user email address."
+  (cond ((equal user-mail-address "egrep@protonmail.ch")
+         (setq smtpmail-stream-type 'ssl))
+        ((equal user-mail-address "sadhooklay@gmail.com")
+         (setq smtpmail-stream-type 'starttls))))
+
+(add-hook 'message-send-hook #'my-configure-smtp-stream-type)
 
 
 ;;;; Programming Languages, Markup and Configurations.
