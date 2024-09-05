@@ -176,6 +176,11 @@ advice for `require-package', to which ARGS are passed."
 (setq-default which-key-idle-delay 1.5)
 
 
+;;;; Personal Info
+(setq user-full-name "Serghei Iakovlev")
+(setq user-mail-address "egrep@protonmail.ch")
+
+
 ;;;; Common functions
 (defun my-ensure-directory-exists (dir)
   "Ensure that the directory DIR exists, create it if it doesn't."
@@ -2173,16 +2178,18 @@ when composing new messages."
 (add-hook 'message-mode-hook #'my|gnus-setup-message-environment)
 
 ;;;;; Setup SMTP
-(setq message-send-mail-function 'message-smtpmail-send-it)
+
+(setq smtpmail-servers-requiring-authorization ".*")
+(setq message-send-mail-function #'message-send-mail-with-sendmail)
 (setq send-mail-function #'smtpmail-send-it)
+
 
 ;; SMTP server settings.
 (defun my-configure-smtp-stream-type ()
   "Configure the SMTP stream type based on the current user email address."
-  (cond ((equal user-mail-address "egrep@protonmail.ch")
-         (setq smtpmail-stream-type 'ssl))
-        ((equal user-mail-address "sadhooklay@gmail.com")
-         (setq smtpmail-stream-type 'starttls))))
+  (cond ((equal user-mail-address "sadhooklay@gmail.com")
+         (setq smtpmail-stream-type 'starttls))
+        (t (setq smtpmail-stream-type 'ssl))))
 
 (add-hook 'message-send-hook #'my-configure-smtp-stream-type)
 
