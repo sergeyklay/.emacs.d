@@ -2029,9 +2029,6 @@ This function serves multiple purposes:
 
 ;;;; News, Feeds and Mail
 ;;;;; Gnus
-;; No primary server setup; Gnus runs without any default server.
-(setq gnus-select-method '(nnnil ""))
-
 ;; Fetch old headers when needed to reconstruct the full thread context.
 ;; Setting this to `some' balances performance with the need for context.
 (setq gnus-fetch-old-headers 'some)
@@ -2050,11 +2047,13 @@ This function serves multiple purposes:
 ;; managing legacy files, making Gnus faster and more efficient.
 (setq gnus-read-newsrc-file nil)
 
-;; Configure all used IMAP servers for Gnus. Each server is defined in
-;; `gnus-secondary-select-methods'
+;; Default method for selecting a newsgroup.
+(setq gnus-select-method '(nntp "news.gmane.io"))
+
+;; Configure all used IMAP servers for Gnus. Each server defined in
+;; `gnus-secondary-select-methods' bellow uses "~/.authinfo.gpg" file.
 (setq gnus-secondary-select-methods
-      '((nntp "news.gmane.io")
-        (nnimap "main"
+      '((nnimap "main"
                 (nnimap-address "127.0.0.1")
                 (nnimap-server-port 1143)
                 (nnimap-stream starttls)
