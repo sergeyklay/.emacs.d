@@ -2112,6 +2112,13 @@ This function serves multiple purposes:
   (add-to-list 'mm-discouraged-alternatives "application/msword"))
 
 ;;;;; Composing
+;; For details see:
+;; https://www.gnu.org/software/emacs/manual/html_node/gnus/Posting-Styles.html
+(setq gnus-posting-styles
+      '((".*"
+         (signature-file "~/.signature")
+         (name "Serghei Iakovlev"))))
+
 (defun my|gnus-setup-message-environment ()
   "Configure the environment for composing messages in Gnus.
 
