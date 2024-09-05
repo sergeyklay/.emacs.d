@@ -2124,6 +2124,27 @@ This function serves multiple purposes:
          ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
          ("X-Message-SMTP-Method" "smtp smtp.gmail.com 587"))))
 
+(defun my|wrap-with-cut-marks ()
+  "Insert cut markers around the selected region.
+
+If a region of text is selected, this function wraps it with
+Emacs cut marks for easier sharing in emails or documentation. If
+no region is selected, it simply inserts the cut marks with a
+blank line between them."
+  (interactive)
+  (let ((start-marker "--8<-----------------cut here----------------start--------------->8--\n")
+        (end-marker "--8<-----------------cut here----------------end----------------->8--\n"))
+    (if (use-region-p)
+        ;; Wrap the selected region with start and end markers.
+        (let ((region-text (buffer-substring (region-beginning) (region-end))))
+          (delete-region (region-beginning) (region-end))
+          (insert (concat start-marker region-text "\n" end-marker)))
+      ;; Insert empty cut block if no region is selected.
+      (progn
+        (insert (concat start-marker "\n" end-marker))
+        (forward-line -2)
+        (move-beginning-of-line nil)))))
+
 (defun my|gnus-setup-message-environment ()
   "Configure the environment for composing messages in Gnus.
 
