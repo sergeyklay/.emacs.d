@@ -369,27 +369,15 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (unless (memq epa-file-handler file-name-handler-alist)
   (epa-file-enable))
 
-;; Require `auth-source-pass' only if pass executable is available.
+;; Setup `pass-view-mode' iff pass executable is available.
 (when (executable-find "pass")
-  (require 'auth-source-pass)
-  (my-ensure-directory-exists (expand-file-name auth-source-pass-filename))
-
-  (with-eval-after-load 'auth-source-pass
-    ;; Enable extra query keywords for `auth-source-pass'.
-    (setq auth-source-pass-extra-query-keywords t)
-
-    ;; Enable `auth-source-pass' to use pass for `auth-sources'.
-    (auth-source-pass-enable))
+  (my-ensure-directory-exists (expand-file-name "~/.password-store"))
 
   (require 'pass)
   (with-eval-after-load 'pass
-    ;; Dynamically associate .gpg files in the pass directory with
-    ;; `pass-view-mode', using the current value of `auth-source-pass-filename'.
+    ;; Associate .gpg files in the pass directory with `pass-view-mode'.
     (add-to-list
-     'auto-mode-alist
-     (cons (format "%s/.*\\.gpg\\'"
-                   (regexp-quote (expand-file-name auth-source-pass-filename)))
-           'pass-view-mode))))
+     'auto-mode-alist (cons "~/.password-store/.*\\.gpg\\'" 'pass-view-mode))))
 
 
 ;;;; Calendar
@@ -1982,12 +1970,6 @@ This function serves multiple purposes:
       (when (y-or-n-p "Start ERC? ")
         ;; No need to manually call `password-store-get' here if you
         ;; properly setup `auth-source' above.
-        ;;
-        ;; In my case I store only password in:
-        ;;
-        ;;   ~/.password-store/irc/irc.libera.chat/<username>.gpg
-        ;;
-        ;; and this is simple wroks.
         (erc :server "irc.libera.chat" :port 6667)))))
 
 (global-set-key (kbd "C-c e f") #'my/erc-start-or-switch)
@@ -2046,16 +2028,6 @@ This function serves multiple purposes:
 
 
 ;;;; News, Feeds and Mail
-(defun my-auth-source-search-user (host port)
-  "Retrieve the user associated with HOST and PORT from authentication sources.
-
-Utilizes `auth-source-search' to fetch user credentials from
-supported backends (e.g., authinfo, gpg, pass).  Returns the first
-matching user or nil if no match is found."
-  (let ((account (car (auth-source-search :port port :host host :max 1))))
-    (when (not (null account))
-      (plist-get account :user))))
-
 ;;;;; Gnus
 ;; No primary server setup; Gnus runs without any default server.
 (setq gnus-select-method '(nnnil ""))
