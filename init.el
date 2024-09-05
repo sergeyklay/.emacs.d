@@ -2053,40 +2053,35 @@ This function serves multiple purposes:
 ;; Configure all used IMAP servers for Gnus. Each server is defined in
 ;; `gnus-secondary-select-methods'
 (setq gnus-secondary-select-methods
-      '((nnimap "main"
+      '((nntp "news.gmane.io")
+        (nnimap "main"
                 (nnimap-address "127.0.0.1")
                 (nnimap-server-port 1143)
                 (nnimap-stream starttls)
                 (nnimap-inbox "INBOX")
                 ;; ProtonMail's IMAP server does not support the UID EXPUNGE
                 ;; command.  Let's just mark messages with the \Deleted flag.
-                (nnimap-expunge 'never)
-                ;; I decide for myself what is expirable.
-                (nnmail-expiry-wait 'never))
+                (nnimap-expunge never)
+                ;; Move to trash ASAP.
+                (nnmail-expiry-wait immediate)
+                (nnmail-expiry-target "nnimap+main:Trash"))
         (nnimap "gmail"
                 (nnimap-address "imap.gmail.com")
                 (nnimap-server-port "imaps")
                 (nnimap-stream ssl)
                 (nnimap-inbox "INBOX")
-                (nnir-search-engine imap)
                 ;; Gmail's IMAP server does not support the UID EXPUNGE command.
                 ;; Let's just mark messages with the \Deleted flag.
-                (nnimap-expunge 'never)
-                ;; I decide for myself what is expirable.
-                (nnmail-expiry-wait 'never))))
+                (nnimap-expunge never)
+                ;; Move to trash ASAP.
+                (nnmail-expiry-wait immediate)
+                (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash"))))
 
-(defun my/gnus-summary-move-to-trash ()
-  "Move the current article to the trash folder based on the newsgroup."
-  (interactive)
-  (cond ((string-match "nnimap\\+main" gnus-newsgroup-name)
-         (gnus-summary-move-article nil "nnimap+main:Trash"))
-        ((string-match "nnimap\\+gmail" gnus-newsgroup-name)
-         (gnus-summary-move-article nil "nnimap+gmail:[Gmail]/Trash"))
-        (t (gnus-summary-delete-article nil))))
-
+;;;;; Summary
 (defun my|gnus-summary-setup-keybindings ()
   "Configure keybindings in Gnus summary mode."
-  (local-set-key (kbd "<f8>") #'my/gnus-summary-move-to-trash))
+  ;; Mark all unread articles in this newsgroup as read.
+  (local-set-key (kbd "v R") #'gnus-summary-catchup))
 
 (add-hook 'gnus-summary-mode-hook #'my|gnus-summary-setup-keybindings)
 
