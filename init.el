@@ -2076,9 +2076,6 @@ This function serves multiple purposes:
 ;; Setting this to `some' balances performance with the need for context.
 (setq gnus-fetch-old-headers 'some)
 
-;; Do not use the entire Emacs window for Gnus; better for split workflows.
-(setq gnus-use-full-window nil)
-
 ;; Prevents Gnus from saving the .newsrc file, which speeds up exiting Gnus and
 ;; reduces disk usage. This setting is useful if Gnus is the only newsreader in
 ;; use, as it avoids the need to keep .newsrc updated.
