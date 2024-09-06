@@ -631,7 +631,12 @@ enabling modes and features that enhance the editing experience:
        (with-current-buffer (get-buffer-create name)
          (org-mode)
          (goto-char (point-min))
-         (insert "#+TITLE: Scratch\n\n")
+         ;; Initial documentation displayed in *scratch-org* buffer.
+         (insert "# This buffer is for notes and Org ")
+         (insert "structure editing that are not saved.\n")
+         (insert "# To create a file, visit it with ")
+         (insert (format "%s and enter text in its buffer.\n\n"
+                         (substitute-command-keys "\\[find-file]")))
          (current-buffer))))))
 
 (define-key my-keyboard-map (kbd "o") #'my/switch-to-org)
