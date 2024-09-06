@@ -167,7 +167,14 @@ advice for `require-package', to which ARGS are passed."
     map)
   "My own keyboard map.")
 
-(keymap-global-set "<f9>" my-keyboard-map)
+;; As stated in the manual:
+;;
+;; A small number of keys are reserved for user-defined bindings, and should not
+;; be used by modes, so key bindings using those keys are safer in this regard.
+;; The reserved key sequences are those consisting of C-c followed by a letter
+;; (either upper or lower case), and function keys F5 through F9 without
+;; modifiers
+(keymap-global-set "C-c s" my-keyboard-map)
 
 ;; Load `which-key' and enable `which-key-mode'.
 (add-hook 'after-init-hook #'which-key-mode)
