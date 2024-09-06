@@ -2127,6 +2127,8 @@ This function serves multiple purposes:
         ("nnimap\\+gmail:.*"
          (address ,(car (auth-source-user-and-password "smtp.gmail.com")))
          ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
+         ;; The port for TLS should be 465, and for STARTTLS it should be 587.
+         ;; For details see `message-multi-smtp-send-mail' implementation.
          ("X-Message-SMTP-Method" "smtp smtp.gmail.com 465"))))
 
 (defun my|wrap-with-cut-marks ()
@@ -2183,8 +2185,8 @@ when composing new messages."
 (setq message-send-mail-function #'message-send-mail-with-sendmail)
 (setq send-mail-function #'smtpmail-send-it)
 
-;; This will be redefined in `message-multi-smtp-send-mail' dynamically.
-(setq-default smtpmail-stream-type 'ssl)
+;; This will be redefined later in `message-multi-smtp-send-mail'.
+(setq smtpmail-stream-type 'ssl)
 
 
 ;;;; Programming Languages, Markup and Configurations.
