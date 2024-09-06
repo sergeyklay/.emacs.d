@@ -973,7 +973,7 @@ with @, excluding inherited tags and TODO headings."
 ;; Append captured notes and flags to `org-default-notes-file' file.
 (setq org-mobile-inbox-for-pull org-default-notes-file)
 
-(defun my/mobile-org-import ()
+(defun my/mobile-org-pull ()
   "Import content from `org-mobile-capture-file' to `org-mobile-inbox-for-pull'.
 
 This function performs the following steps:
@@ -989,9 +989,9 @@ and cleaned up for further processing."
   (find-file org-mobile-inbox-for-pull)
   (delete-trailing-whitespace))
 
-(define-key my-keyboard-map (kbd "i") #'my/mobile-org-import)
+(define-key my-keyboard-map (kbd "C-p") #'my/mobile-org-pull)
 
-(defun my/mobile-org-export ()
+(defun my/mobile-org-push ()
   "Push a custom agenda setup to MobileOrg directory.
 
 This function temporarily modifies `org-agenda-custom-commands'
@@ -1015,7 +1015,7 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
     ;; Generate MobileOrg export.
     (org-mobile-push)))
 
-(define-key my-keyboard-map (kbd "e") #'my/mobile-org-export)
+(define-key my-keyboard-map (kbd "C-P") #'my/mobile-org-push)
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
