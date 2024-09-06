@@ -1049,7 +1049,7 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
   (interactive)
   (consult-ripgrep my-org-files-path))
 
-(define-key my-keyboard-map (kbd "s") #'my/org-search-agenda)
+(define-key my-keyboard-map (kbd "C-s") #'my/org-search-agenda)
 
 (defun my|create-missing-org-files ()
   "Create missing files listed in `org-agenda-files'."
