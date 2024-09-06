@@ -2121,11 +2121,11 @@ This function serves multiple purposes:
 (setq gnus-posting-styles
       `((".*"
          (signature ,user-full-name)
-         (address "egrep@protonmail.ch")
+         (address ,(car (auth-source-user-and-password "127.0.0.1")))
          ("GCC" "nnimap+main:Sent")
          ("X-Message-SMTP-Method" "smtp 127.0.0.1 1025"))
         ("nnimap\\+gmail:.*"
-         (address "sadhooklay@gmail.com")
+         (address ,(car (auth-source-user-and-password "smtp.gmail.com")))
          ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
          ("X-Message-SMTP-Method" "smtp smtp.gmail.com 465"))))
 
