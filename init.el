@@ -271,9 +271,6 @@ advice for `require-package', to which ARGS are passed."
 ;; your working environment.
 (setq-default inhibit-startup-screen t)
 
-;; Set the initial major mode of the scratch buffer to text-mode.
-(setq-default initial-major-mode 'text-mode)
-
 ;; Disable the creation of lockfiles on Windows, as they can cause issues
 ;; with file systems on that platform.
 (setq-default create-lockfiles (not (member system-type '(windows-nt))))
