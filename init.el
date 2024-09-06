@@ -194,6 +194,20 @@ advice for `require-package', to which ARGS are passed."
   (unless (file-exists-p dir)
     (make-directory dir t)))
 
+(defun my/switch-to-org ()
+  "Get a scratch buffer."
+  (interactive)
+  (let* ((name "*scratch*")
+         (buf (get-buffer name)))
+    (pop-to-buffer
+     (if (bufferp buf)
+         buf  ; Existing scratch buffer
+       ;; New scratch buffer
+       (with-current-buffer (get-buffer-create name)
+         (current-buffer))))))
+
+(define-key my-keyboard-map (kbd "s") #'my/switch-to-scratch)
+
 
 ;;;; Backup
 ;; Silently deletes excess backup versions.
@@ -607,6 +621,23 @@ enabling modes and features that enhance the editing experience:
 
 ;; Attach the environment setup to Org-mode.
 (add-hook 'org-mode-hook #'my|org-setup-environment)
+
+(defun my/switch-to-org ()
+  "Get a scratch buffer for the `org-mode'."
+  (interactive)
+  (let* ((name "*scratch-org*")
+         (buf (get-buffer name)))
+    (pop-to-buffer
+     (if (bufferp buf)
+         buf  ; Existing scratch buffer
+       ;; New scratch buffer
+       (with-current-buffer (get-buffer-create name)
+         (org-mode)
+         (goto-char (point-min))
+         (insert "#+TITLE: Scratch\n\n")
+         (current-buffer))))))
+
+(define-key my-keyboard-map (kbd "o") #'my/switch-to-org)
 
 ;; Standard key bindings
 (global-set-key (kbd "C-c l") #'org-store-link)
