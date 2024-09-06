@@ -194,7 +194,7 @@ advice for `require-package', to which ARGS are passed."
   (unless (file-exists-p dir)
     (make-directory dir t)))
 
-(defun my/switch-to-org ()
+(defun my/switch-to-scratch ()
   "Get a scratch buffer."
   (interactive)
   (let* ((name "*scratch*")
