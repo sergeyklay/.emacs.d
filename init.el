@@ -338,7 +338,10 @@ advice for `require-package', to which ARGS are passed."
   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
 (with-eval-after-load 'flyspell
-  (define-key flyspell-mode-map (kbd "C-;") nil)
+  ;; These keys are intended for `embark'
+  (dolist (key '("C-;" "C-," "C-."))
+    (unbind-key key flyspell-mode-map))
+
   ;; Be silent when checking words to avoid unnecessary messages.
   (setq flyspell-issue-message-flag nil))
 
@@ -1624,7 +1627,7 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; C-c d will duplicate line (see `duplicate-line') if the region is inactive,
 ;; otherwise will duplicate region.  With C-u N C-c d will duplicate N times.
-(global-set-key (kbd "C-c d") #'duplicate-dwim)
+(define-key my-keyboard-map (kbd "d") #'duplicate-dwim)
 
 
 ;;;; Project management
@@ -1735,7 +1738,7 @@ related to your current project."
 (with-eval-after-load 'flyspell
   (require 'flyspell-correct)
 
-  (define-key flyspell-mode-map (kbd "C-c s") #'consult-flyspell)
+  (define-key flyspell-mode-map (kbd "<f7>") #'consult-flyspell)
 
   ;; Set custom function for selecting corrections.
   (setq consult-flyspell-select-function #'flyspell-correct-at-point))
