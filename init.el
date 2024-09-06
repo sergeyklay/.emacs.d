@@ -278,9 +278,6 @@ advice for `require-package', to which ARGS are passed."
 
 
 ;;;; Sane defaults
-;; Remove the initial message from the scratch buffer.
-(setq-default initial-scratch-message "")
-
 ;; Disable the startup screen, allowing for a quicker start directly into
 ;; your working environment.
 (setq-default inhibit-startup-screen t)
