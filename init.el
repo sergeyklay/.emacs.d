@@ -2097,15 +2097,16 @@ This function serves multiple purposes:
 ;; `gnus-secondary-select-methods' bellow uses "~/.authinfo.gpg" file.
 (setq gnus-secondary-select-methods
       '((nnimap "main"
-                (nnimap-address "127.0.0.1")
+                (nnimap-address "127.0.0.1") ; ProtonMail Bridge
                 (nnimap-server-port 1143)
                 (nnimap-stream starttls)
                 (nnimap-inbox "INBOX")
                 ;; ProtonMail's IMAP server does not support the UID EXPUNGE
-                ;; command.  Let's just mark messages with the \Deleted flag.
+                ;; command.  So just mark messages with the \Deleted flag.
                 (nnimap-expunge never)
-                ;; Move to trash ASAP.
+                ;; Mails marked as expired can be processed immediately.
                 (nnmail-expiry-wait immediate)
+                ;; Move expired messages to ProtonMail's trash.
                 (nnmail-expiry-target "nnimap+main:Trash"))
         (nnimap "gmail"
                 (nnimap-address "imap.gmail.com")
@@ -2113,11 +2114,14 @@ This function serves multiple purposes:
                 (nnimap-stream ssl)
                 (nnimap-inbox "INBOX")
                 ;; Gmail's IMAP server does not support the UID EXPUNGE command.
-                ;; Let's just mark messages with the \Deleted flag.
+                ;; So just mark messages with the \Deleted flag.
                 (nnimap-expunge never)
-                ;; Move to trash ASAP.
+                ;; Mails marked as expired can be processed immediately.
                 (nnmail-expiry-wait immediate)
+                ;; Move expired messages to Gmail's trash.
                 (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash"))))
+
+(define-key my-keyboard-map (kbd "g") #'gnus)
 
 ;;;;; Summary
 (defun my|gnus-summary-setup-keybindings ()
