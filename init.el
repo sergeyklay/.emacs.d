@@ -2127,7 +2127,7 @@ This function serves multiple purposes:
         ("nnimap\\+gmail:.*"
          (address "sadhooklay@gmail.com")
          ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
-         ("X-Message-SMTP-Method" "smtp smtp.gmail.com 587"))))
+         ("X-Message-SMTP-Method" "smtp smtp.gmail.com 465"))))
 
 (defun my|wrap-with-cut-marks ()
   "Insert cut markers around the selected region.
@@ -2183,15 +2183,8 @@ when composing new messages."
 (setq message-send-mail-function #'message-send-mail-with-sendmail)
 (setq send-mail-function #'smtpmail-send-it)
 
-;; SMTP server settings.
-(defun my-set-smtp-stream-type-by-domain ()
-  "Set the SMTP stream type based on the `user-mail-address' domain."
-  (setq smtpmail-stream-type
-        (pcase (downcase (cadr (split-string (message-user-mail-address) "@")))
-          ("gmail.com" 'starttls)
-          (_ 'ssl))))
-
-(add-hook 'message-send-hook #'my-set-smtp-stream-type-by-domain)
+;; This will be redefined in `message-multi-smtp-send-mail' dynamically.
+(setq-default smtpmail-stream-type 'ssl)
 
 
 ;;;; Programming Languages, Markup and Configurations.
