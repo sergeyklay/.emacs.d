@@ -848,7 +848,7 @@ with @, excluding inherited tags and TODO headings."
       ;; Display an error message if the contacts file is not found.
       (message "Org contacts file not found."))))
 
-(define-key my-keyboard-map (kbd "k") #'my/org-contacts-search)
+(define-key my-keyboard-map (kbd "C-c") #'my/org-contacts-search)
 
 ;;;;; Org TODO
 ;; Define my default keywords as workflow states.
