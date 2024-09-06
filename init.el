@@ -2127,30 +2127,15 @@ This function serves multiple purposes:
         ("nnimap\\+gmail:.*"
          (address ,(car (auth-source-user-and-password "smtp.gmail.com")))
          ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
-         ;; The port for TLS should be 465, and for STARTTLS it should be 587.
+         ;; Use port 465 for direct TLS/SSL connection, which encrypts
+         ;; the connection immediately.  Port 587 is used for
+         ;; STARTTLS, where the connection starts unencrypted and is
+         ;; then upgraded to TLS/SSL.  When using port 587, ensure that
+         ;; `smtpmail-stream-type' is set to 'starttls to enable the
+         ;; correct connection method.
+         ;;
          ;; For details see `message-multi-smtp-send-mail' implementation.
          ("X-Message-SMTP-Method" "smtp smtp.gmail.com 465"))))
-
-(defun my|wrap-with-cut-marks ()
-  "Insert cut markers around the selected region.
-
-If a region of text is selected, this function wraps it with
-Emacs cut marks for easier sharing in emails or documentation. If
-no region is selected, it simply inserts the cut marks with a
-blank line between them."
-  (interactive)
-  (let ((start-marker "--8<-----------------cut here----------------start--------------->8--\n")
-        (end-marker "--8<-----------------cut here----------------end----------------->8--\n"))
-    (if (use-region-p)
-        ;; Wrap the selected region with start and end markers.
-        (let ((region-text (buffer-substring (region-beginning) (region-end))))
-          (delete-region (region-beginning) (region-end))
-          (insert (concat start-marker region-text "\n" end-marker)))
-      ;; Insert empty cut block if no region is selected.
-      (progn
-        (insert (concat start-marker "\n" end-marker))
-        (forward-line -2)
-        (move-beginning-of-line nil)))))
 
 (defun my|gnus-setup-message-environment ()
   "Configure the environment for composing messages in Gnus.
