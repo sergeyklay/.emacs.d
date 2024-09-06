@@ -2177,21 +2177,21 @@ when composing new messages."
 
 (add-hook 'message-mode-hook #'my|gnus-setup-message-environment)
 
+
 ;;;;; Setup SMTP
-
 (setq smtpmail-servers-requiring-authorization ".*")
 (setq message-send-mail-function #'message-send-mail-with-sendmail)
 (setq send-mail-function #'smtpmail-send-it)
 
-
 ;; SMTP server settings.
-(defun my-configure-smtp-stream-type ()
-  "Configure the SMTP stream type based on the current user email address."
-  (cond ((equal user-mail-address "sadhooklay@gmail.com")
-         (setq smtpmail-stream-type 'starttls))
-        (t (setq smtpmail-stream-type 'ssl))))
+(defun my-set-smtp-stream-type-by-domain ()
+  "Set the SMTP stream type based on the `user-mail-address' domain."
+  (setq smtpmail-stream-type
+        (pcase (downcase (cadr (split-string (message-user-mail-address) "@")))
+          ("gmail.com" 'starttls)
+          (_ 'ssl))))
 
-(add-hook 'message-send-hook #'my-configure-smtp-stream-type)
+(add-hook 'message-send-hook #'my-set-smtp-stream-type-by-domain)
 
 
 ;;;; Programming Languages, Markup and Configurations.
