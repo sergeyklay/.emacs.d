@@ -1583,6 +1583,13 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
+;; Fonts
+(cond ((and (display-graphic-p)
+            (member "JetBrainsMono Nerd Font Mono" (font-family-list)))
+       (set-face-attribute
+        'default nil
+        :font "JetBrainsMono Nerd Font Mono" :height 120)))
+
 ;; Nicer scrolling
 (when (>=  emacs-major-version 29)
   (pixel-scroll-precision-mode 1))
