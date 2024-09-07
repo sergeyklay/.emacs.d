@@ -1048,7 +1048,7 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
     ;; Generate MobileOrg export.
     (org-mobile-push)))
 
-(define-key my-keyboard-map (kbd "C-P") #'my/mobile-org-push)
+(define-key my-keyboard-map (kbd "M-p") #'my/mobile-org-push)
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
@@ -1749,9 +1749,6 @@ related to your current project."
                 #'consult-buffer-other-frame)
 
 (with-eval-after-load 'consult
-  (global-set-key (kbd "C-c k")  #'consult-ripgrep)
-  (global-set-key (kbd "C-c r")  #'consult-history)
-
   (define-key minibuffer-local-map (kbd "C-r") #'consult-history))
 
 (defun my/consult-jump-in-buffer ()
@@ -1762,13 +1759,13 @@ related to your current project."
     ((eq major-mode 'org-mode) 'consult-org-heading)
     (t 'consult-imenu))))
 
-(global-set-key (kbd "C-x <tab>") #'my/consult-jump-in-buffer)
+(define-key my-keyboard-map (kbd "j") #'my/consult-jump-in-buffer)
 
 ;; Completion of misspelled words in buffer.
 (with-eval-after-load 'flyspell
   (require 'flyspell-correct)
 
-  (define-key flyspell-mode-map (kbd "<f7>") #'consult-flyspell)
+  (define-key flyspell-mode-map (kbd "C-c f s") #'consult-flyspell)
 
   ;; Set custom function for selecting corrections.
   (setq consult-flyspell-select-function #'flyspell-correct-at-point))
