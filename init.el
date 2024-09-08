@@ -515,28 +515,19 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 
 ;;;; Organization
-(defconst my-org-files-path
-  (file-name-as-directory
-   (concat (file-name-as-directory (expand-file-name "~")) "org"))
-  "Path to the user org files directory.")
-
 (defconst my-org-webdaw-path
   (expand-file-name
    "Notes"
    (expand-file-name
     "Dropbox"
     (expand-file-name "~")))
-  "Common directory for exaport Org files and agendas.")
-
-(defconst my-org-reports-path (expand-file-name "Reports" my-org-webdaw-path)
-  "Common directory for exaport Org files and agendas.")
+  "Common directory for export/import Org files and agendas.")
 
 (require 'org)
 
 (with-eval-after-load 'org
-  ;; Ensure directories for Org files and reports exist.
-  (my-ensure-directory-exists my-org-files-path)
-  (my-ensure-directory-exists my-org-reports-path)
+  ;; Ensure the directory for Org files is exist.
+  (my-ensure-directory-exists org-directory)
 
   ;; Although I don't use `diary-file', Org-agenda still checks for its
   ;; existence even when `org-agenda-include-diary' is set to nil.  This happens
@@ -566,9 +557,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 ;; Set the default width for inline images to 600 pixels.
 (setq org-image-actual-width '(600))
-
-;; Set up the global directory for org files.
-(setq org-directory (directory-file-name my-org-files-path))
 
 ;; Enforce TODO dependencies, blocking parent tasks from being marked DONE
 ;; if child tasks are still not completed.
@@ -855,7 +843,7 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
   ;; Managing contacts into org-mode.
   (with-eval-after-load 'org-contacts
     (setq org-contacts-files
-          `(,(concat my-org-files-path "contacts.org")))))
+          `(,(expand-file-name "contacts.org" org-directory)))))
 
 (defun my/org-contacts-search ()
   "Search and select a contact.
@@ -946,7 +934,7 @@ with @, excluding inherited tags and TODO headings."
 
 ;; Default target for capturing notes. Also used for mobile sync.
 ;; See `org-mobile-inbox-for-pull' bellow.
-(setq org-default-notes-file (expand-file-name "inbox.org" my-org-files-path))
+(setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
 
 ;; Define custom Org Capture templates
 (setq org-capture-templates
@@ -987,7 +975,7 @@ with @, excluding inherited tags and TODO headings."
 (add-hook 'org-capture-mode-hook (lambda () (require 'org-contacts)))
 
 ;;;;; Org Mobile
-;; Setup path for export Org files.
+;; Path for export/import Org files.
 ;;
 ;; To use it with Beorg you have to:
 ;; 1. Open Files in Beog mobile app
@@ -998,7 +986,12 @@ with @, excluding inherited tags and TODO headings."
 ;; 1. Open menu in Plain Org mobile app
 ;; 2. Select "Open file"
 ;; 3. Open this file located in your Dropbox "Notes" directory
-(setq org-mobile-directory my-org-webdaw-path)
+(setq org-mobile-directory (expand-file-name "~/Documents/Notes"))
+(with-eval-after-load 'org
+  ;; Ensure directories for export/import Org files are exist.
+  (my-ensure-directory-exists org-mobile-directory)
+  (my-ensure-directory-exists
+   (expand-file-name "Reports" org-mobile-directory)))
 
 ;; Do not generate IDs for all headings.
 (setq org-mobile-force-id-on-agenda-items nil)
@@ -1052,37 +1045,24 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 
 ;;;;; Org Agenda
 (defconst my-org-agenda-files-work
-  `(,(concat my-org-files-path "business.org")
-    ,(concat my-org-files-path "airslate.org"))
+  `(,(expand-file-name "business.org" org-directory)
+    ,(expand-file-name "airslate.org" org-directory))
   "The list of my work agenda files.")
 
 (defconst my-org-agenda-files-life
-  `(,(concat my-org-files-path "blog.org")
-    ,(concat my-org-files-path "contacts.org")
+  `(,(expand-file-name "blog.org" org-directory)
+    ,(expand-file-name "contacts.org" org-directory)
     ;; Finances / Legal / Authorities / Insure / Regulate
-    ,(concat my-org-files-path "flair.org")
-    ,(concat my-org-files-path "hardware.org")
-    ,(concat my-org-files-path "inbox.org")
-    ,(concat my-org-files-path "misc.org")
-    ,(concat my-org-files-path "notes.org"))
+    ,(expand-file-name "flair.org" org-directory)
+    ,(expand-file-name "hardware.org" org-directory)
+    ,(expand-file-name "inbox.org" org-directory)
+    ,(expand-file-name "misc.org" org-directory)
+    ,(expand-file-name "notes.org" org-directory))
   "The list of my non-work agenda files.")
-
-;; Re-align tags when window shape changes
-(with-eval-after-load 'org-agenda
-  (add-hook 'org-agenda-mode-hook
-            (lambda () (add-hook 'window-configuration-change-hook
-                                 #'org-agenda-align-tags nil t))))
 
 ;; I maintain two categories of agenda files: work and non-work files.
 (setq org-agenda-files
       (append my-org-agenda-files-work my-org-agenda-files-life))
-
-(defun my/org-search-agenda ()
-  "Search (i.e. ripgrep) stuff in my agenda files."
-  (interactive)
-  (consult-ripgrep my-org-files-path))
-
-(define-key my-keyboard-map (kbd "C-s") #'my/org-search-agenda)
 
 (defun my|create-missing-org-files ()
   "Create missing files listed in `org-agenda-files'."
@@ -1100,7 +1080,22 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
                          (apply-partially #'org-agenda-prepare-buffers
                                           (org-agenda-files t t))))
 
-(add-hook 'org-agenda-mode  #'my|org-agenda-refresh-on-idle)
+(with-eval-after-load 'org-agenda
+  ;; Always highlight the current agenda line.
+  (add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
+
+  ;; Refresh Org Agenda buffers on idle.
+  (add-hook 'org-agenda-mode-hook #'my|org-agenda-refresh-on-idle)
+
+  ;; Re-align tags when window shape changes
+  (add-hook 'window-configuration-change-hook #'org-agenda-align-tags nil t))
+
+(defun my/org-search-agenda ()
+  "Search (i.e. ripgrep) stuff in my agenda files."
+  (interactive)
+  (consult-ripgrep org-directory))
+
+(define-key my-keyboard-map (kbd "C-s") #'my/org-search-agenda)
 
 ;; Do not initialize agenda Org files when generating (only) agenda.
 (setq org-agenda-inhibit-startup t)
@@ -1113,9 +1108,6 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 
 ;; Restore windows layout after quit agenda.
 (setq org-agenda-restore-windows-after-quit t)
-
-;; Open agenda in the current window.
-(setq org-agenda-window-setup 'current-window)
 
 (defun my-org-agenda-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
@@ -1287,8 +1279,9 @@ the date of the week's end (Sunday)."
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'any)))))
          nil
-         (,(expand-file-name "agenda_180d_filtered.html"
-                             my-org-reports-path)))
+         (,(expand-file-name
+            "agenda_180d_filtered.html"
+            (expand-file-name "Reports" org-mobile-directory))))
         ;; Full agenda for the next 31 days.  Will used to export HTML file.
         ;; See `org-agenda-exporter-settings' comment bellow.
         ("Ra", "Detail agenda +31d"
@@ -1298,8 +1291,9 @@ the date of the week's end (Sunday)."
                    (org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'todo 'done)))))
          nil
-         (,(expand-file-name "agenda_details_raw.html"
-                             my-org-reports-path)))
+         (,(expand-file-name
+            "agenda_details_raw.html"
+            (expand-file-name "Reports" org-mobile-directory))))
         ("Rw", "Company work done this week"
          ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\"|TODO=\"STARTED\""
                         (my-get-week-start-date))
@@ -1320,18 +1314,15 @@ the date of the week's end (Sunday)."
          ;; This can be a list of files, for example ("~/a.pdf" "~/b.txt").
          ;; Reworked to get plain txt format due to this issue:
          ;; https://www.reddit.com/r/orgmode/comments/1f4t3ga/help_with_exporting_org_agenda_to_pdf_with/
-         (,@(expand-file-name (my-weekly-agenda-export-name)
-                              my-org-reports-path)))))
+         (,@(expand-file-name
+             (my-weekly-agenda-export-name)
+             (expand-file-name "Reports" org-mobile-directory))))))
 
-;; Always highlight the current agenda line.
-(add-hook 'org-agenda-mode-hook (lambda () (hl-line-mode 1)))
-
-;; Export agenda settings.  To save the result as an HTML file, you must
-;; manually call the `org-store-agenda-view' which generates and saves HTML
-;; reports directly based on the commands defined in
-;; `org-agenda-custom-commands', without needing to first display the agenda
-;; view. The resulting file will be saved in the directory specified by
-;; `my-org-reports-path'.
+;; Export agenda settings.  To save the result as an HTML file, you have to call
+;; the `org-store-agenda-view' which generates and saves HTML reports directly
+;; based on the commands defined in `org-agenda-custom-commands', without
+;; needing to first display the agenda view. The resulting file will be saved in
+;; the directory specified by custom agenda commands.
 ;;
 ;; I export my agendas using a daily cronjob with command that looks like:
 ;;
@@ -1355,14 +1346,14 @@ the date of the week's end (Sunday)."
   "Switch to the buffer associated with the given Org FILENAME.
 
 If a buffer visiting FILENAME is already open, switch to it.  If
-the buffer does not exist, open the FILENAME from the `my-org-files-path'
+the buffer does not exist, open the FILENAME from the `org-directory'
 directory and switch to the newly created buffer.
 
 FILENAME should be the name of the Org file without any directory
-path.  The file is expected to reside in the `my-org-files-path' directory."
+path.  The file is expected to reside in the `org-directory' directory."
   (switch-to-buffer
    (or (get-buffer filename)
-       (find-file-noselect (concat my-org-files-path filename)))))
+       (find-file-noselect (expand-file-name filename org-directory)))))
 
 (defun my/org-move-bookmark-to-notes()
   "Move and format mobile bookmark heading.
