@@ -1135,6 +1135,28 @@ TAG should be a string without the colons, e.g., project."
       (or (outline-next-heading)
           (goto-char (point-max))))))
 
+(defun my-org-agenda-skip-parent-if-has-scheduled-childs ()
+  "Skip a parent heading if it has uncompleted children that are scheduled.
+
+This function is intended to be used with
+`org-agenda-skip-function' to refine the agenda view. It checks
+if the current heading is a TODO item and skips it if it has any
+children that are not yet completed but have a scheduled time."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (save-excursion
+      (org-back-to-heading t)
+      (when (org-entry-is-todo-p)  ; Only interested in TODO entries
+        (let ((has-unscheduled-scheduled-child nil))
+          (save-excursion
+            (org-map-entries
+             (lambda ()
+               (when (and (not (org-entry-is-done-p))
+                          (org-get-scheduled-time (point)))
+                 (setq has-unscheduled-scheduled-child t)))
+             nil 'tree))
+          (when has-unscheduled-scheduled-child
+            (goto-char subtree-end)))))))
+
 (defun my-org-cmp-closed (a b)
   "Compare Org agenda entries A and B by their CLOSED timestamp.
 Return +1 if A is closed more recently than B, -1 if B is closed
@@ -1205,7 +1227,7 @@ the date of the week's end (Sunday)."
         ("o" "Unfinished, but not scheduled tasks"
          ((tags-todo "-someday-project"
                      ((org-agenda-skip-function
-                       '(org-agenda-skip-entry-if 'scheduled))
+                       'my-org-agenda-skip-parent-if-has-scheduled-childs)
                       (org-agenda-overriding-header "Unscheduled Tasks")))))
         ;; Probably need to remove the scheduled date
         ("O" "Scheduled, but with :someday: tag"
