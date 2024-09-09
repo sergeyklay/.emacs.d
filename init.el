@@ -58,15 +58,15 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
 
 
 ;;;; Packages management
-;; Package management in Emacs can be done in several ways. I personally like
-;; classic one with `package.el'. Some will prefer straight.el, use-package,
+;; Package management in Emacs can be done in several ways.  I personally like
+;; classic one with `package.el'.  Some will prefer straight.el, use-package,
 ;; and so on, but I haven't found the need for them.
 (require 'package)
 
 ;; Setting up package archives.
 (add-to-list 'package-archives '( "melpa" . "https://melpa.org/packages/") t)
 
-;; Priorities. Default priority is 0.
+;; Priorities.  Default priority is 0.
 (setq package-archive-priorities
       '(("gnu"      . 100)
         ("nongnu"   . 50)
@@ -92,9 +92,9 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
   (package-installed-p package))
 
 ;; package.el updates the saved version of `package-selected-packages' correctly
-;; only after `custom-file' has been loaded, which is a bug. We work around this
-;; by adding the required packages to `package-selected-packages' after startup
-;; is complete. This code borrowed from Steve Purcell configuration.
+;; only after `custom-file' has been loaded, which is a bug.  We work around
+;; this by adding the required packages to `package-selected-packages' after
+;; startup is complete.  This code borrowed from Steve Purcell configuration.
 
 (defvar my-required-packages nil
   "List of packages that were successfully installed.")
@@ -236,7 +236,7 @@ advice for `require-package', to which ARGS are passed."
 
 
 ;;;; History
-;; Set the maximum number of entries to save in the history. A larger value
+;; Set the maximum number of entries to save in the history.  A larger value
 ;; allows for a more extensive history, which can be handy if you often need
 ;; to recall older entries.
 (setq history-length 1000)
@@ -246,7 +246,7 @@ advice for `require-package', to which ARGS are passed."
 
 ;; Enable `save-place-mode' to save point position in files across sessions.  It
 ;; ensures that you return to the exact spot where you left off, enhancing
-;; workflow efficiency. Only enable in interactive mode.
+;; workflow efficiency.  Only enable in interactive mode.
 (when (not noninteractive)
   (add-hook 'after-init-hook #'save-place-mode))
 
@@ -319,13 +319,13 @@ advice for `require-package', to which ARGS are passed."
 ;; Automatically save the personal dictionary without asking for confirmation.
 (setq ispell-silently-savep t)
 
-;; Define the default dictionary to be used. You can change "en_US" to any
+;; Define the default dictionary to be used.  You can change "en_US" to any
 ;; dictionary that is installed and available on your system.
 (setq ispell-local-dictionary "en_US")
 
 ;; Configure the list of my dictionaries.
 ;; Note: On macOS, Homebrew does not provide dictionaries by default.
-;; You will need to install them manually. For more information on how
+;; You will need to install them manually.  For more information on how
 ;; to install dictionaries, visit:
 ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
 (setq ispell-local-dictionary-alist
@@ -932,7 +932,7 @@ with @, excluding inherited tags and TODO headings."
    ":END:\n\n")
   "A template for capturing contact records.")
 
-;; Default target for capturing notes. Also used for mobile sync.
+;; Default target for capturing notes.  Also used for mobile sync.
 ;; See `org-mobile-inbox-for-pull' bellow.
 (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
 
@@ -1139,7 +1139,7 @@ TAG should be a string without the colons, e.g., project."
   "Skip a parent heading if it has uncompleted children that are scheduled.
 
 This function is intended to be used with
-`org-agenda-skip-function' to refine the agenda view. It checks
+`org-agenda-skip-function' to refine the agenda view.  It checks
 if the current heading is a TODO item and skips it if it has any
 children that are not yet completed but have a scheduled time."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -1360,7 +1360,7 @@ the date of the week's end (Sunday)."
          ((org-agenda-files '("airslate.org"))
           (org-agenda-cmp-user-defined 'my-org-cmp-closed)
           (org-agenda-sorting-strategy '(user-defined-down))
-          ;; Hide tags in this agenda view. This is a report after all.
+          ;; Hide tags in this agenda view.  This is a report after all.
           (org-agenda-hide-tags-regexp ".")
           ;; I don't need category/filename in this agenda view.
           (org-agenda-prefix-format "  %?-12t% s")
@@ -1376,8 +1376,8 @@ the date of the week's end (Sunday)."
 ;; Export agenda settings.  To save the result as an HTML file, you have to call
 ;; the `org-store-agenda-view' which generates and saves HTML reports directly
 ;; based on the commands defined in `org-agenda-custom-commands', without
-;; needing to first display the agenda view. The resulting file will be saved in
-;; the directory specified by custom agenda commands.
+;; needing to first display the agenda view.  The resulting file will be saved
+;; in the directory specified by custom agenda commands.
 ;;
 ;; I export my agendas using a daily cronjob with command that looks like:
 ;;
@@ -1888,14 +1888,14 @@ related to your current project."
   (require 'prescient)
   (require 'vertico-prescient)
 
-  ;; The default settings seem a little forgetful to me. Let's try this out.
+  ;; The default settings seem a little forgetful to me.  Let's try this out.
   (setq prescient-history-length 200)
 
   ;; Common sense.
   (setq prescient-sort-full-matches-first t)
 
-  ;; Disable filtering in Prescient, leaving only sorting. I use `orderless' for
-  ;; filtering (see abowe).
+  ;; Disable filtering in Prescient, leaving only sorting.  I use `orderless'
+  ;; for filtering (see above).
   (setq vertico-prescient-enable-filtering nil)
 
   ;; Prescient for improved sorting and filtering.  Prescient enhances sorting
@@ -2104,7 +2104,7 @@ This function serves multiple purposes:
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;;;;; Eshell
-;; The default settings seem a little forgetful to me. Let's try this out.
+;; The default settings seem a little forgetful to me.  Let's try this out.
 (setq eshell-history-size 1000)
 
 ;; Prevent duplicate entries in the Eshell history.
@@ -2148,7 +2148,7 @@ This function serves multiple purposes:
 (setq gnus-fetch-old-headers 'some)
 
 ;; Prevents Gnus from saving the .newsrc file, which speeds up exiting Gnus and
-;; reduces disk usage. This setting is useful if Gnus is the only newsreader in
+;; reduces disk usage.  This setting is useful if Gnus is the only newsreader in
 ;; use, as it avoids the need to keep .newsrc updated.
 (setq gnus-save-newsrc-file nil)
 
@@ -2161,7 +2161,7 @@ This function serves multiple purposes:
 ;; Default method for selecting a newsgroup.
 (setq gnus-select-method '(nntp "news.gmane.io"))
 
-;; Configure all used IMAP servers for Gnus. Each server defined in
+;; Configure all used IMAP servers for Gnus.  Each server defined in
 ;; `gnus-secondary-select-methods' bellow uses "~/.authinfo.gpg" file.
 (setq gnus-secondary-select-methods
       '((nnimap "main"
@@ -2222,8 +2222,9 @@ This function serves multiple purposes:
 (setq mml-secure-openpgp-encrypt-to-self t)
 
 (with-eval-after-load 'mm-decode
-  ;; Avoid rendering certain MIME types by default. Prefer text-based parts when
-  ;; available.  Useful for maintaining a cleaner reading experience in Gnus.
+  ;; Avoid rendering certain MIME types by default.  Prefer text-based parts
+  ;; when available.  Useful for maintaining a cleaner reading experience in
+  ;; Gnus.
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext")
   (add-to-list 'mm-discouraged-alternatives "application/msword"))
@@ -2314,7 +2315,7 @@ when composing new messages."
 
 (with-eval-after-load 'rst
   ;; Customize `rst-new-adornment-down' to automatically lower the adornment
-  ;; level when creating new sections in reStructuredText files. This setting
+  ;; level when creating new sections in reStructuredText files.  This setting
   ;; makes it easier to maintain a clear structure in your documentation.
   (setq rst-new-adornment-down t)
 
@@ -2483,7 +2484,7 @@ level 2, and so on."
 ;; `user-emacs-directory'.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-;; Load `custom-file' if it exists or is a symbolic link. This should be done
+;; Load `custom-file' if it exists or is a symbolic link.  This should be done
 ;; at the very end of the configuration to ensure that it does not override any
 ;; settings made earlier in this file.
 (when (or (file-exists-p custom-file) (file-symlink-p custom-file))
