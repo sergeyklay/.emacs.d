@@ -975,18 +975,43 @@ with @, excluding inherited tags and TODO headings."
 (add-hook 'org-capture-mode-hook (lambda () (require 'org-contacts)))
 
 ;;;;; Org Mobile
-;; Path for export/import Org files.
+;; Set up for syncing Org files between current workstation and mobile app.
 ;;
-;; To use it with Beorg you have to:
-;; 1. Open Files in Beog mobile app
-;; 2. Ceate file called "mobileorg" (w/o extension)
-;; 3. Setup sync Beorg with Dropbox "Notes" directory
+;; This configuration is compatible with several mobile applications that handle
+;; Org files, such as Beorg, Plain Org, and potentially MobileOrg.  The
+;; `org-mobile-directory' is set to the user's "Notes" folder, which must be
+;; properly configured in the mobile application for syncing.
 ;;
-;; To use it with Plain Org you have to
-;; 1. Open menu in Plain Org mobile app
-;; 2. Select "Open file"
-;; 3. Open this file located in your Dropbox "Notes" directory
+;; On iOS, applications like Beorg and Plain Org can access the synced files by
+;; navigating to the specified directory via iCloud.  This setup would also
+;; theoretically work with Dropbox if it supported symbolic links in the 21st
+;; century, but Dropbox's current limitations in background syncing with
+;; Org-related apps make it unreliable - you'll forced to put it in ~/Dropbox/*
+;; directory.  Moreover, I have observed an unpleasant behavior with Dropbox:
+;; changes made to a file on the computer are not reflected in the mobile
+;; application that works with Org files.  My guess is that there’s something
+;; missing from Dropbox’s mobile background syncing process, unrelated to
+;; Org-related apps specifically.
+;;
+;; Beorg Setup:
+;; 1. Under Files Synchronization setting in the Beorg mobile app choose Sync
+;;    method, and select "Choose Folder"
+;; 2. Next, tap "Link Folder"
+;; 3. Select up syncing with the "Notes" directory.
+;;
+;; Plain Org Setup:
+;; 1. Open the menu in the Plain Org mobile app.
+;; 2. Select "Open file."
+;; 3. Navigate to and open a file located in your "Notes" directory.
+;;
+;; For MobileOrg on macOS with iCloud, the path would typically need to be
+;; set to something like
+;; "~/Library/Mobile Documents/iCloud~com~mobileorg~mobileorg/Documents".
+;; However, I find the performance of the MobileOrg app on my phone
+;; unsatisfactory by my quality standards; the way this app behaves and the
+;; issues it creates in my daily workflow are unacceptable to me.
 (setq org-mobile-directory (expand-file-name "~/Documents/Notes"))
+
 (with-eval-after-load 'org
   ;; Ensure directories for export/import Org files are exist.
   (my-ensure-directory-exists org-mobile-directory)
