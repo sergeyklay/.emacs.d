@@ -751,7 +751,7 @@ It generates an Org ID if needed and updates the ID locations."
   "Mark the current Org heading as a project.
 
 This function ensures that the current heading:
-1. Has the tag :project:
+1. Has the tag project
 2. Has the property COOKIE_DATA set to todo recursive
 3. Has a TODO keyword
 4. Starts with a progress indicator [/]
