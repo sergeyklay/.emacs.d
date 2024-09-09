@@ -1598,26 +1598,26 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; Fonts
 (when (display-graphic-p)
-  (when (member "Iosevka" (font-family-list))
+  (when (member "JetBrainsMono Nerd Font Mono" (font-family-list))
     (set-face-attribute 'default nil
-                        :family "Iosevka"
-                        :height 140))
+                        :family "JetBrainsMono Nerd Font Mono"
+                        :height 130))
 
   ;; Use the same font for fixed-pitch face as for default face.
   (set-face-attribute 'fixed-pitch nil
                       :family (face-attribute 'default :family))
 
-  (when (member "FreeSans" (font-family-list))
+  (when (member "Cantarell" (font-family-list))
     (set-face-attribute 'variable-pitch nil
-                        :family "FreeSans"
+                        :family "Cantarell"
                         :weight 'regular
-                        :height 0.9))
+                        :height 1.05))
 
   (when (member "Apple Color Emoji" (font-family-list))
     (set-fontset-font t 'emoji "Apple Color Emoji")))
 
 ;; Nicer scrolling
-(when (>=  emacs-major-version 29)
+(when (display-graphic-p)
   (pixel-scroll-precision-mode 1))
 
 (defun my/terminal-visible-bell ()
