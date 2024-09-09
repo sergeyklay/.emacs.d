@@ -1146,15 +1146,25 @@ children that are not yet completed but have a scheduled time."
     (save-excursion
       (org-back-to-heading t)
       (when (org-entry-is-todo-p)  ; Only interested in TODO entries
-        (let ((has-unscheduled-scheduled-child nil))
+        (let ((has-scheduled-childs nil)
+              (has-deadline (org-entry-get (point) "DEADLINE")))
           (save-excursion
             (org-map-entries
              (lambda ()
-               (when (and (not (org-entry-is-done-p))
-                          (org-get-scheduled-time (point)))
-                 (setq has-unscheduled-scheduled-child t)))
+               (when (and (org-entry-is-todo-p)
+                          (not (org-entry-is-done-p))
+                          ;; Look for SCHEDULED or DEADLINE
+                          (or (org-get-scheduled-time (point))
+                              (org-entry-get (point) "DEADLINE")))
+                 (setq has-scheduled-childs t)))
              nil 'tree))
-          (when has-unscheduled-scheduled-child
+          ;; If this function returns nil, the current match should not be
+          ;; skipped.  Otherwise, the function must return a position from where
+          ;; the search should be continued.
+          (when (or has-scheduleds-child has-deadline)
+            ;; In the context of `org-agenda-skip-function', returning
+            ;; `subtree-end' tells the agenda to skip over the entire subtree of
+            ;; the current heading.
             (goto-char subtree-end)))))))
 
 (defun my-org-cmp-closed (a b)
