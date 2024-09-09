@@ -2156,6 +2156,9 @@ This function serves multiple purposes:
 
 (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
 
+;; Always highlight the current line in gnus groups.
+(add-hook 'gnus-group-mode-hook (lambda () (hl-line-mode 1)))
+
 ;;;;; MML documents
 ;; Reuse the encryption keys specified for `epa-file-encrypt-to' when signing.
 (setq mml-secure-openpgp-signers epa-file-encrypt-to)
