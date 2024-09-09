@@ -1275,21 +1275,37 @@ the date of the week's end (Sunday)."
                  (org-agenda-overriding-header
                   "Stuck Projects with open but not scheduled sub-tasks")))))
         ;; All tasks marked as DONE within the current week for weekly reviews
-        ;; or status updates.
-        ("w" "Tasks done this week"
+        ;; or status updates, including recurring TODO tasks that were acted
+        ;; upon during the same period.
+        ("w" "Tasks done this week" ;;
          ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\""
                         (my-get-week-start-date))
                 ((org-agenda-overriding-header
-                  "Tasks done this week"))))
+                  "Tasks done this week")))
+          ;; Show recurring TODO tasks that were acted upon this week,
+          ;; identified by their LAST_REPEAT property being within the current
+          ;; week.
+          (tags (format "TODO=\"TODO\"&LAST_REPEAT>=\"<%s>\""
+                        (my-get-week-start-date))
+                ((org-agenda-overriding-header
+                  "Recurrent tasks acted upon this week"))))
          ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
           (org-agenda-sorting-strategy '(user-defined-down))))
         ;; All tasks marked as DONE within the current month for montly reviews
-        ;; or status updates.
+        ;; or status updates, including recurring TODO tasks that were acted
+        ;; upon during the same period.
         ("W" "Tasks done this month"
          ((tags (format "TODO=\"DONE\"&CLOSED>=\"<%s>\""
                         (my-get-month-start-date))
                 ((org-agenda-overriding-header
-                  "Tasks done this month"))))
+                  "Tasks done this month")))
+          ;; Show recurring TODO tasks that were acted upon this month,
+          ;; identified by their LAST_REPEAT property being within the current
+          ;; month.
+          (tags (format "TODO=\"TODO\"&LAST_REPEAT>=\"<%s>\""
+                        (my-get-month-start-date))
+                ((org-agenda-overriding-header
+                  "Recurrent tasks acted upon this month"))))
          ((org-agenda-cmp-user-defined 'my-org-cmp-closed)
           (org-agenda-sorting-strategy '(user-defined-down))))
         ;; Filtered tasks excluding those with :project: tag, their children,
@@ -1332,7 +1348,14 @@ the date of the week's end (Sunday)."
                 ((org-agenda-overriding-header
                   (concat
                    "Tasks I worked on this week ("
-                   (string-join (my-weekly-agenda-export-range) " - ") ")")))))
+                   (string-join (my-weekly-agenda-export-range) " - ") ")"))))
+          ;; Show recurring TODO tasks that were acted upon this week,
+          ;; identified by their LAST_REPEAT property being within the current
+          ;; week.
+          (tags (format "TODO=\"TODO\"&LAST_REPEAT>=\"<%s>\""
+                        (my-get-week-start-date))
+                ((org-agenda-overriding-header
+                  "Recurrent tasks acted upon this week"))))
          ;; Files in `org-agenda-files' can be relative to `org-directory'.
          ((org-agenda-files '("airslate.org"))
           (org-agenda-cmp-user-defined 'my-org-cmp-closed)
@@ -1345,7 +1368,7 @@ the date of the week's end (Sunday)."
           (org-agenda-todo-keyword-format "%-10s"))
          ;; This can be a list of files, for example ("~/a.pdf" "~/b.txt").
          ;; Reworked to get plain txt format due to this issue:
-         ;; https://www.reddit.com/r/orgmode/comments/1f4t3ga/help_with_exporting_org_agenda_to_pdf_with/
+         ;; https://lists.gnu.org/archive/html/help-gnu-emacs/2024-09/msg00058.html
          (,@(expand-file-name
              (my-weekly-agenda-export-name)
              (expand-file-name "Reports" org-mobile-directory))))))
