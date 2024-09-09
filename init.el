@@ -2042,6 +2042,12 @@ This function serves multiple purposes:
 ;; - `https://emacs.stackexchange.com/q/3447/16592'
 (setq shell-command-switch "-lc")
 
+;; The comint prompt is read only.
+(setq comint-prompt-read-only t)
+
+;; Make colors display correctly in M-x shell.
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
 ;;;;; Eshell
 ;; The default settings seem a little forgetful to me. Let's try this out.
 (setq eshell-history-size 1000)
