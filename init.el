@@ -1186,7 +1186,7 @@ children that are not yet completed but have a scheduled time."
           ;; If this function returns nil, the current match should not be
           ;; skipped.  Otherwise, the function must return a position from where
           ;; the search should be continued.
-          (when (or has-scheduleds-child has-deadline)
+          (when (or has-scheduled-childs has-deadline)
             ;; In the context of `org-agenda-skip-function', returning
             ;; `subtree-end' tells the agenda to skip over the entire subtree of
             ;; the current heading.
