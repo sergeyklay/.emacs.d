@@ -183,11 +183,6 @@ advice for `require-package', to which ARGS are passed."
 (setq-default which-key-idle-delay 1.5)
 
 
-;;;; Personal Info
-(setq user-full-name "Serghei Iakovlev")
-(setq user-mail-address "egrep@protonmail.ch")
-
-
 ;;;; Common functions
 (defun my-ensure-directory-exists (dir)
   "Ensure that the directory DIR exists, create it if it doesn't."
@@ -2167,150 +2162,9 @@ This function serves multiple purposes:
 
 
 ;;;; News, Feeds and Mail
-;;;;; Gnus
-;; Fetch old headers when needed to reconstruct the full thread context.
-;; Setting this to `some' balances performance with the need for context.
-(setq gnus-fetch-old-headers 'some)
 
-;; Prevents Gnus from saving the .newsrc file, which speeds up exiting Gnus and
-;; reduces disk usage.  This setting is useful if Gnus is the only newsreader in
-;; use, as it avoids the need to keep .newsrc updated.
-(setq gnus-save-newsrc-file nil)
-
-;; Disables reading of the .newsrc and .newsrc-SERVER files on startup, allowing
-;; Gnus to rely solely on its own configuration (.newsrc.eld).  This streamlines
-;; the initialization process and eliminates the overhead associated with
-;; managing legacy files, making Gnus faster and more efficient.
-(setq gnus-read-newsrc-file nil)
-
-;; Default method for selecting a newsgroup.
-(setq gnus-select-method '(nntp "news.gmane.io"))
-
-;; Configure all used IMAP servers for Gnus.  Each server defined in
-;; `gnus-secondary-select-methods' bellow uses "~/.authinfo.gpg" file.
-(setq gnus-secondary-select-methods
-      '((nnimap "main"
-                (nnimap-address "127.0.0.1") ; ProtonMail Bridge
-                (nnimap-server-port 1143)
-                (nnimap-stream starttls)
-                (nnimap-inbox "INBOX")
-                ;; ProtonMail's IMAP server does not support the UID EXPUNGE
-                ;; command.  So just mark messages with the \Deleted flag.
-                (nnimap-expunge never)
-                ;; Mails marked as expired can be processed immediately.
-                (nnmail-expiry-wait immediate)
-                ;; Move expired messages to ProtonMail's trash.
-                (nnmail-expiry-target "nnimap+main:Trash"))
-        (nnimap "gmail"
-                (nnimap-address "imap.gmail.com")
-                (nnimap-server-port "imaps")
-                (nnimap-stream ssl)
-                (nnimap-inbox "INBOX")
-                ;; Gmail's IMAP server does not support the UID EXPUNGE command.
-                ;; So just mark messages with the \Deleted flag.
-                (nnimap-expunge never)
-                ;; Mails marked as expired can be processed immediately.
-                (nnmail-expiry-wait immediate)
-                ;; Move expired messages to Gmail's trash.
-                (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash"))))
-
+;; I use a dedicated (not public yet) configuration for gnus.
 (define-key my-keyboard-map (kbd "g") #'gnus)
-
-;;;;; Summary
-(defun my|gnus-summary-setup-keybindings ()
-  "Configure keybindings in Gnus summary mode."
-  ;; Mark all unread articles in this newsgroup as read.
-  (local-set-key (kbd "v R") #'gnus-summary-catchup))
-
-(add-hook 'gnus-summary-mode-hook #'my|gnus-summary-setup-keybindings)
-
-;;;;; Groups and Topics
-(defun my/gnus-group-list-subscribed ()
-  "List all subscribed groups with or without un-read messages."
-  (interactive)
-  (gnus-group-list-all-groups gnus-level-subscribed))
-
-(with-eval-after-load 'gnus-group
-  ;; List all subscribed groups with or without un-read messages.
-  (define-key gnus-group-mode-map (kbd "o") #'my/gnus-group-list-subscribed))
-
-(add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
-
-;; Always highlight the current line in gnus groups.
-(add-hook 'gnus-group-mode-hook (lambda () (hl-line-mode 1)))
-
-;;;;; MML documents
-;; Reuse the encryption keys specified for `epa-file-encrypt-to' when signing.
-(setq mml-secure-openpgp-signers epa-file-encrypt-to)
-
-;; Ensure emails sent are readable by the sender; self-encrypt by default.
-(setq mml-secure-openpgp-encrypt-to-self t)
-
-(with-eval-after-load 'mm-decode
-  ;; Avoid rendering certain MIME types by default.  Prefer text-based parts
-  ;; when available.  Useful for maintaining a cleaner reading experience in
-  ;; Gnus.
-  (add-to-list 'mm-discouraged-alternatives "text/html")
-  (add-to-list 'mm-discouraged-alternatives "text/richtext")
-  (add-to-list 'mm-discouraged-alternatives "application/msword"))
-
-;;;;; Composing
-;; For details see:
-;; https://www.gnu.org/software/emacs/manual/html_node/gnus/Posting-Styles.html
-(setq gnus-posting-styles
-      `((".*"
-         (signature ,user-full-name)
-         (address ,(car (auth-source-user-and-password "127.0.0.1")))
-         ("GCC" "nnimap+main:Sent")
-         ("X-Message-SMTP-Method" "smtp 127.0.0.1 1025"))
-        ("nnimap\\+gmail:.*"
-         (address ,(car (auth-source-user-and-password "smtp.gmail.com")))
-         ("GCC" "nnimap+gmail:[Gmail]/Sent Mail")
-         ;; Use port 465 for direct TLS/SSL connection, which encrypts
-         ;; the connection immediately.  Port 587 is used for
-         ;; STARTTLS, where the connection starts unencrypted and is
-         ;; then upgraded to TLS/SSL.  When using port 587, ensure that
-         ;; `smtpmail-stream-type' is set to 'starttls to enable the
-         ;; correct connection method.
-         ;;
-         ;; For details see `message-multi-smtp-send-mail' implementation.
-         ("X-Message-SMTP-Method" "smtp smtp.gmail.com 465"))))
-
-(defun my|gnus-setup-message-environment ()
-  "Configure the environment for composing messages in Gnus.
-
-This hook sets up various editing modes and formatting options
-commonly used when composing emails in Gnus.  Specifically:
-
-- `fill-column' is set to 69, aligning with traditional email
-  formatting standards.
-- `auto-fill-mode' is enabled to automatically wrap lines at the
-  fill column.
-- `font-lock-mode' ensures syntax highlighting is active.
-- `abbrev-mode' expands abbreviations during text entry.
-- `flyspell-mode' is activated for on-the-fly spell checking.
-- `writegood-mode' helps improve writing quality with stylistic
-  suggestions.
-
-Add this function to `message-mode-hook' to apply these settings
-when composing new messages."
-  (setq-local fill-column 69)
-  (auto-fill-mode 1)
-  (font-lock-mode 1)
-  (abbrev-mode 1)
-  (flyspell-mode 1)
-  (writegood-mode 1))
-
-(add-hook 'message-mode-hook #'my|gnus-setup-message-environment)
-
-
-;;;;; Setup SMTP
-(setq smtpmail-servers-requiring-authorization ".*")
-(setq message-send-mail-function #'message-send-mail-with-sendmail)
-(setq send-mail-function #'smtpmail-send-it)
-
-;; This will be redefined later in `message-multi-smtp-send-mail'.
-(setq smtpmail-stream-type 'ssl)
 
 
 ;;;; Programming Languages, Markup and Configurations.
@@ -2504,7 +2358,7 @@ level 2, and so on."
               (server-start))))
 
 
-;;;;; Customizations.
+;;;; Customizations.
 ;; Save custom variables in a separate file named custom.el
 ;; `user-emacs-directory'.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
