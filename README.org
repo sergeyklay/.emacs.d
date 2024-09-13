@@ -46,6 +46,21 @@ I adhere to the following guiding principles in this configuration:
   custom keymaps for any desired keybinding ideas, without altering
   default package behavior.
 
+** Performance Considerations
+
+When it comes to performance, it's all relative. Currently, Emacs
+loads in a little over a second in the graphical environment on macOS,
+which is admittedly slower than the configurations of those more
+dedicated to optimizing startup times. However, it is definitely
+faster than many other configurations found online. Have I settled on
+this? No, I occasionally work on slight optimizations and will
+continue to do so spontaneously. That said, Emacs startup time is not
+a top priority for me as long as it stays around one second,
+especially since I do not restart Emacs for weeks or months at a
+time. Therefore, these metrics might improve over time (and are likely
+better on workstations running Linux), but it's certainly not
+something that occupies most of my attention.
+
 ** Requirements
 
 Currently, I use GNU Emacs 29.x, and I recommend others do the same by
