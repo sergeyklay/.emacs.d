@@ -326,26 +326,25 @@ advice for `require-package', to which ARGS are passed."
   (interactive)
   (my-isearch-exit-and-run #'project-find-regexp))
 
-(with-eval-after-load 'iserach
-  ;; Invoke `occur' using the current `isearch' string.
-  (define-key isearch-mode-map (kbd "C-o") #'my-occur-from-isearch)
+;; Invoke `occur' using the current `isearch' string.
+(define-key isearch-mode-map (kbd "C-o") #'my-occur-from-isearch)
 
-  ;; Invoke `project-find-regexp' using the current `isearch' string.
-  (define-key isearch-mode-map (kbd "C-f") #'my-project-search-from-isearch)
+;; Invoke `project-find-regexp' using the current `isearch' string.
+(define-key isearch-mode-map (kbd "C-f") #'my-project-search-from-isearch)
 
-  ;; Do incremental search forward for a symbol found near point.
-  (define-key isearch-mode-map (kbd "C-d") #'isearch-forward-symbol-at-point)
+;; Do incremental search forward for a symbol found near point.
+(define-key isearch-mode-map (kbd "C-d") #'isearch-forward-symbol-at-point)
 
-  ;; Jump to search results instead of having to do multiples C-s.
-  (define-key isearch-mode-map (kbd "C-j") #'avy-isearch)
+;; Jump to search results instead of having to do multiples C-s.
+(define-key isearch-mode-map (kbd "C-j") #'avy-isearch)
 
-  ;; Interactive replacement:
-  ;; - M-% to call `anzu-isearch-query-replace'
-  ;; - C-M-% to call `anzu-isearch-query-replace-regexp'
-  (define-key isearch-mode-map [remap isearch-query-replace]
-              #'anzu-isearch-query-replace)
-  (define-key isearch-mode-map [remap isearch-query-replace-regexp]
-              #'anzu-isearch-query-replace-regexp))
+;; Interactive replacement:
+;; - M-% to call `anzu-isearch-query-replace'
+;; - C-M-% to call `anzu-isearch-query-replace-regexp'
+(define-key isearch-mode-map [remap isearch-query-replace]
+            #'anzu-isearch-query-replace)
+(define-key isearch-mode-map [remap isearch-query-replace-regexp]
+            #'anzu-isearch-query-replace-regexp)
 
 (defun my-isearch-start-from-region (orig-fn &rest args)
   "Advice to start `isearch' with the active region or symbol at point.
