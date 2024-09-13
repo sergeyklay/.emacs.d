@@ -755,12 +755,33 @@ non-alphanumeric characters and replaces spaces with hyphens."
     ;; Remove trailing hyphens, downcase and trim length to 60 chars
     (string-limit (downcase (replace-regexp-in-string "-+$" "" slug)) 60)))
 
+(defun my/org-goto-id-property ()
+  "Move cursor to the start of the ID property value in Org heading."
+  (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "This function is intended to be used in Org-mode only"))
+  (let ((initial-point (point))
+        (drawer-pos nil)
+        (id-pos nil))
+    (save-excursion
+      (org-back-to-heading t)
+      (setq drawer-pos (re-search-forward "^\\s-*:PROPERTIES:" nil t))
+      (when drawer-pos
+        (when (re-search-forward "^\\s-*:ID:\\s-+\\(.*\\)" nil t)
+              (setq id-pos (match-beginning 1)))))
+    (when id-pos
+      (org-show-entry)
+      (goto-char drawer-pos)
+      (org-flag-drawer nil)
+      (goto-char id-pos))))
+
+(define-key my-keyboard-map (kbd "M-i") #'my/org-goto-id-property)
+
 (defun my/org-generate-id ()
   "Create a human-readable ID for the current entry and return it.
 
-If the entry already has an ID, just return it.  In any case
-copies resulted ID to the `kill-ring'.  The function generates a
-new ID by performing the following steps:
+If the entry already has an ID, just return it.  The function
+generates a new ID by performing the following steps:
 
 1. Retrieves the heading text of the current Org heading.
 2. Sanitizes the heading text to form a slug suitable for an ID.
@@ -774,12 +795,9 @@ new ID by performing the following steps:
 5. Updates the Org database of ID locations with the new ID and
    the file location to ensure the ID can be tracked and
    retrieved in the future.
-6. Copies the new ID to the `kill-ring', prefixed with id: for
-   easy pasting.
 
 The function returns the generated ID, or if an existing ID is
-found, it returns the existing ID after copying it to the
-`kill-ring'."
+found, it returns the existing ID."
   (interactive)
   (unless (derived-mode-p 'org-mode)
     (user-error "This function is intended to be used in Org-mode only"))
@@ -788,7 +806,6 @@ found, it returns the existing ID after copying it to the
       (cond
        ;; Check if the ID property already exists
        ((and id (stringp id) (string-match "\\S-" id))
-        (org-kill-new (concat "id:" id))
         id)
        ;; If not - retrieve the heading text and create a new ID
        (t
@@ -803,8 +820,6 @@ found, it returns the existing ID after copying it to the
           ;; Add the ID with location FILE to the database of ID locations.
           (org-id-add-location id (or org-id-overriding-file-name
 				      (buffer-file-name (buffer-base-buffer))))
-          ;; Copy the ID to the `kill-ring'
-          (org-kill-new (concat "id:" id))
           id))))))
 
 (defun my/org-id-advice (&rest args)
