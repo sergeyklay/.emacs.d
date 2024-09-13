@@ -113,7 +113,9 @@ advice for `require-package', to which ARGS are passed."
 (advice-add 'ensure-package-installed :around 'my-note-selected-package)
 
 (defconst my-selected-packages
-  '(anaconda-mode         ; Python IDE support
+  '(anzu                  ; Show current match and total matches information
+    anaconda-mode         ; Python IDE support
+    avy                   ; Jump to things in Emacs tree-style
     benchmark-init        ; Benchmarks for require and load calls
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with Consult
@@ -302,6 +304,82 @@ advice for `require-package', to which ARGS are passed."
   (when (and (file-directory-p src)
              (not (file-remote-p src)))
     (setq source-directory src)))
+
+
+;;;; Search
+(defun my-isearch-exit-and-run (function)
+  "Exit `isearch' and run FUNCTION with the current `isearch' string."
+  (let ((query (if isearch-regexp
+                   isearch-string
+                 (regexp-quote isearch-string))))
+    (isearch-update-ring isearch-string isearch-regexp)
+    (isearch-exit)
+    (funcall function query)))
+
+(defun my-occur-from-isearch ()
+  "Invoke `occur' using the current `isearch' string."
+  (interactive)
+  (my-isearch-exit-and-run #'occur))
+
+(defun my-project-search-from-isearch ()
+  "Invoke `project-find-regexp' using the current `isearch' string."
+  (interactive)
+  (my-isearch-exit-and-run #'project-find-regexp))
+
+(with-eval-after-load 'iserach
+  ;; Invoke `occur' using the current `isearch' string.
+  (define-key isearch-mode-map (kbd "C-o") #'my-occur-from-isearch)
+
+  ;; Invoke `project-find-regexp' using the current `isearch' string.
+  (define-key isearch-mode-map (kbd "C-f") #'my-project-search-from-isearch)
+
+  ;; Do incremental search forward for a symbol found near point.
+  (define-key isearch-mode-map (kbd "C-d") #'isearch-forward-symbol-at-point)
+
+  ;; Jump to search results instead of having to do multiples C-s.
+  (define-key isearch-mode-map (kbd "C-j") #'avy-isearch)
+
+  ;; Interactive replacement:
+  ;; - M-% to call `anzu-isearch-query-replace'
+  ;; - C-M-% to call `anzu-isearch-query-replace-regexp'
+  (define-key isearch-mode-map [remap isearch-query-replace]
+              #'anzu-isearch-query-replace)
+  (define-key isearch-mode-map [remap isearch-query-replace-regexp]
+              #'anzu-isearch-query-replace-regexp))
+
+(defun my-isearch-start-from-region (orig-fn &rest args)
+  "Advice to start `isearch' with the active region or symbol at point.
+
+This advice function enhances `isearch' commands by using the
+current active region as the initial search string when
+available.  If the region is active and `transient-mark-mode' is
+enabled, the region's content is used.  Otherwise, the original
+search behavior is preserved.
+
+ORIG-FN is the original isearch function being advised.
+ARGS are the arguments passed to the original isearch function."
+  (let ((search-string
+         (when (and transient-mark-mode mark-active (not (eq (mark) (point))))
+           (buffer-substring-no-properties (mark) (point)))))
+    ;; Deactivate mark if a region was used for search initialization.
+    (when search-string
+      (isearch-update-ring search-string)
+      (deactivate-mark))
+    ;; Call the original isearch function.
+    (apply orig-fn args)
+    ;; Yank the search string if set.
+    (when search-string
+      (isearch-yank-string
+       (if isearch-regexp
+           search-string
+         (regexp-quote search-string))))))
+
+;; Add the advice to all relevant isearch functions.
+(dolist (fn '(isearch-forward
+              isearch-forward-regexp
+              isearch-backward
+              isearch-backward-regexp))
+  (advice-add fn :around #'my-isearch-start-from-region))
 
 
 ;;;; Spell
@@ -1601,10 +1679,71 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (add-hook 'after-init-hook #'windmove-mode)
 
 (with-eval-after-load 'windmove
-  (global-set-key (kbd "C-x w <up>") 'windmove-up)
-  (global-set-key (kbd "C-x w <down>") 'windmove-down)
-  (global-set-key (kbd "C-x w <right>") 'windmove-right)
-  (global-set-key (kbd "C-x w <left>") 'windmove-left))
+  (global-set-key (kbd "C-x w k") 'windmove-up)
+  (global-set-key (kbd "C-x w j") 'windmove-down)
+  (global-set-key (kbd "C-x w l") 'windmove-right)
+  (global-set-key (kbd "C-x w h") 'windmove-left))
+
+(defun my-select-window (window &rest _)
+  "Select WINDOW as the active window in `display-buffer-alist'."
+  (select-window window))
+
+;; Configure display behavior for search result buffers (`occur' and `xref').
+;; This ensures consistent placement and appearance of these buffers.
+(setq display-buffer-alist
+      '(((or
+          (derived-mode . occur-mode)
+          (major-mode . xref--xref-buffer-mode))
+         ;; Reuse an existing Occur window, or display
+         ;; it at the bottom if not found.
+         (display-buffer-reuse-window display-buffer-at-bottom)
+         ;; Automatically select the window when it is displayed.
+         (body-function . my-select-window)
+         ;; Set the window height to 26% of the available space.
+         (window-height . 0.26)
+         ;; Mark the window as dedicated to its buffer, preventing
+         ;; other buffers from being displayed in this window.
+         (dedicated . t)
+         ;; Preserve the window's size when redisplaying or
+         ;; resizing other windows.
+         (preserve-size . (t . t))
+         ;; Remove the mode line to reduce visual clutter, providing
+         ;; a cleaner view focused on the search results.
+         (window-parameters . ((mode-line-format . none))))))
+
+(with-eval-after-load 'occur
+  (defun my-occur-visit-result-and-close ()
+    "Visit the occurrence at point and close the Occur window."
+    (interactive)
+    (let ((pos (occur-mode-find-occurrence)))
+      (when pos
+        (quit-window)
+        (goto-char pos))))
+
+  ;; Bind M-RET to visit the occurrence and close the window.
+  (define-key occur-mode-map (kbd "M-RET") #'my-occur-visit-result-and-close)
+
+  ;; Define `C-g` to quit the window in `occur-mode`.
+  (define-key occur-mode-map (kbd "C-g") #'quit-window)
+
+  ;; Enable `hl-line-mode` in `occur-mode` buffers.
+  (add-hook 'occur-mode-hook (lambda () (hl-line-mode 1))))
+
+(with-eval-after-load 'xref
+  (defun my-xref-visit-result-and-close ()
+    "Visit the xref at point and close the Xref window."
+    (interactive)
+    (xref-show-location-at-point)
+    (quit-window))
+
+  ;; Bind M-RET to visit the occurrence and close the window.
+  (define-key xref--xref-buffer-mode-map (kbd "M-RET") #'my-xref-visit-result-and-close)
+
+  ;; Define `C-g` to quit the window in `xref--xref-buffer-mode`.
+  (define-key xref--xref-buffer-mode-map (kbd "C-g") #'quit-window)
+
+  ;; Enable `hl-line-mode` in `xref` buffers.
+  (add-hook 'xref--xref-buffer-mode-hook (lambda () (hl-line-mode 1))))
 
 
 ;;;; Appearance
@@ -1822,7 +1961,6 @@ related to your current project."
 ;; Enable Consult for enhanced command completion.
 (global-set-key [remap switch-to-buffer]   #'consult-buffer)
 (global-set-key [remap goto-line]          #'consult-goto-line)
-(global-set-key [remap isearch-forward]    #'consult-line)
 (global-set-key [remap locate]             #'consult-locate)
 (global-set-key [remap man]                #'consult-man)
 (global-set-key [remap load-theme]         #'consult-theme)
@@ -1846,6 +1984,15 @@ related to your current project."
     (t 'consult-imenu))))
 
 (define-key my-keyboard-map (kbd "j") #'my/consult-jump-in-buffer)
+
+(defun my-isearch-consult-line-from-isearch ()
+  "Invoke `consult-line' from isearch."
+  (interactive)
+  (my-isearch-exit-and-run #'consult-line))
+
+(with-eval-after-load 'isearch
+  (define-key isearch-mode-map (kbd "C-l")
+              #'my-isearch-consult-line-from-isearch))
 
 ;; Completion of misspelled words in buffer.
 (with-eval-after-load 'flyspell
