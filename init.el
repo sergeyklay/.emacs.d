@@ -755,21 +755,39 @@ non-alphanumeric characters and replaces spaces with hyphens."
     ;; Remove trailing hyphens, downcase and trim length to 60 chars
     (string-limit (downcase (replace-regexp-in-string "-+$" "" slug)) 60)))
 
+(defun my-org-find-property (property)
+  "Find the position of the first occurrence of PROPERTY's value.
+
+Return the position of the property's value, or nil if not found.
+If narrowing is in effect, only search the visible part of the
+buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((case-fold-search t)
+	  (re (org-re-property property nil t nil)))
+      (catch 'exit
+	(while (re-search-forward re nil t)
+	  (when (org-entry-get (point) property nil t)
+	    (throw 'exit (match-beginning 3))))))))
+
 (defun my/org-goto-id-property ()
   "Move cursor to the start of the ID property value in Org heading."
   (interactive)
-  (unless (derived-mode-p 'org-mode)
-    (user-error "This function is intended to be used in Org-mode only"))
-  (let ((initial-point (point))
-        (drawer-pos nil)
+  (let ((drawer-pos nil)
         (id-pos nil))
     (save-excursion
       (org-back-to-heading t)
-      (setq drawer-pos (re-search-forward "^\\s-*:PROPERTIES:" nil t))
-      (when drawer-pos
-        (when (re-search-forward "^\\s-*:ID:\\s-+\\(.*\\)" nil t)
-              (setq id-pos (match-beginning 1)))))
-    (when id-pos
+      (let ((case-fold-search t)
+            (start (point)))
+        (outline-next-visible-heading 1)
+        (save-restriction
+          (narrow-to-region start (point))
+          (setq id-pos (my-org-find-property "ID"))
+          (when id-pos
+            (goto-char id-pos)
+            (setq drawer-pos
+                  (re-search-backward "^\\s-*:PROPERTIES:" nil t))))))
+    (when (and id-pos drawer-pos)
       (org-show-entry)
       (goto-char drawer-pos)
       (org-flag-drawer nil)
