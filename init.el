@@ -2119,31 +2119,31 @@ related to your current project."
 (require 'erc-join)
 
 ; Autojoin specific channels on Libera.Chat
-(setq erc-autojoin-channels-alist
-      '(("Libera.Chat" "#emacs" "#org-mode" "#re2c" "#systemcrafters" "#pim")))
+(setopt erc-autojoin-channels-alist
+      '(("Libera.Chat" "#emacs" "#org-mode" "#re2c" "#systemcrafters")))
 
 ;; Set autojoin timing to wait for ident response
-(setq erc-autojoin-timing 'ident)
+(setopt erc-autojoin-timing 'ident)
 
 ;; Set the user's full name in ERC.  You can set `user-full-name' by setting
 ;; NAME environment variable in your system.
-(setq erc-user-full-name user-full-name)
+(setopt erc-user-full-name user-full-name)
 
 ;; Hide certain messages (JOIN, PART, QUIT, NICK) in chat buffers
-(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
-(setq erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+(setopt erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
+(setopt erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
 
 ;; Set the lurker threshold time to 12 hours (43200 seconds)
-(setq erc-lurker-threshold-time 43200)
+(setopt erc-lurker-threshold-time 43200)
 
 ;; Disable prompting for password when connecting to servers
-(setq erc-prompt-for-password nil)
+(setopt erc-prompt-for-password nil)
 
 (require 'erc-fill)
 
 ;; Set the fill function to erc-fill-static and center lines
-(setq erc-fill-function 'erc-fill-static)
-(setq erc-fill-static-center 22)
+(setopt erc-fill-function 'erc-fill-static)
+(setopt erc-fill-static-center 22)
 
 (defun my|setup-erc-modules ()
   "Set up additional modules for ERC."
@@ -2183,34 +2183,34 @@ This results in a filename of the form #channel@server.txt, for example:
     (convert-standard-filename file)))
 
 ;; Organize chat history with timestamped directories.
-(setq erc-log-channels-directory #'my-erc-monthly-log-directory)
+(setopt erc-log-channels-directory #'my-erc-monthly-log-directory)
 
 ;; Keep logs succinct and identifiable by channel and server.
-(setq erc-generate-log-file-name-function #'my-erc-log-file-name-short)
+(setopt erc-generate-log-file-name-function #'my-erc-log-file-name-short)
 
 ;; Seamlessly integrate past conversations into current session.
-(setq erc-log-insert-log-on-open t)
+(setopt erc-log-insert-log-on-open t)
 
 ;; Leave the chat without baggage—no auto-saving on exit.
-(setq erc-save-buffer-on-part nil)
+(setopt erc-save-buffer-on-part nil)
 
 ;; Exit private chats without leaving a paper trail.
-(setq erc-save-queries-on-quit nil)
+(setopt erc-save-queries-on-quit nil)
 
 ;; Capture every word as it’s typed—no lag in logging.
-(setq erc-log-write-after-insert t)
+(setopt erc-log-write-after-insert t)
 
 ;; Ensure every message you send is instantly preserved.
-(setq erc-log-write-after-send t)
+(setopt erc-log-write-after-send t)
 
 ;;;;; ERC Services Configuration
 (require 'erc-services)
 
 ;; Skip the redundant password prompt—use stored credentials instead.
-(setq erc-prompt-for-nickserv-password nil)
+(setopt erc-prompt-for-nickserv-password nil)
 
 ;; Let auth-source handle your NickServ credentials with discretion.
-(setq erc-use-auth-source-for-nickserv-password t)
+(setopt erc-use-auth-source-for-nickserv-password t)
 
 ;; Enable services to handle NickServ and other IRC services.
 (erc-services-mode 1)
@@ -2225,7 +2225,7 @@ This results in a filename of the form #channel@server.txt, for example:
 (require 'erc-track)
 
 ;; Ignore the noise—focus only on the messages that matter.
-(setq erc-track-exclude-types
+(setopt erc-track-exclude-types
       '("JOIN" "MODE" "NICK" "PART" "QUIT"
         "301"   ; away notice
         "305"   ; return from awayness
