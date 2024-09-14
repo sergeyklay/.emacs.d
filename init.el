@@ -57,6 +57,11 @@ Set DEBUG=1 in the command line or use --debug-init to enable this.")
             gcs-done)))
 
 
+;;;; Personal Info
+;; Used for `gnus', `erc', and so non.
+(setopt user-full-name "Serghei Iakovlev")
+
+
 ;;;; Packages management
 ;; Package management in Emacs can be done in several ways.  I personally like
 ;; classic one with `package.el'.  Some will prefer straight.el, use-package,
