@@ -1751,39 +1751,37 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
          ;; a cleaner view focused on the search results.
          (window-parameters . ((mode-line-format . none))))))
 
-(with-eval-after-load 'occur
-  (defun my-occur-visit-result-and-close ()
-    "Visit the occurrence at point and close the Occur window."
-    (interactive)
-    (let ((pos (occur-mode-find-occurrence)))
-      (when pos
-        (quit-window)
-        (goto-char pos))))
+(defun my-occur-visit-result-and-close ()
+  "Visit the occurrence at point and close the Occur window."
+  (interactive)
+  (let ((pos (occur-mode-find-occurrence)))
+    (when pos
+      (quit-window)
+      (goto-char pos))))
 
-  ;; Bind M-RET to visit the occurrence and close the window.
-  (define-key occur-mode-map (kbd "M-RET") #'my-occur-visit-result-and-close)
+;; Bind M-RET to visit the occurrence and close the window.
+(define-key occur-mode-map (kbd "M-RET") #'my-occur-visit-result-and-close)
 
-  ;; Define `C-g` to quit the window in `occur-mode`.
-  (define-key occur-mode-map (kbd "C-g") #'quit-window)
+;; Define `C-g` to quit the window in `occur-mode`.
+(define-key occur-mode-map (kbd "C-g") #'quit-window)
 
-  ;; Enable `hl-line-mode` in `occur-mode` buffers.
-  (add-hook 'occur-mode-hook (lambda () (hl-line-mode 1))))
+;; Enable `hl-line-mode` in `occur-mode` buffers.
+(add-hook 'occur-mode-hook (lambda () (hl-line-mode 1)))
 
-(with-eval-after-load 'xref
-  (defun my-xref-visit-result-and-close ()
-    "Visit the xref at point and close the Xref window."
-    (interactive)
-    (xref-show-location-at-point)
-    (quit-window))
+(defun my-xref-visit-result-and-close ()
+  "Visit the xref at point and close the Xref window."
+  (interactive)
+  (xref-show-location-at-point)
+  (quit-window))
 
-  ;; Bind M-RET to visit the occurrence and close the window.
-  (define-key xref--xref-buffer-mode-map (kbd "M-RET") #'my-xref-visit-result-and-close)
+;; Bind M-RET to visit the occurrence and close the window.
+(define-key xref--xref-buffer-mode-map (kbd "M-RET") #'my-xref-visit-result-and-close)
 
-  ;; Define `C-g` to quit the window in `xref--xref-buffer-mode`.
-  (define-key xref--xref-buffer-mode-map (kbd "C-g") #'quit-window)
+;; Define `C-g` to quit the window in `xref--xref-buffer-mode`.
+(define-key xref--xref-buffer-mode-map (kbd "C-g") #'quit-window)
 
-  ;; Enable `hl-line-mode` in `xref` buffers.
-  (add-hook 'xref--xref-buffer-mode-hook (lambda () (hl-line-mode 1))))
+;; Enable `hl-line-mode` in `xref` buffers.
+(add-hook 'xref--xref-buffer-mode-hook (lambda () (hl-line-mode 1)))
 
 
 ;;;; Appearance
