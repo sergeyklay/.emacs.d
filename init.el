@@ -391,21 +391,21 @@ ARGS are the arguments passed to the original isearch function."
 (require 'ispell)
 
 ;; Set the program name to hunspell which is the spell checker we are using.
-(setq ispell-program-name (executable-find "hunspell"))
+(setopt ispell-program-name (executable-find "hunspell"))
 
 ;; Automatically save the personal dictionary without asking for confirmation.
-(setq ispell-silently-savep t)
+(setopt ispell-silently-savep t)
 
 ;; Define the default dictionary to be used.  You can change "en_US" to any
 ;; dictionary that is installed and available on your system.
-(setq ispell-local-dictionary "en_US")
+(setopt ispell-local-dictionary "en_US")
 
 ;; Configure the list of my dictionaries.
 ;; Note: On macOS, Homebrew does not provide dictionaries by default.
 ;; You will need to install them manually.  For more information on how
 ;; to install dictionaries, visit:
 ;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
-(setq ispell-local-dictionary-alist
+(setopt ispell-local-dictionary-alist
       '(("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
          ("-d" "en_US") nil utf-8)
         ("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
@@ -413,22 +413,13 @@ ARGS are the arguments passed to the original isearch function."
         ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
          ("-d" "russian-aot-ieyo") nil utf-8)))
 
-;; Specify that we are using hunspell, not aspell.
-(setq ispell-really-aspell nil)
-(setq ispell-really-hunspell t)
-
-;; Configure flyspell to work with hunspell.
-(when (and ispell-program-name (executable-find ispell-program-name))
-  ;; Add spell-checking in comments for all programming language modes
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+;; Be silent when checking words to avoid unnecessary messages.
+(setopt flyspell-issue-message-flag nil)
 
 (with-eval-after-load 'flyspell
   ;; These keys are intended for `embark'
   (dolist (key '("C-;" "C-," "C-."))
-    (unbind-key key flyspell-mode-map))
-
-  ;; Be silent when checking words to avoid unnecessary messages.
-  (setq flyspell-issue-message-flag nil))
+    (unbind-key key flyspell-mode-map)))
 
 ;; Load `writegood-mode' and set up hooks.
 (with-eval-after-load 'writegood-mode
