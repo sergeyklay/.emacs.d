@@ -1,8 +1,8 @@
 ;; passive-voice-check.el --- Check for passive voice in documentation. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2024 Serghei Iakovlev <gnu@serghei.pl>
 
-;; Author: Serghei Iakovlev <egrep@protonmail.ch>
+;; Author: Serghei Iakovlev <gnu@serghei.pl>
 ;; URL: https://github.com/sergeyklay/.emacs.d
 
 ;; This file is NOT part of Emacs.

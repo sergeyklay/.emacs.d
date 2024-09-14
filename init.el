@@ -1,8 +1,8 @@
 ;;; init.el --- Initialization file. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2024 Serghei Iakovlev <egrep@protonmail.ch>
+;; Copyright (C) 2019-2024 Serghei Iakovlev <gnu@serghei.pl>
 
-;; Author: Serghei Iakovlev <egrep@protonmail.ch>
+;; Author: Serghei Iakovlev <gnu@serghei.pl>
 ;; URL: https://github.com/sergeyklay/.emacs.d
 ;; Keywords: configuration, misc
 
