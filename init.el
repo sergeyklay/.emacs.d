@@ -456,11 +456,14 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (unless (eq (window-system) 'w32)
   ;; Set pinentry mode to loopback for all systems except Windows.
   ;; For more see "man 1 gpg" for the option "--pinentry-mode".
-  (setq epg-pinentry-mode 'loopback))
+  (setopt epg-pinentry-mode 'loopback))
+
+;; GnuPG ID of your default identity.
+(setq epg-user-id "1E0B5331219BEA88")
 
 ;; Specify the key to use for file encryption
 ;; Also used for `org-crypt-key' (see bellow).
-(setq epa-file-encrypt-to '("1E0B5331219BEA88"))
+(setq epa-file-encrypt-to `(,epg-user-id))
 
 ;; Enable automatic encryption/decryption of *.gpg files
 (require 'epa-file)
