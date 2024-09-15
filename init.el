@@ -939,9 +939,8 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (define-key my-keyboard-map (kbd "P") #'my/org-mark-as-project)
 
 ;;;;; Org Links
-
 ;; Alist of link abbreviations to link certain kind of data.
-(setq org-link-abbrev-alist
+(setopt org-link-abbrev-alist
       ;; `org-contacts-link-open' from `org-contacts' has very unusual and not
       ;; acceptable behavior for me.  Maybe I will write a bug report or submit
       ;; a patch at some point, but as a temporary solution - I am using
@@ -949,25 +948,25 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
       `(("contact" . ,(concat (expand-file-name "contacts.org" org-directory)
                               "::"))))
 ;;;;; Org Crypt
+;; Set my encrypt key from `epa-file-encrypt-to' (see above).
+(setopt org-crypt-key epg-user-id)
+
+;; Do not ask for disabling `auto-save-mode'.
+(setopt org-crypt-disable-auto-save nil)
+
 ;; Check if GPG is available, then require `org-crypt'.
 ;; Otherwise, display a warning.
 (if my-gpg-program
-    (require 'org-crypt)
+    (progn
+      (require 'org-crypt)
+      ;; Encrypt all entries before saving.
+      (org-crypt-use-before-save-magic))
   (warn "GPG is not available. `org-crypt' could not be loaded."))
-
-;; Set my encrypt key from `epa-file-encrypt-to' (see above).
-(setq org-crypt-key epa-file-encrypt-to)
-
-;; Do not ask for disabling `auto-save-mode'.
-(setq org-crypt-disable-auto-save nil)
-
-;; Encrypt all entries before saving.
-(org-crypt-use-before-save-magic)
 
 ;; Projects are tagged with :project: and :crypt: is used to mark headings
 ;; to be encrypted.  I don't want all subitems to pop up in the corresponding
 ;; agenda view.
-(setq org-tags-exclude-from-inheritance '("project" "crypt"))
+(setopt org-tags-exclude-from-inheritance '("project" "crypt"))
 
 ;;;;; Org Contib
 (with-eval-after-load 'org
