@@ -122,7 +122,6 @@ advice for `require-package', to which ARGS are passed."
     anaconda-mode         ; Python IDE support
     avy                   ; Jump to things in Emacs tree-style
     benchmark-init        ; Benchmarks for require and load calls
-    bnf-mode              ; Major mode for editing BNF grammars
     cask-mode             ; Major mode for editing Cask files
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with Consult
@@ -211,6 +210,29 @@ advice for `require-package', to which ARGS are passed."
          (current-buffer))))))
 
 (define-key my-keyboard-map (kbd "s") #'my/switch-to-scratch)
+
+(defun my/reload-current-mode ()
+  "Reload the current major mode.
+
+This function temporarily switches the current buffer's major
+mode to `fundamental-mode' and then back to the original major
+mode.  This is useful when you've re-evaluated a major mode's
+definition (e.g., using `eval-buffer' on the mode's source file)
+and want to apply the changes to the current buffer.
+
+After modifying and evaluating your mode's source code, call this
+function to refresh the mode in the mode related buffer and see
+the changes take effect."
+  (interactive)
+  (let ((current-mode major-mode)
+        (load-prefer-newer t))
+    (fundamental-mode)
+    (when (locate-library (concat (symbol-name current-mode) ".el"))
+      (unload-feature current-mode)
+      (load (concat (symbol-name current-mode) ".el")))
+    (funcall current-mode)))
+
+(global-set-key (kbd "C-<f5>") #'my/reload-current-mode)
 
 
 ;;;; Backup
@@ -2338,6 +2360,15 @@ This function serves multiple purposes:
 
 
 ;;;; Programming Languages, Markup and Configurations.
+;; Since I’m the author and maintainer of `bnf-mode', I use my local version
+;; instead of the installed package.  This lets me tweak the mode however I
+;; want, experiment with it, and instantly apply changes in buffers thanks to
+;; `my/reload-current-mode'.
+(if (file-exists-p "~/work/bnf-mode/bnf-mode.el")
+    (progn
+      (add-to-list 'load-path "~/work/bnf-mode")
+      (load "bnf-mode.el")))
+
 ;; Associate `bnf-mode' with .bnf files.
 (add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode))
 
