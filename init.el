@@ -385,6 +385,35 @@ ARGS are the arguments passed to the original isearch function."
               isearch-backward-regexp))
   (advice-add fn :around #'my-isearch-start-from-region))
 
+(defun my-occur-visit-result-and-close ()
+  "Visit the occurrence at point and close the Occur window."
+  (interactive)
+  (let ((pos (occur-mode-find-occurrence)))
+    (when pos
+      (quit-window)
+      (goto-char pos))))
+
+;; Bind M-<return> to visit the occurrence and close the window.
+(define-key occur-mode-map (kbd "M-<return>") #'my-occur-visit-result-and-close)
+
+;; Enable `hl-line-mode` in `occur-mode` buffers.
+(add-hook 'occur-mode-hook (lambda () (hl-line-mode 1)))
+
+;; Use ripgrep if installed
+(when (executable-find "rg")
+  (setopt xref-search-program 'ripgrep))
+
+(defun my|xref-setup-environment ()
+  "Set up a tailored environment for `xref--xref-buffer-mode' buffers."
+  ;; Enable `hl-line-mode' in `xref' buffers.
+  (hl-line-mode 1)
+
+  ;; Bind M-<return> to visit the occurrence and close the window.
+  (define-key xref--xref-buffer-mode-map (kbd "M-<return>")
+              #'xref-quit-and-goto-xref))
+
+(add-hook 'xref--xref-buffer-mode-hook #'my|xref-setup-environment)
+
 
 ;;;; Spell
 ;; Configuration for `ispell' to use hunspell as the spell checker.
@@ -1742,38 +1771,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
          ;; a cleaner view focused on the search results.
          (window-parameters . ((mode-line-format . none))))))
 
-(defun my-occur-visit-result-and-close ()
-  "Visit the occurrence at point and close the Occur window."
-  (interactive)
-  (let ((pos (occur-mode-find-occurrence)))
-    (when pos
-      (quit-window)
-      (goto-char pos))))
-
-;; Bind M-RET to visit the occurrence and close the window.
-(define-key occur-mode-map (kbd "M-RET") #'my-occur-visit-result-and-close)
-
-;; Define `C-g` to quit the window in `occur-mode`.
-(define-key occur-mode-map (kbd "C-g") #'quit-window)
-
-;; Enable `hl-line-mode` in `occur-mode` buffers.
-(add-hook 'occur-mode-hook (lambda () (hl-line-mode 1)))
-
-(defun my-xref-visit-result-and-close ()
-  "Visit the xref at point and close the Xref window."
-  (interactive)
-  (xref-show-location-at-point)
-  (quit-window))
-
-;; Bind M-RET to visit the occurrence and close the window.
-(define-key xref--xref-buffer-mode-map (kbd "M-RET") #'my-xref-visit-result-and-close)
-
-;; Define `C-g` to quit the window in `xref--xref-buffer-mode`.
-(define-key xref--xref-buffer-mode-map (kbd "C-g") #'quit-window)
-
-;; Enable `hl-line-mode` in `xref` buffers.
-(add-hook 'xref--xref-buffer-mode-hook (lambda () (hl-line-mode 1)))
-
 
 ;;;; Appearance
 
@@ -1919,10 +1916,6 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; Auto clean up zombie projects from `project-list-file'
 (run-at-time "07:00pm" (* 24 60 60) 'project-forget-zombie-projects)
-
-;; Use ripgrep if installed
-(when (executable-find "rg")
-  (setq xref-search-program 'ripgrep))
 
 (defun my/project-switch-project (dir)
   "Switch to another project by running an Emacs command.
