@@ -123,6 +123,7 @@ advice for `require-package', to which ARGS are passed."
     avy                   ; Jump to things in Emacs tree-style
     benchmark-init        ; Benchmarks for require and load calls
     bnf-mode              ; Major mode for editing BNF grammars
+    cask-mode             ; Major mode for editing Cask files
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with Consult
     csv-mode              ; CSV file editing mode
@@ -2464,6 +2465,9 @@ This function serves multiple purposes:
   (add-hook 'python-mode-hook #'anaconda-eldoc-mode))
 
 ;;;;; Lisp and company
+;; Associate `cask-mode' with Cask files.
+(add-to-list 'auto-mode-alist '("Cask'" . cask-mode))
+
 (defun my-elisp-outline-level ()
   "Calculate the outline level based on the number of leading semicolons.
 
