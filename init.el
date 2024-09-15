@@ -122,6 +122,7 @@ advice for `require-package', to which ARGS are passed."
     anaconda-mode         ; Python IDE support
     avy                   ; Jump to things in Emacs tree-style
     benchmark-init        ; Benchmarks for require and load calls
+    bnf-mode              ; Major mode for editing BNF grammars
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with Consult
     csv-mode              ; CSV file editing mode
@@ -2337,6 +2338,9 @@ This function serves multiple purposes:
 
 
 ;;;; Programming Languages, Markup and Configurations.
+;; Associate `bnf-mode' with .bnf files.
+(add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode))
+
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
