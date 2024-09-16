@@ -2364,10 +2364,9 @@ This function serves multiple purposes:
 ;; instead of the installed package.  This lets me tweak the mode however I
 ;; want, experiment with it, and instantly apply changes in buffers thanks to
 ;; `my/reload-current-mode'.
-(if (file-exists-p "~/work/bnf-mode/bnf-mode.el")
-    (progn
-      (add-to-list 'load-path "~/work/bnf-mode")
-      (load "bnf-mode.el")))
+(when (file-exists-p "~/work/bnf-mode/bnf-mode.el")
+  (add-to-list 'load-path "~/work/bnf-mode")
+  (load "bnf-mode.el"))
 
 ;; Associate `bnf-mode' with .bnf files.
 (add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode))
