@@ -2399,9 +2399,7 @@ This function serves multiple purposes:
 
   ;; Highlight current element and column.
   (setopt web-mode-enable-current-element-highlight t)
-  (setopt web-mode-enable-current-column-highlight t)
-
-  (message "LOADED MY HOOK"))
+  (setopt web-mode-enable-current-column-highlight t))
 
 (add-hook 'web-mode-hook #'my|setup-web-mode-environment)
 
