@@ -148,7 +148,8 @@ advice for `require-package', to which ARGS are passed."
     vertico-prescient     ; Prescient integration with Vertico
     which-key             ; Display available keybindings
     writegood-mode        ; Improve writing style
-    yaml-mode)            ; Major mode for YAML files
+    yaml-mode             ; Major mode for YAML files
+    web-mode)             ; Web template editing mode for emacs
    "A list of packages that are selected for installation.")
 
 ;; Install packages as soon as possible.
@@ -2366,10 +2367,43 @@ This function serves multiple purposes:
 ;; `my/reload-current-mode'.
 (when (file-exists-p "~/work/bnf-mode/bnf-mode.el")
   (add-to-list 'load-path "~/work/bnf-mode")
-  (load "bnf-mode.el"))
+  (load "bnf-mode.el")
 
-;; Associate `bnf-mode' with .bnf files.
-(add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode))
+  ;; Associate `bnf-mode' with .bnf files.
+  (add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode)))
+
+;; Web-mode is an autonomous emacs major-mode for editing web templates.
+;; HTML documents can embed parts (CSS / JavaScript) and blocks
+;; (client / server side).
+(require 'web-mode)
+
+(defconst my-web-mode-extensions
+  '("\\.html?\\'"
+    "\\.js[x]?\\'"
+    "\\.ts[x]?\\'")
+  "A list of file extensions to associate with `web-mode'.")
+
+;; Associate file extensions with web-mode.
+(dolist (extension my-web-mode-extensions)
+  (add-to-list 'auto-mode-alist `(,extension . web-mode)))
+
+(defun my|setup-web-mode-environment ()
+  "Custom configurations for web-mode."
+  ;; Enable rainbow-mode for color highlighting.
+  (rainbow-mode 1)
+
+  ;; Set indentation offsets.
+  (setopt web-mode-markup-indent-offset 2)
+  (setopt web-mode-css-indent-offset 2)
+  (setopt web-mode-code-indent-offset 2)
+
+  ;; Highlight current element and column.
+  (setopt web-mode-enable-current-element-highlight t)
+  (setopt web-mode-enable-current-column-highlight t)
+
+  (message "LOADED MY HOOK"))
+
+(add-hook 'web-mode-hook #'my|setup-web-mode-environment)
 
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
@@ -2380,11 +2414,11 @@ This function serves multiple purposes:
 ;; Defer loading `rainbow-mode' until `css-mode' is activated.
 (add-hook 'css-mode-hook #'rainbow-mode)
 
+;; TODO: Currently it is `web-mode', but I'll sortout with JS a bit later.
 ;; Associate `js-mode' with .js files.
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
-
+;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
 ;; Set the indentation level for JavaScript files to 2 spaces.
-(setq js-indent-level 2)
+;; (setq js-indent-level 2)
 
 ;; Associate `xml-mode' with .plist files.
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
