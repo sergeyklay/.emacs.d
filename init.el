@@ -1685,21 +1685,10 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (define-key my-keyboard-map (kbd "b") #'my/org-move-bookmark-to-notes)
 
 ;;;;; Org Refile
-(defun my-org-opened-buffer-files ()
-  "Return the list of org files currently opened in Emacs."
-  (delq nil
-        (mapcar (lambda (x)
-                  (if (and (buffer-file-name x)
-                           (string-match "\\.org$"
-                                         (buffer-file-name x)))
-                      (buffer-file-name x)))
-                (buffer-list))))
-
 ;; Refile targets include this file and any file contributing
 ;; to the agenda - up to 4 levels deep.
 (setq org-refile-targets
       '((nil :maxlevel . 4)  ; nil means current buffer
-        (my-org-opened-buffer-files :maxlevel . 4)
         (org-agenda-files :maxlevel . 4)))
 
 ;; Targets start with the file name allows creating level 1 tasks.
