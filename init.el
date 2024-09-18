@@ -212,6 +212,13 @@ advice for `require-package', to which ARGS are passed."
 
 (define-key my-keyboard-map (kbd "s") #'my/switch-to-scratch)
 
+(defun my/insert-current-date-iso-8601 ()
+  "Insert the current date and time in ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ)."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%dT%H:%M:%SZ" (current-time) t)))
+
+(define-key my-keyboard-map (kbd "D") #'my/insert-current-date-iso-8601)
+
 (defun my/reload-current-mode ()
   "Reload the current major mode.
 
