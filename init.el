@@ -564,7 +564,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
     (holiday-fixed 5 9 "День перемоги (Ukraine)")
     (holiday-fixed 6 28 "День Конституції України (Ukraine)")
     (holiday-fixed 8 24 "День Незалежності України (Ukraine)")
-    (holiday-fixed 10 14 "День захисника України (Ukraine)")
+    (holiday-fixed 10 1 "День захисників і захисниць України (Ukraine)")
     (holiday-fixed 12 25 "Різдво Христове (Ukraine)"))
   "Ukrainian public holidays.")
 
