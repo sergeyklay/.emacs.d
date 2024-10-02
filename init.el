@@ -137,7 +137,7 @@ advice for `require-package', to which ARGS are passed."
     markdown-mode         ; Major mode for Markdown files
     orderless             ; Flexible completion style
     org-cliplink          ; Capture clipboard URLs to Org mode
-    org-contacts          ; Contacts management with Org mode
+    ox-hugo               ; Blogging using org-mode
     pass                  ; Interface to the Password Store
     password-store        ; Emacs interface for password-store
     prescient             ; Predictive sorting and filtering
@@ -968,15 +968,6 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 
 (define-key my-keyboard-map (kbd "P") #'my/org-mark-as-project)
 
-;;;;; Org Links
-;; Alist of link abbreviations to link certain kind of data.
-(setopt org-link-abbrev-alist
-      ;; `org-contacts-link-open' from `org-contacts' has very unusual and not
-      ;; acceptable behavior for me.  Maybe I will write a bug report or submit
-      ;; a patch at some point, but as a temporary solution - I am using
-      ;; "contact:" instead of "org-contact:" provided by `org-contacts'.
-      `(("contact" . ,(concat (expand-file-name "contacts.org" org-directory)
-                              "::"))))
 ;;;;; Org Crypt
 ;; Set my encrypt key from `epa-file-encrypt-to' (see above).
 (setopt org-crypt-key epg-user-id)
@@ -1002,38 +993,10 @@ see: https://karl-voit.at/2019/11/03/org-projects/"
 (with-eval-after-load 'org
   ;; Take a URL from the clipboard and inserts an org-mode link.
   (require 'org-cliplink)
-  (global-set-key (kbd "C-x p i") #'org-cliplink)
+  (global-set-key (kbd "C-x p i") #'org-cliplink))
 
-  ;; Managing contacts into org-mode.
-  (with-eval-after-load 'org-contacts
-    (setq org-contacts-files
-          `(,(expand-file-name "contacts.org" org-directory)))))
-
-(defun my/org-contacts-search ()
-  "Search and select a contact.
-
-This function searches and select a contact with tags starting
-with @, excluding inherited tags and TODO headings."
-  (interactive)
-  (unless (boundp 'org-contacts-files)
-    (require 'org-contacts))
-  (let ((contact-file (car org-contacts-files))
-        (starting-point (current-buffer)))
-    (if (and contact-file (file-exists-p contact-file))
-        (condition-case _err
-            (progn
-              (find-file contact-file)
-              ;; Disable tag inheritance temporarily.
-              (let ((org-use-tag-inheritance nil))
-                ;; Run `consult-org-heading' with the match pattern to filter
-                ;; desired headings with direct tags starting with '@'.
-                (consult-org-heading "+{@*}-TODO")))
-          ;; On error, switch back to the starting buffer.
-          (error (switch-to-buffer starting-point)))
-      ;; Display an error message if the contacts file is not found.
-      (message "Org contacts file not found."))))
-
-(define-key my-keyboard-map (kbd "C-c") #'my/org-contacts-search)
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
 
 ;;;;; Org TODO
 ;; Define my default keywords as workflow states.
@@ -1078,24 +1041,6 @@ with @, excluding inherited tags and TODO headings."
    "- [ ] Link on tag pages?\n\n")
   "A template for capturing blog-related ideas.")
 
-(defconst my-org-contacts-template
-  (concat
-   "* %^{Name} %^g\n"
-   ":PROPERTIES:\n"
-   ":TYPE: %^{PROMPT|person|person|company|list|other}\n"
-   ":EMAIL: %^{Email}\n"
-   ":PHONE: %^{Phone}\n"
-   ":STREET:\n"
-   ":POSTALCODE:\n"
-   ":CITY:\n"
-   ":COUNTRY:\n"
-   ":BIRTHDAY: %^{Birthday}t\n"
-   ":URL:\n"
-   ":NOTE: %^{NOTE}\n"
-   ":CREATED: %U\n"
-   ":END:\n\n")
-  "A template for capturing contact records.")
-
 ;; Default target for capturing notes.  Also used for mobile sync.
 ;; See `org-mobile-inbox-for-pull' bellow.
 (setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
@@ -1106,9 +1051,6 @@ with @, excluding inherited tags and TODO headings."
          ,my-org-capture-template-simple :empty-lines 1)
         ("e" "Event" entry (file+headline "misc.org" "Events")
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-        ;; I prefer refile this later manually into proper group.
-        ;; "" means `org-default-notes-file'.
-        ("k" "Contact" entry (file "") ,my-org-contacts-template :empty-lines 1)
         ("t" "Trip Checklist" checkitem
          (file+headline "misc.org" "Trip Checklist"))
         ("b" "Bookmark" entry (file+headline "notes.org" "Bookmarks")
@@ -1132,11 +1074,6 @@ with @, excluding inherited tags and TODO headings."
          "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)))
 
 (global-set-key (kbd "C-c c") #'org-capture)
-
-;; Load `org-contacts' as late as possible to optimize Emacs startup speed.
-;; Profiling showed that loading `org-contacts' and its dependencies takes
-;; over 500 ms, so delaying it helps reduce initial startup time.
-(add-hook 'org-capture-mode-hook (lambda () (require 'org-contacts)))
 
 ;;;;; Org Mobile
 ;; Set up for syncing Org files between current workstation and mobile app.
@@ -1285,6 +1222,9 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
   (consult-ripgrep org-directory))
 
 (define-key my-keyboard-map (kbd "C-s") #'my/org-search-agenda)
+
+;; Show diaries in my agenda.
+(setopt org-agenda-include-diary t)
 
 ;; Do not initialize agenda Org files when generating (only) agenda.
 (setq org-agenda-inhibit-startup t)
