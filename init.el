@@ -132,6 +132,7 @@ advice for `require-package', to which ARGS are passed."
     flyspell-correct      ; Correct spelling with popup menus
     git-modes             ; Modes for Git-related files
     htmlize               ; Convert buffer text to HTML
+    json-mode             ; Major mode for editing JSON files
     magit                 ; The Git porcelain inside Emacs
     marginalia            ; Annotations for completions
     markdown-mode         ; Major mode for Markdown files
@@ -2307,6 +2308,9 @@ This function serves multiple purposes:
 
   ;; Associate `bnf-mode' with .bnf files.
   (add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode)))
+
+;; Associate `json-mode' with .json and .jsonc files.
+(add-to-list 'auto-mode-alist '("\\.jsonc?\\'" . json-mode))
 
 ;; Web-mode is an autonomous emacs major-mode for editing web templates.
 ;; HTML documents can embed parts (CSS / JavaScript) and blocks
