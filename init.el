@@ -1777,10 +1777,12 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 ;; Fonts
 (when (display-graphic-p)
-  (when (member "JetBrainsMono Nerd Font Mono" (font-family-list))
+  (when (member "JetBrains Mono" (font-family-list))
     (set-face-attribute 'default nil
-                        :family "JetBrainsMono Nerd Font Mono"
-                        :height 130))
+                        :family "JetBrains Mono"
+                        :width 'normal
+                        :height (if (eq system-type 'gnu/linux) 110 130)
+                        :weight 'regular))
 
   ;; Use the same font for fixed-pitch face as for default face.
   (set-face-attribute 'fixed-pitch nil
