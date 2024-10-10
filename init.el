@@ -449,31 +449,42 @@ ARGS are the arguments passed to the original isearch function."
 
 
 ;;;; Spell
-;; Configuration for `ispell' to use hunspell as the spell checker.
 (require 'ispell)
-
-;; Set the program name to hunspell which is the spell checker we are using.
-(setopt ispell-program-name (executable-find "hunspell"))
 
 ;; Automatically save the personal dictionary without asking for confirmation.
 (setopt ispell-silently-savep t)
 
-;; Define the default dictionary to be used.  You can change "en_US" to any
-;; dictionary that is installed and available on your system.
-(setopt ispell-local-dictionary "en_US")
-
 ;; Configure the list of my dictionaries.
 ;; Note: On macOS, Homebrew does not provide dictionaries by default.
-;; You will need to install them manually.  For more information on how
-;; to install dictionaries, visit:
-;; URL `https://passingcuriosity.com/2017/emacs-hunspell-and-dictionaries'
-(setopt ispell-local-dictionary-alist
-      '(("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
-         ("-d" "en_US") nil utf-8)
-        ("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
-         ("-d" "pl") nil utf-8)
-        ("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
-         ("-d" "russian-aot-ieyo") nil utf-8)))
+;; You will need to install them manually.
+(let ((valid-dicts (ispell-valid-dictionary-list))
+      (dicts-alist nil))
+
+  ;; Add English dictionary
+  (when (member "en_US" valid-dicts)
+    ;; Define the default dictionary to be used.
+    (setopt ispell-local-dictionary "en_US")
+    (push '("english" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+            ("-d" "en_US") nil utf-8)
+          dicts-alist))
+
+  ;; Add Polish dictionary
+  (when (member "pl" valid-dicts)
+    (push '("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+            ("-d" "pl") nil utf-8)
+          dicts-alist))
+
+  ;; Add Russian dictionary
+  (let ((ru-dict (cond
+                  ((member "ru-yeyo" valid-dicts) "ru-yeyo")
+                  ((member "russian-aot-ieyo" valid-dicts) "russian-aot-ieyo")
+                  (t nil))))
+    (when ru-dict
+      (push `("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
+              ("-d" ,ru-dict) nil utf-8)
+            dicts-alist)))
+
+  (setopt ispell-local-dictionary-alist dicts-alist))
 
 ;; Be silent when checking words to avoid unnecessary messages.
 (setopt flyspell-issue-message-flag nil)

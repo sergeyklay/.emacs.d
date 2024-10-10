@@ -75,7 +75,6 @@ I have built this configuration with the following tools in mind:
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
 - [[https://imagemagick.org][Imagemagick (=convert=)]]
 - [[https://www.ghostscript.com/][Ghostscript (=gs=)]]
-- [[https://hunspell.github.io/][hunspell (=hunspell=)]]
 - [[https://pandoc.org/][Pandoc (=pandoc=)]]
 - [[https://www.passwordstore.org/][The standard Unix password manager (=pass=)]]
 - [[https://gnutls.org/][GnuTLS]]
