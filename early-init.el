@@ -60,9 +60,7 @@
 (setq tool-bar-mode nil)
 (when (fboundp 'set-scroll-bar-mode)
   (set-scroll-bar-mode nil))
-
-;; Currently I use menubar on graphical mode.
-(when (and (not (display-graphic-p)) (fboundp 'menu-bar-mode))
+(when (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 
 ;; Reduce rendering/line scan work by not rendering cursors or regions in
