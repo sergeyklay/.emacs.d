@@ -31,7 +31,7 @@ I adhere to the following guiding principles in this configuration:
   understandable.
 - My setup should work seamlessly across different operating systems,
   providing a consistent experience. These days it's somewhat geared
-  towards macOS, but it also should work on Linux and I hope Windows.
+  towards Linux, but it also should work on macOS and I hope Windows.
 - The goal is to maintain a setup that is functional and easy to
   manage, without pushing Emacs to its limits or adding features for
   the sake of novelty.
