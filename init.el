@@ -2321,6 +2321,8 @@ This function serves multiple purposes:
 ;; Associate `json-mode' with .json and .jsonc files.
 (add-to-list 'auto-mode-alist '("\\.jsonc?\\'" . json-mode))
 
+(add-hook 'json-mode-hook (lambda () (hs-minor-mode 1)))
+
 ;; Web-mode is an autonomous emacs major-mode for editing web templates.
 ;; HTML documents can embed parts (CSS / JavaScript) and blocks
 ;; (client / server side).
