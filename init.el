@@ -659,14 +659,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 
 
 ;;;; Organization
-(defconst my-org-webdaw-path
-  (expand-file-name
-   "Notes"
-   (expand-file-name
-    "Dropbox"
-    (expand-file-name "~")))
-  "Common directory for export/import Org files and agendas.")
-
 (require 'org)
 
 (with-eval-after-load 'org
