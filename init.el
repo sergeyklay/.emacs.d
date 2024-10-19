@@ -2310,8 +2310,53 @@ This function serves multiple purposes:
 
 ;;;; News, Feeds and Mail
 
-;; I use a dedicated (not public yet) configuration for gnus.
-(define-key my-keyboard-map (kbd "g") #'gnus)
+(defun my|mutt-mail-mode-detect ()
+  "Enable `mail-mode' when editing Mutt temporary files.
+
+This function checks if the current buffer is associated with a
+file created by Mutt for composing emails (like /tmp/mutt-XXXXXXX)."
+  (when (and buffer-file-name
+             (let* ((temp-dir (file-name-as-directory
+                               (file-truename temporary-file-directory)))
+                    (mutt-file-prefix (concat temp-dir "mutt-")))
+               (string-prefix-p mutt-file-prefix
+                                (file-truename buffer-file-name))))
+    (mail-mode)))
+
+(add-hook 'find-file-hook #'my|mutt-mail-mode-detect)
+
+(defun my|mail-setup-environment ()
+  "Configure the environment for composing messages in Mutt.
+
+This hook sets up various editing modes and formatting options
+commonly used when composing emails in Mutt.  Specifically:
+
+- `fill-column' is set to 69, aligning with traditional email
+  formatting standards.
+- `show-trailing-whitespace' is set to nil, to disable trailing
+  whitespace highlighting in mail composition mode, as it is not
+  needed here.
+- `auto-fill-mode' is enabled to automatically wrap lines at the
+  fill column.
+- `font-lock-mode' ensures syntax highlighting is active.
+- `abbrev-mode' expands abbreviations during text entry.
+- `flyspell-mode' is activated for on-the-fly spell checking.
+- `writegood-mode' helps improve writing quality with stylistic
+  suggestions.
+
+Add this function to `mail-mode-hook' to apply these settings
+when composing new messages."
+  (setq-local fill-column 69)
+  (setq-local show-trailing-whitespace nil)
+
+  (auto-fill-mode 1)
+  (font-lock-mode 1)
+  (abbrev-mode 1)
+  (flyspell-mode 1)
+  (writegood-mode 1))
+
+;; Attach the environment setup to mail-mode.
+(add-hook 'mail-mode-hook #'my|mail-setup-environment)
 
 
 ;;;; Programming Languages, Markup and Configurations.
