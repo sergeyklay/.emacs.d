@@ -1900,8 +1900,16 @@ to directory DIR."
 (defun my/switch-project-and-kill-buffers ()
   "Kill all buffers of the current project, then switch to a new project."
   (interactive)
-  (project-kill-buffers t)
-  (call-interactively 'my-project-switch-project))
+  (let ((current-project (project-current)))
+    (if current-project
+        (progn
+          ;; Kill all buffers belonging to the current project without
+          ;; confirmation.
+          (project-kill-buffers t)
+          ;; Interactively switch to another project.
+          (call-interactively #'project-switch-project))
+      ;; If there's no current project, inform the user.
+      (message "No current project found."))))
 
 (defun my/project-list-buffers ()
   "Display a list of buffers associated with the current project.
