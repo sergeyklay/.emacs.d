@@ -2371,9 +2371,15 @@ when composing new messages."
   ;; Associate `bnf-mode' with .bnf files.
   (add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode)))
 
+(when (file-exists-p "~/src/muttrc-mode-el/muttrc-mode.el")
+  (add-to-list 'load-path "~/src/muttrc-mode-el")
+
+  (autoload 'muttrc-mode "muttrc-mode.el" "Major mode to edit muttrc files" t)
+  ;; Associate `muttrc-mode' with muttrc files.
+  (add-to-list 'auto-mode-alist '("muttrc\\'" . muttrc-mode)))
+
 ;; Associate `json-mode' with .json and .jsonc files.
 (add-to-list 'auto-mode-alist '("\\.jsonc?\\'" . json-mode))
-
 (add-hook 'json-mode-hook (lambda () (hs-minor-mode 1)))
 
 ;; Web-mode is an autonomous emacs major-mode for editing web templates.
