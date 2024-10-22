@@ -1788,7 +1788,8 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
     (set-face-attribute 'default nil
                         :family "JetBrains Mono"
                         :width 'normal
-                        :height (if (eq system-type 'gnu/linux) 110 130)
+                        ;; Linux and Windows 100 height
+                        :height (if (eq system-type 'darwin) 130 110)
                         :weight 'regular))
 
   ;; Use the same font for fixed-pitch face as for default face.
