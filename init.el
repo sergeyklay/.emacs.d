@@ -255,18 +255,19 @@ the changes take effect."
 (setq vc-make-backup-files t)
 
 ;; Keep all backups in one directory.
-(let ((my-backup-dir (concat user-emacs-directory "backup/")))
-  (setq backup-directory-alist
+(let ((my-backup-dir (expand-file-name "backup" user-emacs-directory)))
+  (setopt backup-directory-alist
         `(("." . ,(file-name-as-directory my-backup-dir))))
   (my-ensure-directory-exists my-backup-dir))
 
 
 ;;;; Auto-Saving
-(let ((save-dir (concat user-emacs-directory "auto-save-list/")))
-  (setq
-   auto-save-file-name-transforms `((".*" ,(expand-file-name "\\2" save-dir) t))
-   auto-save-list-file-name
-   (concat save-dir (format ".saves-%d-%s~" (emacs-pid) (system-name))))
+(let ((save-dir (expand-file-name "auto-save-list" user-emacs-directory)))
+  (setopt auto-save-file-name-transforms
+          `((".*" ,(concat (file-name-as-directory save-dir) "\\2") t)))
+  (setopt auto-save-list-file-name
+          (expand-file-name (format ".saves-%d-%s~" (emacs-pid) (system-name))
+                            save-dir))
   (my-ensure-directory-exists save-dir))
 
 
