@@ -1791,8 +1791,11 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
     (set-face-attribute 'default nil
                         :family "JetBrains Mono"
                         :width 'normal
-                        ;; Linux and Windows 100 height
-                        :height (if (eq system-type 'darwin) 130 110)
+                        :height (cond
+                                 ((eq system-type 'darwin) 130)  ;; macOS
+                                 ((eq system-type 'gnu/linux) 110)  ;; Linux
+                                 ((eq system-type 'windows-nt) 100)  ;; Windows
+                                 (t 100))  ;; Default fallback
                         :weight 'regular))
 
   ;; Use the same font for fixed-pitch face as for default face.
@@ -2598,16 +2601,6 @@ level 2, and so on."
 (add-hook 'lisp-interaction-mode-hook #'my|lisp-modes-setup)
 
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
-
-
-;;;; Emacs Server
-;; Enable Emacs server mode, allowing Emacs to act as a server for external
-;; clients.
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'server)
-            (unless (server-running-p)
-              (server-start))))
 
 
 ;;;; Customizations.
