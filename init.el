@@ -275,10 +275,10 @@ the changes take effect."
 ;; Set the maximum number of entries to save in the history.  A larger value
 ;; allows for a more extensive history, which can be handy if you often need
 ;; to recall older entries.
-(setq history-length 1000)
+(setopt history-length 1000)
 
 ;; Enable the removal of duplicate entries in the history.
-(setq history-delete-duplicates t)
+(setopt history-delete-duplicates t)
 
 ;; Enable `save-place-mode' to save point position in files across sessions.  It
 ;; ensures that you return to the exact spot where you left off, enhancing
@@ -299,15 +299,14 @@ the changes take effect."
 
 (with-eval-after-load 'recentf
   ;; Set the maximum number of recent files to save.
-  (setq recentf-max-saved-items 1000)
+  (setopt recentf-max-saved-items 1000)
 
   ;; Update `recentf-exclude' to exclude specific paths and files
   ;; I din't need in the list.
-  (setq recentf-exclude
-        (append recentf-exclude
-                `("/tmp"
-                  ,(expand-file-name "~/tmp")
-                  ,(concat package-user-dir "/.*-autoloads\\.el\\'"))))
+  (setopt recentf-exclude
+          `(,(temporary-file-directory)
+            ,(concat (file-name-as-directory package-user-dir)
+                     ".*-autoloads\\.el\\'")))
 
   ;; Set up an idle timer to save the recent list every 3 minutes
   (run-with-idle-timer (* 3 60) t #'recentf-save-list))
