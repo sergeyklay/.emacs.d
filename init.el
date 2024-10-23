@@ -336,12 +336,16 @@ the changes take effect."
 (add-hook 'text-mode-hook (lambda () (setq show-trailing-whitespace t)))
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
-;; Set up source-directory for C source files, used to understand and debug
-;; built-in Emacs functions.
-(let ((src (expand-file-name "~/src/emacs.git")))
+;; Set `source-directory' to the local Emacs source directory.
+;; Used to understand and debug built-in Emacs functions.
+(let ((src (if (eq system-type 'windows-nt)
+               "D:/src/emacs.git"
+             (expand-file-name "~/src/emacs.git"))))
+  ;; Check if the directory exists and is
+  ;; not remote before setting `source-directory`.
   (when (and (file-directory-p src)
              (not (file-remote-p src)))
-    (setq source-directory src)))
+    (setopt source-directory src)))
 
 
 ;;;; Search
