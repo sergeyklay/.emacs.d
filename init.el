@@ -470,12 +470,12 @@ ARGS are the arguments passed to the original isearch function."
 (setopt ispell-silently-savep t)
 
 (when (eq system-type 'windows-nt)
-  (let ((dic-dir "C:/Hunspell")
+  (let ((dic-dir (or (getenv "DICPATH") "C:/Hunspell"))
         (hunspell-bin (executable-find "hunspell")))
     (when (and hunspell-bin (file-exists-p dic-dir))
       ;; Set environment variables for Hunspell
-      (setenv "LANG" "en_US")
-      (setenv "DICPATH" dic-dir)
+      (unless (getenv "LANG") (setenv "LANG" "en_US"))
+      (unless (getenv "DICPATH") (setenv "DICPATH" dic-dir))
 
       (defun my--build-dict-path (lang ext)
         "Build the full path to the dictionary file for LANG and EXT."
