@@ -503,8 +503,8 @@ ARGS are the arguments passed to the original isearch function."
         (setopt ispell-program-name hunspell-bin)))))
 
 ;; Configure the list of my dictionaries.
-;; Note: On macOS, Homebrew does not provide dictionaries by default.
-;; You will need to install them manually.
+;; Note: Homebrew on macOS, and Chocolatey on Windows does not provide
+;; dictionaries by default.  You will need to install them manually.
 (let ((valid-dicts (ispell-valid-dictionary-list))
       (dicts-alist nil))
 
