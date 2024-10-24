@@ -487,13 +487,10 @@ ARGS are the arguments passed to the original isearch function."
         (dolist (dict-file dict-files)
           ;; Extract language code from file name
           ;; (e.g., "en_US" from "en_US.aff")
-          (let* ((lang (file-name-base dict-file))
-                 (aff-file (my--build-dict-path lang ".aff"))
-                 (dic-file (my--build-dict-path lang ".dic")))
+          (let ((lang (file-name-base dict-file)))
             ;; Add dictionary to the alist if both .aff and .dic files exist
-            (when (and (file-exists-p aff-file)
-                       (file-exists-p dic-file))
-              (push (list lang aff-file) dict-paths))))
+            (when (file-exists-p (my--build-dict-path lang ".dic"))
+              (push (list lang (my--build-dict-path lang ".aff")) dict-paths))))
 
         ;; Set `ispell-hunspell-dict-paths-alist' dynamically
         ;; if there are valid dictionaries
