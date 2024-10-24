@@ -193,6 +193,17 @@ advice for `require-package', to which ARGS are passed."
 (setq-default which-key-idle-delay 1.5)
 
 
+;;;; System Path
+(cond
+ ((eq system-type 'windows-nt)
+  (let ((chocolatey-bin "C:/ProgramData/chocolatey/bin"))
+    ;; Only add the directory to `exec-path' if it exists
+    ;; and is not already present
+    (when (and (file-directory-p chocolatey-bin)
+               (not (member chocolatey-bin exec-path)))
+      (add-to-list 'exec-path chocolatey-bin)))))
+
+
 ;;;; Common functions
 (defun my-ensure-directory-exists (dir)
   "Ensure that the directory DIR exists, create it if it doesn't."
@@ -458,6 +469,40 @@ ARGS are the arguments passed to the original isearch function."
 ;; Automatically save the personal dictionary without asking for confirmation.
 (setopt ispell-silently-savep t)
 
+(when (eq system-type 'windows-nt)
+  (let ((dic-dir "C:/Hunspell")
+        (hunspell-bin (executable-find "hunspell")))
+    (when (and hunspell-bin (file-exists-p dic-dir))
+      ;; Set environment variables for Hunspell
+      (setenv "LANG" "en_US")
+      (setenv "DICPATH" dic-dir)
+
+      (defun my--build-dict-path (lang ext)
+        "Build the full path to the dictionary file for LANG and EXT."
+        (expand-file-name (concat lang ext) (file-name-as-directory dic-dir)))
+
+      ;; Find all available .aff files in the dictionary directory
+      (let ((dict-files (directory-files dic-dir t "\\.aff$"))
+            dict-paths)
+        (dolist (dict-file dict-files)
+          ;; Extract language code from file name
+          ;; (e.g., "en_US" from "en_US.aff")
+          (let ((lang (file-name-base dict-file)))
+            ;; Add dictionary to the alist if both .aff and .dic files exist
+            (when (and (file-exists-p (my--build-dict-path lang ".aff"))
+                       (file-exists-p (my--build-dict-path lang ".dic")))
+              (push (list lang (my--build-dict-path lang ".aff")) dict-paths))))
+
+        ;; Set `ispell-hunspell-dict-paths-alist' dynamically
+        ;; if there are valid dictionaries
+        (when dict-paths
+          (setq ispell-hunspell-dict-paths-alist dict-paths))
+
+        ;; Use Hunspell as the spell checker.  This should be set after
+        ;; `ispell-hunspell-dict-paths-alist', "LANG" and "DICPATH" environment
+        ;; variables due to `setopt' nature.
+        (setopt ispell-program-name hunspell-bin)))))
+
 ;; Configure the list of my dictionaries.
 ;; Note: On macOS, Homebrew does not provide dictionaries by default.
 ;; You will need to install them manually.
@@ -473,15 +518,20 @@ ARGS are the arguments passed to the original isearch function."
           dicts-alist))
 
   ;; Add Polish dictionary
-  (when (member "pl" valid-dicts)
-    (push '("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
-            ("-d" "pl") nil utf-8)
-          dicts-alist))
+  (let ((pl-dict (cond
+                  ((member "pl" valid-dicts) "pl")
+                  ((member "pl_PL" valid-dicts) "pl_PL")
+                  (t nil))))
+    (when pl-dict
+      (push `("polish" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+              ("-d" ,pl-dict) nil utf-8)
+            dicts-alist)))
 
   ;; Add Russian dictionary
   (let ((ru-dict (cond
                   ((member "ru-yeyo" valid-dicts) "ru-yeyo")
                   ((member "russian-aot-ieyo" valid-dicts) "russian-aot-ieyo")
+                  ((member "ru_RU" valid-dicts) "ru_RU")
                   (t nil))))
     (when ru-dict
       (push `("russian" "[А-Яа-я]" "[^А-Яа-я]" "[-']" nil
