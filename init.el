@@ -738,6 +738,7 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 ;; Place tags directly after headline text, with only one space in between.
 ;; I don't like tags alignment.
 (setopt org-tags-column 0)
+(setopt org-auto-align-tags nil)
 
 ;; When opening an Org file, start with all top-level headers collapsed.
 (setq org-startup-folded t)
@@ -1861,8 +1862,14 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
                         :weight 'regular
                         :height 1.05))
 
-  (when (member "Apple Color Emoji" (font-family-list))
-    (set-fontset-font t 'emoji "Apple Color Emoji")))
+  ;; Handle Apple, Windows and Linux by setting proper Emoji font.
+  (cond
+   ((member "Apple Color Emoji" (font-family-list))
+    (set-fontset-font t 'emoji "Apple Color Emoji"))
+   ((member "Segoe UI Emoji" (font-family-list))
+    (set-fontset-font t 'emoji "Segoe UI Emoji"))
+   ((member "Noto Color Emoji" (font-family-list))
+    (set-fontset-font t 'emoji "Noto Color Emoji"))))
 
 ;; Nicer scrolling
 (when (display-graphic-p)
