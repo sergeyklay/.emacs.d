@@ -715,9 +715,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (require 'org)
 
 (with-eval-after-load 'org
-  (when (eq system-type 'windows-nt)
-    (setopt org-directory "D:/org"))
-
   ;; Ensure the directory for Org files is exist.
   (my-ensure-directory-exists org-directory)
 
