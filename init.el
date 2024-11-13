@@ -2447,9 +2447,7 @@ when composing new messages."
 (require 'web-mode)
 
 (defconst my-web-mode-extensions
-  '("\\.html?\\'"
-    "\\.js[x]?\\'"
-    "\\.ts[x]?\\'")
+  '("\\.html?\\'")
   "A list of file extensions to associate with `web-mode'.")
 
 ;; Associate file extensions with web-mode.
