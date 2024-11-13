@@ -732,11 +732,6 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (add-to-list 'auto-mode-alist
              '("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode))
 
-;; Place tags directly after headline text, with only one space in between.
-;; I don't like tags alignment.
-(setopt org-tags-column 0)
-(setopt org-auto-align-tags nil)
-
 ;; When opening an Org file, start with all top-level headers collapsed.
 (setq org-startup-folded t)
 
