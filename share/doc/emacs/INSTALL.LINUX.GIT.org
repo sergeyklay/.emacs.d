@@ -1,26 +1,36 @@
-* Building and Installing Emacs from the Repository
+* How to Build and Install Emacs from Source on Linux
 
-For detailed info see [[https://git.savannah.gnu.org/cgit/emacs.git/tree/INSTALL.REPO][official Emacs documentation]].
+This guide provides a step-by-step walkthrough for building and
+installing Emacs from source, inspired by the official
+[[https://git.savannah.gnu.org/cgit/emacs.git/tree/INSTALL.REPO][Emacs documentation]].
 
-** Clone repo and prepare project
+** Clone the Repository and Prepare the Project
+
+Begin by cloning the Emacs Git repository and preparing it for configuration:
 
 #+begin_src shell
-  $ git clone git://git.sv.gnu.org/emacs.git emacs.git
-  $ cd emacs.git
-  $ git checkout emacs-29
-  $ ./autogen.sh
+  git clone git://git.sv.gnu.org/emacs.git emacs.git
+  cd emacs.git
+  git checkout emacs-29
+  ./autogen.sh
 #+end_src
 
 ** Configure Emacs
 
-For details regarding your arch use ~gcc -march=native -Q --help=target~, for example:
+*** Choosing Compiler Flags
+
+To optimize for your architecture, identify supported flags using ~gcc~:
 
 #+begin_src shell
-  $ gcc -march=native -Q --help=target | grep -E '\-march=\s+[a-z0-9]+$'
+  gcc -march=native -Q --help=target | grep -E '\-march=\s+[a-z0-9]+$'
 #+end_src
 
+*** Example Configuration
+
+Here’s a detailed ~./configure~ command that includes modern options:
+
 #+begin_src shell
-  $ CFLAGS='-g -O2 -march=znver4 -pipe -fno-fast-math -ffp-contract=off' \
+  CFLAGS='-g -O2 -march=znver4 -pipe -fno-fast-math -ffp-contract=off' \
     ./configure \
       --disable-silent-rules \
       --enable-acl \
@@ -77,26 +87,48 @@ For details regarding your arch use ~gcc -march=native -Q --help=target~, for ex
 
 ** Compile Emacs
 
+Leverage parallel compilation to speed up the process:
+
 #+begin_src shell
-  $ make -j $(getconf _NPROCESSORS_ONLN) bootstrap
+  make -j $(getconf _NPROCESSORS_ONLN) bootstrap
 #+end_src
 
 ** Start Emacs Server
 
-#+begin_src shell
-  $ systemctl enable --user emacs
-  $ systemctl start --user emacs
-#+end_src
-
-** Set Emacs as the Default Editor in Debian Like Distros
+To enable and start the Emacs server using ~systemd~:
 
 #+begin_src shell
-  $ sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/emacs 100
+  systemctl enable --user emacs
+  systemctl start --user emacs
 #+end_src
 
-** Set =ctags.emacs= as the Default =ctags= in Debian Like Distros
+** Set Emacs as the Default Editor
+
+*** Debian-based Distributions
 
 #+begin_src shell
-  $ sudo update-alternatives --install /usr/bin/ctags ctags /usr/local/bin/ctags.emacs 100
-  $ sudo update-alternatives --set ctags /usr/local/bin/ctags.emacs
+  sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/emacs 100
 #+end_src
+
+** Set =ctags.emacs= as Default =ctags=
+
+*** Debian-based Distributions
+
+#+begin_src shell
+  sudo update-alternatives --install /usr/bin/ctags ctags /usr/local/bin/ctags.emacs 100
+  sudo update-alternatives --set ctags /usr/local/bin/ctags.emacs
+#+end_src
+
+** Notes and Tips
+
+*** Performance Tuning
+
+Customize ~CFLAGS~ for your CPU architecture.
+
+*** Dependencies
+
+Ensure required libraries are installed before running ~./configure~. For Debian-based Distributions see [[file:PREREQS.DEBIAN.org][PREREQS.DEBIAN.org]] file.
+
+*** Testing Installation
+
+Run ~emacs --version~ to confirm successful installation.
