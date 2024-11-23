@@ -2441,18 +2441,10 @@ when composing new messages."
 (add-to-list 'auto-mode-alist '("\\.jsonc?\\'" . json-mode))
 (add-hook 'json-mode-hook (lambda () (hs-minor-mode 1)))
 
-;; Web-mode is an autonomous emacs major-mode for editing web templates.
-;; HTML documents can embed parts (CSS / JavaScript) and blocks
-;; (client / server side).
-(require 'web-mode)
-
-(defconst my-web-mode-extensions
-  '("\\.html?\\'")
-  "A list of file extensions to associate with `web-mode'.")
-
-;; Associate file extensions with web-mode.
-(dolist (extension my-web-mode-extensions)
-  (add-to-list 'auto-mode-alist `(,extension . web-mode)))
+;; Associate `web-mode' with .htm and .html files.  `web-mode' is an autonomous
+;; emacs major-mode for editing web templates.  HTML documents can embed parts
+;; (CSS / JavaScript) and blocks (client / server side).
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 (defun my|setup-web-mode-environment ()
   "Custom configurations for web-mode."
@@ -2474,16 +2466,16 @@ when composing new messages."
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
 ;; Set the indentation level for CSS files to 2 spaces.
-(setq css-indent-offset 2)
+(setopt css-indent-offset 2)
 
 ;; Defer loading `rainbow-mode' until `css-mode' is activated.
 (add-hook 'css-mode-hook #'rainbow-mode)
 
-;; TODO: Currently it is `web-mode', but I'll sortout with JS a bit later.
-;; Associate `js-mode' with .js files.
-;; (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
+;; Associate `js-mode' with javascript files.
+(add-to-list 'auto-mode-alist '("\\.\\(?:c\\|m\\)?js\\'" . js-mode))
+
 ;; Set the indentation level for JavaScript files to 2 spaces.
-;; (setq js-indent-level 2)
+(setopt js-indent-level 2)
 
 ;; Associate `xml-mode' with .plist files.
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
