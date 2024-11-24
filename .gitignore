@@ -55,6 +55,16 @@
 # existence when verifying `org-agenda-diary-file'.
 /diary
 
+# DAP adapters
+/.extension
+
+# Stores the native-compiled *.eln files for configuration's *.el files.
+# Appears when Emacs was built with "--with-native-compilation" option.
+/eln-cache
+
+# File where LSP session information is stored
+.lsp-session-v1
+
 # List of org files with IDs on those files.
 .org-id-locations
 
