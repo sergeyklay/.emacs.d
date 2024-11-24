@@ -14,3 +14,9 @@ Go to project root and run the following commands:
 #+end_src
 
 Next, open project in Emacs and run ~M-x lsp~.
+
+For details see:
+
+- https://github.com/direnv/direnv?tab=readme-ov-file#getting-started
+- https://github.com/direnv/direnv/wiki/Python
+- https://github.com/purcell/envrc
