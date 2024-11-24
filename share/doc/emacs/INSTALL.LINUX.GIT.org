@@ -65,6 +65,7 @@ Here’s a detailed ~./configure~ command that includes modern options:
       --with-toolkit-scroll-bars \
       --with-tree-sitter \
       --with-webp \
+      --with-x \
       --with-x-toolkit=gtk3 \
       --with-xft \
       --with-xml2 \
@@ -80,7 +81,6 @@ Here’s a detailed ~./configure~ command that includes modern options:
       --without-ns \
       --without-pop \
       --without-selinux \
-      --without-x \
       --without-xaw3d \
       --without-xwidgets
 #+end_src
