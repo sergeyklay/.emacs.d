@@ -6,7 +6,6 @@
 # https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
 
 # Directories to ignore (do not add trailing '/'s, they skip symlinks).
-/anaconda-mode
 /auto-save-list
 /backup
 /elpa
@@ -14,9 +13,6 @@
 /snippets
 /transient
 /.cask
-
-# Byte compiled elisp files.
-*.elc
 
 # Emacs Bookmark.
 /bookmarks
@@ -61,6 +57,9 @@
 # Stores the native-compiled *.eln files for configuration's *.el files.
 # Appears when Emacs was built with "--with-native-compilation" option.
 /eln-cache
+
+# Byte compiled elisp files.
+*.elc
 
 # File where LSP session information is stored
 .lsp-session-v1

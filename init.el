@@ -119,7 +119,6 @@ advice for `require-package', to which ARGS are passed."
 
 (defconst my-selected-packages
   '(anzu                  ; Show current match and total matches information
-    anaconda-mode         ; Python IDE support
     avy                   ; Jump to things in Emacs tree-style
     benchmark-init        ; Benchmarks for require and load calls
     cask-mode             ; Major mode for editing Cask files
@@ -134,6 +133,8 @@ advice for `require-package', to which ARGS are passed."
     git-modes             ; Modes for Git-related files
     htmlize               ; Convert buffer text to HTML
     json-mode             ; Major mode for editing JSON files
+    lsp-mode              ; LSP client for code intelligence
+    lsp-ui                ; UI enhancements for LSP mode
     magit                 ; The Git porcelain inside Emacs
     marginalia            ; Annotations for completions
     markdown-mode         ; Major mode for Markdown files
@@ -2425,7 +2426,38 @@ when composing new messages."
 (add-hook 'mail-mode-hook #'my|mail-setup-environment)
 
 
-;;;; Programming Languages, Markup and Configurations.
+;;;; Language Support
+;;;;; IDE Features with lsp-mode
+(defun my|setup-lsp-mode-environment ()
+  "Configure LSP mode for enhanced experience."
+  ;; Segments used in breadcrumb text on headerline
+  (setopt lsp-headerline-breadcrumb-segments
+          '(path-up-to-project  ; Include the directories up to project
+            file                ; Include the open file name
+            symbols))           ; Include document symbols if server supports it
+  (lsp-headerline-breadcrumb-mode))
+
+;; Define autoloads for `lsp-mode' commands to ensure lazy loading.
+(autoload 'lsp "lsp-mode" nil t)
+(autoload 'lsp-deferred "lsp-mode" nil t)
+
+;; Set the LSP keymap prefix
+(setopt lsp-keymap-prefix "C-c s l")
+
+;; Hook the setup function to `lsp-mode'.
+(add-hook 'lsp-mode-hook #'my|setup-lsp-mode-environment)
+
+;; Enable which-key integration for LSP
+(with-eval-after-load 'lsp-mode
+  (lsp-enable-which-key-integration t))
+
+;; Load `lsp-ui' only when needed
+(autoload 'lsp-ui-mode "lsp-ui" nil t)
+
+(with-eval-after-load 'lsp-ui
+  (setopt lsp-ui-doc-enable t))
+
+;;;;; Language grammars
 ;; Since I’m the author and maintainer of `bnf-mode', I use my local version
 ;; instead of the installed package.  This lets me tweak the mode however I
 ;; want, experiment with it, and instantly apply changes in buffers thanks to
@@ -2437,6 +2469,7 @@ when composing new messages."
   ;; Associate `bnf-mode' with .bnf files.
   (add-to-list 'auto-mode-alist '("\\.bnf\\'" . bnf-mode)))
 
+;;;;; Configuration like languages
 (when (file-exists-p "~/src/muttrc-mode-el/muttrc-mode.el")
   (add-to-list 'load-path "~/src/muttrc-mode-el")
 
@@ -2444,10 +2477,12 @@ when composing new messages."
   ;; Associate `muttrc-mode' with muttrc files.
   (add-to-list 'auto-mode-alist '("muttrc\\'" . muttrc-mode)))
 
+;;;;; JSON
 ;; Associate `json-mode' with .json and .jsonc files.
 (add-to-list 'auto-mode-alist '("\\.jsonc?\\'" . json-mode))
 (add-hook 'json-mode-hook (lambda () (hs-minor-mode 1)))
 
+;;;;; HTML
 ;; Associate `web-mode' with .htm and .html files.  `web-mode' is an autonomous
 ;; emacs major-mode for editing web templates.  HTML documents can embed parts
 ;; (CSS / JavaScript) and blocks (client / server side).
@@ -2469,6 +2504,7 @@ when composing new messages."
 
 (add-hook 'web-mode-hook #'my|setup-web-mode-environment)
 
+;;;;; CSS
 ;; Associate `css-mode' with .css files.
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 
@@ -2478,17 +2514,22 @@ when composing new messages."
 ;; Defer loading `rainbow-mode' until `css-mode' is activated.
 (add-hook 'css-mode-hook #'rainbow-mode)
 
+;;;;; JS
 ;; Associate `js-mode' with javascript files.
 (add-to-list 'auto-mode-alist '("\\.\\(?:c\\|m\\)?js\\'" . js-mode))
 
 ;; Set the indentation level for JavaScript files to 2 spaces.
 (setopt js-indent-level 2)
 
+;;;;; XML
 ;; Associate `xml-mode' with .plist files.
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
+;;;;; Yaml
 ;; Associate `yaml-mode' whith .yml and .yaml files.
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode))
+
+;;;;; reStructuredText
 
 ;; Associate `rst-mode' whith .rst files.
 (add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
@@ -2504,6 +2545,7 @@ when composing new messages."
   ;; preferred in text-heavy files like reStructuredText.
   (add-hook 'rst-mode-hook #'visual-line-mode))
 
+;;;;; Markdown
 (defconst pandoc-executable-path (executable-find "pandoc")
   "The pandoc executable path on this system.")
 
@@ -2558,6 +2600,7 @@ when composing new messages."
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'visual-line-mode)
 
+;;;;; SQL
 ;; Associate .sql files with `sql-mode'.
 (add-to-list 'auto-mode-alist '("\\.sql\\'" . sql-mode))
 
@@ -2572,24 +2615,30 @@ when composing new messages."
   (define-key sqlite-mode-map (kbd "M-s t") #'sqlite-mode-list-tables)
   (define-key sqlite-mode-map (kbd "<tab>") #'sqlite-mode-list-data))
 
+;;;;; CSV
 ;; Associate `.csv` files with `csv-mode'.
 (add-to-list 'auto-mode-alist '("\\.csv\\'" . csv-mode))
 
 ;; Enable `csv-align-mode' automatically when `csv-mode is activated.
 (add-hook 'csv-mode-hook #'csv-align-mode)
 
+;;;;; Python
 ;; Ensure `python' mode is loaded when opening Python files.
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
 ;; Set custom Python shell interpreter settings.
-(setq python-shell-interpreter "python3")
-(setq python-shell-interpreter-args "-i --simple-prompt --pprint")
+(setopt python-shell-interpreter "python3")
+(setopt python-shell-interpreter-args "-i --simple-prompt --pprint")
 
-;; Load `anaconda-mode' annd configure hooks after `python-mode` is loaded.
+;; Let Emacs guess the Python offset but prevent telling me about guessing.
+;; Simple, I find the "Can’t guess python-indent-offset, using defaults: 4"
+;; warning to be harmless and unnecessary spam.
+(setopt python-indent-guess-indent-offset-verbose nil)
+
+;; Configure hooks after `python-mode' is loaded.
 (with-eval-after-load 'python
-  ;; Enable `anaconda-mode' and `anaconda-eldoc-mode' in Python buffers.
-  (add-hook 'python-mode-hook #'anaconda-mode)
-  (add-hook 'python-mode-hook #'anaconda-eldoc-mode))
+  ;; Enable `lsp-deferred' in Python buffers.
+  (add-hook 'python-mode-hook #'lsp-deferred))
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
