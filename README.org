@@ -69,6 +69,7 @@ and I have no insight into how it behaves on older versions.
 
 I have built this configuration with the following tools in mind:
 
+- [[https://direnv.net/][direnv (=direnv=)]]
 - [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 - [[https://git-scm.com][Git (=git=)]]
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]

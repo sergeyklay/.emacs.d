@@ -128,6 +128,7 @@ advice for `require-package', to which ARGS are passed."
     csv-mode              ; CSV file editing mode
     embark                ; Contextual actions in buffers
     embark-consult        ; Embark integration with Consult
+    envrc                 ; Environment variable manager for shell
     erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
     flyspell-correct      ; Correct spelling with popup menus
     git-modes             ; Modes for Git-related files
@@ -2365,6 +2366,12 @@ This function serves multiple purposes:
 ;; Keybinding to quickly launch Eshell.
 ;; Pressing "M-s e" will open Eshell in the current buffer.
 (global-set-key (kbd "M-s e") 'eshell)
+
+;; Setup buffer-local direnv integration for Emacs.
+(when (executable-find "direnv")
+  ;; `envrc-global-mode' should be enabled after other global minor modes,
+  ;; since each prepends itself to various hooks.
+  (add-hook 'after-init-hook #'envrc-global-mode))
 
 
 ;;;; News, Feeds and Mail
