@@ -2368,12 +2368,6 @@ This function serves multiple purposes:
 ;; Pressing "M-s e" will open Eshell in the current buffer.
 (global-set-key (kbd "M-s e") 'eshell)
 
-;; Setup buffer-local direnv integration for Emacs.
-(when (executable-find "direnv")
-  ;; `envrc-global-mode' should be enabled after other global minor modes,
-  ;; since each prepends itself to various hooks.
-  (add-hook 'after-init-hook #'envrc-global-mode))
-
 
 ;;;; News, Feeds and Mail
 
@@ -2702,6 +2696,12 @@ level 2, and so on."
 
 
 ;;;; Customizations.
+;; Setup buffer-local direnv integration for Emacs.
+(when (executable-find "direnv")
+  ;; `envrc-global-mode' should be enabled after other global minor modes,
+  ;; since each prepends itself to various hooks.
+  (add-hook 'after-init-hook #'envrc-global-mode))
+
 ;; Save custom variables in a separate file named custom.el
 ;; `user-emacs-directory'.
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
