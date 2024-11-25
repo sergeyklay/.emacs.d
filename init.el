@@ -2308,7 +2308,7 @@ This function serves multiple purposes:
         ;; properly setup `auth-source' above.
         (erc :server "irc.libera.chat" :port 6667)))))
 
-(define-key my-keyboard-map (kbd "e") #'my/erc-start-or-switch)
+(define-key my-keyboard-map (kbd "i") #'my/erc-start-or-switch)
 
 
 ;;;; Shells
