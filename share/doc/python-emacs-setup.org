@@ -134,25 +134,55 @@ Autocompletion is powered by ~company~ in conjunction with
 
 ** TODO Real-Time Syntax Checking with ~flycheck~ or ~flymake~
 
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 ** TODO Intelligent Contextual Actions with ~embark~
 
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 ** TODO Debugging Python Code with ~dap-mode~
+
+#+begin_quote
+Work In Progress...
+#+end_quote
 
 * Advanced Features
 
 ** TODO Code Refactoring with ~lsp-mode~ and ~lsp-pyright~
 
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 ** TODO Navigating Python Projects with ~xref~ and ~imenu~
+
+#+begin_quote
+Work In Progress...
+#+end_quote
 
 ** TODO Integrated Documentation Lookup with ~lsp~ and ~helpful~
 
-* Extending the Workflow
+#+begin_quote
+Work In Progress...
+#+end_quote
 
-** TODO Using ~org-mode~ for Literate Programming and Notes
+* Extending the Workflow
 
 ** TODO Integrating Testing Frameworks (e.g., ~pytest~)
 
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 ** TODO Advanced Debugging Tips and Tools
+
+#+begin_quote
+Work In Progress...
+#+end_quote
 
 * Future Enhancements
 
@@ -168,6 +198,10 @@ Do I really need the following:
 #+end_src
 
 ** TODO Planned Features and Improvements
+
+#+begin_quote
+Work In Progress...
+#+end_quote
 
 * Appendix
 
@@ -196,3 +230,7 @@ Do I really need the following:
 - [[https://github.com/emacs-lsp/lsp-pyright/issues/95][How setup it to use the ~pyright~ installed in the environment?]]
 
 ** TODO Example Configurations
+
+#+begin_quote
+Work In Progress...
+#+end_quote
