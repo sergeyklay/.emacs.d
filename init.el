@@ -122,6 +122,7 @@ advice for `require-package', to which ARGS are passed."
     avy                   ; Jump to things in Emacs tree-style
     benchmark-init        ; Benchmarks for require and load calls
     cask-mode             ; Major mode for editing Cask files
+    company               ; Code completion framework
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with `consult'
     csv-mode              ; CSV file editing mode
@@ -2422,6 +2423,15 @@ when composing new messages."
 
 
 ;;;; Language Support
+;;;;; Setup Completion
+(require 'company)
+
+;; The idle delay in seconds until completion starts automatically.
+(setopt company-idle-delay 0.1)
+
+;; Show quick-access hints beside the candidates.
+(setopt company-show-quick-access t)
+
 ;;;;; IDE Features with lsp-mode
 ;; Set the LSP keymap prefix.
 (setopt lsp-keymap-prefix "C-c s l")
