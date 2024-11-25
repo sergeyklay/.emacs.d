@@ -34,7 +34,7 @@
 ;;; Code:
 
 
-;;;; Profiling and Debug
+;;;; Profiling and Debug for Emacs
 (defconst emacs-debug-mode (or (getenv "DEBUG") init-file-debug)
   "If non-nil, Emacs will be verbose.
 Set DEBUG=1 in the command line or use --debug-init to enable this.")
@@ -123,36 +123,37 @@ advice for `require-package', to which ARGS are passed."
     benchmark-init        ; Benchmarks for require and load calls
     cask-mode             ; Major mode for editing Cask files
     consult               ; Incremental narrowing framework
-    consult-flyspell      ; Flyspell integration with Consult
+    consult-flyspell      ; Flyspell integration with `consult'
     csv-mode              ; CSV file editing mode
     embark                ; Contextual actions in buffers
-    embark-consult        ; Embark integration with Consult
+    embark-consult        ; Embark integration with `consult'
     envrc                 ; Environment variable manager for shell
-    erc-hl-nicks          ; Nick highlighting in ERC (IRC client)
+    erc-hl-nicks          ; Nick highlighting in `erc' (IRC client)
     flyspell-correct      ; Correct spelling with popup menus
     git-modes             ; Modes for Git-related files
     htmlize               ; Convert buffer text to HTML
     json-mode             ; Major mode for editing JSON files
-    lsp-mode              ; LSP client for code intelligence
-    lsp-ui                ; UI enhancements for LSP mode
+    lsp-mode              ; Language Server Protocol support
+    lsp-pyright           ; LSP client leveraging pyright Python Language Server
+    lsp-ui                ; UI enhancements for `lsp-mode'
     magit                 ; The Git porcelain inside Emacs
-    marginalia            ; Annotations for completions
+    marginalia            ; Annotations for minibufer completions
     markdown-mode         ; Major mode for Markdown files
-    orderless             ; Flexible completion style
-    org-cliplink          ; Capture clipboard URLs to Org mode
-    ox-hugo               ; Blogging using org-mode
+    orderless             ; Flexible completion style for minibufers
+    org-cliplink          ; Capture clipboard URLs to `org-mode'
+    ox-hugo               ; Blogging using `org-mode'
     pass                  ; Interface to the Password Store
     password-store        ; Emacs interface for password-store
     prescient             ; Predictive sorting and filtering
     rainbow-delimiters    ; Color nested parentheses
     rainbow-mode          ; Colorize color values in buffers
     sql-indent            ; Indentation support for SQL
-    vertico               ; Vertical interactive completion
-    vertico-prescient     ; Prescient integration with Vertico
+    vertico               ; Vertical interactive completion for minibuffers
+    vertico-prescient     ; Prescient integration with `vertico'
     which-key             ; Display available keybindings
     writegood-mode        ; Improve writing style
     yaml-mode             ; Major mode for YAML files
-    web-mode)             ; Web template editing mode for emacs
+    web-mode)             ; Web template editing mode for Emacs
    "A list of packages that are selected for installation.")
 
 ;; Install packages as soon as possible.
@@ -2422,34 +2423,38 @@ when composing new messages."
 
 ;;;; Language Support
 ;;;;; IDE Features with lsp-mode
-(defun my|setup-lsp-mode-environment ()
-  "Configure LSP mode for enhanced experience."
-  ;; Segments used in breadcrumb text on headerline
-  (setopt lsp-headerline-breadcrumb-segments
-          '(path-up-to-project  ; Include the directories up to project
-            file                ; Include the open file name
-            symbols))           ; Include document symbols if server supports it
-  (lsp-headerline-breadcrumb-mode))
-
-;; Define autoloads for `lsp-mode' commands to ensure lazy loading.
-(autoload 'lsp "lsp-mode" nil t)
-(autoload 'lsp-deferred "lsp-mode" nil t)
-
-;; Set the LSP keymap prefix
+;; Set the LSP keymap prefix.
 (setopt lsp-keymap-prefix "C-c s l")
 
-;; Hook the setup function to `lsp-mode'.
-(add-hook 'lsp-mode-hook #'my|setup-lsp-mode-environment)
+(defun my-locate-python-virtualenv ()
+  "Find the Python executable based on the VIRTUAL_ENV environment variable."
+  (when-let ((venv (getenv "VIRTUAL_ENV")))
+    (let ((python-path (expand-file-name "bin/python" venv)))
+      (lsp--info "VIRTUAL_ENV is set to %s" venv)
+      (when (file-executable-p python-path)
+        (lsp--info "Found python executable at %s" python-path)
+        python-path))))
 
-;; Enable which-key integration for LSP
+(with-eval-after-load 'lsp-pyright
+  (add-to-list 'lsp-pyright-python-search-functions
+               #'my-locate-python-virtualenv))
+
+;; Configure LSP completion to use `completion-at-point-functions'.
+(setopt lsp-completion-provider :capf)
+
+;; Segments used in breadcrumb text on headerline.
+(setopt lsp-headerline-breadcrumb-segments
+        '(path-up-to-project  ; Include the directories up to project
+          file                ; Include the open file name
+          symbols))           ; Include document symbols if server supports it
+
 (with-eval-after-load 'lsp-mode
+  ;; Configure LSP mode for enhanced experience.
+  (add-hook 'lsp-mode-hook #'lsp-headerline-breadcrumb-mode)
+  (add-hook 'lsp-mode-hook #'lsp-ui-mode)
+
+  ;; Enable `which-key-mode' integration for LSP
   (lsp-enable-which-key-integration t))
-
-;; Load `lsp-ui' only when needed
-(autoload 'lsp-ui-mode "lsp-ui" nil t)
-
-(with-eval-after-load 'lsp-ui
-  (setopt lsp-ui-doc-enable t))
 
 ;;;;; Language grammars
 ;; Since I’m the author and maintainer of `bnf-mode', I use my local version

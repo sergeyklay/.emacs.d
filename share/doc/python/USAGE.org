@@ -1,6 +1,12 @@
 * Setup python project
 
-Go to project root and run the following commands:
+To use pyright static type checker and Emacs integration with it in form of ~lsp-pyright~ you have to install pyright CLI first:
+
+#+begin_src shell
+  sudo npm install -g pyright
+#+end_src
+
+Next, go to project root and run the following commands:
 
 #+begin_src shell
   # Set it up for direnv
@@ -17,6 +23,7 @@ Next, open project in Emacs and run ~M-x lsp~.
 
 For details see:
 
+- https://microsoft.github.io/pyright/
 - https://github.com/direnv/direnv?tab=readme-ov-file#getting-started
 - https://github.com/direnv/direnv/wiki/Python
 - https://github.com/purcell/envrc
