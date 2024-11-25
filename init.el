@@ -2620,8 +2620,7 @@ when composing new messages."
 ;; Ensure `python' mode is loaded when opening Python files.
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
-;; Set custom Python shell interpreter settings.
-(setopt python-shell-interpreter "python3")
+;; Set custom Python shell interpreter arguments.
 (setopt python-shell-interpreter-args "-i --simple-prompt --pprint")
 
 ;; Let Emacs guess the Python offset but prevent telling me about guessing.
@@ -2629,10 +2628,19 @@ when composing new messages."
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
+(defun my|setup-python-environment ()
+  "Custom configurations for Pyton mode."
+  ;; Set the `python-shell-interpreter' to the python3 in PATH.
+  ;; At this moment `envrc' should successfully configure environment.
+  (setq-local python-shell-interpreter (executable-find "python"))
+
+  ;; Enable LSP support in Python buffers.
+  (require 'lsp-pyright)
+  (lsp))
+
 ;; Configure hooks after `python-mode' is loaded.
 (with-eval-after-load 'python
-  ;; Enable `lsp-deferred' in Python buffers.
-  (add-hook 'python-mode-hook #'lsp-deferred))
+  (add-hook 'python-mode-hook #'my|setup-python-environment))
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
