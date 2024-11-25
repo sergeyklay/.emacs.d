@@ -1,0 +1,198 @@
+#+title: Advanced Python Development Workflow in Emacs
+#+author: Serghei Iakovlev
+
+* Introduction
+
+** Why Emacs for Python Development?
+
+Emacs is not just an editor — it's an extensible platform for crafting
+highly personalized development environments. With tools like
+~lsp-mode~, ~company~, ~flycheck~, and ~dap-mode~, it rivals dedicated IDEs
+like PyCharm. This guide demonstrates how to configure Emacs into a
+robust Python IDE for everything from basic scripting to large-scale
+projects.
+
+** Overview of the Configuration Stack
+
+The setup leverages a modular stack of tools, each addressing a specific need:
+
+- *LSP (Language Server Protocol):* Provides code intelligence features
+  like autocompletion, navigation, and type checking.
+- *Autocompletion:* Handled by ~company~ in tandem with ~lsp-pyright~.
+- *Linting:* Powered by flycheck or flymake for real-time feedback.
+- *Debugging:* Managed via ~dap-mode~, enabling a seamless debugging experience.
+- *Environment Management:* Simplified with ~direnv~ and ~envrc~,
+  automatically configuring Python virtual environments.
+
+** Key Components and Their Roles
+
+Each tool in this stack has a unique responsibility. Here's a quick
+rundown:
+
+- ~lsp-mode~: A core integration layer for [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]],
+  enabling features like diagnostics, navigation, and refactoring.
+- ~lsp-pyright~: The Python language server providing type checking,
+  intelligent autocompletion, and static analysis.
+- ~company~: Backend-agnostic autocompletion framework integrated with
+  ~lsp-mode~.
+- ~flycheck~: Provides linting capabilities for Python projects,
+  supporting both LSP diagnostics and custom checkers.
+- ~dap-mode~: [[https://microsoft.github.io/debug-adapter-protocol//][Debug Adapter Protocol]] integration for stepping through
+  code, inspecting variables, and setting breakpoints.
+- ~direnv~ + ~envrc~: Automates environment setup, ensuring seamless
+  virtual environment activation in Emacs.
+
+** Goals and Scope of This Guide
+
+The purpose of this guide is to meticulously explore how Emacs can be
+transformed into a world-class Python IDE. This is not a universal
+manual intended for everyone—it is deeply tailored to my specific
+needs, preferences, and engineering rigor. Throughout this document, I
+aim to combine practical usability with transparent configuration,
+balancing power and simplicity.
+
+This guide reflects my personal journey in creating an IDE that meets
+my own standards of excellence. Could Emacs be made "better"?
+Absolutely, because the concept of "better" is always
+contextual. Could someone else choose different tools than I did?
+Certainly. The tools I selected represent the choices I made based on
+my criteria and understanding, which I will detail throughout the
+guide.
+
+At its core, this is a collection of my thoughts, experiments, and
+findings—a snapshot of my current understanding of how to make Emacs
+the ultimate Python development environment. While it may not suit
+everyone, I hope it inspires others to refine their workflows and
+explore the potential of Emacs as a highly customizable IDE.
+
+* Environment Setup
+
+** Installing Python and Dependencies
+
+Before diving into Emacs-specific configuration, ensure that your
+system is ready:
+
+#+begin_src shell
+  # Install pyright for type checking
+  sudo npm install -g pyright
+#+end_src
+
+Ensure Python, and npm are available on your system. If not, consult
+your system package manager's documentation.
+
+** Configuring Virtual Environments with ~direnv~ and ~envrc~
+
+A well-configured environment is key for maintaining consistency
+across projects. ~direnv~ and ~envrc~ automate virtual environment
+activation.
+
+1. At the root of your Python project, create an ~.envrc~ file:
+   #+begin_src shell
+     export VIRTUAL_ENV=.venv
+     layout python3
+   #+end_src
+
+2. Allow direnv to manage the environment:
+   #+begin_src shell
+     direnv allow
+   #+end_src
+
+** Setting Python Path and Version Automatically
+
+To avoid manually configuring Python paths, ensure ~direnv~ is
+integrated with Emacs via the ~envrc~ package. Add this snippet to your
+Emacs configuration at the very bottom of your configuration:
+
+#+begin_src elisp
+  ;; Setup buffer-local direnv integration for Emacs.
+  (when (executable-find "direnv")
+    ;; `envrc-global-mode' should be enabled after other global minor modes,
+    ;; since each prepends itself to various hooks.
+    (add-hook 'after-init-hook #'envrc-global-mode))
+#+end_src
+
+This activates ~envrc-mode~ for all programming modes, automatically
+aligning Emacs with the active environment.
+
+* Essential Features
+
+** Autocompletion with ~company~ and ~lsp-pyright~
+
+Autocompletion is powered by ~company~ in conjunction with
+~lsp-mode~. Here’s how to set it up:
+
+1. Install ~company~ and configure if needed:
+   #+begin_src elisp
+     (require 'company)
+
+     ;; The idle delay in seconds until completion starts automatically.
+     (setopt company-idle-delay 0.1)
+
+     ;; Show quick-access hints beside the candidates.
+     (setopt company-show-quick-access t)
+   #+end_src
+
+** TODO Real-Time Syntax Checking with ~flycheck~ or ~flymake~
+
+** TODO Intelligent Contextual Actions with ~embark~
+
+** TODO Debugging Python Code with ~dap-mode~
+
+* Advanced Features
+
+** TODO Code Refactoring with ~lsp-mode~ and ~lsp-pyright~
+
+** TODO Navigating Python Projects with ~xref~ and ~imenu~
+
+** TODO Integrated Documentation Lookup with ~lsp~ and ~helpful~
+
+* Extending the Workflow
+
+** TODO Using ~org-mode~ for Literate Programming and Notes
+
+** TODO Integrating Testing Frameworks (e.g., ~pytest~)
+
+** TODO Advanced Debugging Tips and Tools
+
+* Future Enhancements
+
+** Ideas for Extending This Guide
+
+*** TODO Sortout with language server and its plugins
+
+Do I really need the following:
+
+#+begin_src shell
+  # Install language server and its plugins
+  python -m pip install python-lsp-server pylsp-mypy
+#+end_src
+
+** TODO Planned Features and Improvements
+
+* Appendix
+
+** Additional Resources and References
+
+*** System Resources
+
+- [[https://microsoft.github.io/pyright/][Pyright Home Page]]
+  /Official documentation and features of the Pyright static type checker./
+- [[https://direnv.net/][direnv home page]]
+  /Introduction to direnv and how it simplifies environment management./
+- [[https://github.com/direnv/direnv/wiki/Python][Using direnv for Python (Wiki)]]
+  /Comprehensive guide on configuring Python environments with direnv./
+- [[https://github.com/direnv/direnv][direnv project at GitHub]]
+  /Source code and additional documentation for direnv./
+
+*** Emmacs Resources
+
+- [[https://github.com/purcell/envrc][envrc project at GitHub]]
+- [[https://github.com/emacs-lsp/lsp-mode][lsp-mode project at GitHub]]
+- [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub]]
+- [[https://github.com/emacs-lsp/dap-mode][dap-mode project at GitHub]]
+
+*** Community Discussions
+
+- [[https://github.com/emacs-lsp/lsp-pyright/issues/95][How setup it to use the ~pyright~ installed in the environment?]]
+
+** TODO Example Configurations
