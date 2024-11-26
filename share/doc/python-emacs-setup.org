@@ -83,15 +83,53 @@ for what it is.
 ** Installing Dependencies
 
 Before diving into Emacs-specific configuration, ensure that your
-system is ready:
+system is ready to support a robust Python development
+workflow. Reflecting on this process, I realize that I might have
+started setting up an IDE for Python a bit late. Had I begun earlier,
+I might have experienced the era when ~pyright~ was installed
+automatically through ~lsp-mode~ or some behind-the-scenes magic. At
+least, this is what some of the older articles and tutorials suggest.
+
+Now, at the end of 2024, as I delve deeper into Python tooling, I
+encounter remnants of examples that hint at ~pyright~ being set up
+without manual intervention. It's entirely possible that even today it
+could be installed automatically if I enabled some hidden option in
+~lsp-mode~. However, in my case, nothing worked until I explicitly
+installed ~pyright~. So, here's the definitive approach that worked for
+me.
+
+According to the official documentation, there are two main ways to
+install ~pyright~:
+
+1. **Install the Node.js package globally:** This is the most official
+   and feature-complete method. It provides a CLI application that
+   seamlessly integrates with ~lsp-mode~.
+2. **Install the Python package:** While this method might appeal to
+   Python purists, I see several drawbacks:
+   - If installed locally within a virtual environment, it adds yet
+     another dependency to every project, which may not be ideal for
+     workflows where dependencies are frequently removed and
+     reinstalled for testing reproducibility.
+   - Installing it globally feels redundant when a more official,
+     Node.js-based alternative exists.
+
+Given these considerations, I chose the global installation via
+Node.js. Here's how you can do the same:
 
 #+begin_src shell
-  # Install pyright for type checking
+  # Install pyright globally using npm
   sudo npm install -g pyright
 #+end_src
 
-Ensure Python, and npm are available on your system. If not, consult
-your system package manager's documentation.
+I also suspect that in some Linux distributions or macOS, ~pyright~
+might be available as a package through the system's package
+manager. This could also work well, depending on your preferred
+setup. For my workflow, however, the Node.js approach proved to be the
+most straightforward and reliable.
+
+Finally, if you happen to explore deeper and discover a way to enable
+the mythical auto-installation of ~pyright~ in ~lsp-mode~, feel free to
+share — I’d love to know what I missed!
 
 ** Configuring Virtual Environments with ~direnv~ and ~envrc~
 
@@ -251,19 +289,6 @@ configurations.
 #+begin_quote
 Work In Progress...
 #+end_quote
-
-* Temporary
-
-This section contains my personal TODOs related to this guide.
-
-** TODO Sortout with language server and its plugins
-
-Do I really need the following:
-
-#+begin_src shell
-  # Install language server and its plugins
-  python -m pip install python-lsp-server pylsp-mypy
-#+end_src
 
 * Appendix
 
