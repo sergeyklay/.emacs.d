@@ -12,6 +12,42 @@ like PyCharm. This guide demonstrates how to configure Emacs into a
 robust Python IDE for everything from basic scripting to large-scale
 projects.
 
+** Goals and Scope of This Guide
+
+The purpose of this guide is to meticulously explore how Emacs can be
+transformed into a advanced Python IDE. This is not a universal manual
+intended for everyone — it is deeply tailored to my specific needs,
+preferences, and engineering rigor. Throughout this document, I aim to
+combine practical usability with transparent configuration, balancing
+power and simplicity.
+
+This guide reflects my personal journey in creating an IDE that meets
+my own standards of excellence. Could Emacs be made "better"?
+Absolutely, because the concept of "better" is always
+contextual. Could someone else choose different tools than I did?
+Certainly. The tools I selected represent the choices I made based on
+my criteria and understanding, which I will detail throughout the
+guide.
+
+At its core, this is a collection of my thoughts, experiments, and
+findings—a snapshot of my current understanding of how to make Emacs
+the ultimate Python development environment. While it may not suit
+everyone, I hope it inspires others to refine their workflows and
+explore the potential of Emacs as a highly customizable IDE.
+
+A note on some conscious exclusions: I do not use ~use-package~ in my
+personal Emacs configuration. While it may be a popular choice in the
+Emacs community, I have not found it particularly valuable for my
+workflow. I manage my configuration manually, and this approach works
+perfectly for me. If you are a ~use-package~ user, you might need to
+adapt discussed configuration to fit your own setup — I leave this as
+an exercise for you.
+
+Similarly, you will not find anything related to ~evil-mode~ or its
+keybindings in this guide. If I want to use Vim, I simply use Vim. I
+see no reason to mimic Vim within Emacs, as I prefer to embrace Emacs
+for what it is.
+
 ** Overview of the Configuration Stack
 
 A modern IDE is not just a text editor; it's a comprehensive ecosystem
@@ -101,7 +137,7 @@ In the context of Emacs and Python:
   types, and modules. Essentially, it serves as a bridge between Emacs
   and Pyright.
 
-**** Interaction Architecture
+In general, we get the following architecture:
 
 1. Emacs (~lsp-mode~): The client-side component. Sends requests to the
    server and displays the results.
@@ -110,16 +146,15 @@ In the context of Emacs and Python:
 3. Node.js (Pyright): The server-side component. Processes requests,
    analyzes Python code, and returns the results to the client.
 
-**** Example Interaction Workflow
+Let's consider a small example that demonstrates how this architecture
+works:
 
 1. The user edits a Python file in Emacs.
 2. ~lsp-mode~ sends a request through ~lsp-pyright~ to the Pyright server:
-   "What is the type of variable X?"
+   "/What is the type of variable X?/"
 3. Pyright analyzes the code and returns the type of the variable.
 4. ~lsp-mode~ displays the result to the user in the minibuffer or on
    hover.
-
-**** Why is this separation important?
 
 In this architecture LSP servers are editor-independent. Pyright can
 be used not only in Emacs but also in VS Code or Neovim. In other
@@ -128,25 +163,139 @@ hand, ~lsp-pyright~ allows you to easily switch to another server (e.g.,
 analysis is offloaded from the editor, as the server runs in a
 separate process.
 
-** Key Components and Their Roles
+*** Debug Adapter Protocol
 
-To bring the abstract concepts from the previous section to life, I
-rely on a carefully chosen set of tools. Each component has a clear
-purpose and integrates seamlessly into Emacs. Here's a quick
-rundown:
+Before Debug Adapter Protocol (DAP)[fn:5] was introduced, developers and
+teams creating IDEs and editors faced significant challenges in
+implementing debugging support. Each IDE had to individually integrate
+debugging for every programming language, leading to substantial
+duplication of effort and inefficiencies.
 
-- ~lsp-mode~: A core integration layer for Language Server Protocol,
-  enabling features like diagnostics, navigation, and refactoring.
-- ~lsp-pyright~: The Python language server providing type checking,
-  intelligent autocompletion, and static analysis.
-- ~company~: Backend-agnostic autocompletion framework integrated with
-  ~lsp-mode~.
-- ~flycheck~: Provides linting capabilities for Python projects,
-  supporting both LSP diagnostics and custom checkers.
-- ~dap-mode~: Debug Adapter Protocol integration for stepping through
-  code, inspecting variables, and setting breakpoints.
-- ~direnv~ + ~envrc~: Automates environment setup, ensuring seamless
-  virtual environment activation in Emacs.
+For instance, to support languages like Python, C++, and Java, IDE
+developers needed to integrate distinct debuggers such as ~gdb~ for C++
+or ~pdb~ for Python. This required an understanding of the internal
+protocols for each debugger, resulting in:
+
+- Slow adoption of new languages in editors.
+- Lack of standardization: Each IDE or tool implemented its own
+  debugging solutions.
+- Integration challenges with existing tools and ecosystems.
+
+To address these problems, Microsoft introduced DAP while working on
+Visual Studio Code (VS Code). The concept was to provide a unified
+protocol for communication between IDEs and debuggers via a
+standardized API.
+
+DAP was designed to solve several key issues:
+
+1. *Reducing effort for debugging support across languages:*
+   - IDE developers need to implement support for DAP, not individual
+     debuggers.
+   - Language developers create a Debug Adapter to interface with
+     their debugger, avoiding the need to support multiple IDEs.
+2. *Standardization and universality:*
+   - Debuggers for any programming language can connect to any IDE
+     supporting DAP.
+3. *Modularity:*
+   - IDEs and debuggers can evolve independently. Updates to a
+     debugger do not require IDE code changes.
+4. *Remote debugging support:*
+   - DAP is designed to work both locally and remotely, simplifying
+     integration with cloud and distributed environments.
+
+DAP defines a JSON-based protocol for communication between two parties:
+
+- *Editor (Client)*: For example, VS Code or Emacs sends commands such
+  as "/set a breakpoint/" or "/start execution/".
+- *Server*: A Debug Adapter for a specific debugger (e.g.,~debugpy~ for
+  Python) processes the commands and responds.
+
+In the Emacs-Python ecosystem, the tools play the following roles:
+
+- *Server:* A Python debugger, such as ~debugpy~[fn:6], acts as the server-side
+  component. It processes requests from the DAP client (e.g., "/start
+  code execution/") and returns results (e.g., "/current line of
+  execution: 15, value of variable X: 42/"). The server manages the
+  entire debugging process, including:
+  - Setting breakpoints.
+  - Stepping through code.
+  - Displaying the program's current state.
+- *Client:* ~dap-mode~[fn:7] serves as the client implementation of DAP in
+  Emacs. It configures and manages debugging sessions, sends requests
+  to the server (e.g., "/add a breakpoint/" or "/execute the next step/"),
+  and presents information (call stacks, variable values, current
+  execution line) to the user. ~dap-mode~ provides an interface for
+  working with various language debuggers using the standardized DAP
+  protocol.
+- *Wrapper:* ~dap-python~ (part of ~dap-mode~ package) acts as an
+  intermediary layer between ~dap-mode~ and specific debuggers like
+  ~debugpy~. It simplifies Python-specific configurations such as:
+  - Selecting the interpreter.
+  - Passing script arguments.
+  - Configuring source paths. This makes launching Python debuggers
+    straightforward while adhering to the DAP standard.
+
+In general, we get the following architecture:
+
+1. Emacs (~dap-mode~): Client-side component. Manages the debugging
+   interface and sends requests to the server.
+2. Emacs (~dap-python~): Auxiliary layer. Configures the debugger server
+   (e.g., ~debugpy~) for Python.
+3. Debugger (~debugpy~): Server-side component. Executes debugging
+   commands and provides data to the client.
+
+Let's consider a small example that demonstrates how this architecture
+works:
+
+1. The user initiates a debugging session for a Python script in Emacs
+   via ~dap-mode~.
+2. ~dap-mode~, through ~dap-python~, launches the debugger server
+   (~debugpy~) with the specified configuration.
+3. ~dap-mode~ sends requests to the server:
+   - "/Set a breakpoint at line 10/".
+   - "/Run the script until the next breakpoint/".
+4. ~debugpy~ processes the requests:
+   - Sets the breakpoint.
+   - Runs the script, stopping at line 10.
+   - Returns the current call stack and variable values.
+5. ~dap-mode~ displays this information to the user within Emacs.
+
+In this architecture DAP servers are independent of editors. For
+example, ~debugpy~ can be used with VS Code, Emacs, or Neovim. In other
+hand, ~dap-python~ allows seamless switching between debuggers (e.g.,
+using PyCharm’s debugger instead of ~debugpy~). Debugging via DAP
+integrates naturally with other Emacs capabilities, such as ~lsp-mode~,
+creating a cohesive development environment.
+
+** Integrating Components into a Unified Workflow
+
+With a solid understanding of the foundational protocols (LSP and
+DAP), we can now explore how to integrate these tools into a cohesive
+development environment in Emacs. While each component serves a
+specific purpose, the true power of this setup lies in their seamless
+collaboration.
+
+The following sections will demonstrate how these components work
+together to create an efficient Python IDE:
+
+- *Code Intelligence (LSP):* ~lsp-mode~ acts as the backbone of our
+  configuration, providing diagnostics, navigation, and refactoring
+  capabilities via Pyright, our chosen Python Language Server.
+- *Real-time Feedback:* ~flycheck~ integrates with ~lsp-mode~ to ensure
+  real-time linting and error highlighting during development.
+- *Autocompletion:* ~company~ leverages the capabilities of ~lsp-mode~ and
+  ~yasnippet~ to provide intelligent code suggestions and template
+  expansions.
+- *Debugging (DAP):* ~dap-mode~ and ~dap-python~ enable interactive
+  debugging sessions, allowing you to set breakpoints, inspect
+  variables, and step through code—all within Emacs.
+- *Environment Management:* ~direnv~ and ~envrc~ automate the activation of
+  virtual environments, ensuring your Python projects remain
+  consistent and reproducible.
+
+By strategically combining these tools, we can achieve a powerful and
+flexible development setup that adapts to the demands of both small
+scripts and large-scale Python projects.
 
 Each of these tools will be explained in the sections below, detailing
 their role in the workflow, their purpose within our configuration,
@@ -163,42 +312,6 @@ preferences or project requirements. This guide should not be viewed
 as a rigid framework but rather as a practical and quick way to
 achieve a comprehensive Python IDE setup in Emacs.
 
-
-** Goals and Scope of This Guide
-
-The purpose of this guide is to meticulously explore how Emacs can be
-transformed into a advanced Python IDE. This is not a universal manual
-intended for everyone — it is deeply tailored to my specific needs,
-preferences, and engineering rigor. Throughout this document, I aim to
-combine practical usability with transparent configuration, balancing
-power and simplicity.
-
-This guide reflects my personal journey in creating an IDE that meets
-my own standards of excellence. Could Emacs be made "better"?
-Absolutely, because the concept of "better" is always
-contextual. Could someone else choose different tools than I did?
-Certainly. The tools I selected represent the choices I made based on
-my criteria and understanding, which I will detail throughout the
-guide.
-
-At its core, this is a collection of my thoughts, experiments, and
-findings—a snapshot of my current understanding of how to make Emacs
-the ultimate Python development environment. While it may not suit
-everyone, I hope it inspires others to refine their workflows and
-explore the potential of Emacs as a highly customizable IDE.
-
-A note on some conscious exclusions: I do not use ~use-package~ in my
-personal Emacs configuration. While it may be a popular choice in the
-Emacs community, I have not found it particularly valuable for my
-workflow. I manage my configuration manually, and this approach works
-perfectly for me. If you are a ~use-package~ user, you might need to
-adapt discussed configuration to fit your own setup — I leave this as
-an exercise for you.
-
-Similarly, you will not find anything related to ~evil-mode~ or its
-keybindings in this guide. If I want to use Vim, I simply use Vim. I
-see no reason to mimic Vim within Emacs, as I prefer to embrace Emacs
-for what it is.
 
 * Environment Setup
 
@@ -418,8 +531,6 @@ Work In Progress...
 
 *** General Resources
 
-- [[https://microsoft.github.io/debug-adapter-protocol//][Debug Adapter Protocol]]
-  /Debug Adapter Protocol homepage./
 - [[https://direnv.net/][direnv home page]]
   /Introduction to direnv and how it simplifies environment management./
 - [[https://github.com/direnv/direnv/wiki/Python][Using direnv for Python (Wiki)]]
@@ -433,8 +544,6 @@ Work In Progress...
   /Emacs support for direnv which operates buffer-locally./
 - [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub ]]
   /The ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers./
-- [[https://github.com/emacs-lsp/dap-mode][dap-mode project at GitHub]]
-  /Emacs client/library for Debug Adapter Protocol./
 - [[https://github.com/joaotavora/yasnippet][yasnippet project at GitHub]]
   /A template system for Emacs./
 
@@ -448,7 +557,13 @@ Work In Progress...
 Work In Progress...
 #+end_quote
 
------
+* Footnotes
+
+[fn:7] Emacs client library for Debug Adapter Protocol: https://github.com/emacs-lsp/dap-mode
+
+[fn:6] An implementation of the Debug Adapter Protocol for Python: https://github.com/microsoft/debugpy
+
+[fn:5] Debug Adapter Protocol homepage: https://microsoft.github.io/debug-adapter-protocol/
 
 [fn:4] ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers: https://github.com/emacs-lsp/lsp-pyright
 
