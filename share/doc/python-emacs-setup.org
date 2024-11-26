@@ -29,7 +29,7 @@ The setup leverages a modular stack of tools, each addressing a specific need:
 Each tool in this stack has a unique responsibility. Here's a quick
 rundown:
 
-- ~lsp-mode~: A core integration layer for [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]],
+- ~lsp-mode~: A core integration layer for Language Server Protocol,
   enabling features like diagnostics, navigation, and refactoring.
 - ~lsp-pyright~: The Python language server providing type checking,
   intelligent autocompletion, and static analysis.
@@ -37,7 +37,7 @@ rundown:
   ~lsp-mode~.
 - ~flycheck~: Provides linting capabilities for Python projects,
   supporting both LSP diagnostics and custom checkers.
-- ~dap-mode~: [[https://microsoft.github.io/debug-adapter-protocol//][Debug Adapter Protocol]] integration for stepping through
+- ~dap-mode~: Debug Adapter Protocol integration for stepping through
   code, inspecting variables, and setting breakpoints.
 - ~direnv~ + ~envrc~: Automates environment setup, ensuring seamless
   virtual environment activation in Emacs.
@@ -45,11 +45,11 @@ rundown:
 ** Goals and Scope of This Guide
 
 The purpose of this guide is to meticulously explore how Emacs can be
-transformed into a world-class Python IDE. This is not a universal
-manual intended for everyone—it is deeply tailored to my specific
-needs, preferences, and engineering rigor. Throughout this document, I
-aim to combine practical usability with transparent configuration,
-balancing power and simplicity.
+transformed into a advanced Python IDE. This is not a universal manual
+intended for everyone — it is deeply tailored to my specific needs,
+preferences, and engineering rigor. Throughout this document, I aim to
+combine practical usability with transparent configuration, balancing
+power and simplicity.
 
 This guide reflects my personal journey in creating an IDE that meets
 my own standards of excellence. Could Emacs be made "better"?
@@ -65,9 +65,22 @@ the ultimate Python development environment. While it may not suit
 everyone, I hope it inspires others to refine their workflows and
 explore the potential of Emacs as a highly customizable IDE.
 
+A note on some conscious exclusions: I do not use ~use-package~ in my
+personal Emacs configuration. While it may be a popular choice in the
+Emacs community, I have not found it particularly valuable for my
+workflow. I manage my configuration manually, and this approach works
+perfectly for me. If you are a ~use-package~ user, you might need to
+adapt discussed configuration to fit your own setup — I leave this as
+an exercise for you.
+
+Similarly, you will not find anything related to ~evil-mode~ or its
+keybindings in this guide. If I want to use Vim, I simply use Vim. I
+see no reason to mimic Vim within Emacs, as I prefer to embrace Emacs
+for what it is.
+
 * Environment Setup
 
-** Installing Python and Dependencies
+** Installing Dependencies
 
 Before diving into Emacs-specific configuration, ensure that your
 system is ready:
@@ -100,23 +113,26 @@ activation.
 ** Setting Python Path and Version Automatically
 
 To avoid manually configuring Python paths, ensure ~direnv~ is
-integrated with Emacs via the ~envrc~ package. Add this snippet to your
-Emacs configuration at the very bottom of your configuration:
+integrated with Emacs via the ~envrc~ package.  The ~envrc~ package
+provides seamless integration of ~direnv~ with Emacs. It automatically
+applies environment variables buffer-locally, ensuring
+project-specific configurations don't leak into other buffers.  Add
+this snippet to your Emacs configuration at the very bottom of your
+configuration:
 
 #+begin_src elisp
-  ;; Setup buffer-local direnv integration for Emacs.
   (when (executable-find "direnv")
-    ;; `envrc-global-mode' should be enabled after other global minor modes,
-    ;; since each prepends itself to various hooks.
     (add-hook 'after-init-hook #'envrc-global-mode))
 #+end_src
 
 This activates ~envrc-mode~ for all programming modes, automatically
-aligning Emacs with the active environment.
+aligning Emacs with the active environment. Please note,
+~envrc-global-mode~ should be enabled after other global minor modes,
+since each prepends itself to various hooks.
 
-* Essential Features
+* IDE Setup
 
-** Autocompletion with ~company~ and ~lsp-pyright~
+** Autocompletion with ~company~ and ~lsp-mode~
 
 Autocompletion is powered by ~company~ in conjunction with
 ~lsp-mode~. Here’s how to set it up:
@@ -132,6 +148,14 @@ Autocompletion is powered by ~company~ in conjunction with
      (setopt company-show-quick-access t)
    #+end_src
 
+** TODO Using Snippets with ~yasnippet~ and ~lsp-mode~
+
+*** TODO Setup
+*** TODO Enable yasnippet globally?
+*** TODO Integrate ~yasnippet~ with ~company~
+*** TODO Create sample sippets
+
+** TODO Setup ~lsp-mode~, ~lsp-pyright~ and ~lsp-ui~
 ** TODO Real-Time Syntax Checking with ~flycheck~ or ~flymake~
 
 #+begin_quote
@@ -150,7 +174,7 @@ Work In Progress...
 Work In Progress...
 #+end_quote
 
-* Advanced Features
+* Testing IDE Workflow
 
 ** TODO Code Refactoring with ~lsp-mode~ and ~lsp-pyright~
 
@@ -186,9 +210,7 @@ Work In Progress...
 
 * Future Enhancements
 
-** Ideas for Extending This Guide
-
-*** TODO Sortout with language server and its plugins
+** TODO Sortout with language server and its plugins
 
 Do I really need the following:
 
@@ -197,18 +219,16 @@ Do I really need the following:
   python -m pip install python-lsp-server pylsp-mypy
 #+end_src
 
-** TODO Planned Features and Improvements
-
-#+begin_quote
-Work In Progress...
-#+end_quote
-
 * Appendix
 
 ** Additional Resources and References
 
-*** System Resources
+*** General Resources
 
+- [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]]
+  /Language Server Protocol homepage./
+- [[https://microsoft.github.io/debug-adapter-protocol//][Debug Adapter Protocol]]
+  /Debug Adapter Protocol homepage./
 - [[https://microsoft.github.io/pyright/][Pyright Home Page]]
   /Official documentation and features of the Pyright static type checker./
 - [[https://direnv.net/][direnv home page]]
@@ -221,9 +241,15 @@ Work In Progress...
 *** Emmacs Resources
 
 - [[https://github.com/purcell/envrc][envrc project at GitHub]]
+  /Emacs support for direnv which operates buffer-locally./
 - [[https://github.com/emacs-lsp/lsp-mode][lsp-mode project at GitHub]]
-- [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub]]
+  /Emacs client/library for the Language Server Protocol/.
+- [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub ]]
+  /The ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers./
 - [[https://github.com/emacs-lsp/dap-mode][dap-mode project at GitHub]]
+  /Emacs client/library for Debug Adapter Protocol./
+- [[https://github.com/joaotavora/yasnippet][yasnippet project at GitHub]]
+  /A template system for Emacs./
 
 *** Community Discussions
 
