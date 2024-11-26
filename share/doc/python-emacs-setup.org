@@ -40,6 +40,94 @@ fixing issues.
 Seamless management of Python environments and dependencies simplifies
 setup and reduces context switching.
 
+** Foundations of Key Protocols
+
+Before delving deeper into the tools and their configurations, we have
+to understand some foundational concepts and protocols that underpin
+the technologies used in this guide. This section provides a brief
+overview of two critical protocols: Language Server Protocol and Debug
+Adapter Protocol. These protocols form the backbone of modern IDEs,
+enabling modularity, flexibility, and seamless integration across
+various tools.
+
+*** Language Server Protocol
+
+The Language Server Protocol (LSP)[fn:1] was introduced by Microsoft
+in 2016 as a way to standardize communication between code editors (or
+IDEs) and language-specific tooling. Prior to LSP, every editor had
+its own method of integrating language support, leading to
+fragmentation, duplicated effort, and slower progress in tooling
+development.
+
+LSP solves these issues by decoupling the editor and the language
+tooling into two distinct components:
+
+1. *Editor (Client):* The interface that the developer interacts with
+   (e.g., Emacs, Visual Studio Code, Neovim).
+2. *Language Server:* A standalone program that provides features such
+   as autocompletion, type checking, navigation, and refactoring for a
+   specific programming language.
+
+These components communicate using JSON-RPC over a network or local
+connection. For example, the client might request "/Provide
+autocompletions at line X, column Y/", and the server responds with
+suggestions.
+
+In the context of Emacs and Python:
+
+- *Language Server:* Pyright[fn:2] (written in TypeScript) — the one of
+  existing implementations of Language Servers for Python, — provides
+  functionality like:
+  - autocompletion
+  - type checking
+  - diagnostics
+  - refactoring
+  - code navigation
+  It works independently of the editors, communicating with clients
+  via the standard LSP protocol.
+- *Client:* Packages such as ~lsp-mode~[fn:3] implement the client side of
+  the LSP protocol in Emacs.  ~lsp-mode~ facilitate communication with
+  the server (e.g., "/find the definitions of the function/") and
+  handling responses from the server (e.g., "/here are the function
+  definitions in file X, line Y/"). ~lsp-mode~ also rendering output
+  (e.g., error highlights, documentation tooltips).
+- *Wrapper:* This component is often optional, and strictly speaking,
+  you can do without it. In this guide, I will focus on the Pyright
+  language server, with ~lsp-pyright~[fn:4] as its wrapper. This package
+  acts as an intermediary layer between ~lsp-mode~ and the Pyright
+  server. It configures and launches the Pyright Node.js package as a
+  language server. Additionally, ~lsp-pyright~ provides Python-specific
+  configurations, such as setting up virtual environment paths (venv),
+  types, and modules. Essentially, it serves as a bridge between Emacs
+  and Pyright.
+
+**** Interaction Architecture
+
+1. Emacs (~lsp-mode~): The client-side component. Sends requests to the
+   server and displays the results.
+2. Emacs (~lsp-pyright~): The auxiliary layer. Handles the setup and
+   configuration of Pyright.
+3. Node.js (Pyright): The server-side component. Processes requests,
+   analyzes Python code, and returns the results to the client.
+
+**** Example Interaction Workflow
+
+1. The user edits a Python file in Emacs.
+2. ~lsp-mode~ sends a request through ~lsp-pyright~ to the Pyright server:
+   "What is the type of variable X?"
+3. Pyright analyzes the code and returns the type of the variable.
+4. ~lsp-mode~ displays the result to the user in the minibuffer or on
+   hover.
+
+**** Why is this separation important?
+
+In this architecture LSP servers are editor-independent. Pyright can
+be used not only in Emacs but also in VS Code or Neovim. In other
+hand, ~lsp-pyright~ allows you to easily switch to another server (e.g.,
+~pylsp~) without altering the client logic. And at the end, the code
+analysis is offloaded from the editor, as the server runs in a
+separate process.
+
 ** Key Components and Their Roles
 
 To bring the abstract concepts from the previous section to life, I
@@ -329,13 +417,9 @@ Work In Progress...
 ** Additional Resources and References
 
 *** General Resources
-
-- [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]]
-  /Language Server Protocol homepage./
+/
 - [[https://microsoft.github.io/debug-adapter-protocol//][Debug Adapter Protocol]]
   /Debug Adapter Protocol homepage./
-- [[https://microsoft.github.io/pyright/][Pyright Home Page]]
-  /Official documentation and features of the Pyright static type checker./
 - [[https://direnv.net/][direnv home page]]
   /Introduction to direnv and how it simplifies environment management./
 - [[https://github.com/direnv/direnv/wiki/Python][Using direnv for Python (Wiki)]]
@@ -347,8 +431,6 @@ Work In Progress...
 
 - [[https://github.com/purcell/envrc][envrc project at GitHub]]
   /Emacs support for direnv which operates buffer-locally./
-- [[https://github.com/emacs-lsp/lsp-mode][lsp-mode project at GitHub]]
-  /Emacs client/library for the Language Server Protocol/.
 - [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub ]]
   /The ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers./
 - [[https://github.com/emacs-lsp/dap-mode][dap-mode project at GitHub]]
@@ -365,3 +447,10 @@ Work In Progress...
 #+begin_quote
 Work In Progress...
 #+end_quote
+
+* Footnotes
+
+- [fn:4] ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers https://github.com/emacs-lsp/lsp-pyright
+- [fn:3] Emacs client/library for the Language Server Protocol https://github.com/emacs-lsp/lsp-mode
+- [fn:2] Pyright homepage https://microsoft.github.io/pyright/#/
+- [fn:1] Language Server Protocol homepage: https://microsoft.github.io/language-server-protocol/
