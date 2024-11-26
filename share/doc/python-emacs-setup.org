@@ -481,7 +481,7 @@ since each prepends itself to various hooks.
 Autocompletion is a cornerstone of modern development workflows,
 saving countless keystrokes and providing real-time insights into your
 code. In this guide, autocompletion is achieved through the powerful
-combination of ~company~ and ~lsp-mode~.
+combination of ~company~[fn:13] and ~lsp-mode~.
 
 The setup for basic autocompletion is remarkably simple:
 
@@ -496,7 +496,7 @@ combined with ~lsp-mode~.
 
 ** TODO Enhancing Autocompletion with ~yasnippet~
 
-To complement ~lsp-mode~ and ~company~, ~yasnippet~ provides pre-defined
+To complement ~lsp-mode~ and ~company~, ~yasnippet~[fn:14] provides pre-defined
 code snippets and templates for repetitive code structures.
 
 *** TODO Setup
@@ -598,18 +598,11 @@ configurations.
 Work In Progress...
 #+end_quote
 
-* Appendix
-
-** Additional Resources and References
-
-*** Emacs Resources
-
-- [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub ]]
-  /The ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers./
-- [[https://github.com/joaotavora/yasnippet][yasnippet project at GitHub]]
-  /A template system for Emacs./
-
 * Footnotes
+[fn:14] A template system for Emacs: https://github.com/joaotavora/yasnippet
+
+[fn:13] Modular in-buffer completion framework for Emacs: https://company-mode.github.io/
+
 [fn:12] Emacs support for ~direnv~: https://github.com/wbolster/emacs-direnv
 
 [fn:11] Emacs support for ~direnv~ which operates buffer-locally: https://github.com/purcell/envrc
