@@ -450,7 +450,7 @@ Work In Progress...
 
 * Footnotes
 
-- [fn:4] ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers https://github.com/emacs-lsp/lsp-pyright
-- [fn:3] Emacs client/library for the Language Server Protocol https://github.com/emacs-lsp/lsp-mode
-- [fn:2] Pyright homepage https://microsoft.github.io/pyright/#/
-- [fn:1] Language Server Protocol homepage: https://microsoft.github.io/language-server-protocol/
+[fn:4] ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers: https://github.com/emacs-lsp/lsp-pyright
+[fn:3] Emacs client/library for the Language Server Protocol: https://github.com/emacs-lsp/lsp-mode
+[fn:2] Pyright homepage: https://microsoft.github.io/pyright/#/
+[fn:1] Language Server Protocol homepage: https://microsoft.github.io/language-server-protocol/
