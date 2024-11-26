@@ -14,19 +14,37 @@ projects.
 
 ** Overview of the Configuration Stack
 
-The setup leverages a modular stack of tools, each addressing a specific need:
+A modern IDE is not just a text editor; it's a comprehensive ecosystem
+that supports every aspect of software development. To transform Emacs
+into an IDE tailored for Python, I leverage a modular stack of
+technologies, each addressing a specific aspect of the development
+workflow.
 
-- *LSP (Language Server Protocol):* Provides code intelligence features
-  like autocompletion, navigation, and type checking.
-- *Autocompletion:* Handled by ~company~ in tandem with ~lsp-pyright~.
-- *Linting:* Powered by flycheck or flymake for real-time feedback.
-- *Debugging:* Managed via ~dap-mode~, enabling a seamless debugging experience.
-- *Environment Management:* Simplified with ~direnv~ and ~envrc~,
-  automatically configuring Python virtual environments.
+*** Code Intelligence
+
+Autocompletion, navigation, and type checking enhance productivity and
+help catch errors early.
+
+*** Linting and Static Analysis
+
+Real-time feedback ensures code adheres to best practices and avoids
+common pitfalls.
+
+*** Debugging
+
+Integrated debugging tools streamline the process of finding and
+fixing issues.
+
+*** Environment Management
+
+Seamless management of Python environments and dependencies simplifies
+setup and reduces context switching.
 
 ** Key Components and Their Roles
 
-Each tool in this stack has a unique responsibility. Here's a quick
+To bring the abstract concepts from the previous section to life, I
+rely on a carefully chosen set of tools. Each component has a clear
+purpose and integrates seamlessly into Emacs. Here's a quick
 rundown:
 
 - ~lsp-mode~: A core integration layer for Language Server Protocol,
@@ -41,6 +59,22 @@ rundown:
   code, inspecting variables, and setting breakpoints.
 - ~direnv~ + ~envrc~: Automates environment setup, ensuring seamless
   virtual environment activation in Emacs.
+
+Each of these tools will be explained in the sections below, detailing
+their role in the workflow, their purpose within our configuration,
+and the minimal setup required to achieve a cohesive, functional
+result. However, this guide does not aim to provide an exhaustive
+configuration for each package. For deeper customization tailored to
+your specific needs, I strongly encourage referring to the official
+documentation of each tool.
+
+Additionally, it is important to note that the tools discussed here
+are not always the only options available in their respective
+domains. Often, you can substitute one tool for another based on your
+preferences or project requirements. This guide should not be viewed
+as a rigid framework but rather as a practical and quick way to
+achieve a comprehensive Python IDE setup in Emacs.
+
 
 ** Goals and Scope of This Guide
 
@@ -101,10 +135,10 @@ me.
 According to the official documentation, there are two main ways to
 install ~pyright~:
 
-1. **Install the Node.js package globally:** This is the most official
+1. *Install the Node.js package globally:* This is the most official
    and feature-complete method. It provides a CLI application that
    seamlessly integrates with ~lsp-mode~.
-2. **Install the Python package:** While this method might appeal to
+2. *Install the Python package:* While this method might appeal to
    Python purists, I see several drawbacks:
    - If installed locally within a virtual environment, it adds yet
      another dependency to every project, which may not be ideal for
