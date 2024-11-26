@@ -420,7 +420,6 @@ Here’s a basic example of how to set up ~direnv~ for a Python project:
      export VIRTUAL_ENV=.venv
      layout python3
    #+end_src
-
  2. Enable ~direnv~ for this directory:
     #+begin_src shell
       direnv allow
