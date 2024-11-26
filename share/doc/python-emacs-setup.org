@@ -148,7 +148,10 @@ Autocompletion is powered by ~company~ in conjunction with
      (setopt company-show-quick-access t)
    #+end_src
 
-** TODO Using Snippets with ~yasnippet~ and ~lsp-mode~
+** TODO Enhancing Autocompletion with ~yasnippet~
+
+To complement ~lsp-mode~ and ~company~, ~yasnippet~ provides pre-defined
+code snippets and templates for repetitive code structures.
 
 *** TODO Setup
 
@@ -193,6 +196,15 @@ Work In Progress...
 Work In Progress...
 #+end_quote
 
+** TODO Automating Virtual Environments with ~Poetry~ and ~direnv~
+
+~Poetry~ simplifies virtual environment management, and its integration
+with ~direnv~ automates environment setup:
+
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 * Testing IDE Workflow
 
 ** TODO Code Refactoring with ~lsp-mode~ and ~lsp-pyright~
@@ -229,6 +241,21 @@ Work In Progress...
 
 * Future Enhancements
 
+** Exploring Alternative LSP Clients
+
+While ~lsp-mode~ is the most feature-complete client, ~Eglot~ offers a
+simpler and more lightweight alternative for integrating LSP servers
+with Emacs. It is worth exploring for users who prefer minimal
+configurations.
+
+#+begin_quote
+Work In Progress...
+#+end_quote
+
+* Temporary
+
+This section contains my personal TODOs related to this guide.
+
 ** TODO Sortout with language server and its plugins
 
 Do I really need the following:
@@ -257,7 +284,7 @@ Do I really need the following:
 - [[https://github.com/direnv/direnv][direnv project at GitHub]]
   /Source code and additional documentation for direnv./
 
-*** Emmacs Resources
+*** Emacs Resources
 
 - [[https://github.com/purcell/envrc][envrc project at GitHub]]
   /Emacs support for direnv which operates buffer-locally./
