@@ -151,9 +151,28 @@ Autocompletion is powered by ~company~ in conjunction with
 ** TODO Using Snippets with ~yasnippet~ and ~lsp-mode~
 
 *** TODO Setup
+
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 *** TODO Enable yasnippet globally?
+
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 *** TODO Integrate ~yasnippet~ with ~company~
+
+#+begin_quote
+Work In Progress...
+#+end_quote
+
 *** TODO Create sample sippets
+
+#+begin_quote
+Work In Progress...
+#+end_quote
 
 ** TODO Setup ~lsp-mode~, ~lsp-pyright~ and ~lsp-ui~
 ** TODO Real-Time Syntax Checking with ~flycheck~ or ~flymake~
