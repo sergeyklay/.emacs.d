@@ -601,7 +601,224 @@ advanced snippet features and refine your workflow. For now, enjoy the
 simplicity of having code snippets readily available at your
 fingertips.
 
-** TODO Setup ~lsp-mode~, ~lsp-pyright~ and ~lsp-ui~
+** Setup ~lsp-mode~, ~lsp-pyright~ and ~lsp-ui~
+
+This section covers one of the most exciting parts of the guide:
+configuring LSP for Python development in Emacs. With this setup,
+you’ll unlock roughly 70% of the features this guide aims to deliver,
+turning Emacs into a highly capable Python IDE.
+
+*** Getting Started
+
+To begin, ensure you have the following packages installed: ~lsp-mode~,
+~lsp-pyright~, and ~lsp-ui~[fn:15]. These three packages form the backbone of our
+LSP configuration.
+
+*** Configuring the Keymap Prefix
+
+One of the first and most helpful configurations is setting a keymap
+prefix for ~lsp-mode~. If you struggle with remembering multiple
+keybindings or simply prefer an accessible overview of available
+commands, I recommend install and use the ~which-key~[fn:16] package.
+
+~which-key~ is a minor mode that displays keybinding suggestions in a
+popup as you type a prefix. When integrated with lsp-mode, it provides
+a quick reference for all LSP-related commands.
+
+By default, the ~lsp-mode~ keymap prefix is ~s-l~ (Super + L), which often
+conflicts with system-wide shortcuts, such as screen locking on many
+Linux desktop environments. To avoid this, I recommend changing it to
+~C-c l~, even though it conflicts with ~org-store-link~ in
+~org-mode~. Personally, I find the excessive use of ~C-c <key>~ bindings
+for so many commands in ~org-mode~ to be unjustified.
+
+As stated in the manual:
+#+begin_quote
+A small number of keys are reserved for user-defined bindings, and
+*should not be used by modes*, so key bindings using those keys are
+safer in this regard.  The reserved key sequences are those consisting
+of ~C-c~ followed by a letter (either upper or lower case), and function
+keys ~F5~ through ~F9~ without modifiers.
+#+end_quote
+
+Here’s how you can remap the prefix and reassign ~org-store-link~:
+
+#+begin_src elisp
+  ; Reassign org-store-link
+  (global-set-key (kbd "C-c o l") #'org-store-link)
+
+  (setopt lsp-keymap-prefix "C-c l")
+#+end_src
+
+*** Selecting the Correct Python Version
+
+~lsp-pyright~ automatically attempts to locate the appropriate Python
+executable for the current project using a series of search
+functions. The default behavior includes:
+
+1. Searching for a virtual environment named ~.venv~ or ~venv~ in the
+   parent directories.
+2. Looking for a Python executable in your system’s ~PATH~.
+
+
+However, you can extend or customize this behavior. Earlier in this
+guide, we configured ~direnv~ to set the ~VIRTUAL_ENV~ environment
+variable. Let’s leverage this by adding a custom search function:
+
+#+begin_src elisp
+  (defun my-locate-python-virtualenv ()
+  "Find the Python executable based on the VIRTUAL_ENV environment variable."
+  (when-let ((venv (getenv "VIRTUAL_ENV")))
+    (let ((python-path (expand-file-name "bin/python" venv)))
+      (when (file-executable-p python-path)
+        python-path))))
+
+(with-eval-after-load 'lsp-pyright
+  (add-to-list 'lsp-pyright-python-search-functions
+               #'my-locate-python-virtualenv))
+#+end_src
+
+This addition ensures ~lsp-pyright~ prioritizes the Python executable
+specified by ~VIRTUAL_ENV~, speeding up its decision-making
+process. This environemt was set by ~direnv~ and proxied to Emacs by
+~envrc~ mode. While optional, this example demonstrates the simplicity
+and flexibility of extending ~lsp-pyright~.
+
+*** Configuring LSP Completion
+
+In Emacs, the current trend for completion logic is to leverage the
+~completion-at-point-functions~ (CAPF) framework. This is a standardized
+approach to completion that integrates with many major modes and
+external tools, including those that support the LSP.
+
+CAPF serves as the backbone for modern Emacs completion systems. It
+provides a unified interface for completion suggestions and works
+seamlessly with LSP-based tools. ~company-capf~ acts as a bridge between
+the ~company-mode~ autocompletion system and the CAPF framework, making
+it a popular and highly recommended backend for autocompletion.
+
+By default, the ~company-backends~ variable is configured as follows:
+
+#+begin_src elisp
+   (company-bbdb company-semantic company-cmake company-capf company-clang company-files
+                 (company-dabbrev-code company-gtags company-etags company-keywords)
+                 company-oddmuse company-dabbrev)
+#+end_src
+
+This setup includes a wide range of backends, with ~company-capf~
+already present. However, this default configuration may introduce
+redundant or less relevant backends for your use case, especially when
+working with LSP.
+
+To streamline the autocompletion process, you can customize
+company-backends to prioritize CAPF and reduce clutter from other
+backends. Here’s a minimal configuration that works well for LSP-based
+workflows:
+
+#+begin_src elisp
+  (setopt company-backends '((company-capf company-dabbrev-code)))
+#+end_src
+
+In this configuration:
+
+- ~company-capf~ handles completions provided by the
+  ~completion-at-point-functions~ framework, including suggestions from
+  LSP servers.
+- ~company-dabbrev-code~ acts as a fallback, providing context-sensitive
+  completions from existing code in the buffer.
+
+This setup is sufficient for many major modes that implement CAPF
+support, including Python via ~lsp-mode~.
+
+When using ~lsp-mode~, CAPF support is enabled by setting the LSP
+completion provider to ~:capf~. This ensures that ~lsp-mode~ integrates
+seamlessly with ~company-capf~:
+
+#+begin_src elisp
+  (setopt lsp-completion-provider :capf)
+#+end_src
+
+This single line of configuration tells lsp-mode to provide its
+completion suggestions via CAPF, which ~company-capf~ then picks up and
+presents as part of its backend.
+
+*** Enhancing the UI with ~lsp-ui~
+
+~lsp-ui~ improves the visual experience of working with LSP in
+Emacs. For example, the breadcrumb displayed in the headerline can
+show information about the current file, its path, and relevant
+symbols. Here’s a sample configuration:
+
+#+begin_src elisp
+  (setopt lsp-headerline-breadcrumb-segments
+          '(path-up-to-project  ; Include directories up to the project root
+            file                ; Include the open file name
+            symbols))           ; Include document symbols, if supported
+#+end_src
+
+Additionally, enable the ~lsp-headerline-breadcrumb-mode~ and
+~lsp-ui-mode~ hooks to ensure these features are activated whenever
+~lsp-mode~ is enabled:
+
+#+begin_src elisp
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-headerline-breadcrumb-mode)
+    (add-hook 'lsp-mode-hook #'lsp-ui-mode))
+#+end_src
+
+*** Integrating ~which-key~ with ~lsp-mode~
+
+To further enhance the usability of ~lsp-mode~, enable its built-in
+integration with ~which-key~:
+
+#+begin_src elisp
+  (with-eval-after-load 'lsp-mode
+    (lsp-enable-which-key-integration t))
+#+end_src
+
+This integration ensures that pressing the LSP keymap prefix (~C-c l~ in
+our case) provides a helpful list of available commands.
+
+*** Bringing It All Together
+
+Here’s the complete setup:
+
+#+begin_src elisp
+  ;; Set LSP keymap prefix
+  (setopt lsp-keymap-prefix "C-c l")
+
+  ;; Configure LSP completion
+  (setopt lsp-completion-provider :capf)
+
+  ;; Extend Python search functions for lsp-pyright
+  (defun my-locate-python-virtualenv ()
+    "Find the Python executable based on the VIRTUAL_ENV environment variable."
+    (when-let ((venv (getenv "VIRTUAL_ENV")))
+      (let ((python-path (expand-file-name "bin/python" venv)))
+        (when (file-executable-p python-path)
+          python-path))))
+
+  (with-eval-after-load 'lsp-pyright
+    (add-to-list 'lsp-pyright-python-search-functions
+                 #'my-locate-python-virtualenv))
+
+  ;; Configure LSP UI enhancements
+  (setopt lsp-headerline-breadcrumb-segments
+          '(path-up-to-project
+            file
+            symbols))
+
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-headerline-breadcrumb-mode)
+    (add-hook 'lsp-mode-hook #'lsp-ui-mode)
+    (lsp-enable-which-key-integration t))
+#+end_src
+
+With this configuration, ~lsp-mode~, ~lsp-pyright~, and ~lsp-ui~ work
+seamlessly together to provide an enhanced development experience. You
+now have powerful tools for Python development at your disposal, with
+minimal effort and plenty of room for customization.
+
 ** TODO Real-Time Syntax Checking with ~flycheck~ or ~flymake~
 
 #+begin_quote
@@ -677,6 +894,10 @@ Work In Progress...
 #+end_quote
 
 * Footnotes
+[fn:16] Display available keybindings in popup: https://elpa.gnu.org/packages/which-key.html
+
+[fn:15] UI integrations for ~lsp-mode~: https://github.com/emacs-lsp/lsp-ui
+
 [fn:14] A template system for Emacs: https://github.com/joaotavora/yasnippet
 
 [fn:13] Modular in-buffer completion framework for Emacs: https://company-mode.github.io/
