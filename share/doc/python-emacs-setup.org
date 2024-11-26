@@ -30,7 +30,7 @@ my criteria and understanding, which I will detail throughout the
 guide.
 
 At its core, this is a collection of my thoughts, experiments, and
-findings—a snapshot of my current understanding of how to make Emacs
+findings — a snapshot of my current understanding of how to make Emacs
 the ultimate Python development environment. While it may not suit
 everyone, I hope it inspires others to refine their workflows and
 explore the potential of Emacs as a highly customizable IDE.
@@ -366,32 +366,103 @@ Finally, if you happen to explore deeper and discover a way to enable
 the mythical auto-installation of ~pyright~ in ~lsp-mode~, feel free to
 share — I’d love to know what I missed!
 
-** Configuring Virtual Environments with ~direnv~ and ~envrc~
+** Managing Multiple Pythons
 
-A well-configured environment is key for maintaining consistency
-across projects. ~direnv~ and ~envrc~ automate virtual environment
-activation.
+Managing multiple Python versions is a necessity for many
+developers. Often, you don’t want to use the latest Python release,
+primarily due to package requirements or compatibility
+constraints. There are several approaches to managing multiple Python
+versions, and the choice largely depends on your environment and
+preferences.
 
-1. At the root of your Python project, create an ~.envrc~ file:
+For example, if you're using Gentoo, Portage provides access to
+several older Python versions. Similarly, tools like Nix or Guix can
+be pinned to specific commits containing the desired Python
+version. However, for most users, the simplest and most flexible
+method is to use ~pyenv~[fn:8].
+
+~pyenv~ allows you to install and manage multiple Python versions
+seamlessly. It also provides shims, which enable your shell to
+automatically select the appropriate Python version based on the
+current project directory. This functionality makes it a convenient
+tool for managing Python installations.
+
+That said, in my workflow, I only use pyenv for installing and
+managing Python versions. For selecting the Python version on a
+per-project basis, I prefer to rely on direnv[fn:9], which I’ll describe
+next.
+
+*** Using ~direnv~
+
+~direnv~ is a language-agnostic tool that automatically enables or
+disables environment variables depending on the current directory (and
+its subdirectories). This approach eliminates the need to manually
+manage Python versions for each project and streamlines the setup
+process.
+
+With ~direnv~, you can configure a project’s Python environment simply
+by navigating into the corresponding directory. Unlike ~pyenv~ shims,
+which require additional configuration, ~direnv~ handles everything for
+you in a way that works not just for Python but for virtually any
+programming environment.
+
+In fact there is an extensive Community Wiki that covers almost
+every setup you could want. Therefore,
+
+I will not focus on the deep
+customization of ~direnv~ and show a basic example of how to set up
+~direnv~ for a Python project:
+
+Here’s a basic example of how to set up ~direnv~ for a Python project:
+
+1. At the root of your project, create a file named ~.envrc~:
    #+begin_src shell
      export VIRTUAL_ENV=.venv
      layout python3
    #+end_src
 
-2. Allow direnv to manage the environment:
-   #+begin_src shell
-     direnv allow
-   #+end_src
+ 2. Enable ~direnv~ for this directory:
+    #+begin_src shell
+      direnv allow
+    #+end_src
 
-** Setting Python Path and Version Automatically
+From this point on, commands like ~command -v python~ or ~type -a python~
+will point to the local Python version specified in your project.
 
-To avoid manually configuring Python paths, ensure ~direnv~ is
-integrated with Emacs via the ~envrc~ package.  The ~envrc~ package
-provides seamless integration of ~direnv~ with Emacs. It automatically
-applies environment variables buffer-locally, ensuring
-project-specific configurations don't leak into other buffers.  Add
-this snippet to your Emacs configuration at the very bottom of your
-configuration:
+The beauty of this workflow lies in its simplicity and flexibility:
+
+- ~pyenv~ ensures you can easily install any Python version you need.
+- ~direnv~ takes care of dynamically selecting the correct environment
+  as you switch between projects, reducing the need for repetitive
+  manual configuration.
+- ~direnv~ is language-agnostic, meaning it can be used not only for
+  Python but for virtually any environment management scenario.
+
+The example provided above is intentionally minimal and sufficient for
+the scope of this guide. However, ~direnv~ offers extensive
+customization options, including advanced configurations that
+integrate with ~pyenv~ shims. For more complex workflows, I highly
+recommend exploring the official documentation and experimenting with
+the examples available in the community wiki[fn:10].
+
+By combining ~pyenv~ and ~direnv~, you gain a robust and scalable approach
+to managing multiple Python versions without the overhead of manual
+setup.
+
+** Integrating ~direnv~ with Emacs
+
+There are 2 Emacs extensions I know of for ~direnv~. There's
+~envrc~[fn:11] and ~emacs-direnv~[fn:12]. Both are good and
+well-supported, but envrc sets environment variables
+buffer-locally. It automatically applies environment variables
+buffer-locally, ensuring project-specific configurations don't leak
+into other buffers.  This means I can open files in different
+projects, each with their own virtual env, and emacs will see
+different PATH etc. For each file I have open. This means I can run
+correctly isolated LSP sessions for each project.
+
+Add this snippet to your Emacs configuration at the very bottom of
+your configuration:
 
 #+begin_src elisp
   (when (executable-find "direnv")
@@ -529,35 +600,23 @@ Work In Progress...
 
 ** Additional Resources and References
 
-*** General Resources
-
-- [[https://direnv.net/][direnv home page]]
-  /Introduction to direnv and how it simplifies environment management./
-- [[https://github.com/direnv/direnv/wiki/Python][Using direnv for Python (Wiki)]]
-  /Comprehensive guide on configuring Python environments with direnv./
-- [[https://github.com/direnv/direnv][direnv project at GitHub]]
-  /Source code and additional documentation for direnv./
-
 *** Emacs Resources
 
-- [[https://github.com/purcell/envrc][envrc project at GitHub]]
-  /Emacs support for direnv which operates buffer-locally./
 - [[https://github.com/emacs-lsp/lsp-pyright][lsp-pyright project at GitHub ]]
   /The ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers./
 - [[https://github.com/joaotavora/yasnippet][yasnippet project at GitHub]]
   /A template system for Emacs./
 
-*** Community Discussions
-
-- [[https://github.com/emacs-lsp/lsp-pyright/issues/95][How setup it to use the ~pyright~ installed in the environment?]]
-
-** TODO Example Configurations
-
-#+begin_quote
-Work In Progress...
-#+end_quote
-
 * Footnotes
+[fn:12] Emacs support for ~direnv~: https://github.com/wbolster/emacs-direnv
+
+[fn:11] Emacs support for ~direnv~ which operates buffer-locally: https://github.com/purcell/envrc
+
+[fn:10] ~direnv~ Community Wiki: https://github.com/direnv/direnv/wiki/Python
+
+[fn:9] ~direnv~ home page: https://direnv.net/
+
+[fn:8] Simple Python version management: https://github.com/pyenv/pyenv
 
 [fn:7] Emacs client library for Debug Adapter Protocol: https://github.com/emacs-lsp/dap-mode
 
