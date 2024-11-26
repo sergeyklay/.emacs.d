@@ -478,19 +478,21 @@ since each prepends itself to various hooks.
 
 ** Autocompletion with ~company~ and ~lsp-mode~
 
-Autocompletion is powered by ~company~ in conjunction with
-~lsp-mode~. Here’s how to set it up:
+Autocompletion is a cornerstone of modern development workflows,
+saving countless keystrokes and providing real-time insights into your
+code. In this guide, autocompletion is achieved through the powerful
+combination of ~company~ and ~lsp-mode~.
 
-1. Install ~company~ and configure if needed:
-   #+begin_src elisp
-     (require 'company)
+The setup for basic autocompletion is remarkably simple:
 
-     ;; The idle delay in seconds until completion starts automatically.
-     (setopt company-idle-delay 0.1)
+1. Install ~company~.
+2. Profit.
 
-     ;; Show quick-access hints beside the candidates.
-     (setopt company-show-quick-access t)
-   #+end_src
+That’s it. No, seriously — this is not a joke. For the purposes of
+this guide (and honestly, for most use cases), you don’t even need to
+include ~(require 'company)~ in your Emacs configuration. By simply
+installing the package, autocompletion will work out of the box when
+combined with ~lsp-mode~.
 
 ** TODO Enhancing Autocompletion with ~yasnippet~
 
