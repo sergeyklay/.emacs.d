@@ -494,34 +494,112 @@ include ~(require 'company)~ in your Emacs configuration. By simply
 installing the package, autocompletion will work out of the box when
 combined with ~lsp-mode~.
 
-** TODO Enhancing Autocompletion with ~yasnippet~
+** Enhancing Autocompletion with ~yasnippet~
 
-To complement ~lsp-mode~ and ~company~, ~yasnippet~[fn:14] provides pre-defined
-code snippets and templates for repetitive code structures.
+To complement the power of ~lsp-mode~ and ~company~, ~yasnippet~[fn:14]
+provides ability to use predefined code snippets and templates for
+repetitive structures. This tool can save time and reduce boilerplate
+by allowing you to expand small triggers into full code blocks.
 
-*** TODO Setup
+In this section, I’ll guide you through the minimal configuration
+necessary to get started with ~yasnippet~. As always, I recommend
+exploring its capabilities further to tailor it to your specific
+needs, but here we’ll focus on the essentials.
 
-#+begin_quote
-Work In Progress...
-#+end_quote
+*** Integrating ~yasnippet~ with ~company~
 
-*** TODO Enable yasnippet globally?
+After installing ~yasnippet~, there’s no need to clutter your
+configuration with unnecessary options. Instead, let’s focus on a few
+key points. In the previous section, I mentioned how ~company~ works
+right out of the box. Now, we’ll extend ~company~ to integrate ~yasnippet~
+for snippet autocompletion. Add the following to your configuration:
 
-#+begin_quote
-Work In Progress...
-#+end_quote
+#+begin_src elisp
+  (with-eval-after-load 'company
+    (add-to-list 'company-backends 'company-yasnippet))
+#+end_src
 
-*** TODO Integrate ~yasnippet~ with ~company~
+This line is all you need to enable ~yasnippet~ as a backend for ~company~.
 
-#+begin_quote
-Work In Progress...
-#+end_quote
+For more advanced configurations, you might group multiple backends
+together. Here’s an example:
 
-*** TODO Create sample sippets
+#+begin_src elisp
+  (with-eval-after-load 'company
+    (add-to-list 'company-backends '(company-capf company-yasnippet)))
+#+end_src
 
-#+begin_quote
-Work In Progress...
-#+end_quote
+While the concept of ~company-backends~ is a bit more intricate (it’s
+essentially a list of functions implementing a specific interface),
+this simple addition suffices for our needs. For a deeper dive,
+consult the ~company-backends~ documentation.
+
+*** Enabling ~yasnippet~ Globally?
+
+Whether to enable ~yasnippet~ globally depends on your workflow. To
+enable it globally, simply call:
+
+#+begin_src elisp
+  (with-eval-after-load 'yasnippet
+    (yas-global-mode 1))
+#+end_src
+
+For the purposes of this guide, global mode is unnecessary. Instead,
+you can opt for a more targeted approach by reloading snippet tables
+and enabling ~yasnippet~ selectively in specific modes:
+
+#+begin_src elisp
+  (with-eval-after-load 'yasnippet
+    (yas-reload-all))
+#+end_src
+
+To enable ~yasnippet~ only in ~python-mode~, lets define a custom function
+and add it to the relevant hook. We'll reuse this hook a bit later for
+other python-related setiings.
+
+#+begin_src elisp
+    (defun my|setup-python-environment ()
+      "Custom configurations for Python mode."
+      ;; Enable YASnippet mode
+      (yas-minor-mode 1))
+
+  ;; Configure hooks after `python-mode` is loaded
+  (with-eval-after-load 'python
+    (add-hook 'python-mode-hook #'my|setup-python-environment))
+#+end_src
+
+This approach keeps your configuration modular and avoids loading
+unnecessary modes globally.
+
+*** Creating a Sample Snippet
+
+Now that we have ~yasnippet~ set up, let’s create a simple snippet to
+see it in action. Create a file at =~/.emacs.d/snippets/python-mode/def=
+with the following content:
+
+#+begin_src python
+  # -*- mode: snippet -*-
+  # name: def
+  # key: def
+  # --
+  def ${1:function_name}(${2:args}):
+      ${3:pass}
+#+end_src
+
+At this stage, I won’t delve into the syntax of snippets. You can
+experiment with it later to create more complex templates. For now,
+type ~def~ in a Python buffer and press ~TAB~ to expand it using
+~yas-expand~. Alternatively, you can type the first few characters, wait
+for ~lsp-mode~ to suggest def through ~company~, and select it with
+~TAB~. It’s that simple.
+
+The goal of this configuration is to get you started
+quickly. ~yasnippet~ integrates seamlessly with ~lsp-mode~ and ~company~,
+and the minimal setup above is sufficient to demonstrate its
+potential. As you grow more familiar with it, you can explore more
+advanced snippet features and refine your workflow. For now, enjoy the
+simplicity of having code snippets readily available at your
+fingertips.
 
 ** TODO Setup ~lsp-mode~, ~lsp-pyright~ and ~lsp-ui~
 ** TODO Real-Time Syntax Checking with ~flycheck~ or ~flymake~
