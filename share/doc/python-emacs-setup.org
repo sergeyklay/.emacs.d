@@ -417,7 +417,7 @@ Work In Progress...
 ** Additional Resources and References
 
 *** General Resources
-/
+
 - [[https://microsoft.github.io/debug-adapter-protocol//][Debug Adapter Protocol]]
   /Debug Adapter Protocol homepage./
 - [[https://direnv.net/][direnv home page]]
@@ -447,6 +447,8 @@ Work In Progress...
 #+begin_quote
 Work In Progress...
 #+end_quote
+
+-----
 
 [fn:4] ~lsp-mode~ client leveraging ~pyright~ and ~basedpyright~ Language Servers: https://github.com/emacs-lsp/lsp-pyright
 
