@@ -51,9 +51,6 @@
 # existence when verifying `org-agenda-diary-file'.
 /diary
 
-# DAP adapters
-/.extension
-
 # Stores the native-compiled *.eln files for configuration's *.el files.
 # Appears when Emacs was built with "--with-native-compilation" option.
 /eln-cache
@@ -66,5 +63,11 @@
 
 # List of org files with IDs on those files.
 .org-id-locations
+
+# Debug Adapter Protocol (DAP) breakpoints
+.dap-breakpoints
+
+# DAP adapters
+/.extension
 
 network-security.data
