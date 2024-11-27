@@ -2524,7 +2524,7 @@ when composing new messages."
 (add-hook 'mail-mode-hook #'my|mail-setup-environment)
 
 
-;;;; Language Support
+;;;; IDE Like Features
 ;;;;; Setup Completion
 (require 'company)
 
@@ -2537,28 +2537,12 @@ when composing new messages."
 ;;;;; Snippets and Expansions
 (setopt yas-verbosity (if emacs-debug-mode 3 0))
 
-(with-eval-after-load 'company
-  (add-to-list 'company-backends 'company-yasnippet))
-
 (with-eval-after-load 'yasnippet
   (yas-reload-all))
 
-;;;;; IDE Features with lsp-mode
+;;;;; Setup LSP
 ;; Set the LSP keymap prefix.
 (setopt lsp-keymap-prefix "C-c l")
-
-(defun my-locate-python-virtualenv ()
-  "Find the Python executable based on the VIRTUAL_ENV environment variable."
-  (when-let ((venv (getenv "VIRTUAL_ENV")))
-    (let ((python-path (expand-file-name "bin/python" venv)))
-      (lsp--info "VIRTUAL_ENV is set to %s" venv)
-      (when (file-executable-p python-path)
-        (lsp--info "Found python executable at %s" python-path)
-        python-path))))
-
-(with-eval-after-load 'lsp-pyright
-  (add-to-list 'lsp-pyright-python-search-functions
-               #'my-locate-python-virtualenv))
 
 ;; Configure LSP completion to use `completion-at-point-functions'.
 (setopt lsp-completion-provider :capf)
@@ -2569,14 +2553,32 @@ when composing new messages."
           file                ; Include the open file name
           symbols))           ; Include document symbols if server supports it
 
+;; Label symbols with numbers on the breadcrumb.
+(setopt lsp-headerline-breadcrumb-enable-symbol-numbers t)
+
+;; Display diagnostics on the sideline.
+(setopt lsp-ui-sideline-show-diagnostsics t)
+
+;; Display documentation of the symbol at point on hover.
+(setopt lsp-ui-doc-enable t)
+
+;; Show doc near the cursor.
+(setq lsp-ui-doc-position 'at-point)
+
+;; Delay before showing the doc.
+(setopt lsp-ui-doc-delay 0.5)
+
+;; Configure LSP mode for enhanced experience.
 (with-eval-after-load 'lsp-mode
-  ;; Configure LSP mode for enhanced experience.
+  ;; Enable feedback on headerline of the symbols at point, current file, etc.
   (add-hook 'lsp-mode-hook #'lsp-headerline-breadcrumb-mode)
-  (add-hook 'lsp-mode-hook #'lsp-ui-mode)
-
   ;; Enable `which-key-mode' integration for LSP
-  (lsp-enable-which-key-integration t))
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  ;; For fancy sideline, popup documentation, VScode-like peek UI, etc.
+  (add-hook 'lsp-mode-hook #'lsp-ui-mode))
 
+
+;;;; Language Support
 ;;;;; Language grammars
 ;; Since I’m the author and maintainer of `bnf-mode', I use my local version
 ;; instead of the installed package.  This lets me tweak the mode however I
@@ -2754,18 +2756,36 @@ when composing new messages."
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
+(defun my-locate-python-virtualenv ()
+  "Find the Python executable based on the VIRTUAL_ENV environment variable."
+  (when-let ((venv (getenv "VIRTUAL_ENV")))
+    (let ((python-path (expand-file-name "bin/python" venv)))
+      (lsp--info "VIRTUAL_ENV is set to %s" venv)
+      (when (file-executable-p python-path)
+        (lsp--info "Found python executable at %s" python-path)
+        python-path))))
+
+(with-eval-after-load 'lsp-pyright
+  (add-to-list 'lsp-pyright-python-search-functions
+               #'my-locate-python-virtualenv))
+
 (defun my|setup-python-environment ()
   "Custom configurations for Pyton mode."
-  ;; Set the `python-shell-interpreter' to the python3 in PATH.
+  ;; Enable YASnippet mode
+  (yas-minor-mode 1)
+
+  ;; Set the `python-shell-interpreter' to the python in PATH.
   ;; At this moment `envrc' should successfully configure environment.
   (setq-local python-shell-interpreter (executable-find "python"))
 
+  ;; Setup active backends for python mode
+  (setq-local company-backends
+              '((company-capf :with company-yasnippet)
+                company-dabbrev-code))
+
   ;; Enable LSP support in Python buffers.
   (require 'lsp-pyright)
-  (lsp)
-
-  ;; Enable YASnippet mode
-  (yas-minor-mode 1))
+  (lsp))
 
 ;; Configure hooks after `python-mode' is loaded.
 (with-eval-after-load 'python
