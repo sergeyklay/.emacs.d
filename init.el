@@ -1837,28 +1837,130 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
 ;; Fonts
+(defun my-calculate-dpi (&optional frame)
+  "Calculate and return the DPI (dots per inch) for the given FRAME.
+If FRAME is nil, use the currently selected frame.
+
+This function computes DPI using the monitor geometry and
+physical dimensions reported by `frame-monitor-attributes'."
+  (let* ((attrs (frame-monitor-attributes frame))
+         (geometry (cdr (assq 'geometry attrs)))
+         (mm-size (cdr (assq 'mm-size attrs)))
+         (pixel-width (nth 2 geometry))
+         (pixel-height (nth 3 geometry))
+         (mm-width (car mm-size))
+         (mm-height (cadr mm-size))
+         (dpi-x (/ (* pixel-width 25.4) mm-width))
+         (dpi-y (/ (* pixel-height 25.4) mm-height)))
+    (/ (+ dpi-x dpi-y) 2.0))) ;; Average DPI
+
+(defun my-adjust-font-height (dpi)
+  "Adjust and return the font height based on DPI.
+
+The function uses predefined DPI ranges to determine an appropriate
+font height. Users can customize these ranges and values as needed.
+
+- DPI > 200: Font height 140 (very high DPI, e.g., Retina or 4K laptops)
+- DPI > 145: Font height 130 (high DPI, e.g., high-res displays)
+- DPI > 100: Font height 120 (medium DPI, e.g., standard monitors)
+- DPI <= 100: Font height 110 (low DPI, e.g., older displays)."
+  (cond
+   ((> dpi 200) 150)
+   ((> dpi 145) 130)
+   ((> dpi 100) 110)
+   (t 100)))
+
+(defun my-dynamic-font-size (&optional frame)
+  "Return the optimal font height for the given FRAME.
+If FRAME is nil, use the currently selected frame.
+
+This function combines `calculate-dpi' and `adjust-font-height'
+to determine the appropriate font size dynamically."
+  (let ((dpi (my-calculate-dpi frame)))
+    (my-adjust-font-height dpi)))
+
+(defun my-set-dynamic-font (&rest args)
+  "Set dynamic fonts for 'default, 'fixed-pitch, and 'variable-pitch faces.
+
+ARGS is a plist of key-value pairs specifying font settings. The
+following keys are supported:
+
+- :frame FRAME                The frame for which to set fonts
+                              (default: current frame).
+- :default FONT-FAMILY        The font family for 'default face.
+- :default-size SIZE          The font height for 'default face (default: auto).
+- :fixed-pitch FONT-FAMILY    The font family for 'fixed-pitch face.
+- :fixed-pitch-size SIZE      The font height for 'fixed-pitch face
+                              (default: auto).
+- :variable-pitch FONT-FAMILY The font family for 'variable-pitch face.
+- :variable-pitch-size SIZE   The font height for 'variable-pitch face
+                              (default: auto).
+- :sync-fixed-pitch t         Should this function use the same font for
+                              'fixed-pitch as for 'default.
+
+If a specified font is unavailable, the current settings for that
+face are retained. Sizes default to dynamic calculation based on DPI
+unless explicitly provided."
+  (let* ((frame (plist-get args :frame))
+         (default-font (or (plist-get args :default)
+                           (face-attribute 'default :family)))
+         (default-size (or (plist-get args :default-size)
+                           (my-dynamic-font-size frame)))
+         (fixed-pitch-font (if (plist-get args :sync-fixed-pitch)
+                               default-font
+                             (or (plist-get args :fixed-pitch)
+                                 (face-attribute 'fixed-pitch :family))))
+         (fixed-pitch-size (or (plist-get args :fixed-pitch-size)
+                               default-size))
+         (variable-pitch-font (or (plist-get args :variable-pitch)
+                                  (face-attribute 'variable-pitch :family)))
+         (variable-pitch-size (or (plist-get args :variable-pitch-size)
+                                  default-size)))
+
+    ;; Set 'default face
+    (set-face-attribute 'default frame
+                        :family
+                        (and default-font
+                             (find-font (font-spec :name default-font)))
+                        :height default-size
+                        :weight 'regular)
+
+
+    ;; Set 'fixed-pitch face
+    (set-face-attribute 'fixed-pitch frame
+                        :family
+                        (and fixed-pitch-font
+                             (find-font (font-spec :name fixed-pitch-font)))
+                        :height fixed-pitch-size
+                        :weight 'normal)
+
+    ;; Set 'variable-pitch face
+    (set-face-attribute 'variable-pitch frame
+                          :family
+                          (and variable-pitch-font
+                               (find-font (font-spec :name variable-pitch-font)))
+                          :height variable-pitch-size
+                          :weight 'normal)))
+
+;; Setup fonts for initial frame
+(add-hook 'after-init-hook
+          (lambda ()
+            (when (display-graphic-p)
+              (my-set-dynamic-font
+               :default "JetBrains Mono"
+               :variable-pitch "Cantarell"
+               :sync-fixed-pitch t))))
+
+;; Setup fonts for all subsequent frames
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            (with-selected-frame frame
+              (my-set-dynamic-font :frame frame
+                                   :default "JetBrains Mono"
+                                   :variable-pitch "Cantarell"
+                                   :sync-fixed-pitch t))))
+
 (when (display-graphic-p)
-  (when (member "JetBrains Mono" (font-family-list))
-    (set-face-attribute 'default nil
-                        :family "JetBrains Mono"
-                        :width 'normal
-                        :height (cond
-                                 ((eq system-type 'darwin) 130)  ;; macOS
-                                 ((eq system-type 'gnu/linux) 110)  ;; Linux
-                                 ((eq system-type 'windows-nt) 100)  ;; Windows
-                                 (t 100))  ;; Default fallback
-                        :weight 'regular))
-
-  ;; Use the same font for fixed-pitch face as for default face.
-  (set-face-attribute 'fixed-pitch nil
-                      :family (face-attribute 'default :family))
-
-  (when (member "Cantarell" (font-family-list))
-    (set-face-attribute 'variable-pitch nil
-                        :family "Cantarell"
-                        :weight 'regular
-                        :height 1.05))
-
   ;; Handle Apple, Windows and Linux by setting proper Emoji font.
   (cond
    ((member "Apple Color Emoji" (font-family-list))
@@ -1866,10 +1968,9 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
    ((member "Segoe UI Emoji" (font-family-list))
     (set-fontset-font t 'emoji "Segoe UI Emoji"))
    ((member "Noto Color Emoji" (font-family-list))
-    (set-fontset-font t 'emoji "Noto Color Emoji"))))
+    (set-fontset-font t 'emoji "Noto Color Emoji")))
 
-;; Nicer scrolling
-(when (display-graphic-p)
+  ;; Nicer scrolling
   (pixel-scroll-precision-mode 1))
 
 (defun my/terminal-visible-bell ()
