@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: def
+# key: def
+# --
+def ${1:function_name}(${2:args}):
+    ${3:pass}

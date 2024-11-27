@@ -154,6 +154,7 @@ advice for `require-package', to which ARGS are passed."
     which-key             ; Display available keybindings
     writegood-mode        ; Improve writing style
     yaml-mode             ; Major mode for YAML files
+    yasnippet             ; A template system for Emacs
     web-mode)             ; Web template editing mode for Emacs
    "A list of packages that are selected for installation.")
 
@@ -822,9 +823,9 @@ enabling modes and features that enhance the editing experience:
 
 (define-key my-keyboard-map (kbd "o") #'my/switch-to-org)
 
-;; Standard key bindings
-(global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c b") #'org-switchb)
+;; Standard actions
+(global-set-key (kbd "C-c o l") #'org-store-link)
+(global-set-key (kbd "C-c o b") #'org-switchb)
 
 ;;;;; Helpers
 (defun my-org-get-created-date ()
@@ -2432,9 +2433,18 @@ when composing new messages."
 ;; Show quick-access hints beside the candidates.
 (setopt company-show-quick-access t)
 
+;;;;; Snippets and Expansions
+(setopt yas-verbosity (if emacs-debug-mode 3 0))
+
+(with-eval-after-load 'company
+  (add-to-list 'company-backends 'company-yasnippet))
+
+(with-eval-after-load 'yasnippet
+  (yas-reload-all))
+
 ;;;;; IDE Features with lsp-mode
 ;; Set the LSP keymap prefix.
-(setopt lsp-keymap-prefix "C-c s l")
+(setopt lsp-keymap-prefix "C-c l")
 
 (defun my-locate-python-virtualenv ()
   "Find the Python executable based on the VIRTUAL_ENV environment variable."
@@ -2651,7 +2661,10 @@ when composing new messages."
 
   ;; Enable LSP support in Python buffers.
   (require 'lsp-pyright)
-  (lsp))
+  (lsp)
+
+  ;; Enable YASnippet mode
+  (yas-minor-mode 1))
 
 ;; Configure hooks after `python-mode' is loaded.
 (with-eval-after-load 'python
