@@ -1837,12 +1837,21 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
 ;; Fonts
+(defun my-scale-factor (&optional frame)
+  "Return the scale factor for the given FRAME.
+If FRAME is nil, use the currently selected frame. If GDK scale
+factor is unavailable, return 1.0 as the default."
+  (let* ((attrs (frame-monitor-attributes frame))
+         (scale (cdr (assq 'scale-factor attrs))))
+    (or scale 1.0)))
+
 (defun my-calculate-dpi (&optional frame)
-  "Calculate and return the DPI (dots per inch) for the given FRAME.
+  "Calculate and return the normalized DPI for the given FRAME.
 If FRAME is nil, use the currently selected frame.
 
 This function computes DPI using the monitor geometry and
-physical dimensions reported by `frame-monitor-attributes'."
+physical dimensions reported by `frame-monitor-attributes' and
+adjusts it using the scale factor for better accuracy."
   (let* ((attrs (frame-monitor-attributes frame))
          (geometry (cdr (assq 'geometry attrs)))
          (mm-size (cdr (assq 'mm-size attrs)))
@@ -1851,8 +1860,10 @@ physical dimensions reported by `frame-monitor-attributes'."
          (mm-width (car mm-size))
          (mm-height (cadr mm-size))
          (dpi-x (/ (* pixel-width 25.4) mm-width))
-         (dpi-y (/ (* pixel-height 25.4) mm-height)))
-    (/ (+ dpi-x dpi-y) 2.0))) ;; Average DPI
+         (dpi-y (/ (* pixel-height 25.4) mm-height))
+         (raw-dpi (/ (+ dpi-x dpi-y) 2.0))
+         (scale-factor (my-scale-factor frame)))
+    (/ raw-dpi scale-factor)))
 
 (defun my-adjust-font-height (dpi)
   "Adjust and return the font height based on DPI.
