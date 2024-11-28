@@ -2542,8 +2542,28 @@ when composing new messages."
 ;; The idle delay in seconds until completion starts automatically.
 (setopt company-idle-delay 0.1)
 
-;; Show quick-access hints beside the candidates.
-(setopt company-show-quick-access t)
+;; Aligns annotations to the right side of the tooltip.
+(setopt company-tooltip-align-annotations t)
+
+(defmacro company-backend-for-hook (hook backends)
+  "Add a HOOK to set `company-backends' dynamically.
+
+HOOK is the name of the hook to which the configuration function
+is added. BACKENDS is the list of backends to set for
+`company-backends' in the local buffer when the hook is run.
+
+Example usage:
+
+  (company-backend-for-hook 'prog-mode-hook
+                            '((company-capf :with company-yasnippet)
+                              company-dabbrev-code))
+
+This will configure `company-backends' for all `prog-mode'
+buffers to include `company-capf' (with optional yasnippet) and
+`company-dabbrev-code'."
+  `(add-hook ,hook (lambda()
+                     (set (make-local-variable 'company-backends)
+                          ,backends))))
 
 ;;;;; Snippets and Expansions
 (setopt yas-verbosity (if emacs-debug-mode 3 0))
@@ -2762,19 +2782,6 @@ when composing new messages."
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
-(defun my-locate-python-virtualenv ()
-  "Find the Python executable based on the VIRTUAL_ENV environment variable."
-  (when-let ((venv (getenv "VIRTUAL_ENV")))
-    (let ((python-path (expand-file-name "bin/python" venv)))
-      (lsp--info "VIRTUAL_ENV is set to %s" venv)
-      (when (file-executable-p python-path)
-        (lsp--info "Found python executable at %s" python-path)
-        python-path))))
-
-(with-eval-after-load 'lsp-pyright
-  (add-to-list 'lsp-pyright-python-search-functions
-               #'my-locate-python-virtualenv))
-
 (defun my|setup-python-environment ()
   "Custom configurations for Pyton mode."
   ;; Enable YASnippet mode
@@ -2784,10 +2791,10 @@ when composing new messages."
   ;; At this moment `envrc' should successfully configure environment.
   (setq-local python-shell-interpreter (executable-find "python"))
 
-  ;; Setup active backends for python mode
-  (setq-local company-backends
-              '((company-capf :with company-yasnippet)
-                company-dabbrev-code))
+  ;; Setup active backends for `python-mode'.
+  (company-backend-for-hook 'lsp-completion-mode-hook
+                            '((company-capf :with company-yasnippet)
+                              company-dabbrev-code))
 
   ;; Enable LSP support in Python buffers.
   (require 'lsp-pyright)
