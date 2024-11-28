@@ -1839,56 +1839,56 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 ;; Fonts
 (defun my-scale-factor (&optional frame)
   "Return the scale factor for the given FRAME.
-If FRAME is nil, use the currently selected frame. If GDK scale
-factor is unavailable, return 1.0 as the default."
+
+If FRAME is nil, use the currently selected frame.
+If scale factor is unavailable, return 1.0 as the default."
   (let* ((attrs (frame-monitor-attributes frame))
          (scale (cdr (assq 'scale-factor attrs))))
     (or scale 1.0)))
 
-(defun my-calculate-dpi (&optional frame)
-  "Calculate and return the normalized DPI for the given FRAME.
-If FRAME is nil, use the currently selected frame.
+(defun my-frame-dpi (&optional frame)
+  "Calculate the DPI (dots per inch) for the given FRAME.
 
-This function computes DPI using the monitor geometry and
-physical dimensions reported by `frame-monitor-attributes' and
-adjusts it using the scale factor for better accuracy."
+If FRAME is nil, use the currently selected frame.
+The DPI is computed based on the physical screen size and resolution."
   (let* ((attrs (frame-monitor-attributes frame))
          (geometry (cdr (assq 'geometry attrs)))
          (mm-size (cdr (assq 'mm-size attrs)))
          (pixel-width (nth 2 geometry))
          (pixel-height (nth 3 geometry))
          (mm-width (car mm-size))
-         (mm-height (cadr mm-size))
-         (dpi-x (/ (* pixel-width 25.4) mm-width))
-         (dpi-y (/ (* pixel-height 25.4) mm-height))
-         (raw-dpi (/ (+ dpi-x dpi-y) 2.0))
-         (scale-factor (my-scale-factor frame)))
-    (/ raw-dpi scale-factor)))
+         (mm-height (cadr mm-size)))
+    (when (and mm-width mm-height (/= mm-width 0) (/= mm-height 0))
+      (let ((dpi-x (/ (* pixel-width 25.4) mm-width))
+            (dpi-y (/ (* pixel-height 25.4) mm-height)))
+        (/ (+ dpi-x dpi-y) 2.0)))))
 
-(defun my-adjust-font-height (dpi)
-  "Adjust and return the font height based on DPI.
-
-The function uses predefined DPI ranges to determine an appropriate
-font height. Users can customize these ranges and values as needed.
-
-- DPI > 200: Font height 140 (very high DPI, e.g., Retina or 4K laptops)
-- DPI > 145: Font height 130 (high DPI, e.g., high-res displays)
-- DPI > 100: Font height 120 (medium DPI, e.g., standard monitors)
-- DPI <= 100: Font height 110 (low DPI, e.g., older displays)."
+(defun my-font-size-based-on-dpi (dpi)
+  "Determine the baseline font size based on DPI."
   (cond
-   ((> dpi 200) 150)
-   ((> dpi 145) 130)
-   ((> dpi 100) 110)
-   (t 100)))
+   ((> dpi 200) 140)  ; Very high DPI
+   ((> dpi 145) 130)  ; High DPI
+   ((> dpi 110) 110)  ; Medium DPI
+   (t 100)))          ; Low DPI
 
-(defun my-dynamic-font-size (&optional frame)
-  "Return the optimal font height for the given FRAME.
+(defun my-calculate-font-size (&optional frame)
+  "Calculate the optimal font size for the given FRAME.
+
 If FRAME is nil, use the currently selected frame.
-
-This function combines `calculate-dpi' and `adjust-font-height'
-to determine the appropriate font size dynamically."
-  (let ((dpi (my-calculate-dpi frame)))
-    (my-adjust-font-height dpi)))
+Factors:
+- DPI from monitor attributes
+- System scale factor
+- Frame char height (optional adjustment)"
+  (let* ((dpi (or (my-frame-dpi frame) 96)) ; Default to 96 DPI if unknown
+         (scale-factor (my-scale-factor frame))
+         (baseline-size (my-font-size-based-on-dpi dpi))
+         (adjustment-factor (if frame
+                                (/ (frame-char-height frame) 21.0)
+                              1.0)))
+    ;; Apply DPI scaling and adjust for frame char height softly
+    (truncate (* baseline-size scale-factor
+                 ;; Bound adjustment factor to avoid extreme values
+                 (min 1.1 (max 0.9 adjustment-factor))))))
 
 (defun my-set-dynamic-font (&rest args)
   "Set dynamic fonts for 'default, 'fixed-pitch, and 'variable-pitch faces.
@@ -1916,8 +1916,8 @@ unless explicitly provided."
          (default-font (or (plist-get args :default)
                            (face-attribute 'default :family)))
          (default-size (or (plist-get args :default-size)
-                           (my-dynamic-font-size frame)))
-         (fixed-pitch-font (if (plist-get args :sync-fixed-pitch)
+                           (my-calculate-font-size frame)))
+         (fixed-pitch-font(if (plist-get args :sync-fixed-pitch)
                                default-font
                              (or (plist-get args :fixed-pitch)
                                  (face-attribute 'fixed-pitch :family))))
