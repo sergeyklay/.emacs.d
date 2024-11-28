@@ -2544,9 +2544,6 @@ when composing new messages."
 ;; Set the LSP keymap prefix.
 (setopt lsp-keymap-prefix "C-c l")
 
-;; Configure LSP completion to use `completion-at-point-functions'.
-(setopt lsp-completion-provider :capf)
-
 ;; Segments used in breadcrumb text on headerline.
 (setopt lsp-headerline-breadcrumb-segments
         '(path-up-to-project  ; Include the directories up to project
@@ -2563,7 +2560,7 @@ when composing new messages."
 (setopt lsp-ui-doc-enable t)
 
 ;; Show doc near the cursor.
-(setq lsp-ui-doc-position 'at-point)
+(setopt lsp-ui-doc-position 'at-point)
 
 ;; Delay before showing the doc.
 (setopt lsp-ui-doc-delay 0.5)
@@ -2573,9 +2570,7 @@ when composing new messages."
   ;; Enable feedback on headerline of the symbols at point, current file, etc.
   (add-hook 'lsp-mode-hook #'lsp-headerline-breadcrumb-mode)
   ;; Enable `which-key-mode' integration for LSP
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-  ;; For fancy sideline, popup documentation, VScode-like peek UI, etc.
-  (add-hook 'lsp-mode-hook #'lsp-ui-mode))
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
 
 ;;;; Language Support
