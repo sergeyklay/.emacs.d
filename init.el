@@ -2584,17 +2584,23 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; Label symbols with numbers on the breadcrumb.
 (setopt lsp-headerline-breadcrumb-enable-symbol-numbers t)
 
-;; Display diagnostics on the sideline.
-(setopt lsp-ui-sideline-show-diagnostsics t)
-
-;; Display documentation of the symbol at point on hover.
-(setopt lsp-ui-doc-enable t)
-
-;; Show doc near the cursor.
-(setopt lsp-ui-doc-position 'at-point)
-
 ;; Delay before showing the doc.
 (setopt lsp-ui-doc-delay 0.5)
+
+;; Disable `lsp-sideline'.
+(setopt lsp-ui-sideline-enable nil)
+(setopt lsp-ui-sideline-show-hover nil)
+
+(with-eval-after-load 'lsp-ui
+  ;; Remap `xref-find-definitions' (bound to M-. by default)
+  (define-key lsp-ui-mode-map
+              [remap xref-find-definitions]
+              #'lsp-ui-peek-find-definitions)
+
+  ;; Remap `xref-find-references' (bound to M-? by default)
+  (define-key lsp-ui-mode-map
+              [remap xref-find-references]
+              #'lsp-ui-peek-find-references))
 
 ;; Configure LSP mode for enhanced experience.
 (with-eval-after-load 'lsp-mode
