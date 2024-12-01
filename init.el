@@ -130,6 +130,7 @@ advice for `require-package', to which ARGS are passed."
     embark-consult        ; Embark integration with `consult'
     envrc                 ; Environment variable manager for shell
     erc-hl-nicks          ; Nick highlighting in `erc' (IRC client)
+    flycheck              ; Syntax check and diagnostics for my code
     flyspell-correct      ; Correct spelling with popup menus
     git-modes             ; Modes for Git-related files
     htmlize               ; Convert buffer text to HTML
@@ -2794,6 +2795,8 @@ buffers to include `company-capf' (with optional yasnippet) and
   ;; Set the `python-shell-interpreter' to the python in PATH.
   ;; At this moment `envrc' should successfully configure environment.
   (setq-local python-shell-interpreter (executable-find "python"))
+
+  (setq-local flycheck-python-pycompile-executable python-shell-interpreter)
 
   ;; Setup active backends for `python-mode'.
   (company-backend-for-hook 'lsp-completion-mode-hook
