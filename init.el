@@ -125,6 +125,7 @@ advice for `require-package', to which ARGS are passed."
     company               ; Code completion framework
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with `consult'
+    consult-lsp           ; `lsp-mode' and `consult' helping each other
     csv-mode              ; CSV file editing mode
     embark                ; Contextual actions in buffers
     embark-consult        ; Embark integration with `consult'
@@ -2588,7 +2589,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; Delay before showing the doc.
 (setopt lsp-ui-doc-delay 0.5)
 
-;; Disable `lsp-sideline'.
+;; Disable `lsp-sideline' as I don't need it.
 (setopt lsp-ui-sideline-enable nil)
 (setopt lsp-ui-sideline-show-hover nil)
 
@@ -2605,6 +2606,24 @@ buffers to include `company-capf' (with optional yasnippet) and
 
 ;; Configure LSP mode for enhanced experience.
 (with-eval-after-load 'lsp-mode
+  ;; Remap `lsp-treemacs-errors-list' (bound to C-c l g e).
+  ;;
+  ;; I find `consult-lsp-diagnostics' more convenient than
+  ;; `lsp-treemacs-errors-list' for querying `lsp-mode' diagnostics.  Therefore,
+  ;; I prefer to replace the default command used with the standard binding for
+  ;; displaying the diagnostics window.  The `lsp-treemacs-errors-list' command
+  ;; will remain available for manual invocation if needed.
+  (define-key lsp-mode-map
+              [remap lsp-treemacs-errors-list]
+              #'consult-lsp-diagnostics)
+
+  ;; Remap `xref-find-apropos' (bound to C-c l g a).
+  ;;
+  ;; As a `consult' user, I find it more natural and comfortable to use
+  ;; `consult-lsp-symbols' instead of `xref-find-apropos'.  The output of
+  ;; `consult-lsp-symbols' feels more intuitive and user-friendly to me.
+  (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols)
+
   ;; Enable `which-key-mode' integration for LSP.
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
