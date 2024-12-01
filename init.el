@@ -127,6 +127,7 @@ advice for `require-package', to which ARGS are passed."
     consult-flyspell      ; Flyspell integration with `consult'
     consult-lsp           ; `lsp-mode' and `consult' helping each other
     csv-mode              ; CSV file editing mode
+    dap-mode              ; Debug Adapter Protocol support
     embark                ; Contextual actions in buffers
     embark-consult        ; Embark integration with `consult'
     envrc                 ; Environment variable manager for shell
@@ -2628,6 +2629,13 @@ buffers to include `company-capf' (with optional yasnippet) and
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
 
+;;;; Debuggin with dap-mode
+
+(require 'dap-mode)
+
+(setopt dap-auto-configure-mode t)
+
+
 ;;;; Language Support
 ;;;;; Language grammars
 ;; Since I’m the author and maintainer of `bnf-mode', I use my local version
@@ -2824,11 +2832,19 @@ buffers to include `company-capf' (with optional yasnippet) and
 
   ;; Enable LSP support in Python buffers.
   (require 'lsp-pyright)
-  (lsp))
+  (lsp-deferred)
+
+  (dap-mode 1))
 
 ;; Configure hooks after `python-mode' is loaded.
 (with-eval-after-load 'python
-  (add-hook 'python-mode-hook #'my|setup-python-environment))
+  (add-hook 'python-mode-hook #'my|setup-python-environment)
+
+  (require 'dap-python)
+  ;; ptvsd is depracated, and as of 8/10/2022, ptvsd caused dap to break
+  ;; when it hits a breakpoint.  This comment and issue has context:
+  ;; https://github.com/emacs-lsp/dap-mode/issues/625#issuecomment-1128961454
+  (setopt dap-python-debugger 'debugpy))
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
