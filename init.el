@@ -2604,9 +2604,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 
 ;; Configure LSP mode for enhanced experience.
 (with-eval-after-load 'lsp-mode
-  ;; Enable feedback on headerline of the symbols at point, current file, etc.
-  (add-hook 'lsp-mode-hook #'lsp-headerline-breadcrumb-mode)
-  ;; Enable `which-key-mode' integration for LSP
+  ;; Enable `which-key-mode' integration for LSP.
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
 
