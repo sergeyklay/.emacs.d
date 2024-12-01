@@ -132,7 +132,6 @@ advice for `require-package', to which ARGS are passed."
     embark-consult        ; Embark integration with `consult'
     envrc                 ; Environment variable manager for shell
     erc-hl-nicks          ; Nick highlighting in `erc' (IRC client)
-    flycheck              ; Syntax check and diagnostics for my code
     flyspell-correct      ; Correct spelling with popup menus
     git-modes             ; Modes for Git-related files
     htmlize               ; Convert buffer text to HTML
@@ -2628,11 +2627,10 @@ buffers to include `company-capf' (with optional yasnippet) and
   ;; Enable `which-key-mode' integration for LSP.
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
-
-;;;; Debuggin with dap-mode
+;;;;; Debuggin with dap-mode
 
+;; Auto configure dap minor mode.
 (require 'dap-mode)
-
 (setopt dap-auto-configure-mode t)
 
 
