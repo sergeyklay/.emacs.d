@@ -2630,7 +2630,6 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;;;;; Debuggin with dap-mode
 
 ;; Auto configure dap minor mode.
-(require 'dap-mode)
 (setopt dap-auto-configure-mode t)
 
 
@@ -2830,19 +2829,19 @@ buffers to include `company-capf' (with optional yasnippet) and
 
   ;; Enable LSP support in Python buffers.
   (require 'lsp-pyright)
-  (lsp-deferred)
-
-  (dap-mode 1))
-
-;; Configure hooks after `python-mode' is loaded.
-(with-eval-after-load 'python
-  (add-hook 'python-mode-hook #'my|setup-python-environment)
+  (lsp)
 
   (require 'dap-python)
   ;; ptvsd is depracated, and as of 8/10/2022, ptvsd caused dap to break
   ;; when it hits a breakpoint.  This comment and issue has context:
   ;; https://github.com/emacs-lsp/dap-mode/issues/625#issuecomment-1128961454
-  (setopt dap-python-debugger 'debugpy))
+  (setq-local dap-python-debugger 'debugpy)
+
+  (dap-mode 1))
+
+;; Configure hooks after `python-mode' is loaded.
+(with-eval-after-load 'python
+  (add-hook 'python-mode-hook #'my|setup-python-environment))
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
