@@ -2285,13 +2285,6 @@ related to your current project."
 (setopt erc-fill-function 'erc-fill-static)
 (setopt erc-fill-static-center 22)
 
-(defun my|setup-erc-modules ()
-  "Set up additional modules for ERC."
-  (add-to-list 'erc-modules 'log)
-  (erc-update-modules))
-
-(add-hook 'erc-mode-hook #'my|setup-erc-modules)
-
 ;; Set up logging for ERC
 (defconst my-erc-base-log-directory
   (concat (expand-file-name "~") "/logs/erc/")
@@ -2344,22 +2337,12 @@ This results in a filename of the form #channel@server.txt, for example:
 (setopt erc-log-write-after-send t)
 
 ;;;;; ERC Services Configuration
-(require 'erc-services)
 
 ;; Skip the redundant password prompt—use stored credentials instead.
 (setopt erc-prompt-for-nickserv-password nil)
 
 ;; Let auth-source handle your NickServ credentials with discretion.
 (setopt erc-use-auth-source-for-nickserv-password t)
-
-;; Enable services to handle NickServ and other IRC services.
-(erc-services-mode 1)
-
-;;;;; ERC Spelling Configuration
-(require 'erc-spelling)
-
-;; Ensure your messages are typo-free, because every word counts.
-(erc-spelling-mode 1)
 
 ;;;;; ERC Track Configuration
 (require 'erc-track)
@@ -2426,6 +2409,23 @@ This function serves multiple purposes:
         (erc :server "irc.libera.chat" :port 6667)))))
 
 (define-key my-keyboard-map (kbd "i") #'my/erc-start-or-switch)
+
+;;;;; ERC hooks and modules
+
+(defun my|setup-erc-modules ()
+  "Set up additional modules for ERC."
+  (add-to-list 'erc-modules 'log)
+  (erc-update-modules))
+
+(with-eval-after-load 'erc
+  ;; Enable services to handle NickServ and other IRC services.
+  (add-hook 'erc-mode-hook #'erc-services-mode)
+
+  ;; Set up additional modules for ERC.
+  (add-hook 'erc-mode-hook #'erc-spelling-mode)
+
+  ;; Ensure your messages are typo-free, because every word counts.
+  (add-hook 'erc-mode-hook #'my|setup-erc-modules))
 
 
 ;;;; Shells
