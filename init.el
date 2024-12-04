@@ -2820,14 +2820,25 @@ buffers to include `company-capf' (with optional yasnippet) and
   ;; Enable YASnippet mode
   (yas-minor-mode 1)
 
+  ;; Turn on `flyspell-mode' for comments and strings.
+  (flyspell-prog-mode)
+
   ;; Setup active backends for `python-mode'.
   (company-backend-for-hook 'lsp-completion-mode-hook
                             '((company-capf :with company-yasnippet)
                               company-dabbrev-code))
 
+  ;; Prevent `lsp-pyright' start in multi-root mode.
+  ;; This must be set before the package is loaded.
+  (setq-local lsp-pyright-multi-root nil)
+
   ;; Enable LSP support in Python buffers.
   (require 'lsp-pyright)
-  (lsp)
+
+  ;; The difference between `lsp' and `lsp-deferred' is that
+  ;; `lsp-deferred' will start the server when you switch to that
+  ;; buffer (on demand).
+  (lsp-deferred)
 
   (require 'dap-python)
   ;; ptvsd is depracated, and as of 8/10/2022, ptvsd caused dap to break
