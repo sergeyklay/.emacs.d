@@ -2579,9 +2579,9 @@ buffers to include `company-capf' (with optional yasnippet) and
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
 ;;;;; Setup LSP
-;; Set the LSP keymap prefix.
 (require 'lsp-mode)
 
+;; Change the LSP keymap prefix.
 (setopt lsp-keymap-prefix "C-c l")
 
 ;; Shut down LSP server after close all buffers associated with the server.
