@@ -2835,8 +2835,7 @@ buffers to include `company-capf' (with optional yasnippet) and
   (dap-mode 1))
 
 ;; Configure hooks after `python-mode' is loaded.
-(with-eval-after-load 'python
-  (add-hook 'python-mode-hook #'my|setup-python-environment))
+(add-hook 'python-mode-hook #'setup-python-environment)
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
