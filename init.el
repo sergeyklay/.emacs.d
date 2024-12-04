@@ -2573,8 +2573,15 @@ buffers to include `company-capf' (with optional yasnippet) and
 (with-eval-after-load 'yasnippet
   (yas-reload-all))
 
+;;;;; Syntax check
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+
 ;;;;; Setup LSP
 ;; Set the LSP keymap prefix.
+(require 'lsp-mode)
+
 (setopt lsp-keymap-prefix "C-c l")
 
 ;; Segments used in breadcrumb text on headerline.
