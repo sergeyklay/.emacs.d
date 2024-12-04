@@ -2584,6 +2584,9 @@ buffers to include `company-capf' (with optional yasnippet) and
 
 (setopt lsp-keymap-prefix "C-c l")
 
+;; Shut down LSP server after close all buffers associated with the server.
+(setopt lsp-keep-workspace-alive nil)
+
 ;; Segments used in breadcrumb text on headerline.
 (setopt lsp-headerline-breadcrumb-segments
         '(path-up-to-project  ; Include the directories up to project
