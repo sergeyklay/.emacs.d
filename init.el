@@ -2583,9 +2583,6 @@ buffers to include `company-capf' (with optional yasnippet) and
           file                ; Include the open file name
           symbols))           ; Include document symbols if server supports it
 
-;; Label symbols with numbers on the breadcrumb.
-(setopt lsp-headerline-breadcrumb-enable-symbol-numbers t)
-
 ;; Delay before showing the doc.
 (setopt lsp-ui-doc-delay 0.5)
 
