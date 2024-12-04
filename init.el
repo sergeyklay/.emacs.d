@@ -2807,24 +2807,15 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; Ensure `python' mode is loaded when opening Python files.
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
-;; Set custom Python shell interpreter arguments.
-(setopt python-shell-interpreter-args "-i --simple-prompt --pprint")
-
 ;; Let Emacs guess the Python offset but prevent telling me about guessing.
 ;; Simple, I find the "Can’t guess python-indent-offset, using defaults: 4"
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
-(defun my|setup-python-environment ()
-  "Custom configurations for Pyton mode."
+(defun setup-python-environment ()
+  "Custom configurations for `python-mode'."
   ;; Enable YASnippet mode
   (yas-minor-mode 1)
-
-  ;; Set the `python-shell-interpreter' to the python in PATH.
-  ;; At this moment `envrc' should successfully configure environment.
-  (setq-local python-shell-interpreter (executable-find "python"))
-
-  (setq-local flycheck-python-pycompile-executable python-shell-interpreter)
 
   ;; Setup active backends for `python-mode'.
   (company-backend-for-hook 'lsp-completion-mode-hook
