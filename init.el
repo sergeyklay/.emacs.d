@@ -127,6 +127,7 @@ advice for `require-package', to which ARGS are passed."
     consult-flyspell      ; Flyspell integration with `consult'
     consult-lsp           ; `lsp-mode' and `consult' helping each other
     csv-mode              ; CSV file editing mode
+    delight               ; Customise the mode names displayed in the mode line
     dap-mode              ; Debug Adapter Protocol support
     embark                ; Contextual actions in buffers
     embark-consult        ; Embark integration with `consult'
@@ -195,6 +196,7 @@ advice for `require-package', to which ARGS are passed."
 
 ;; Load `which-key' and enable `which-key-mode'.
 (add-hook 'after-init-hook #'which-key-mode)
+(delight 'which-key-mode nil "which-key")
 
 ;; Increase the delay for which-key buffer to popup.
 (setq-default which-key-idle-delay 1.5)
