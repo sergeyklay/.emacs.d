@@ -123,6 +123,7 @@ advice for `require-package', to which ARGS are passed."
     benchmark-init        ; Benchmarks for require and load calls
     cask-mode             ; Major mode for editing Cask files
     company               ; Code completion framework
+    doom-themes           ; Currently used theme for emacs
     consult               ; Incremental narrowing framework
     consult-flyspell      ; Flyspell integration with `consult'
     consult-lsp           ; `lsp-mode' and `consult' helping each other
@@ -1807,35 +1808,11 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
       '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-(defun my-theme-dark-p ()
-  "Return t if the current Emacs theme is dark."
-  (let* ((bg-color (face-background 'default nil 'default))
-         (bg-rgb (color-values bg-color))
-         (brightness (apply '+ (mapcar (lambda (x) (/ x 65535.0)) bg-rgb))))
-    (< brightness 1.5)))
+;; Doom Themes
+(load-theme 'doom-one t)
 
-(defun my-set-cursor-color-based-on-theme ()
-  "Set cursor color based on whether the theme is dark or light."
-  (if (my-theme-dark-p)
-      (custom-set-faces
-       '(cursor ((t (:background "#F6CB47")))))  ; Orange
-    (custom-set-faces
-     '(cursor ((t (:background "#000000")))))))  ; Black
-
-(defvar after-load-theme-hook nil
-  "Hook run after a color theme is loaded using `load-theme'.")
-
-(defadvice load-theme (after run-after-load-theme-hook activate)
-  "Run `after-load-theme-hook'."
-  (run-hooks 'after-load-theme-hook))
-
-(add-hook 'after-load-theme-hook #'my-set-cursor-color-based-on-theme)
-
-;; Modus themes
-(load-theme 'modus-vivendi t)
-(my-set-cursor-color-based-on-theme)
-
-(global-set-key (kbd "<f5>") #'modus-themes-toggle)
+(setopt doom-themes-enable-bold nil)
+(setopt doom-themes-enable-italic nil)
 
 ;; Modeline
 (delight 'auto-revert-mode nil "autorevert")
@@ -1873,7 +1850,7 @@ The DPI is computed based on the physical screen size and resolution."
   "Determine the baseline font size based on DPI."
   (cond
    ((> dpi 200) 140)  ; Very high DPI
-   ((> dpi 145) 130)  ; High DPI
+   ((> dpi 145) 135)  ; High DPI
    ((> dpi 110) 110)  ; Medium DPI
    (t 100)))          ; Low DPI
 
