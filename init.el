@@ -177,7 +177,6 @@ advice for `require-package', to which ARGS are passed."
 ;; https://www.masteringemacs.org/article/mastering-key-bindings-emacs
 (defvar my-keyboard-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd ";") #'comment-or-uncomment-region)
     (define-key map (kbd "-") #'text-scale-decrease)
     (define-key map (kbd "+") #'text-scale-increase)
     ;; because "+" needs "S-=" and I might forget to press shift
