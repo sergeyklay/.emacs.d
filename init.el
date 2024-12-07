@@ -2807,13 +2807,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 
     ;; Set buffer-local `flycheck' variables for checkers.
     (setq-local flycheck-python-flake8-executable flake8-exec)
-    (setq-local flycheck-python-pylint-executable pylint-exec)
-
-    ;; Dynamically configure next checkers.
-    (when flake8-exec
-      (flycheck-add-next-checker 'lsp 'python-flake8 t))
-    (when pylint-exec
-      (flycheck-add-next-checker 'lsp 'python-pylint t))))
+    (setq-local flycheck-python-pylint-executable pylint-exec)))
 
 (defun setup-python-environment ()
   "Custom configurations for `python-mode'."
@@ -2843,6 +2837,17 @@ buffers to include `company-capf' (with optional yasnippet) and
   ;; `lsp-deferred' will start the server when you switch to that
   ;; buffer (on demand).
   (lsp-deferred)
+
+  ;; Dynamically configure next Flycheck checkers.
+  (when flycheck-python-flake8-executable
+    (flycheck-add-next-checker 'lsp 'python-flake8 t))
+
+  (when flycheck-python-pylint-executable
+    (flycheck-add-next-checker 'lsp 'python-pylint t))
+
+  (when (not flycheck-python-mypy-executable)
+    (flycheck-remove-next-checker 'python-flake8 'python-mypy)
+    (flycheck-remove-next-checker 'python-pylint 'python-mypy))
 
   (require 'dap-python)
   ;; ptvsd is depracated, and as of 8/10/2022, ptvsd caused dap to break
