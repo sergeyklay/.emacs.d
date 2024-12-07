@@ -132,6 +132,7 @@ advice for `require-package', to which ARGS are passed."
     embark-consult        ; Embark integration with `consult'
     envrc                 ; Environment variable manager for shell
     erc-hl-nicks          ; Nick highlighting in `erc' (IRC client)
+    flycheck              ; Syntax checking for used languages
     flyspell-correct      ; Correct spelling with popup menus
     git-modes             ; Modes for Git-related files
     htmlize               ; Convert buffer text to HTML
@@ -2573,14 +2574,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 (with-eval-after-load 'yasnippet
   (yas-reload-all))
 
-;;;;; Syntax check
-(with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
-
 ;;;;; Setup LSP
-(require 'lsp-mode)
-
 ;; Change the LSP keymap prefix.
 (setopt lsp-keymap-prefix "C-c l")
 
@@ -2596,9 +2590,8 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; Delay before showing the doc.
 (setopt lsp-ui-doc-delay 0.5)
 
-;; Disable `lsp-sideline' as I don't need it.
-(setopt lsp-ui-sideline-enable nil)
-(setopt lsp-ui-sideline-show-hover nil)
+;; Prefer `flychecke-mode' as the checker backend provider.
+(setopt lsp-diagnostics-provider :flycheck)
 
 (with-eval-after-load 'lsp-ui
   ;; Remap `xref-find-definitions' (bound to M-. by default)
@@ -2815,6 +2808,26 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
+;; We can safely declare this function, since we'll only call it in
+;; `python-mode', that is, when python.el was already loaded.
+(declare-function python-shell-calculate-exec-path "python")
+
+(defun flycheck-set-python-checkers ()
+  "Set checkers executables for the current buffer."
+  (let* ((exec-path (python-shell-calculate-exec-path))
+         (flake8-exec (executable-find "flake8"))
+         (pylint-exec (executable-find "pylint")))
+
+    ;; Set buffer-local `flycheck' variables for checkers.
+    (setq-local flycheck-python-flake8-executable flake8-exec)
+    (setq-local flycheck-python-pylint-executable pylint-exec)
+
+    ;; Dynamically configure next checkers.
+    (when flake8-exec
+      (flycheck-add-next-checker 'lsp 'python-flake8 t))
+    (when pylint-exec
+      (flycheck-add-next-checker 'lsp 'python-pylint t))))
+
 (defun setup-python-environment ()
   "Custom configurations for `python-mode'."
   ;; Enable YASnippet mode
@@ -2822,6 +2835,10 @@ buffers to include `company-capf' (with optional yasnippet) and
 
   ;; Turn on `flyspell-mode' for comments and strings.
   (flyspell-prog-mode)
+
+  ;; Set Python specific checkers for `flycheck'.
+  (add-hook 'hack-local-variables-hook
+            #'flycheck-set-python-checkers 'local)
 
   ;; Setup active backends for `python-mode'.
   (company-backend-for-hook 'lsp-completion-mode-hook
