@@ -1838,6 +1838,11 @@ https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
 
 (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 
+;; Modeline
+(delight 'auto-revert-mode nil "autorevert")
+(delight 'eldoc-mode nil "eldoc")
+(delight 'outline-minor-mode nil "outline")
+
 ;; Fonts
 (defun my-scale-factor (&optional frame)
   "Return the scale factor for the given FRAME.
@@ -2547,6 +2552,8 @@ when composing new messages."
 ;; Aligns annotations to the right side of the tooltip.
 (setopt company-tooltip-align-annotations t)
 
+(delight 'company-mode nil "company")
+
 (defmacro company-backend-for-hook (hook backends)
   "Add a HOOK to set `company-backends' dynamically.
 
@@ -2567,11 +2574,16 @@ buffers to include `company-capf' (with optional yasnippet) and
                      (set (make-local-variable 'company-backends)
                           ,backends))))
 
+;;;;; Diagnostics
+(delight 'flycheck-mode nil 'flycheck)
+
 ;;;;; Snippets and Expansions
 (setopt yas-verbosity (if emacs-debug-mode 3 0))
 
 (with-eval-after-load 'yasnippet
   (yas-reload-all))
+
+(delight 'yas-minor-mode nil "yasnippet")
 
 ;;;;; Setup LSP
 ;; Change the LSP keymap prefix.
@@ -2626,7 +2638,7 @@ buffers to include `company-capf' (with optional yasnippet) and
   ;; Enable `which-key-mode' integration for LSP.
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
-;;;;; Debuggin with dap-mode
+;;;;; Debugging with dap-mode
 
 ;; Auto configure dap minor mode.
 (setopt dap-auto-configure-mode t)
