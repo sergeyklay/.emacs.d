@@ -2577,7 +2577,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; Delay before showing the doc.
 (setopt lsp-ui-doc-delay 0.5)
 
-;; Prefer `flychecke-mode' as the checker backend provider.
+;; Prefer `flycheck-mode' as the checker backend provider.
 (setopt lsp-diagnostics-provider :flycheck)
 
 (with-eval-after-load 'lsp-ui
@@ -2795,31 +2795,34 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
-;; We can safely declare this function, since we'll only call it in
-;; `python-mode', that is, when python.el was already loaded.
-(declare-function python-shell-calculate-exec-path "python")
+(defun flycheck-configure-python-checkers ()
+  "Configure Python-specific Flycheck executables for the current buffer."
+  (let* ((exec-path (python-shell-calculate-exec-path)))
+    (setq-local flycheck-python-flake8-executable (executable-find "flake8"))
+    (setq-local flycheck-python-pylint-executable (executable-find "pylint"))
+    (setq-local flycheck-python-mypy-executable (executable-find "mypy"))))
 
-(defun flycheck-set-python-checkers ()
-  "Set checkers executables for the current buffer."
-  (let* ((exec-path (python-shell-calculate-exec-path))
-         (flake8-exec (executable-find "flake8"))
-         (pylint-exec (executable-find "pylint")))
+(defun flycheck-apply-python-checkers-after-locals ()
+  "Apply Python-specific Flycheck configurations after local variables."
+  (add-hook 'hack-local-variables-hook
+            #'flycheck-configure-python-checkers nil t))
 
-    ;; Set buffer-local `flycheck' variables for checkers.
-    (setq-local flycheck-python-flake8-executable flake8-exec)
-    (setq-local flycheck-python-pylint-executable pylint-exec)))
+(defun flycheck-chain-lsp-python-checkers ()
+  "Chain Python-specific Flycheck checkers after the LSP checker."
+  (when (and (derived-mode-p 'python-mode)
+             flycheck-python-flake8-executable)
+    (flycheck-add-next-checker 'lsp 'python-flake8 t)))
+
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-managed-mode-hook #'flycheck-chain-lsp-python-checkers))
 
 (defun setup-python-environment ()
-  "Custom configurations for `python-mode'."
+  "Setup a Python development environment in the current buffer."
   ;; Enable YASnippet mode
   (yas-minor-mode 1)
 
   ;; Turn on `flyspell-mode' for comments and strings.
   (flyspell-prog-mode)
-
-  ;; Set Python specific checkers for `flycheck'.
-  (add-hook 'hack-local-variables-hook
-            #'flycheck-set-python-checkers 'local)
 
   ;; Setup active backends for `python-mode'.
   (company-backend-for-hook 'lsp-completion-mode-hook
@@ -2838,17 +2841,6 @@ buffers to include `company-capf' (with optional yasnippet) and
   ;; buffer (on demand).
   (lsp-deferred)
 
-  ;; Dynamically configure next Flycheck checkers.
-  (when flycheck-python-flake8-executable
-    (flycheck-add-next-checker 'lsp 'python-flake8 t))
-
-  (when flycheck-python-pylint-executable
-    (flycheck-add-next-checker 'lsp 'python-pylint t))
-
-  (when (not flycheck-python-mypy-executable)
-    (flycheck-remove-next-checker 'python-flake8 'python-mypy)
-    (flycheck-remove-next-checker 'python-pylint 'python-mypy))
-
   (require 'dap-python)
   ;; ptvsd is depracated, and as of 8/10/2022, ptvsd caused dap to break
   ;; when it hits a breakpoint.  This comment and issue has context:
@@ -2859,6 +2851,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 
 ;; Configure hooks after `python-mode' is loaded.
 (add-hook 'python-mode-hook #'setup-python-environment)
+(add-hook 'python-mode-hook #'flycheck-apply-python-checkers-after-locals)
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
