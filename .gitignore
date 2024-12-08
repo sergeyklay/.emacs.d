@@ -60,6 +60,12 @@
 # File where LSP session information is stored
 .lsp-session-v1
 
+# LSP servers
+/.cache/lsp
+
+# lreemacs cache
+/.cache/treemacs-persist
+
 # List of org files with IDs on those files.
 .org-id-locations
 
