@@ -1302,8 +1302,11 @@ MobileOrg, the original `org-agenda-custom-commands' is restored."
 ;; Number of days to include in overview display.
 (setq org-agenda-span 1)
 
+;; Show agenda in the current window, keeping all other windows.
+(setopt org-agenda-window-setup 'current-window)
+
 ;; Restore windows layout after quit agenda.
-(setq org-agenda-restore-windows-after-quit t)
+(setopt org-agenda-restore-windows-after-quit t)
 
 (defun my-org-agenda-skip-non-stuck-projects ()
   "Skip projects that are not stuck."
@@ -2795,34 +2798,31 @@ buffers to include `company-capf' (with optional yasnippet) and
 ;; warning to be harmless and unnecessary spam.
 (setopt python-indent-guess-indent-offset-verbose nil)
 
-(defun flycheck-configure-python-checkers ()
-  "Configure Python-specific Flycheck executables for the current buffer."
-  (let* ((exec-path (python-shell-calculate-exec-path)))
-    (setq-local flycheck-python-flake8-executable (executable-find "flake8"))
-    (setq-local flycheck-python-pylint-executable (executable-find "pylint"))
-    (setq-local flycheck-python-mypy-executable (executable-find "mypy"))))
-
-(defun flycheck-apply-python-checkers-after-locals ()
-  "Apply Python-specific Flycheck configurations after local variables."
-  (add-hook 'hack-local-variables-hook
-            #'flycheck-configure-python-checkers nil t))
-
 (defun flycheck-chain-lsp-python-checkers ()
   "Chain Python-specific Flycheck checkers after the LSP checker."
-  (when (and (derived-mode-p 'python-mode)
+  (if (and (derived-mode-p 'python-mode)
              flycheck-python-flake8-executable)
-    (flycheck-add-next-checker 'lsp 'python-flake8 t)))
+      (flycheck-add-next-checker 'lsp 'python-flake8 t)
+    (flycheck-remove-next-checker 'lsp 'python-flake8)))
 
 (with-eval-after-load 'lsp-mode
   (add-hook 'lsp-managed-mode-hook #'flycheck-chain-lsp-python-checkers))
 
 (defun setup-python-environment ()
   "Setup a Python development environment in the current buffer."
+  ;; Compute the environment configuration for the project and
+  ;; set the buffer-local values for `process-environment' and
+  ;; `exec-path'.
+  (envrc--update)
+
+  ;; Initialize Python-specific Flycheck checkers after local variables are set.
+  ;; We can safely `executable-find' here, thank to `envrc--update'.
+  (setq-local flycheck-python-flake8-executable (executable-find "flake8"))
+  (setq-local flycheck-python-pylint-executable (executable-find "pylint"))
+  (setq-local flycheck-python-mypy-executable (executable-find "mypy"))
+
   ;; Enable YASnippet mode
   (yas-minor-mode 1)
-
-  ;; Turn on `flyspell-mode' for comments and strings.
-  (flyspell-prog-mode)
 
   ;; Setup active backends for `python-mode'.
   (company-backend-for-hook 'lsp-completion-mode-hook
@@ -2851,7 +2851,7 @@ buffers to include `company-capf' (with optional yasnippet) and
 
 ;; Configure hooks after `python-mode' is loaded.
 (add-hook 'python-mode-hook #'setup-python-environment)
-(add-hook 'python-mode-hook #'flycheck-apply-python-checkers-after-locals)
+(add-hook 'python-mode-hook #'flyspell-prog-mode)
 
 ;;;;; Lisp and company
 ;; Associate `cask-mode' with Cask files.
