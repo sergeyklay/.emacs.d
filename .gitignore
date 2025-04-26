@@ -75,4 +75,7 @@
 # DAP adapters
 /.extension
 
+# Emacs Sessions
+session.*
+
 network-security.data
