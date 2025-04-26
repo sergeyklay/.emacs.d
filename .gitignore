@@ -75,6 +75,9 @@
 # DAP adapters
 /.extension
 
+# IELM
+ielm-history.eld
+
 # Emacs Sessions
 session.*
 
