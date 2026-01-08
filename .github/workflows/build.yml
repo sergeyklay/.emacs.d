@@ -40,10 +40,10 @@ jobs:
           - '29.2'
           - '29.3'
           - '29.4'
-          - snapshot
-        include:
-          - emacs_version: snapshot
-            allow_failure: true
+        #   - snapshot
+        # include:
+        #   - emacs_version: snapshot
+        #     allow_failure: true
 
     steps:
       - name: Setup Prerequisites
