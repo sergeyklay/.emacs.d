@@ -1,134 +1,163 @@
 * How to Build and Install Emacs from Source on Linux
 
 This guide provides a step-by-step walkthrough for building and
-installing Emacs from source, inspired by the official
+installing GNU Emacs 30.x from source as a console-only editor with
+native compilation.  Inspired by the official
 [[https://git.savannah.gnu.org/cgit/emacs.git/tree/INSTALL.REPO][Emacs documentation]].
 
-** Clone the Repository and Prepare the Project
+** Prerequisites
 
-Begin by cloning the Emacs Git repository and preparing it for configuration:
+Install the required build dependencies.
+
+*** Debian/Ubuntu
+
+#+begin_src shell
+  sudo apt install autoconf \
+    automake \
+    gcc \
+    libacl1-dev \
+    libdbus-1-dev \
+    libgccjit-14-dev \
+    libgmp-dev \
+    libgnutls28-dev \
+    libjansson-dev \
+    libm17n-dev \
+    libncurses-dev \
+    libsqlite3-dev \
+    libsystemd-dev \
+    libxml2-dev \
+    libxpm-dev \
+    mailutils \
+    make \
+    pkg-config \
+    texinfo \
+    zlib1g-dev
+#+end_src
+
+Note: =libgccjit-14-dev= version depends on your default GCC.
+Check with =gcc --version= and install the matching
+=libgccjit-NN-dev=.
+
+** Clone the Repository
 
 #+begin_src shell
   git clone git://git.sv.gnu.org/emacs.git emacs.git
   cd emacs.git
-  git checkout emacs-29
+  git checkout emacs-30
   ./autogen.sh
 #+end_src
 
 ** Configure Emacs
 
-*** Choosing Compiler Flags
+*** Detect CPU Architecture
 
-To optimize for your architecture, identify supported flags using ~gcc~:
+To optimize for your CPU, identify the architecture flag:
 
 #+begin_src shell
-  gcc -march=native -Q --help=target | grep -E '\-march=\s+[a-z0-9]+$'
+  gcc -march=native -Q --help=target \
+    | grep -E '\-march=\s+[a-z0-9]+$'
 #+end_src
 
-*** Example Configuration
+Replace =-march=znver4= below with whatever your CPU reports.
 
-Here’s a detailed ~./configure~ command that includes modern options:
+*** Configure Command
+
+This builds a console-only Emacs with native compilation,
+matching the following Gentoo USE flags:
+
+: acl dbus dynamic-loading gmp inotify jit libxml2 m17n-lib
+: mailutils sqlite ssl systemd threads xpm zlib
 
 #+begin_src shell
-  CFLAGS='-g -O2 -march=znver4 -pipe -fno-fast-math -ffp-contract=off' \
+  CFLAGS='-g -O2 -march=znver4 -pipe' \
     ./configure \
       --disable-silent-rules \
       --enable-acl \
       --program-transform-name='s/^ctags$/ctags.emacs/' \
-      --with-cairo \
       --with-dbus \
       --with-dumping=pdumper \
       --with-file-notification=inotify \
-      --with-gif \
       --with-gnutls \
-      --with-gpm \
-      --with-harfbuzz \
-      --with-imagemagick \
-      --with-jpeg \
-      --with-json \
-      --with-lcms2 \
       --with-libgmp \
-      --with-libotf \
       --with-libsystemd \
       --with-m17n-flt \
       --with-mailutils \
       --with-modules \
       --with-native-compilation=aot \
       --with-pdumper \
-      --with-pgtk \
-      --with-png \
-      --with-rsvg \
-      --with-sound \
       --with-sqlite3 \
       --with-threads \
-      --with-tiff \
-      --with-toolkit-scroll-bars \
-      --with-tree-sitter \
-      --with-webp \
-      --with-x \
-      --with-x-toolkit=gtk3 \
-      --with-xft \
       --with-xml2 \
       --with-xpm \
       --with-zlib \
+      --without-cairo \
       --without-compress-install \
       --without-gameuser \
       --without-gconf \
+      --without-gif \
+      --without-gpm \
       --without-gsettings \
+      --without-harfbuzz \
       --without-hesiod \
+      --without-imagemagick \
+      --without-jpeg \
       --without-kerberos \
       --without-kerberos5 \
+      --without-lcms2 \
       --without-ns \
+      --without-png \
       --without-pop \
+      --without-rsvg \
       --without-selinux \
+      --without-sound \
+      --without-tiff \
+      --without-toolkit-scroll-bars \
+      --without-tree-sitter \
+      --without-webp \
+      --without-x \
       --without-xaw3d \
+      --without-xft \
       --without-xwidgets
 #+end_src
 
-** Compile Emacs
-
-Leverage parallel compilation to speed up the process:
+** Compile and Install
 
 #+begin_src shell
-  make -j $(getconf _NPROCESSORS_ONLN) bootstrap
+  make -j$(getconf _NPROCESSORS_ONLN) bootstrap
+  sudo make install
 #+end_src
 
-** Start Emacs Server
+** Post-Install
 
-To enable and start the Emacs server using ~systemd~:
+*** Start Emacs Server
 
 #+begin_src shell
   systemctl enable --user emacs
   systemctl start --user emacs
 #+end_src
 
-** Set Emacs as the Default Editor
-
-*** Debian-based Distributions
+*** Set Emacs as Default Editor (Debian/Ubuntu)
 
 #+begin_src shell
-  sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/emacs 100
+  sudo update-alternatives --install \
+    /usr/bin/editor editor /usr/local/bin/emacs 100
+  sudo update-alternatives --install \
+    /usr/bin/emacs emacs /usr/local/bin/emacs 100
+  sudo update-alternatives --install \
+    /usr/bin/emacsclient emacsclient \
+    /usr/local/bin/emacsclient 100
 #+end_src
 
-** Set =ctags.emacs= as Default =ctags=
-
-*** Debian-based Distributions
+*** Set =ctags.emacs= as Default =ctags= (Debian/Ubuntu)
 
 #+begin_src shell
-  sudo update-alternatives --install /usr/bin/ctags ctags /usr/local/bin/ctags.emacs 100
+  sudo update-alternatives --install \
+    /usr/bin/ctags ctags /usr/local/bin/ctags.emacs 100
   sudo update-alternatives --set ctags /usr/local/bin/ctags.emacs
 #+end_src
 
-** Notes and Tips
+*** Verify
 
-*** Performance Tuning
-
-Customize ~CFLAGS~ for your CPU architecture.
-
-*** Dependencies
-
-Ensure required libraries are installed before running ~./configure~. For Debian-based Distributions see [[file:PREREQS.DEBIAN.org][PREREQS.DEBIAN.org]] file.
-
-*** Testing Installation
-
-Run ~emacs --version~ to confirm successful installation.
+#+begin_src shell
+  emacs --version
+#+end_src
