@@ -29,9 +29,7 @@ I adhere to the following guiding principles in this configuration:
   necessary, I prefer GNU alternatives over third-party options from
   MELPA, ensuring that the setup remains streamlined and
   understandable.
-- My setup should work seamlessly across different operating systems,
-  providing a consistent experience. These days it's somewhat geared
-  towards Linux, but it also work on macOS and Windows.
+- My setup is geared towards Linux and terminal usage.
 - The goal is to maintain a setup that is functional and easy to
   manage, without pushing Emacs to its limits or adding features for
   the sake of novelty.
@@ -48,35 +46,31 @@ I adhere to the following guiding principles in this configuration:
 
 ** Performance Considerations
 
-When it comes to performance, it's all relative. Currently, Emacs
-loads in a little over a second in the graphical environment, which is
-admittedly slower than the configurations of those more dedicated to
-optimizing startup times. However, it is definitely faster than many
-other configurations found online. Have I settled on this? No, I
-occasionally work on slight optimizations and will continue to do so
-spontaneously. That said, Emacs startup time is not a top priority for
-me as long as it stays around one second, especially since I do not
-restart Emacs for weeks or months at a time. Therefore, these metrics
-might improve over time, but it's certainly not something that
-occupies most of my attention.
+When it comes to performance, it's all relative.  Currently, Emacs
+loads in under a second (~0.5s in daemon mode, ~0.8s in batch
+mode), which is faster than many other configurations found
+online.  Have I settled on this?  No, I occasionally work on slight
+optimizations and will continue to do so spontaneously.  That said,
+Emacs startup time is not a top priority for me as long as it stays
+under a second, especially since I do not restart Emacs for weeks
+or months at a time.  Therefore, these metrics might improve over
+time, but it's certainly not something that occupies most of my
+attention.
 
 ** Requirements
 
-Currently, I use GNU Emacs 29.x, and I recommend others do the same by
+Currently, I use GNU Emacs 30.x, and I recommend others do the same by
 using this configuration to ensure everything works smoothly.  I have
-not tested this configuration with versions of Emacs prior to 29.1,
+not tested this configuration with versions of Emacs prior to 30.1,
 and I have no insight into how it behaves on older versions.
 
 I have built this configuration with the following tools in mind:
 
-- [[https://direnv.net/][direnv (=direnv=)]]
+- [[https://asdf-vm.com/][asdf (=asdf=)]]
 - [[https://github.com/BurntSushi/ripgrep][ripgrep (=rg=)]]
 - [[https://git-scm.com][Git (=git=)]]
 - [[https://www.gnupg.org][GnuPG (=gpg=)]]
-- [[https://imagemagick.org][Imagemagick (=convert=)]]
-- [[https://www.ghostscript.com/][Ghostscript (=gs=)]]
 - [[https://pandoc.org/][Pandoc (=pandoc=)]]
-- [[https://www.passwordstore.org/][The standard Unix password manager (=pass=)]]
 - [[https://gnutls.org/][GnuTLS]]
 
 These tools enhance the functionality of my daily workflows, so it's
@@ -86,7 +80,7 @@ recommended to have them installed for full compatibility.
 
 This project is open source software licensed under the
 [[https://github.com/sergeyklay/.emacs.d/blob/master/LICENSE][GNU General Public Licence version 3]].
-Copyright © 2019, 2020, 2021, 2022, 2023, 2024 Serghei Iakovlev.
+Copyright © 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Serghei Iakovlev.
 
 *** Note On Copyright Years
 
