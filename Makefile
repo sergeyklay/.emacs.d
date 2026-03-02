@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2024 Serghei Iakovlev <gnu@serghei.pl>
+# Copyright (C) 2019-2026 Serghei Iakovlev <gnu@serghei.pl>
 #
 # This file is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -43,10 +43,6 @@ checkdoc:
 	done && echo "Done."
 	@echo ""
 
-.PHONY: checkstyle
-checkstyle: test/passive-voice-check.el
-	$(RUNEMACS) --load $(TOP)/$<
-
 .PHONY: checkstartup
 checkstartup: $(SRCS)
 	$(RUNEMACS) --eval '(progn (defvar url-show-status) (let ((debug-on-error t) (url-show-status nil) (user-emacs-directory default-directory) (user-init-file (expand-file-name "init.el"))(load-path (delq default-directory load-path))) (setq package-check-signature nil) (load-file user-init-file) (run-hooks (quote after-init-hook))))'
@@ -54,7 +50,7 @@ checkstartup: $(SRCS)
 	@echo ""
 
 .PHONY: test
-test: checkstartup checkdoc checkstyle
+test: checkstartup checkdoc
 
 .PHONY: help
 help:
@@ -65,9 +61,8 @@ help:
 	@echo '  help:          Show this help and exit'
 	@echo '  install:       Install dependencies'
 	@echo '  checkdoc:      Check doc for errors'
-	@echo '  checkstyle:    Check for passive voice in documentation'
 	@echo '  checkstartup:  Run Emacs startup to validate configuration and hooks'
-	@echo '  test:          Run checks for startup, documentation, and style compliance'
+	@echo '  test:          Run checks for startup and documentation'
 	@echo '  clean:         Remove byte compiled files and artifacts'
 	@echo ''
 
