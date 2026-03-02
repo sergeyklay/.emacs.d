@@ -1,6 +1,6 @@
-;; early-init.el --- Early init file to use for Emacs >= 27.x -*- lexical-binding: t; -*-
+;; early-init.el --- Early init file to use for Emacs >= 30.x -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019-2024 Serghei Iakovlev <gnu@serghei.pl>
+;; Copyright (C) 2019-2026 Serghei Iakovlev <gnu@serghei.pl>
 
 ;; Author: Serghei Iakovlev <gnu@serghei.pl>
 ;; URL: https://github.com/sergeyklay/.emacs.d
@@ -56,19 +56,7 @@
 ;; `set-language-enviornment' sets `default-input-method', which is unwanted.
 (setq default-input-method nil)
 
-;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
-(setq tool-bar-mode nil)
-(when (fboundp 'set-scroll-bar-mode)
-  (set-scroll-bar-mode nil))
 
-;; Reduce rendering/line scan work by not rendering cursors or regions in
-;; non-focused windows.
-(setq-default cursor-in-non-selected-windows nil)
-
-;; Resizing the Emacs frame can be a terribly expensive part of changing the
-;; font.  By inhibiting this, the startup time is significantly reduced,
-;; especially with fonts larger than the system default.
-(setq frame-inhibit-implied-resize t)
 
 ;; Remove command line options that aren't relevant to the current OS; this
 ;; results in slightly less processing at startup.
