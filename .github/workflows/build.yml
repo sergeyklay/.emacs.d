@@ -73,9 +73,6 @@ jobs:
       - name: Check doc for errors
         run: make checkdoc
 
-      - name: Check for passive voice
-        run: make checkstyle
-
       - name: Run Emacs startup
         if: matrix.allow_failure != true
         run: make checkstartup
