@@ -317,6 +317,15 @@ the changes take effect."
 (add-hook 'text-mode-hook (lambda () (setq show-trailing-whitespace t)))
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
+;; Set `source-directory' to the local Emacs source directory.
+;; Used to understand and debug built-in Emacs functions.
+(let ((src (expand-file-name "~/src/emacs.git")))
+  ;; Check if the directory exists and is
+  ;; not remote before setting `source-directory`.
+  (when (and (file-directory-p src)
+             (not (file-remote-p src)))
+    (setopt source-directory src)))
+
 ;;;; Search
 (defun my-isearch-exit-and-run (function)
   "Exit `isearch' and run FUNCTION with the current `isearch' string."
@@ -516,6 +525,9 @@ If neither gpg nor gpg2 is found, this is set to nil.")
 (setopt minibuffer-prompt-properties
       '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+;; Theme
+(load-theme 'modus-vivendi t)
 
 ;; Modeline
 (delight 'auto-revert-mode nil "autorevert")
