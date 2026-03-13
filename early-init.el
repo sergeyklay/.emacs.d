@@ -56,7 +56,12 @@
 ;; `set-language-enviornment' sets `default-input-method', which is unwanted.
 (setq default-input-method nil)
 
-
+;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
+(setq tool-bar-mode nil)
+(when (fboundp 'set-scroll-bar-mode)
+  (set-scroll-bar-mode nil))
+(when (fboundp 'menu-bar-mode)
+  (menu-bar-mode -1))
 
 ;; Remove command line options that aren't relevant to the current OS; this
 ;; results in slightly less processing at startup.
